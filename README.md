@@ -4,7 +4,7 @@ journal.py
 NAME
 ----
 
-journal.py - a command line tool for viewing and maintaining a journal
+`journal.py` - a command line tool for viewing and maintaining a journal
 
 DESCRIPTION
 -----------

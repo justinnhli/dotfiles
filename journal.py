@@ -107,7 +107,8 @@ def main():
 		first_date = Datetime.strptime(first_date_str, "%Y-%m-%d")
 		last_date_str = selected[-1]
 		last_date = Datetime.strptime(last_date_str, "%Y-%m-%d")
-		table = [["year", "posts", "words", "max", "mean", "freq"]]
+		header = ("year", "posts", "words", "max", "mean", "freq")
+		table = []
 		length = 4
 		for unit in sorted(set(key[:length] for key in selected), reverse=args.reverse):
 			dates = [date for date in selected if date[:length] == unit]
@@ -119,14 +120,15 @@ def main():
 			last_unit_date = (last_date if last_date_str[:length] == unit else Datetime(int(unit), 12, 31))
 			first_unit_date = (first_date if first_date_str[:length] == unit else Datetime(int(unit), 1, 1))
 			freq = "{:.3f}".format(((last_unit_date - first_unit_date).days + 1) / posts)
-			table.append([unit, posts, words, longest, mean, freq])
+			table.append((unit, posts, words, longest, mean, freq))
 		total = ["total"] + [sum(row[col] for row in table[1:]) for col in range(1, 3)]
 		total.extend([max(row[3] for row in table[1:]), round(total[2] / total[1]), "{:.3f}".format(((last_date - first_date).days + 1) / total[1])])
-		table.append(total)
-		widths = [max(len(str(row[col])) for row in table) for col in range(0, 6)]
-		print("  ".join(col.center(widths[i]) for i, col in enumerate(table[0])).upper())
-		print("  ".join("-" * width for width in widths))
-		for row in table[1:]:
+		table.append(tuple(total))
+		table = [(year, posts, format(words, ",d"), maxx, mean, freq) for year, posts, words, maxx, mean, freq in table]
+		widths = [max(len(str(row[col])) for row in ([header,] + table)) for col in range(0, 6)]
+		print("  ".join(col.center(widths[i]) for i, col in enumerate(header)).upper())
+		print("  ".join(width * "-" for width in widths))
+		for row in table:
 			print("  ".join(str(col).rjust(widths[i]) for i, col in enumerate(row)))
 
 	elif args.action == "graph":

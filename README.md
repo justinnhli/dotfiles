@@ -41,27 +41,25 @@ OPTIONS
 	optional arguments:
 	  -h, --help            show this help message and exit
 
+	OPERATIONS:
+	  -A                    archive to datetimed tarball
+	  -C                    count words and entries
+	  -G                    graph entry references in DOT
+	  -L                    list entry dates
+	  -S                    show entries
+	  -T                    create tags file
+	  -V                    verify journal sanity
+
 	INPUT OPTIONS:
 	  --directory DIRECTORY
 							use journal files in directory
 	  --ignore IGNORES      ignore specified files
 
-	OPERATIONS:
-	  -A, --Archive         archive to datetimed tarball
-	  -C, --Count           count words and entries
-	  -G, --Graph           graph entry references in DOT
-	  -L, --List            list entry dates
-	  -S, --Show            show entries
-	  -T, --Tag             create tags file
-	  -V, --Verify          verify journal sanity
-
 	OUTPUT OPTIONS:
-	  -d DATE_RANGE, --date-range DATE_RANGE
-							only use entries in range
-	  -i, --no-ignore-case  ignore ignore case
-	  -n NUM_RESULTS, --num-results NUM_RESULTS
-							max number of results
-	  -r, --reverse         reverse chronological order
+	  -d DATE_RANGE         only use entries in range
+	  -i                    ignore ignore case
+	  -n NUM_RESULTS        max number of results
+	  -r                    reverse chronological order
 
 BUGS
 ----

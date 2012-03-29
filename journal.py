@@ -232,7 +232,7 @@ def main():
 				if re.search("[^ -~\t]", line):
 					errors.append(("non-ASCII characters", cur_date, line))
 			else:
-				if line != DATE_REGEX.match(line).group(0):
+				if not DATA_REGEX.match(line):
 					errors.append(("indentation", cur_date, line))
 				cur_date = Datetime.strptime(line[:10], "%Y-%m-%d")
 				if len(line) > 10 and line != cur_date.strftime("%Y-%m-%d, %A"):

@@ -1,0 +1,69 @@
+journal.py
+==========
+
+NAME
+----
+
+journal.py - a command line tool for viewing and maintaining a journal
+
+DESCRIPTION
+-----------
+
+`journal.py` is a tool to archive, search through, calculate statistics
+on, verify, and create tags for a plain text journal. It expects journal
+files to have the extension `.journal` and the contents to conform to a
+(loose) syntax. Entries start with unindented dates in the form `YYYY-MM-DD`,
+optionally followed by "`, WEEKDAY`" (without quotes).  Entry contents
+starts on the next line, indented by at least one tab.  Each line is a
+paragraph; consequtive lines must either be indented by the same level,
+by one more level, or by arbritrarily fewer levels (down to one) than
+the previous line. An empty line is required between entries.  For
+example:
+
+	2012-03-29, Thursday
+		This is the first paragraph.
+		This is the second paragraph.
+			Lines can be indented one level further
+				for each line,
+		but can drop back arbitrarily far
+	
+	2012-03-30, Friday
+		The next entry.
+
+OPTIONS
+-------
+
+	usage: journal.py &lt;operation&gt; \[options\] \[TERM ...\]
+
+	positional arguments:
+	  TERM                  pattern which must exist in entries
+
+	optional arguments:
+	  -h, --help            show this help message and exit
+
+	INPUT OPTIONS:
+	  --directory DIRECTORY
+							use journal files in directory
+	  --ignore IGNORES      ignore specified files
+
+	OPERATIONS:
+	  -A, --Archive         archive to datetimed tarball
+	  -C, --Count           count words and entries
+	  -G, --Graph           graph entry references in DOT
+	  -L, --List            list entry dates
+	  -S, --Show            show entries
+	  -T, --Tag             create tags file
+	  -V, --Verify          verify journal sanity
+
+	OUTPUT OPTIONS:
+	  -d DATE\_RANGE, --date-range DATE\_RANGE
+							only use entries in range
+	  -i, --no-ignore-case  ignore ignore case
+	  -n NUM\_RESULTS, --num-results NUM\_RESULTS
+							max number of results
+	  -r, --reverse         reverse chronological order
+
+BUGS
+----
+
+Report bugs or submit pull requests at <https://github.com/justinnhli/journal>.

@@ -33,7 +33,7 @@ example:
 OPTIONS
 -------
 
-	usage: journal.py &lt;operation&gt; \[options\] \[TERM ...\]
+	usage: journal.py <operation> [options] [TERM ...]
 
 	positional arguments:
 	  TERM                  pattern which must exist in entries
@@ -56,10 +56,10 @@ OPTIONS
 	  -V, --Verify          verify journal sanity
 
 	OUTPUT OPTIONS:
-	  -d DATE\_RANGE, --date-range DATE\_RANGE
+	  -d DATE_RANGE, --date-range DATE_RANGE
 							only use entries in range
 	  -i, --no-ignore-case  ignore ignore case
-	  -n NUM\_RESULTS, --num-results NUM\_RESULTS
+	  -n NUM_RESULTS, --num-results NUM_RESULTS
 							max number of results
 	  -r, --reverse         reverse chronological order
 

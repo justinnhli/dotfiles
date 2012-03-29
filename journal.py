@@ -2,7 +2,7 @@
 
 import re
 from argparse import ArgumentParser
-from datetime import datetime as Datetime, timedelta as TimeDelta
+from datetime import datetime as Datetime
 from os import chdir as cd, chmod, execvp, fork, getcwd as pwd, listdir as ls, remove as rm, system, wait
 from os.path import exists as file_exists, expanduser, realpath, relpath
 from shutil import copy as cp, copytree, rmtree
@@ -57,11 +57,11 @@ def main():
 	if not stdin.isatty():
 		raw_entries = stdin.read()
 	else:
-		raw_entries = []
-		for file in sorted(set("{}/{}".format(args.directory, f) for f in ls(args.directory) if f.endswith(".journal")) - args.ignores):
-			with open(file, "r") as fd:
-				raw_entries.append(fd.read().strip())
-		raw_entries = "\n\n".join(raw_entries)
+		file_entries = []
+		for journal in sorted(set("{}/{}".format(args.directory, f) for f in ls(args.directory) if f.endswith(".journal")) - args.ignores):
+			with open(journal, "r") as fd:
+				file_entries.append(fd.read().strip())
+		raw_entries = "\n\n".join(file_entries)
 	if raw_entries:
 		entries = dict((entry[:10], entry) for entry in raw_entries.split("\n\n") if entry and DATE_REGEX.match(entry))
 	else:
@@ -148,7 +148,7 @@ def main():
 		print("	edge [color=\"#888A85\"];")
 		for dest in ref_map:
 			for src in ref_map[dest]:
-				print("	\"{}\" -> \"{}\";".format(src, dest))
+				print("	\"{}\" -> \"{}\";".format(dest, src))
 		print("}")
 
 	elif args.action == "list":
@@ -184,27 +184,25 @@ def main():
 		if not stdin.isatty():
 			print("Error: tags file can only be created if input is from files")
 			exit(1)
-		jrnl_files = set("{}/{}".format(args.directory, f) for f in ls(args.directory) if f.endswith(".journal")) - args.ignores
-		bib_files = set("{}/{}".format(args.directory, f) for f in ls(args.directory) if f.endswith(".bib")) - args.ignores
 		tags_path = args.directory + "/tags"
 		tags = {}
 		if file_exists(tags_path):
 			rm(tags_path)
-		for file in jrnl_files:
-			with open(file, "r") as fd:
+		for journal in (set("{}/{}".format(args.directory, f) for f in ls(args.directory) if f.endswith(".journal")) - args.ignores):
+			with open(journal, "r") as fd:
 				text = fd.read()
 			for line_number, line in enumerate(text.split("\n")):
 				if DATE_REGEX.match(line):
 					tag = line[:10]
-					tags[tag] = (tag, relpath(file, args.directory), line_number + 1)
-		for file in bib_files:
-			with open(file, "r") as fd:
+					tags[tag] = (tag, relpath(journal, args.directory), line_number + 1)
+		for bibtex in (set("{}/{}".format(args.directory, f) for f in ls(args.directory) if f.endswith(".bib")) - args.ignores):
+			with open(bibtex, "r") as fd:
 				text = fd.read()
 			for line_number, line in enumerate(text.split("\n")):
 				match = BIB_REGEX.match(line)
 				if match:
 					tag = match.group(1)
-					tags[tag] = (tag, relpath(file, args.directory), line_number + 1)
+					tags[tag] = (tag, relpath(bibtex, args.directory), line_number + 1)
 		with open(tags_path, "w") as fd:
 			fd.write("\n".join("{}\t{}\t{}".format(*tag) for tag in sorted(tags.values())))
 			fd.write("\n")
@@ -245,7 +243,7 @@ def main():
 					dates.add(cur_date)
 			last_indent = indent
 		if errors:
-			print("\n".join("{:4d} ({}): \"{}...\"".format(error, date.strftime("%Y-%m-%d"), line.strip()[:20]) for error, date, line in errors))
+			print("\n".join("{} ({}): \"{}...\"".format(error, date.strftime("%Y-%m-%d"), line.strip()[:20]) for error, date, line in errors))
 
 if __name__ == "__main__":
 	main()

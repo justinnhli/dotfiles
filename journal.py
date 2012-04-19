@@ -48,25 +48,23 @@ def main():
 		print("\n".join("Error: {}".format(error) for error in errors) + "\n")
 		arg_parser.print_help()
 		exit(1)
-	else:
-		args.directory = realpath(expanduser(args.directory))
-		args.ignores = set(realpath(expanduser(path)) for path in args.ignores)
-		args.ignore_case = re.IGNORECASE if args.ignore_case else 0
-		args.num_results = int(args.num_results)
+	args.directory = realpath(expanduser(args.directory))
+	args.ignores = set(realpath(expanduser(path)) for path in args.ignores)
+	args.ignore_case = re.IGNORECASE if args.ignore_case else 0
+	args.num_results = int(args.num_results)
 
-	if not stdin.isatty():
-		raw_entries = stdin.read()
-	else:
+	if stdin.isatty():
 		file_entries = []
 		for journal in sorted(set("{}/{}".format(args.directory, f) for f in ls(args.directory) if f.endswith(".journal")) - args.ignores):
 			with open(journal, "r") as fd:
 				file_entries.append(fd.read().strip())
 		raw_entries = "\n\n".join(file_entries)
-	if raw_entries:
-		entries = dict((entry[:10], entry) for entry in raw_entries.split("\n\n") if entry and DATE_REGEX.match(entry))
 	else:
+		raw_entries = stdin.read()
+	if not raw_entries:
 		errors.append("Error: no journal files found or specified")
 		exit(1)
+	entries = dict((entry[:10], entry) for entry in raw_entries.split("\n\n") if entry and DATE_REGEX.match(entry))
 
 	selected = set(entries.keys())
 	for term in args.terms:
@@ -90,7 +88,7 @@ def main():
 		selected = selected[:args.num_results]
 
 	if args.action == "archive":
-		filename = "ar" + Datetime.now().strftime("%Y%m%d%H%M%S")
+		filename = "jrnl" + Datetime.now().strftime("%Y%m%d%H%M%S")
 		temp_path = mkdtemp()
 		copytree(args.directory, temp_path + "/" + filename)
 		cp(argv[0], temp_path + "/" + filename)
@@ -111,9 +109,9 @@ def main():
 		table = []
 		length = 4
 		for unit in sorted(set(key[:length] for key in selected), reverse=args.reverse):
-			dates = [date for date in selected if date[:length] == unit]
+			dates = list(date for date in selected if date[:length] == unit)
 			posts = len(dates)
-			lengths = [len(entries[date].split()) for date in dates]
+			lengths = list(len(entries[date].split()) for date in dates)
 			words = sum(lengths)
 			longest = max(lengths)
 			mean = round(words / posts)
@@ -124,8 +122,8 @@ def main():
 		total = ["total"] + [sum(row[col] for row in table[1:]) for col in range(1, 3)]
 		total.extend([max(row[3] for row in table[1:]), round(total[2] / total[1]), "{:.3f}".format(((last_date - first_date).days + 1) / total[1])])
 		table.append(tuple(total))
-		table = [(year, posts, format(words, ",d"), maxx, mean, freq) for year, posts, words, maxx, mean, freq in table]
-		widths = [max(len(str(row[col])) for row in ([header,] + table)) for col in range(0, 6)]
+		table = list((year, posts, format(words, ",d"), maxx, mean, freq) for year, posts, words, maxx, mean, freq in table)
+		widths = list(max(len(str(row[col])) for row in ([header,] + table)) for col in range(0, 6))
 		print("  ".join(col.center(widths[i]) for i, col in enumerate(header)).upper())
 		print("  ".join(width * "-" for width in widths))
 		for row in table:
@@ -156,11 +154,9 @@ def main():
 	elif args.action == "list":
 		print("\n".join(selected))
 
-	elif args.action == "show":
+	elif args.action == "show" and selected:
 		text = "\n\n".join(entries[key] for key in selected)
-		if not selected:
-			pass
-		elif stdout.isatty():
+		if stdout.isatty():
 			temp_file = mkstemp(".journal")[1]
 			with open(temp_file, "w") as fd:
 				fd.write(text)

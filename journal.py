@@ -5,7 +5,7 @@ from argparse import ArgumentParser
 from datetime import datetime as Datetime
 from os import chdir as cd, chmod, execvp, fork, getcwd as pwd, listdir as ls, remove as rm, system, wait
 from os.path import exists as file_exists, expanduser, realpath, relpath
-from shutil import copy as cp, copytree, rmtree
+from shutil import copy as cp, copytree, ignore_patterns, rmtree
 from stat import S_IRUSR
 from sys import stdin, stdout, argv
 from tempfile import mkdtemp, mkstemp
@@ -90,7 +90,7 @@ def main():
 	if args.action == "archive":
 		filename = "jrnl" + Datetime.now().strftime("%Y%m%d%H%M%S")
 		temp_path = mkdtemp()
-		copytree(args.directory, temp_path + "/" + filename)
+		copytree(args.directory, temp_path + "/" + filename, ignore=ignore_patterns(".*"))
 		cp(argv[0], temp_path + "/" + filename)
 		cur_path = pwd()
 		cd(temp_path)

@@ -137,19 +137,19 @@ def main():
 				if reference != key_date and reference in selected:
 					ref_map.setdefault(reference, set())
 					ref_map[reference].add(key)
-		print("digraph {")
-		print("	graph [size=\"48\", model=\"subset\"];")
-		print("")
-		print("	// NODES")
-		print("	node [fontcolor=\"#3465A4\", fontsize=\"30\", shape=\"none\"];")
-		print("\n".join("	\"{}\" [fontsize=\"{}\"];".format(dest, len(ref_map[dest]) * 15 + 15) for dest in ref_map))
-		print("")
-		print("	// EDGES")
-		print("	edge [color=\"#888A85\"];")
+		print('digraph {')
+		print('\tgraph [size="48", model="subset"];')
+		print()
+		print('\t// NODES')
+		print('\tnode [fontcolor="#3465A4", shape="none"];')
+		print('\n'.join('\t"{}" [fontsize="{}"];'.format(dest, len(entries[dest].split()) / 100) for dest in ref_map))
+		print()
+		print('\t// EDGES')
+		print('\tedge [color="#888A85"];')
 		for dest in ref_map:
 			for src in ref_map[dest]:
-				print("	\"{}\" -> \"{}\";".format(dest, src))
-		print("}")
+				print('\t"{}" -> "{}";'.format(dest, src))
+		print('}')
 
 	elif args.action == "list":
 		print("\n".join(selected))

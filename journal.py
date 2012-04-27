@@ -138,7 +138,7 @@ def main():
 					ref_map.setdefault(reference, set())
 					ref_map[reference].add(key)
 		print('digraph {')
-		print('\tgraph [size="48", model="subset"];')
+		print('\tgraph [size="48", model="subset", rankdir="BT"];')
 		print()
 		print('\t// NODES')
 		print('\tnode [fontcolor="#3465A4", shape="none"];')
@@ -148,7 +148,7 @@ def main():
 		print('\tedge [color="#888A85"];')
 		for dest in ref_map:
 			for src in ref_map[dest]:
-				print('\t"{}" -> "{}";'.format(dest, src))
+				print('\t"{}" -> "{}";'.format(src, dest))
 		print('}')
 
 	elif args.action == "list":

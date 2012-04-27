@@ -64,7 +64,7 @@ def main():
 	if not raw_entries:
 		errors.append("Error: no journal files found or specified")
 		exit(1)
-	entries = dict((entry[:10], entry) for entry in raw_entries.split("\n\n") if entry and DATE_REGEX.match(entry))
+	entries = dict((entry[:10], entry.strip()) for entry in raw_entries.strip().split("\n\n") if entry and DATE_REGEX.match(entry))
 
 	selected = set(entries.keys())
 	for term in args.terms:

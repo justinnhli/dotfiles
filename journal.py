@@ -40,7 +40,7 @@ def main():
 	errors = []
 	if not args.action:
 		errors.append("no operation specified")
-	if args.date_range and not all(RANGE_REGEX.match(dr) for dr in args.date_range.split(",")):
+	if args.date_range and not all(dr and RANGE_REGEX.match(dr) for dr in args.date_range.split(",")):
 		errors.append("option -d/--date must be of the form [YYYY[-MM[-DD]]][:][YYYY[-MM[-DD]]][,...]")
 	if not args.num_results.isdigit():
 		errors.append("option -n/--num-results must be an integer")

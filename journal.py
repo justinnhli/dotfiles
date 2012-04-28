@@ -132,11 +132,10 @@ def main():
 	elif args.action == "graph":
 		ref_map = {}
 		for key_date in selected:
-			key = key_date[:10]
 			for reference in REF_REGEX.findall(entries[key_date]):
 				if reference != key_date and reference in selected:
 					ref_map.setdefault(reference, set())
-					ref_map[reference].add(key)
+					ref_map[reference].add(key_date[:10])
 		print('digraph {')
 		print('\tgraph [size="48", model="subset", rankdir="BT"];')
 		print()

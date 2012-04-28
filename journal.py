@@ -45,8 +45,7 @@ def main():
 	if not args.num_results.isdigit():
 		errors.append("option -n/--num-results must be an integer")
 	if errors:
-		print("\n".join("Error: {}".format(error) for error in errors) + "\n")
-		arg_parser.print_help()
+		print("\n".join("Error: {}".format(error) for error in errors))
 		exit(1)
 	args.directory = realpath(expanduser(args.directory))
 	args.ignores = set(realpath(expanduser(path)) for path in args.ignores)

@@ -33,33 +33,33 @@ example:
 OPTIONS
 -------
 
-    usage: journal.py <operation> [options] [TERM ...]
+	usage: journal.py <operation> [options] [TERM ...]
 
-    positional arguments:
-      TERM                  pattern which must exist in entries
+	positional arguments:
+	  TERM                  pattern which must exist in entries
 
-    optional arguments:
-      -h, --help            show this help message and exit
+	optional arguments:
+	  -h, --help            show this help message and exit
 
-    OPERATIONS:
-      -A                    archive to datetimed tarball
-      -C                    count words and entries
-      -G                    graph entry references in DOT
-      -L                    list entry dates
-      -S                    show entries
-      -T                    create tags file
-      -V                    verify journal sanity
+	OPERATIONS:
+	  -A                    archive to datetimed tarball
+	  -C                    count words and entries
+	  -G                    graph entry references in DOT
+	  -L                    list entry dates
+	  -S                    show entries
+	  -T                    create tags file
+	  -V                    verify journal sanity
 
-    INPUT OPTIONS:
-      --directory DIRECTORY
-                            use journal files in directory
-      --ignore IGNORES      ignore specified files
+	INPUT OPTIONS:
+	  --directory DIRECTORY
+							use journal files in directory
+	  --ignore IGNORES      ignore specified files
 
-    OUTPUT OPTIONS:
-      -d DATE_RANGE         only use entries in range
-      -i                    ignore ignore case
-      -n NUM_RESULTS        max number of results
-      -r                    reverse chronological order
+	FILTER OPTIONS (APPLY TO -C, -G, -L, and -S):
+	  -d DATE_RANGE         only use entries in range
+	  -i                    ignore ignore case
+	  -n NUM_RESULTS        max number of results
+	  -r                    reverse chronological order
 
 BUGS
 ----

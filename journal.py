@@ -45,7 +45,6 @@ def main():
 	args.directory = realpath(expanduser(args.directory))
 	args.ignores = set(realpath(expanduser(path)) for path in args.ignores)
 	args.ignore_case = re.IGNORECASE if args.ignore_case else 0
-	args.num_results = int(args.num_results)
 
 	if stdin.isatty():
 		file_entries = []
@@ -56,8 +55,9 @@ def main():
 	else:
 		raw_entries = stdin.read()
 	if not raw_entries:
-		errors.append("Error: no journal files found or specified")
-		exit(1)
+		print("usage: journal.py <operation> [options] [TERM ...]")
+		print("journal.py: error: no journal files found or specified")
+		exit(2)
 	entries = dict((entry[:10], entry.strip()) for entry in raw_entries.strip().split("\n\n") if entry and DATE_REGEX.match(entry))
 
 	selected = set(entries.keys())

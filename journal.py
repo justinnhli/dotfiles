@@ -16,8 +16,8 @@ RANGE_REGEX = re.compile("^([0-9]{4}(-[0-9]{2}(-[0-9]{2})?)?)?:?([0-9]{4}(-[0-9]
 REF_REGEX = re.compile("([0-9]{4}-[0-9]{2}-[0-9]{2})")
 
 def main():
-	arg_parser = ArgumentParser(usage="%(prog)s <operation> [options] [TERM ...]")
-	arg_parser.set_defaults(directory="./", ignores=["~/journal/notes.journal",], ignore_case=True, num_results="0", reverse=False)
+	arg_parser = ArgumentParser(usage="%(prog)s <operation> [options] [TERM ...]", epilog="a command line tool for viewing and maintaining a journal")
+	arg_parser.set_defaults(directory="./", ignores=[], ignore_case=True, num_results=0, reverse=False)
 	arg_parser.add_argument("terms",  metavar="TERM", nargs="*", help="pattern which must exist in entries")
 	group = arg_parser.add_argument_group("OPERATIONS")
 	group.add_argument("-A",           dest="action",       action="store_const",  const="archive",  help="archive to datetimed tarball")
@@ -33,7 +33,7 @@ def main():
 	group = arg_parser.add_argument_group("FILTER OPTIONS (APPLY TO -C, -G, -L, and -S)")
 	group.add_argument("-d",           dest="date_range",   action="store",                          help="only use entries in range")
 	group.add_argument("-i",           dest="ignore_case",  action="store_false",                    help="ignore ignore case")
-	group.add_argument("-n",           dest="num_results",  action="store",                          help="max number of results")
+	group.add_argument("-n",           dest="num_results",  action="store",        type=int,         help="max number of results")
 	group.add_argument("-r",           dest="reverse",      action="store_true",                     help="reverse chronological order")
 	args = arg_parser.parse_args()
 
@@ -42,8 +42,6 @@ def main():
 		errors.append("no operation specified")
 	if args.date_range and not all(dr and RANGE_REGEX.match(dr) for dr in args.date_range.split(",")):
 		errors.append("option -d/--date must be of the form [YYYY[-MM[-DD]]][:][YYYY[-MM[-DD]]][,...]")
-	if not args.num_results.isdigit():
-		errors.append("option -n/--num-results must be an integer")
 	if errors:
 		print("\n".join("Error: {}".format(error) for error in errors))
 		exit(1)

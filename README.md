@@ -15,8 +15,8 @@ files to have the extension `.journal` and the contents to conform to a
 (loose) syntax. Entries start with unindented dates in the form `YYYY-MM-DD`,
 optionally followed by "`, WEEKDAY`" (without quotes).  Entry contents
 starts on the next line, indented by at least one tab.  Each line is a
-paragraph; consequtive lines must either be indented by the same level,
-by one more level, or by arbritrarily fewer levels (down to one) than
+paragraph; consecutive lines must either be indented by the same level,
+by one more level, or by arbitrarily fewer levels (down to one) than
 the previous line. An empty line is required between entries.  For
 example:
 

@@ -35,6 +35,8 @@ OPTIONS
 
 	usage: journal.py <operation> [options] [TERM ...]
 
+	a command line tool for viewing and maintaining a journal
+
 	positional arguments:
 	  TERM                  pattern which must exist in entries
 
@@ -46,14 +48,14 @@ OPTIONS
 	  -C                    count words and entries
 	  -G                    graph entry references in DOT
 	  -L                    list entry dates
-	  -S                    show entries
+	  -S                    show entry contents
 	  -T                    create tags file
 	  -V                    verify journal sanity
 
 	INPUT OPTIONS:
 	  --directory DIRECTORY
 							use journal files in directory
-	  --ignore IGNORES      ignore specified files
+	  --ignore IGNORES      ignore specified file
 
 	FILTER OPTIONS (APPLY TO -C, -G, -L, and -S):
 	  -d DATE_RANGE         only use entries in range

@@ -16,20 +16,21 @@ RANGE_REGEX = re.compile("^([0-9]{4}(-[0-9]{2}(-[0-9]{2})?)?)?:?([0-9]{4}(-[0-9]
 REF_REGEX = re.compile("([0-9]{4}-[0-9]{2}-[0-9]{2})")
 
 def main():
-	arg_parser = ArgumentParser(usage="%(prog)s <operation> [options] [TERM ...]", epilog="a command line tool for viewing and maintaining a journal")
+	arg_parser = ArgumentParser(usage="%(prog)s <operation> [options] [TERM ...]", description="a command line tool for viewing and maintaining a journal")
 	arg_parser.set_defaults(directory="./", ignores=[], ignore_case=True, num_results=0, reverse=False)
 	arg_parser.add_argument("terms",  metavar="TERM", nargs="*", help="pattern which must exist in entries")
 	group = arg_parser.add_argument_group("OPERATIONS")
+	group = group.add_mutually_exclusive_group(required=True)
 	group.add_argument("-A",           dest="action",       action="store_const",  const="archive",  help="archive to datetimed tarball")
 	group.add_argument("-C",           dest="action",       action="store_const",  const="count",    help="count words and entries")
 	group.add_argument("-G",           dest="action",       action="store_const",  const="graph",    help="graph entry references in DOT")
 	group.add_argument("-L",           dest="action",       action="store_const",  const="list",     help="list entry dates")
-	group.add_argument("-S",           dest="action",       action="store_const",  const="show",     help="show entries")
+	group.add_argument("-S",           dest="action",       action="store_const",  const="show",     help="show entry contents")
 	group.add_argument("-T",           dest="action",       action="store_const",  const="tag",      help="create tags file")
 	group.add_argument("-V",           dest="action",       action="store_const",  const="verify",   help="verify journal sanity")
 	group = arg_parser.add_argument_group("INPUT OPTIONS")
 	group.add_argument("--directory",  dest="directory",    action="store",                          help="use journal files in directory")
-	group.add_argument("--ignore",     dest="ignores",      action="append",                         help="ignore specified files")
+	group.add_argument("--ignore",     dest="ignores",      action="append",                         help="ignore specified file")
 	group = arg_parser.add_argument_group("FILTER OPTIONS (APPLY TO -C, -G, -L, and -S)")
 	group.add_argument("-d",           dest="date_range",   action="store",                          help="only use entries in range")
 	group.add_argument("-i",           dest="ignore_case",  action="store_false",                    help="ignore ignore case")
@@ -37,14 +38,10 @@ def main():
 	group.add_argument("-r",           dest="reverse",      action="store_true",                     help="reverse chronological order")
 	args = arg_parser.parse_args()
 
-	errors = []
-	if not args.action:
-		errors.append("no operation specified")
 	if args.date_range and not all(dr and RANGE_REGEX.match(dr) for dr in args.date_range.split(",")):
-		errors.append("option -d/--date must be of the form [YYYY[-MM[-DD]]][:][YYYY[-MM[-DD]]][,...]")
-	if errors:
-		print("\n".join("Error: {}".format(error) for error in errors))
-		exit(1)
+		print("usage: journal.py <operation> [options] [TERM ...]")
+		print("journal.py: error: argument -d: '{}' should be in format [YYYY[-MM[-DD]]][:][YYYY[-MM[-DD]]][,...]".format(args.date_range))
+		exit(2)
 	args.directory = realpath(expanduser(args.directory))
 	args.ignores = set(realpath(expanduser(path)) for path in args.ignores)
 	args.ignore_case = re.IGNORECASE if args.ignore_case else 0

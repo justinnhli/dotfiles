@@ -39,9 +39,7 @@ def main():
 	args = arg_parser.parse_args()
 
 	if args.date_range and not all(dr and RANGE_REGEX.match(dr) for dr in args.date_range.split(",")):
-		print("usage: journal.py <operation> [options] [TERM ...]")
-		print("journal.py: error: argument -d: '{}' should be in format [YYYY[-MM[-DD]]][:][YYYY[-MM[-DD]]][,...]".format(args.date_range))
-		exit(2)
+		arg_parser.error("argument -d: '{}' should be in format [YYYY[-MM[-DD]]][:][YYYY[-MM[-DD]]][,...]".format(args.date_range))
 	args.directory = realpath(expanduser(args.directory))
 	args.ignores = set(realpath(expanduser(path)) for path in args.ignores)
 	args.ignore_case = re.IGNORECASE if args.ignore_case else 0
@@ -55,9 +53,7 @@ def main():
 	else:
 		raw_entries = stdin.read()
 	if not raw_entries:
-		print("usage: journal.py <operation> [options] [TERM ...]")
-		print("journal.py: error: no journal files found or specified")
-		exit(2)
+		arg_parser.error("no journal files found or specified")
 	entries = dict((entry[:10], entry.strip()) for entry in raw_entries.strip().split("\n\n") if entry and DATE_REGEX.match(entry))
 
 	selected = set(entries.keys())

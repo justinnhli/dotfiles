@@ -91,24 +91,23 @@ def main():
 		rmtree(temp_path)
 
 	elif args.action == "count" and selected:
-		col_headers = ("year", "posts", "words", "max", "mean", "freq")
+		col_headers = ("YEAR", "POSTS", "WORDS", "MAX", "MEAN", "FREQ")
 		row_headers = sorted(set(k[:4] for k in selected), reverse=args.reverse) + ["total",]
 		table = []
-		sections = list(list(k for k in selected if k[:4] == year) for year in row_headers[:-1]) + [selected,]
+		sections = list(tuple(k for k in selected if k[:4] == year) for year in row_headers[:-1]) + [selected,]
 		for year, dates in zip(row_headers, sections):
 			posts = len(dates)
-			lengths = list(len(entries[date].split()) for date in dates)
+			lengths = tuple(len(entries[date].split()) for date in dates)
 			words = sum(lengths)
 			longest = max(lengths)
 			mean = round(words / posts)
-			freq = "{:.3f}".format(((Datetime.strptime(dates[-1], "%Y-%m-%d") - Datetime.strptime(dates[0], "%Y-%m-%d")).days + 1) / posts)
-			table.append((year, posts, words, longest, mean, freq))
-		table = list((year, posts, format(words, ",d"), longest, mean, freq) for year, posts, words, longest, mean, freq in table)
-		widths = list(max(len(str(row[col])) for row in ([col_headers,] + table)) for col in range(0, 6))
-		print("  ".join(col.center(widths[i]) for i, col in enumerate(col_headers)).upper())
+			freq = ((Datetime.strptime(dates[-1], "%Y-%m-%d") - Datetime.strptime(dates[0], "%Y-%m-%d")).days + 1) / posts
+			table.append((year, str(posts), format(words, ",d"), str(longest), str(mean), "{:.3f}".format(freq)))
+		widths = list(max(len(row[col]) for row in ([col_headers,] + table)) for col in range(0, len(col_headers)))
+		print("  ".join(col.center(widths[i]) for i, col in enumerate(col_headers)))
 		print("  ".join(width * "-" for width in widths))
 		for row in table:
-			print("  ".join(str(col).rjust(widths[i]) for i, col in enumerate(row)))
+			print("  ".join(col.rjust(widths[i]) for i, col in enumerate(row)))
 
 	elif args.action == "graph" and selected:
 		ref_map = {}

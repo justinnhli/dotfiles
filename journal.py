@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+# TODO standardize variable name when iterating over selected
+
 import re
 from argparse import ArgumentParser
 from datetime import datetime as Datetime
@@ -92,9 +94,9 @@ def main():
 
 	elif args.action == "count":
 		col_headers = ("year", "posts", "words", "max", "mean", "freq")
-		row_headers = sorted(set(key[:4] for key in selected), reverse=args.reverse) + ["total",]
+		row_headers = sorted(set(k[:4] for k in selected), reverse=args.reverse) + ["total",]
 		table = []
-		sections = list(list(key for key in selected if key[:4] == year) for year in row_headers[:-1]) + [selected,]
+		sections = list(list(k for k in selected if k[:4] == year) for year in row_headers[:-1]) + [selected,]
 		for year, dates in zip(row_headers, sections):
 			posts = len(dates)
 			lengths = list(len(entries[date].split()) for date in dates)
@@ -112,11 +114,11 @@ def main():
 
 	elif args.action == "graph":
 		ref_map = {}
-		for key_date in selected:
-			for reference in REF_REGEX.findall(entries[key_date]):
-				if reference != key_date and reference in selected:
+		for k in selected:
+			for reference in REF_REGEX.findall(entries[k]):
+				if reference != k and reference in selected:
 					ref_map.setdefault(reference, set())
-					ref_map[reference].add(key_date[:10])
+					ref_map[reference].add(k[:10])
 		print('digraph {')
 		print('\tgraph [size="48", model="subset", rankdir="BT"];')
 		print()
@@ -135,7 +137,7 @@ def main():
 		print("\n".join(selected))
 
 	elif args.action == "show" and selected:
-		text = "\n\n".join(entries[key] for key in selected)
+		text = "\n\n".join(entries[k] for k in selected)
 		if stdout.isatty():
 			temp_file = mkstemp(".journal")[1]
 			with open(temp_file, "w") as fd:

@@ -90,7 +90,7 @@ def main():
 		cp(filename + ".tbz", cur_path)
 		rmtree(temp_path)
 
-	elif args.action == "count":
+	elif args.action == "count" and selected:
 		col_headers = ("year", "posts", "words", "max", "mean", "freq")
 		row_headers = sorted(set(k[:4] for k in selected), reverse=args.reverse) + ["total",]
 		table = []
@@ -110,7 +110,7 @@ def main():
 		for row in table:
 			print("  ".join(str(col).rjust(widths[i]) for i, col in enumerate(row)))
 
-	elif args.action == "graph":
+	elif args.action == "graph" and selected:
 		ref_map = {}
 		for k in selected:
 			for reference in REF_REGEX.findall(entries[k]):
@@ -131,7 +131,7 @@ def main():
 				print('\t"{}" -> "{}";'.format(src, dest))
 		print('}')
 
-	elif args.action == "list":
+	elif args.action == "list" and selected:
 		print("\n".join(selected))
 
 	elif args.action == "show" and selected:

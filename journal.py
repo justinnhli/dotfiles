@@ -61,10 +61,10 @@ def main():
 		selected -= set(k for k in selected if not re.search(term, entries[k], flags=args.ignore_case))
 	if selected and args.date_range:
 		all_dates = selected
+		first_date = min(all_dates)
+		last_date = max(all_dates)
 		selected = set()
 		for date_range in args.date_range.split(","):
-			first_date = min(all_dates)
-			last_date = max(all_dates)
 			if ":" in date_range:
 				start_date, end_date = date_range.split(":")
 				start_date, end_date = (start_date or first_date, end_date or last_date)

@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
 
-# TODO standardize variable name when iterating over selected
-
 import re
 from argparse import ArgumentParser
 from datetime import datetime as Datetime

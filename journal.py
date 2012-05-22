@@ -94,7 +94,7 @@ def main():
 		col_headers = ("YEAR", "POSTS", "WORDS", "MAX", "MEAN", "FREQ")
 		row_headers = sorted(set(k[:4] for k in selected), reverse=args.reverse) + ["total",]
 		table = []
-		sections = list(tuple(k for k in selected if k[:4] == year) for year in row_headers[:-1]) + [selected,]
+		sections = list(tuple(k for k in selected if k.startswith(year)) for year in row_headers[:-1]) + [selected,]
 		for year, dates in zip(row_headers, sections):
 			posts = len(dates)
 			lengths = tuple(len(entries[date].split()) for date in dates)
@@ -114,8 +114,7 @@ def main():
 		for k in selected:
 			for reference in REF_REGEX.findall(entries[k]):
 				if reference != k and reference in selected:
-					ref_map.setdefault(reference, set())
-					ref_map[reference].add(k[:10])
+					ref_map.setdefault(reference, set()).add(k[:10])
 		print('digraph {')
 		print('\tgraph [size="48", model="subset", rankdir="BT"];')
 		print()

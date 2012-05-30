@@ -95,7 +95,7 @@ def main():
 		if args.num_results:
 			command.append("n {} -".format(args.num_results))
 		with open(searchlog, "a") as fd:
-			fd.write("{}\t{} {}\n".format(Datetime.today().isoformat(" "), re.sub(" -$", "", "".join(command)), "".join(args.terms)))
+			fd.write("{}\t{} {}\n".format(Datetime.today().isoformat(" "), re.sub(" -$", "", "".join(command)), " ".join('"{}"'.format(term) for term in args.terms)))
 
 	if args.action == "archive":
 		filename = "jrnl" + Datetime.now().strftime("%Y%m%d%H%M%S")

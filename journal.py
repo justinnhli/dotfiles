@@ -168,7 +168,7 @@ def main():
 					else:
 						vim_args.extend(["-c", "set noignorecase"])
 					vim_args.extend(["-c", "/\\v[^\t-~]|" + "|".join(("(" + term + ")") for term in args.terms)])
-				vim_args.extend(["-c", ":set nocursorline", "-c", ":set nospell", "-c", ":0"])
+				vim_args.extend(["-c", ":set nospell", "-c", ":0"])
 				execvp("vim", vim_args)
 			else:
 				wait()

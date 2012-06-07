@@ -112,7 +112,7 @@ def main():
 
 	elif args.action == "count" and selected:
 		col_headers = ("YEAR", "POSTS", "WORDS", "MAX", "MEAN", "FREQ")
-		row_headers = sorted(set(k[:4] for k in selected), reverse=args.reverse) + ["total",]
+		row_headers = sorted(set(k[:4] for k in selected), reverse=args.reverse) + ["all",]
 		table = []
 		sections = list(tuple(k for k in selected if k.startswith(year)) for year in row_headers[:-1]) + [selected,]
 		for year, dates in zip(row_headers, sections):

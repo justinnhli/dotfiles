@@ -227,9 +227,9 @@ def main():
 					errors.append(("balanced quotes", cur_date, line))
 				if re.search("[^ -~\t]", line):
 					errors.append(("non-ASCII characters", cur_date, line))
+			elif not DATE_REGEX.match(line):
+				errors.append(("indentation", cur_date, line))
 			else:
-				if not DATE_REGEX.match(line):
-					errors.append(("indentation", cur_date, line))
 				cur_date = Datetime.strptime(line[:10], "%Y-%m-%d")
 				if len(line) > 10 and line != cur_date.strftime("%Y-%m-%d, %A"):
 					errors.append(("date correctness", cur_date, line))

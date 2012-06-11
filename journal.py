@@ -207,6 +207,7 @@ def main():
 		errors = []
 		dates = set()
 		last_indent = 0
+		long_dates = None
 		cur_date = Datetime(1, 1, 1)
 		for line in raw_entries.split("\n"):
 			if not line:
@@ -231,6 +232,10 @@ def main():
 				errors.append(("indentation", cur_date, line))
 			else:
 				cur_date = Datetime.strptime(line[:10], "%Y-%m-%d")
+				if long_dates is None:
+					long_dates = (len(line) > 10)
+				if long_dates != (len(line) > 10):
+					errors.append(("inconsistent date format", cur_date, line))
 				if len(line) > 10 and line != cur_date.strftime("%Y-%m-%d, %A"):
 					errors.append(("date correctness", cur_date, line))
 				if cur_date in dates:

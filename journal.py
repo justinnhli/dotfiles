@@ -77,26 +77,6 @@ def main():
 	if args.num_results > 0:
 		selected = selected[:args.num_results]
 
-	searchlog = "{}/log".format(args.directory)
-	if args.action in ("graph", "list", "show") and file_exists(searchlog):
-		command = []
-		if args.action == "graph":
-			command.append("-G")
-		elif args.action == "list":
-			command.append("-L")
-		elif args.action == "show":
-			command.append("-S")
-		if args.ignore_case != re.IGNORECASE:
-			command.append("i")
-		if args.reverse:
-			command.append("r")
-		if args.date_range:
-			command.append("d {} -".format(args.date_range))
-		if args.num_results:
-			command.append("n {} -".format(args.num_results))
-		with open(searchlog, "a") as fd:
-			fd.write("{}\t{} {}\n".format(Datetime.today().isoformat(" "), re.sub(" -$", "", "".join(command)), " ".join('"{}"'.format(term) for term in args.terms)))
-
 	if args.action == "archive":
 		filename = "jrnl" + Datetime.now().strftime("%Y%m%d%H%M%S")
 		temp_path = mkdtemp()
@@ -153,6 +133,19 @@ def main():
 		print("\n".join(selected))
 
 	elif args.action == "show" and selected:
+		searchlog = "{}/log".format(args.directory)
+		if file_exists(searchlog):
+			command = ["-S",]
+			if args.ignore_case != re.IGNORECASE:
+				command.append("i")
+			if args.reverse:
+				command.append("r")
+			if args.date_range:
+				command.append("d {} -".format(args.date_range))
+			if args.num_results:
+				command.append("n {} -".format(args.num_results))
+			with open(searchlog, "a") as fd:
+				fd.write("{}\t{} {}\n".format(Datetime.today().isoformat(" "), re.sub(" -$", "", "".join(command)), " ".join('"{}"'.format(term) for term in args.terms)))
 		text = "\n\n".join(entries[k] for k in selected)
 		if stdout.isatty():
 			temp_file = mkstemp(".journal")[1]

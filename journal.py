@@ -209,7 +209,7 @@ def main():
 			if indent == 0 and line[0] == " ":
 				errors.append(("non-tab indentation", cur_date, line))
 				indent = len(re.match("^ *", line).group(0))
-			if indent - last_indent > 2:
+			if indent - last_indent > 1:
 				errors.append(("indentation", cur_date, line))
 			if line and line[-1] in ("\t", " "):
 				errors.append(("end of line whitespace", cur_date, line))
@@ -217,8 +217,6 @@ def main():
 			if indent:
 				if not line.startswith("|") and "  " in line:
 					errors.append(("multiple space", cur_date, line))
-				if line.count("\"") % 2:
-					errors.append(("balanced quotes", cur_date, line))
 				if re.search("[^ -~\t]", line):
 					errors.append(("non-ASCII characters", cur_date, line))
 			elif not DATE_REGEX.match(line):

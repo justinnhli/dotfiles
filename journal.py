@@ -238,7 +238,7 @@ def main():
 			if (value.count('"') % 2) != 0:
 				errors.append(("odd quotation marks", Datetime.strptime(key, "%Y-%m-%d"), re.sub("^.*\n", "", value)))
 		if errors:
-			print("\n".join("{} ({}): \"{}...\"".format(error, date.strftime("%Y-%m-%d"), line.strip()[:20]) for error, date, line in errors))
+			print("\n".join("{} ({}): \"{}...\"".format(error, date.strftime("%Y-%m-%d"), re.sub("[\n\t]", " ", line.strip()[:20])) for error, date, line in errors))
 
 if __name__ == "__main__":
 	main()

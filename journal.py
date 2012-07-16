@@ -234,6 +234,9 @@ def main():
 				else:
 					dates.add(cur_date)
 			last_indent = indent
+		for key, value in entries.items():
+			if (value.count('"') % 2) != 0:
+				errors.append(("odd quotation marks", Datetime.strptime(key, "%Y-%m-%d"), re.sub("^.*\n", "", value)))
 		if errors:
 			print("\n".join("{} ({}): \"{}...\"".format(error, date.strftime("%Y-%m-%d"), line.strip()[:20]) for error, date, line in errors))
 

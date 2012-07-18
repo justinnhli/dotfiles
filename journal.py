@@ -213,26 +213,28 @@ def main():
 				errors.append(("indentation", cur_date, line))
 			if line and line[-1] in ("\t", " "):
 				errors.append(("end of line whitespace", cur_date, line))
+			if re.search("[^\t]\t", line):
+				errprs.append(("mid-line tab", cur_date, line))
+			if re.search("[^ -~\t]", line):
+				errors.append(("non-ASCII characters", cur_date, line))
 			line = line.strip()
-			if indent:
-				if not line.startswith("|") and "  " in line:
-					errors.append(("multiple space", cur_date, line))
-				if re.search("[^ -~\t]", line):
-					errors.append(("non-ASCII characters", cur_date, line))
-			elif not DATE_REGEX.match(line):
-				errors.append(("indentation", cur_date, line))
-			else:
-				cur_date = Datetime.strptime(line[:10], "%Y-%m-%d")
-				if long_dates is None:
-					long_dates = (len(line) > 10)
-				if long_dates != (len(line) > 10):
-					errors.append(("inconsistent date format", cur_date, line))
-				if len(line) > 10 and line != cur_date.strftime("%Y-%m-%d, %A"):
-					errors.append(("date correctness", cur_date, line))
-				if cur_date in dates:
-					errors.append(("duplicate dates", cur_date, line))
+			if not line.startswith("|") and "  " in line:
+				errors.append(("multiple spaces", cur_date, line))
+			if indent == 0:
+				if not DATE_REGEX.match(line):
+					errors.append(("indentation", cur_date, line))
 				else:
-					dates.add(cur_date)
+					cur_date = Datetime.strptime(line[:10], "%Y-%m-%d")
+					if long_dates is None:
+						long_dates = (len(line) > 10)
+					if long_dates != (len(line) > 10):
+						errors.append(("inconsistent date format", cur_date, line))
+					if len(line) > 10 and line != cur_date.strftime("%Y-%m-%d, %A"):
+						errors.append(("date correctness", cur_date, line))
+					if cur_date in dates:
+						errors.append(("duplicate dates", cur_date, line))
+					else:
+						dates.add(cur_date)
 			last_indent = indent
 		for key, value in entries.items():
 			if (value.count('"') % 2) != 0:

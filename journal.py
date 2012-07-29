@@ -214,7 +214,7 @@ def main():
 			if line and line[-1] in ("\t", " "):
 				errors.append(("end of line whitespace", cur_date, line))
 			if re.search("[^\t]\t", line):
-				errprs.append(("mid-line tab", cur_date, line))
+				errors.append(("mid-line tab", cur_date, line))
 			if re.search("[^ -~\t]", line):
 				errors.append(("non-ASCII characters", cur_date, line))
 			line = line.strip()

@@ -199,7 +199,7 @@ def main():
 	elif args.action == "verify":
 		errors = []
 		dates = set()
-		last_indent = 0
+		prev_indent = 0
 		long_dates = None
 		cur_date = Datetime(1, 1, 1)
 		for line in raw_entries.split("\n"):
@@ -209,7 +209,7 @@ def main():
 			if indent == 0 and line[0] == " ":
 				errors.append(("non-tab indentation", cur_date, line))
 				indent = len(re.match("^ *", line).group(0))
-			if indent - last_indent > 1:
+			if indent - prev_indent > 1:
 				errors.append(("indentation", cur_date, line))
 			if line and line[-1] in ("\t", " "):
 				errors.append(("end of line whitespace", cur_date, line))
@@ -235,7 +235,7 @@ def main():
 						errors.append(("duplicate dates", cur_date, line))
 					else:
 						dates.add(cur_date)
-			last_indent = indent
+			prev_indent = indent
 		for key, value in entries.items():
 			if (value.count('"') % 2) != 0:
 				errors.append(("odd quotation marks", Datetime.strptime(key, "%Y-%m-%d"), re.sub("^.*\n", "", value)))

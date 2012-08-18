@@ -46,7 +46,8 @@ def main():
 
 	if stdin.isatty():
 		file_entries = []
-		for journal in sorted(set("{}/{}".format(args.directory, f) for f in ls(args.directory) if f.endswith(".journal")) - args.ignores):
+		files = set(f for f in ls(args.directory) if not f.startswith(".") and f.endswith(".journal"))
+		for journal in sorted(set("{}/{}".format(args.directory, f) for f in files) - args.ignores):
 			with open(journal, "r") as fd:
 				file_entries.append(fd.read().strip())
 		raw_entries = "\n\n".join(file_entries)

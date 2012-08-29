@@ -11,7 +11,6 @@ from sys import stdin, stdout, argv
 from tempfile import mkdtemp, mkstemp
 
 DATE_REGEX = re.compile("([0-9]{4}-[0-9]{2}-[0-9]{2})(, (Mon|Tues|Wednes|Thurs|Fri|Satur|Sun)day)?")
-BIB_REGEX = re.compile("@[a-z]*{(.*),$")
 RANGE_REGEX = re.compile("^([0-9]{4}(-[0-9]{2}(-[0-9]{2})?)?)?:?([0-9]{4}(-[0-9]{2}(-[0-9]{2})?)?)?$")
 REF_REGEX = re.compile("([0-9]{4}-[0-9]{2}-[0-9]{2})")
 
@@ -185,14 +184,6 @@ def main():
 				if DATE_REGEX.match(line):
 					tag = line[:10]
 					tags[tag] = (tag, relpath(journal, args.directory), line_number + 1)
-		for bibtex in (set("{}/{}".format(args.directory, f) for f in ls(args.directory) if f.endswith(".bib")) - args.ignores):
-			with open(bibtex, "r") as fd:
-				text = fd.read()
-			for line_number, line in enumerate(text.split("\n")):
-				match = BIB_REGEX.match(line)
-				if match:
-					tag = match.group(1)
-					tags[tag] = (tag, relpath(bibtex, args.directory), line_number + 1)
 		with open(tags_path, "w") as fd:
 			fd.write("\n".join("{}\t{}\t{}".format(*tag) for tag in sorted(tags.values())))
 			fd.write("\n")

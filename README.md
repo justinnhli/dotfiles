@@ -9,16 +9,15 @@ NAME
 DESCRIPTION
 -----------
 
-`journal.py` is a tool to archive, search through, calculate statistics
-on, verify, and create tags for a plain text journal. It expects journal
-files to have the extension `.journal` and the contents to conform to a
-(loose) syntax. Entries start with unindented dates in the form `YYYY-MM-DD`,
-optionally followed by "`, WEEKDAY`" (without quotes).  Entry contents
-starts on the next line, indented by at least one tab.  Each line is a
-paragraph; consecutive lines must either be indented by the same level,
-by one more level, or by arbitrarily fewer levels (down to one) than
-the previous line. An empty line is required between entries.  For
-example:
+`journal.py` is a tool to archive, search through, calculate statistics on,
+verify, and create tags for a plain text journal. It expects journal files to
+have the extension `.journal` and the contents to conform to a (loose) syntax.
+Entries start with unindented dates in the form `YYYY-MM-DD`, optionally
+followed by `, WEEKDAY`. Entry contents starts on the next line, indented by at
+least one tab. Each line is a paragraph; consecutive lines must either be
+indented by the same level, by one more level, or by arbitrarily fewer levels
+(down to one) than the previous line. An empty line is required between entries.
+For example:
 
     2012-03-29, Thursday
         This is the first paragraph.

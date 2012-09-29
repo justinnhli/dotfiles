@@ -62,7 +62,7 @@ def main():
 	if selected and args.date_range:
 		all_dates = selected
 		first_date = min(all_dates)
-		last_date = max(all_dates)
+		last_date = (datetime.strptime(max(all_dates), "%Y-%m-%d") + timedelta(days=1)).strftime("%Y-%m-%d")
 		selected = set()
 		for date_range in args.date_range.split(","):
 			if ":" in date_range:

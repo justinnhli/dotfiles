@@ -2,7 +2,7 @@
 
 import re
 from argparse import ArgumentParser
-from datetime import datetime as Datetime
+from datetime import datetime, timedelta
 from os import chdir as cd, chmod, execvp, fork, getcwd as pwd, listdir as ls, remove as rm, system, wait
 from os.path import exists as file_exists, expanduser, realpath, relpath
 from shutil import copy as cp, copytree, ignore_patterns, rmtree
@@ -78,7 +78,7 @@ def main():
 		selected = selected[:args.num_results]
 
 	if args.action == "archive":
-		filename = "jrnl" + Datetime.now().strftime("%Y%m%d%H%M%S")
+		filename = "jrnl" + datetime.now().strftime("%Y%m%d%H%M%S")
 		temp_path = mkdtemp()
 		copytree(args.directory, temp_path + "/" + filename, ignore=ignore_patterns(".*"))
 		cp(argv[0], temp_path + "/" + filename)
@@ -101,7 +101,7 @@ def main():
 			words = sum(lengths)
 			longest = max(lengths)
 			mean = round(words / posts)
-			freq = ((Datetime.strptime(dates[-1], "%Y-%m-%d") - Datetime.strptime(dates[0], "%Y-%m-%d")).days + 1) / posts
+			freq = ((datetime.strptime(dates[-1], "%Y-%m-%d") - datetime.strptime(dates[0], "%Y-%m-%d")).days + 1) / posts
 			table.append((year, str(posts), format(words, ",d"), str(longest), str(mean), "{:.3f}".format(freq)))
 		widths = list(max(len(row[col]) for row in ([col_headers,] + table)) for col in range(0, len(col_headers)))
 		print("  ".join(col.center(widths[i]) for i, col in enumerate(col_headers)))
@@ -145,7 +145,7 @@ def main():
 			if args.num_results:
 				command.append("n {} -".format(args.num_results))
 			with open(searchlog, "a") as fd:
-				fd.write("{}\t{} {}\n".format(Datetime.today().isoformat(" "), re.sub(" -$", "", "".join(command)), " ".join('"{}"'.format(term) for term in args.terms)))
+				fd.write("{}\t{} {}\n".format(datetime.today().isoformat(" "), re.sub(" -$", "", "".join(command)), " ".join('"{}"'.format(term) for term in args.terms)))
 		text = "\n\n".join(entries[k] for k in selected)
 		if stdout.isatty():
 			temp_file = mkstemp(".journal")[1]
@@ -193,7 +193,7 @@ def main():
 		dates = set()
 		prev_indent = 0
 		long_dates = None
-		cur_date = Datetime(1, 1, 1)
+		cur_date = datetime(1, 1, 1)
 		for line in raw_entries.split("\n"):
 			if not line:
 				continue
@@ -216,7 +216,7 @@ def main():
 				if not DATE_REGEX.match(line):
 					errors.append(("indentation", cur_date, line))
 				else:
-					cur_date = Datetime.strptime(line[:10], "%Y-%m-%d")
+					cur_date = datetime.strptime(line[:10], "%Y-%m-%d")
 					if long_dates is None:
 						long_dates = (len(line) > 10)
 					if long_dates != (len(line) > 10):
@@ -230,7 +230,7 @@ def main():
 			prev_indent = indent
 		for key, value in entries.items():
 			if (value.count('"') % 2) != 0:
-				errors.append(("odd quotation marks", Datetime.strptime(key, "%Y-%m-%d"), re.sub("^.*\n", "", value)))
+				errors.append(("odd quotation marks", datetime.strptime(key, "%Y-%m-%d"), re.sub("^.*\n", "", value)))
 		if errors:
 			print("\n".join("{} ({}): \"{}...\"".format(error, date.strftime("%Y-%m-%d"), re.sub("[\n\t]", " ", line.strip()[:20])) for error, date, line in errors))
 

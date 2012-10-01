@@ -119,11 +119,11 @@ def main():
 		print('\tgraph [size="48", model="subset", rankdir="BT"];')
 		print()
 		print('\t// NODES')
-		print('\tnode [fontcolor="#3465A4", shape="none"];')
+		print('\tnode [fontcolor="#4E9A06", shape="none"];')
 		print('\n'.join('\t"{}" [fontsize="{}"];'.format(dest, len(entries[dest].split()) / 100) for dest in ref_map))
 		print()
 		print('\t// EDGES')
-		print('\tedge [color="#888A85"];')
+		print('\tedge [color="#555753"];')
 		for dest in ref_map:
 			for src in ref_map[dest]:
 				print('\t"{}" -> "{}";'.format(src, dest))

@@ -70,7 +70,7 @@ def main():
 				start_date, end_date = (start_date or first_date, end_date or last_date)
 				start_date += "-01" * int((10 - len(start_date)) / 2)
 				end_date += "-01" * int((10 - len(end_date)) / 2)
-				selected |= set(k for k in all_dates if (start_date <= k and k < end_date))
+				selected |= set(k for k in all_dates if (start_date <= k < end_date))
 			else:
 				selected |= set(k for k in all_dates if k.startswith(date_range))
 	selected = sorted(selected, reverse=args.reverse)

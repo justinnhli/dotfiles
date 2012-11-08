@@ -126,7 +126,8 @@ def main():
 		print('\tedge [color="#555753"];')
 		for dest in ref_map:
 			for src in ref_map[dest]:
-				print('\t"{}" -> "{}";'.format(src, dest))
+				if src > dest:
+					print('\t"{}" -> "{}";'.format(src, dest))
 		print('}')
 
 	elif args.action == "list" and selected:

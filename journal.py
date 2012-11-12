@@ -32,13 +32,17 @@ def main():
 	group.add_argument("--ignore",     dest="ignores",      action="append",                         help="ignore specified file")
 	group = arg_parser.add_argument_group("FILTER OPTIONS (APPLY TO -C, -G, -L, and -S)")
 	group.add_argument("-d",           dest="date_range",   action="store",                          help="only use entries in range")
+	group.add_argument("-g",           dest="genealogy",    action="store",                          help="only use entries in reference genealogy")
 	group.add_argument("-i",           dest="ignore_case",  action="store_false",                    help="ignore ignore case")
 	group.add_argument("-n",           dest="num_results",  action="store",        type=int,         help="max number of results")
+	group = arg_parser.add_argument_group("OUTPUT OPTIONS")
 	group.add_argument("-r",           dest="reverse",      action="store_true",                     help="reverse chronological order")
 	args = arg_parser.parse_args()
 
 	if args.date_range and not all(dr and RANGE_REGEX.match(dr) for dr in args.date_range.split(",")):
 		arg_parser.error("argument -d: '{}' should be in format [YYYY[-MM[-DD]]][:][YYYY[-MM[-DD]]][,...]".format(args.date_range))
+	if args.genealogy and not REF_REGEX.match(args.genealogy):
+		arg_parser.error("argument -g: '{}' should be in format YYYY-MM-DD".format(args.genealogy))
 	args.directory = realpath(expanduser(args.directory))
 	args.ignores = set(realpath(expanduser(path)) for path in args.ignores)
 	args.ignore_case = re.IGNORECASE if args.ignore_case else 0
@@ -73,6 +77,26 @@ def main():
 				selected |= set(k for k in all_dates if (start_date <= k < end_date))
 			else:
 				selected |= set(k for k in all_dates if k.startswith(date_range))
+	if selected and (args.action == "graph" or args.genealogy):
+		ref_src_map = {}
+		ref_dest_map = {}
+		for src in selected:
+			for dest in REF_REGEX.findall(entries[src]):
+				if src > dest and dest in selected:
+					ref_src_map.setdefault(src, set()).add(dest)
+					ref_dest_map.setdefault(dest, set()).add(src)
+		if args.genealogy:
+			all_dates = selected
+			queue = set([args.genealogy,])
+			selected = set()
+			while queue:
+				date = queue.pop()
+				if date in all_dates:
+					selected.add(date)
+					if date <= args.genealogy and date in ref_src_map:
+						queue |= (ref_src_map[date] - selected)
+					if date >= args.genealogy and date in ref_dest_map:
+						queue |= (ref_dest_map[date] - selected)
 	selected = sorted(selected, reverse=args.reverse)
 	if args.num_results > 0:
 		selected = selected[:args.num_results]
@@ -110,24 +134,20 @@ def main():
 			print("  ".join(col.rjust(widths[i]) for i, col in enumerate(row)))
 
 	elif args.action == "graph" and selected:
-		ref_map = {}
-		for k in selected:
-			for reference in REF_REGEX.findall(entries[k]):
-				if reference != k and reference in selected:
-					ref_map.setdefault(reference, set()).add(k[:10])
 		print('digraph {')
 		print('\tgraph [size="48", model="subset", rankdir="BT"];')
 		print()
 		print('\t// NODES')
 		print('\tnode [fontcolor="#4E9A06", shape="none"];')
-		print('\n'.join('\t"{}" [fontsize="{}"];'.format(dest, len(entries[dest].split()) / 100) for dest in ref_map))
+		print('\n'.join('\t"{}" [fontsize="{}"];'.format(node, len(entries[node].split()) / 100) for node in selected))
 		print()
 		print('\t// EDGES')
 		print('\tedge [color="#555753"];')
-		for dest in ref_map:
-			for src in ref_map[dest]:
-				if src > dest:
-					print('\t"{}" -> "{}";'.format(src, dest))
+		for src in selected:
+			if src in ref_src_map:
+				for dest in sorted(ref_src_map[src], reverse=args.reverse):
+					if dest in selected:
+						print('\t"{}" -> "{}";'.format(src, dest))
 		print('}')
 
 	elif args.action == "list" and selected:

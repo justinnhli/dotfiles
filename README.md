@@ -58,8 +58,11 @@ OPTIONS
 
 	FILTER OPTIONS (APPLY TO -C, -G, -L, and -S):
 	  -d DATE_RANGE         only use entries in range
+	  -g GENEALOGY          only use entries in reference genealogy
 	  -i                    ignore ignore case
 	  -n NUM_RESULTS        max number of results
+
+	OUTPUT OPTIONS:
 	  -r                    reverse chronological order
 
 BUGS

@@ -226,6 +226,8 @@ def main():
 				errors.append(("indentation", cur_date, line))
 			if line and line[-1] in ("\t", " "):
 				errors.append(("end of line whitespace", cur_date, line))
+			if re.search("\t ", line):
+				errors.append(("mixed tab/space indentation", cur_date, line))
 			if re.search("[^\t]\t", line):
 				errors.append(("mid-line tab", cur_date, line))
 			if re.search("[^ -~\t]", line):

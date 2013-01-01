@@ -181,7 +181,7 @@ def main():
 						vim_args[-1] += " nosmartcase"
 					else:
 						vim_args[-1] += " noignorecase"
-					vim_args.extend(["-c", "let @/='\\v" + "|".join(("(" + term + ")") for term in args.terms) + "'"])
+					vim_args.extend(["-c", "let @/=\"\\\\v" + "|".join(("(" + term + ")") for term in args.terms).replace('"', r'\"') + "\""])
 				execvp("vim", vim_args)
 			else:
 				wait()

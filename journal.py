@@ -175,14 +175,13 @@ def main():
 			chmod(temp_file, S_IRUSR)
 			if fork() == 0:
 				cd(args.directory)
-				vim_args = ["vim", temp_file]
+				vim_args = ["vim", temp_file, "-c", "set hlsearch nospell"]
 				if args.terms:
 					if args.ignore_case:
-						vim_args.extend(["-c", "set nosmartcase"])
+						vim_args[-1] += " nosmartcase"
 					else:
-						vim_args.extend(["-c", "set noignorecase"])
-					vim_args.extend(["-c", "/\\v" + "|".join(("(" + term + ")") for term in args.terms)])
-				vim_args.extend(["-c", ":set nospell", "-c", ":0"])
+						vim_args[-1] += " noignorecase"
+					vim_args.extend(["-c", "let @/='\\v" + "|".join(("(" + term + ")") for term in args.terms) + "'"])
 				execvp("vim", vim_args)
 			else:
 				wait()

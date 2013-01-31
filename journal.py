@@ -5,7 +5,7 @@ import tarfile
 from argparse import ArgumentParser
 from datetime import datetime, timedelta
 from os import chdir as cd, chmod, execvp, fork, listdir as ls, remove as rm, wait
-from os.path import basename, exists as file_exists, expanduser, realpath, relpath
+from os.path import basename, exists as file_exists, expanduser, realpath
 from stat import S_IRUSR
 from sys import stdin, stdout, argv
 from tempfile import mkstemp
@@ -43,6 +43,8 @@ if args.genealogy and not REF_REGEX.match(args.genealogy):
 	arg_parser.error("argument -g: '{}' should be in format YYYY-MM-DD".format(args.genealogy))
 args.directory = realpath(expanduser(args.directory))
 args.ignores = set(realpath(expanduser(path)) for path in args.ignores)
+if not stdin.isatty() and args.action in ("archive", "tag", "verify"):
+	arg_parser.error("argument -[ATV]: operation can only be performed on files")
 
 if stdin.isatty():
 	file_entries = []
@@ -54,7 +56,7 @@ if stdin.isatty():
 else:
 	raw_entries = stdin.read()
 if not raw_entries:
-	arg_parser.error("no journal files found or specified")
+	arg_parser.error("no journal entries found or specified")
 entries = dict((entry[:10], entry.strip()) for entry in raw_entries.strip().split("\n\n") if entry and DATE_REGEX.match(entry))
 
 selected = set(entries.keys())
@@ -180,18 +182,15 @@ elif args.action == "show" and selected:
 		print(text)
 
 elif args.action == "tag":
-	if not stdin.isatty():
-		print("Error: tags file can only be created if input is from files")
-		exit(1)
 	tags = {}
 	for journal in journal_files:
-		relative_path = relpath(journal, args.directory)
+		base_name = basename(journal)
 		with open(journal, "r") as fd:
 			text = fd.read()
-		for line_number, line in enumerate(text.split("\n"), start=1):
+		for line_number, line in enumerate(text.splitlines(), start=1):
 			if DATE_REGEX.match(line):
 				tag = line[:10]
-				tags[tag] = (tag, relative_path, line_number)
+				tags[tag] = (tag, base_name, line_number)
 	tags_path = "{}/tags".format(args.directory)
 	if file_exists(tags_path):
 		rm(tags_path)
@@ -203,45 +202,46 @@ elif args.action == "verify":
 	dates = set()
 	prev_indent = 0
 	long_dates = None
-	cur_date = datetime(1, 1, 1)
-	for line in raw_entries.split("\n"):
-		if not line:
-			continue
-		indent = len(re.match("^\t*", line).group(0))
-		if indent == 0 and line[0] == " ":
-			errors.append(("non-tab indentation", cur_date, line))
-			indent = len(re.match("^ *", line).group(0))
-		if indent - prev_indent > 1:
-			errors.append(("indentation", cur_date, line))
-		if line and line[-1] in ("\t", " "):
-			errors.append(("end of line whitespace", cur_date, line))
-		if re.search("\t ", line):
-			errors.append(("mixed tab/space indentation", cur_date, line))
-		if re.search("[^\t]\t", line):
-			errors.append(("mid-line tab", cur_date, line))
-		if re.search("[^ -~\t]", line):
-			errors.append(("non-ASCII characters", cur_date, line))
-		line = line.strip()
-		if not line.startswith("|") and "  " in line:
-			errors.append(("multiple spaces", cur_date, line))
-		if indent == 0:
-			if not DATE_REGEX.match(line):
-				errors.append(("indentation", cur_date, line))
-			else:
-				cur_date = datetime.strptime(line[:10], "%Y-%m-%d")
-				if long_dates is None:
-					long_dates = (len(line) > 10)
-				if long_dates != (len(line) > 10):
-					errors.append(("inconsistent date format", cur_date, line))
-				if len(line) > 10 and line != cur_date.strftime("%Y-%m-%d, %A"):
-					errors.append(("date correctness", cur_date, line))
-				if cur_date in dates:
-					errors.append(("duplicate dates", cur_date, line))
-				else:
+	for journal in journal_files:
+		with open(journal, "r") as fd:
+			text = fd.read()
+		for line_number, line in enumerate(text.splitlines(), start=1):
+			if not line:
+				continue
+			indent = len(re.match("\t*", line).group(0))
+			if indent == 0 and line[0] == " ":
+				errors.append((journal, line_number, "non-tab indentation"))
+				indent = len(re.match(" *", line).group(0))
+			if indent - prev_indent > 1:
+				errors.append((journal, line_number, "indentation"))
+			if line and line[-1] in ("\t", " "):
+				errors.append((journal, line_number, "end of line whitespace"))
+			if re.search("\t ", line):
+				errors.append((journal, line_number, "mixed tab/space indentation"))
+			if re.search("[^\t]\t", line):
+				errors.append((journal, line_number, "mid-line tab"))
+			if re.search("[^ -~\t]", line):
+				errors.append((journal, line_number, "non-ASCII characters"))
+			line = line.strip()
+			if not line.startswith("|") and "  " in line:
+				errors.append((journal, line_number, "multiple spaces"))
+			if indent == 0:
+				if DATE_REGEX.match(line):
+					cur_date = datetime.strptime(line[:10], "%Y-%m-%d")
+					if long_dates is None:
+						long_dates = (len(line) > 10)
+					if long_dates != (len(line) > 10):
+						errors.append((journal, line_number, "inconsistent date format"))
+					if len(line) > 10 and line != cur_date.strftime("%Y-%m-%d, %A"):
+						errors.append((journal, line_number, "date correctness"))
+					if cur_date in dates:
+						errors.append((journal, line_number, "duplicate dates"))
 					dates.add(cur_date)
-		prev_indent = indent
+				else:
+					errors.append((journal, line_number, "indentation"))
+			prev_indent = indent
+	if errors:
+		print("\n".join("{}:{}: {}".format(*error) for error in errors))
 	for key, value in entries.items():
 		if (value.count('"') % 2) != 0:
 			errors.append(("odd quotation marks", datetime.strptime(key, "%Y-%m-%d"), re.sub("^.*\n", "", value)))
-	if errors:
-		print("\n".join("{} ({}): \"{}...\"".format(error, date.strftime("%Y-%m-%d"), re.sub("[\n\t]", " ", line.strip()[:20])) for error, date, line in errors))

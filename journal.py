@@ -125,7 +125,7 @@ elif args.action == "count" and selected:
 
 elif args.action == "graph" and selected:
 	print('digraph {')
-	print('\tgraph [size="48", model="subset", rankdir="BT"];')
+	print('\tgraph [size="48", model="subset", rankdir="{}"];'.format('TB' if args.reverse else 'BT'))
 	print()
 	print('\t// NODES')
 	print('\tnode [fontcolor="#4E9A06", shape="none"];')
@@ -133,11 +133,9 @@ elif args.action == "graph" and selected:
 	print()
 	print('\t// EDGES')
 	print('\tedge [color="#555753"];')
-	for src in selected:
-		if src in ref_src_map:
-			for dest in sorted(ref_src_map[src], reverse=args.reverse):
-				if dest in selected:
-					print('\t"{}" -> "{}";'.format(src, dest))
+	for src, dests in sorted(ref_src_map.items(), reverse=args.reverse):
+		for dest in sorted(dests, reverse=args.reverse):
+			print('\t"{}" -> "{}";'.format(src, dest))
 	print('}')
 
 elif args.action == "list" and selected:

@@ -56,7 +56,7 @@ OPTIONS
 							use journal files in directory
 	  --ignore IGNORES      ignore specified file
 
-	FILTER OPTIONS (APPLY TO -C, -G, -L, and -S):
+	FILTER OPTIONS (APPLIES TO -[CGLS]):
 	  -d DATE_RANGE         only use entries in range
 	  -g GENEALOGY          only use entries in reference genealogy
 	  -i                    ignore ignore case

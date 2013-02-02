@@ -28,7 +28,7 @@ group.add_argument("-V",           dest="action",       action="store_const",  c
 group = arg_parser.add_argument_group("INPUT OPTIONS")
 group.add_argument("--directory",  dest="directory",    action="store",                          help="use journal files in directory")
 group.add_argument("--ignore",     dest="ignores",      action="append",                         help="ignore specified file")
-group = arg_parser.add_argument_group("FILTER OPTIONS (APPLY TO -C, -G, -L, and -S)")
+group = arg_parser.add_argument_group("FILTER OPTIONS (APPLIES TO -[CGLS])")
 group.add_argument("-d",           dest="date_range",   action="store",                          help="only use entries in range")
 group.add_argument("-g",           dest="genealogy",    action="store",                          help="only use entries in reference genealogy")
 group.add_argument("-i",           dest="ignore_case",  action="store_const",  const=False,      help="ignore ignore case")
@@ -41,10 +41,10 @@ if args.date_range and not all(dr and RANGE_REGEX.match(dr) for dr in args.date_
 	arg_parser.error("argument -d: '{}' should be in format [YYYY[-MM[-DD]]][:][YYYY[-MM[-DD]]][,...]".format(args.date_range))
 if args.genealogy and not REF_REGEX.match(args.genealogy):
 	arg_parser.error("argument -g: '{}' should be in format YYYY-MM-DD".format(args.genealogy))
-args.directory = realpath(expanduser(args.directory))
-args.ignores = set(realpath(expanduser(path)) for path in args.ignores)
 if not stdin.isatty() and args.action in ("archive", "tag", "verify"):
 	arg_parser.error("argument -[ATV]: operation can only be performed on files")
+args.directory = realpath(expanduser(args.directory))
+args.ignores = set(realpath(expanduser(path)) for path in args.ignores)
 
 if stdin.isatty():
 	file_entries = []

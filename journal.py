@@ -71,14 +71,6 @@ if selected and args.date_range:
 			selected = set(k for k in selected if (start_date <= k < end_date))
 		else:
 			selected = set(k for k in selected if k.startswith(date_range))
-if selected and args.action == "graph":
-	ref_src_map = {}
-	ref_dest_map = {}
-	for src in selected:
-		for dest in REF_REGEX.findall(entries[src]):
-			if src > dest and dest in selected:
-				ref_src_map.setdefault(src, set()).add(dest)
-				ref_dest_map.setdefault(dest, set()).add(src)
 selected = sorted(selected, reverse=args.reverse)
 if args.num_results > 0:
 	selected = selected[:args.num_results]
@@ -118,9 +110,14 @@ elif args.action == "graph" and selected:
 	print()
 	print('\t// EDGES')
 	print('\tedge [color="#555753"];')
-	for src, dests in sorted(ref_src_map.items(), reverse=args.reverse):
-		for dest in sorted(dests, reverse=args.reverse):
+	ancestors = {}
+	for src in sorted(selected):
+		dests = set(dest for dest in REF_REGEX.findall(entries[src]) if src > dest and dest in selected)
+		ancestors[src] = set().union(*(ancestors.get(parent, set()) for parent in dests))
+		parents = dests - ancestors[src]
+		for dest in sorted(parents, reverse=args.reverse):
 			print('\t"{}" -> "{}";'.format(src, dest))
+		ancestors[src] |= parents
 	print('}')
 
 elif args.action == "list" and selected:

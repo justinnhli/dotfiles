@@ -58,7 +58,6 @@ OPTIONS
 
 	FILTER OPTIONS (APPLIES TO -[CGLS]):
 	  -d DATE_RANGE         only use entries in range
-	  -g GENEALOGY          only use entries in reference genealogy
 	  -i                    ignore ignore case
 	  -n NUM_RESULTS        max number of results
 

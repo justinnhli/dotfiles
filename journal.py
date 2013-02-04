@@ -30,7 +30,6 @@ group.add_argument("--directory",  dest="directory",    action="store",         
 group.add_argument("--ignore",     dest="ignores",      action="append",                         help="ignore specified file")
 group = arg_parser.add_argument_group("FILTER OPTIONS (APPLIES TO -[CGLS])")
 group.add_argument("-d",           dest="date_range",   action="store",                          help="only use entries in range")
-group.add_argument("-g",           dest="genealogy",    action="store",                          help="only use entries in reference genealogy")
 group.add_argument("-i",           dest="ignore_case",  action="store_const",  const=False,      help="ignore ignore case")
 group.add_argument("-n",           dest="num_results",  action="store",        type=int,         help="max number of results")
 group = arg_parser.add_argument_group("OUTPUT OPTIONS")
@@ -39,8 +38,6 @@ args = arg_parser.parse_args()
 
 if args.date_range and not all(dr and RANGE_REGEX.match(dr) for dr in args.date_range.split(",")):
 	arg_parser.error("argument -d: '{}' should be in format [YYYY[-MM[-DD]]][:][YYYY[-MM[-DD]]][,...]".format(args.date_range))
-if args.genealogy and not REF_REGEX.match(args.genealogy):
-	arg_parser.error("argument -g: '{}' should be in format YYYY-MM-DD".format(args.genealogy))
 if not stdin.isatty() and args.action in ("archive", "tag", "verify"):
 	arg_parser.error("argument -[ATV]: operation can only be performed on files")
 args.directory = realpath(expanduser(args.directory))
@@ -74,7 +71,7 @@ if selected and args.date_range:
 			selected = set(k for k in selected if (start_date <= k < end_date))
 		else:
 			selected = set(k for k in selected if k.startswith(date_range))
-if selected and (args.action == "graph" or args.genealogy):
+if selected and args.action == "graph":
 	ref_src_map = {}
 	ref_dest_map = {}
 	for src in selected:
@@ -82,18 +79,6 @@ if selected and (args.action == "graph" or args.genealogy):
 			if src > dest and dest in selected:
 				ref_src_map.setdefault(src, set()).add(dest)
 				ref_dest_map.setdefault(dest, set()).add(src)
-	if args.genealogy:
-		all_dates = selected
-		queue = set([args.genealogy,])
-		selected = set()
-		while queue:
-			date = queue.pop()
-			if date in all_dates:
-				selected.add(date)
-				if date <= args.genealogy and date in ref_src_map:
-					queue |= (ref_src_map[date] - selected)
-				if date >= args.genealogy and date in ref_dest_map:
-					queue |= (ref_dest_map[date] - selected)
 selected = sorted(selected, reverse=args.reverse)
 if args.num_results > 0:
 	selected = selected[:args.num_results]
@@ -151,8 +136,6 @@ elif args.action == "show" and selected:
 			command.append("r")
 		if args.date_range:
 			command.append("d {} -".format(args.date_range))
-		if args.genealogy:
-			command.append("g {} -".format(args.genealogy))
 		if args.num_results:
 			command.append("n {} -".format(args.num_results))
 		with open(searchlog, "a") as fd:

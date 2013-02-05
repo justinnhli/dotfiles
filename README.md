@@ -58,7 +58,7 @@ OPTIONS
 
 	FILTER OPTIONS (APPLIES TO -[CGLS]):
 	  -d DATE_RANGE         only use entries in range
-	  -i                    ignore ignore case
+	  -i                    case insensitive match
 	  -n NUM_RESULTS        max number of results
 
 	OUTPUT OPTIONS:

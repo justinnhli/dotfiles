@@ -143,7 +143,10 @@ elif args.action == "show" and selected:
 		with open(temp_file, "w") as fd:
 			fd.write(text)
 		chmod(temp_file, S_IRUSR)
-		if fork() == 0:
+		if fork():
+			wait()
+			rm(temp_file)
+		else:
 			cd(args.directory)
 			vim_args = ["vim", temp_file, "-c", "set hlsearch nospell"]
 			if args.terms:
@@ -151,11 +154,8 @@ elif args.action == "show" and selected:
 					vim_args[-1] += " nosmartcase"
 				else:
 					vim_args[-1] += " noignorecase"
-				vim_args.extend(["-c", "let @/=\"\\\\v" + "|".join(("(" + term + ")") for term in args.terms).replace('"', r'\"') + "\""])
+				vim_args.extend(["-c", "let @/=\"\\\\v" + "|".join("({})".format(term) for term in args.terms).replace('"', r'\"') + "\""])
 			execvp("vim", vim_args)
-		else:
-			wait()
-			rm(temp_file)
 	else:
 		print(text)
 
@@ -221,5 +221,5 @@ elif args.action == "verify":
 	if errors:
 		print("\n".join("{}:{}: {}".format(*error) for error in errors))
 	for key, value in entries.items():
-		if (value.count('"') % 2) != 0:
+		if value.count('"') % 2:
 			errors.append(("odd quotation marks", datetime.strptime(key, "%Y-%m-%d"), re.sub("^.*\n", "", value)))

@@ -83,10 +83,10 @@ if args.action == "archive":
 
 elif args.action == "count" and selected:
 	col_headers = ("YEAR", "POSTS", "WORDS", "MAX", "MEAN", "FREQ")
+	row_headers = sorted(set(k[:4] for k in selected), reverse=args.reverse)
+	sections = list(tuple(k for k in selected if k.startswith(year)) for year in row_headers)
 	table = []
-	row_headers = sorted(set(k[:4] for k in selected), reverse=args.reverse) + ["all",]
-	sections = list(tuple(k for k in selected if k.startswith(year)) for year in row_headers[:-1]) + [selected,]
-	for year, dates in zip(row_headers, sections):
+	for year, dates in zip(row_headers + ["all",], sections + [selected,]):
 		posts = len(dates)
 		lengths = tuple(len(entries[date].split()) for date in dates)
 		words = sum(lengths)
@@ -97,8 +97,7 @@ elif args.action == "count" and selected:
 	widths = list(max(len(row[col]) for row in ([col_headers,] + table)) for col in range(0, len(col_headers)))
 	print("  ".join(col.center(widths[i]) for i, col in enumerate(col_headers)))
 	print("  ".join(width * "-" for width in widths))
-	for row in table:
-		print("  ".join(col.rjust(widths[i]) for i, col in enumerate(row)))
+	print("\n".join("  ".join(col.rjust(widths[i]) for i, col in enumerate(row)) for row in table))
 
 elif args.action == "graph" and selected:
 	print('digraph {')
@@ -114,10 +113,9 @@ elif args.action == "graph" and selected:
 	for src in sorted(selected):
 		dests = set(dest for dest in REF_REGEX.findall(entries[src]) if src > dest and dest in selected)
 		ancestors[src] = set().union(*(ancestors.get(parent, set()) for parent in dests))
-		parents = dests - ancestors[src]
-		for dest in sorted(parents, reverse=args.reverse):
+		for dest in sorted(dests - ancestors[src], reverse=args.reverse):
 			print('\t"{}" -> "{}";'.format(src, dest))
-		ancestors[src] |= parents
+		ancestors[src] |= dests
 	print('}')
 
 elif args.action == "list" and selected:

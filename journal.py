@@ -58,7 +58,7 @@ entries = dict((entry[:10], entry.strip()) for entry in raw_entries.strip().spli
 
 selected = set(entries.keys())
 for term in args.terms:
-	selected -= set(k for k in selected if not re.search(term, entries[k], flags=args.case_sensitive))
+	selected = set(k for k in selected if re.search(term, entries[k], flags=args.case_sensitive|re.MULTILINE))
 if selected and args.date_range:
 	first_date = min(selected)
 	last_date = (datetime.strptime(max(selected), "%Y-%m-%d") + timedelta(days=1)).strftime("%Y-%m-%d")

@@ -152,7 +152,7 @@ elif args.action == "show" and selected:
 					vim_args[-1] += " nosmartcase"
 				else:
 					vim_args[-1] += " noignorecase"
-				vim_args.extend(["-c", "let @/=\"\\\\v" + "|".join("({})".format(term) for term in args.terms).replace('"', r'\"') + "\""])
+				vim_args.extend(["-c", "let @/=\"\\\\v" + "|".join("({})".format(term) for term in args.terms).replace('"', r'\"').replace("@", r"\\@") + "\""])
 			execvp("vim", vim_args)
 	else:
 		print(text)

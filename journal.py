@@ -74,11 +74,12 @@ if args.date_range:
 else:
 	selected = set(entries.keys())
 if selected:
-	trans_table = str.maketrans("", "", punctuation)
-	for term in args.terms:
-		if args.punctuation:
+	if args.punctuation:
+		for term in args.terms:
 			selected = set(k for k in selected if re.search(term, entries[k], flags=args.case_sensitive|re.MULTILINE))
-		else:
+	else:
+		trans_table = str.maketrans("", "", punctuation)
+		for term in args.terms:
 			term = term.translate(trans_table)
 			selected = set(k for k in selected if re.search(term, entries[k].translate(trans_table), flags=args.case_sensitive|re.MULTILINE))
 if selected:

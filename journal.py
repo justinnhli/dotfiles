@@ -58,29 +58,33 @@ if not raw_entries:
 	arg_parser.error("no journal entries found or specified")
 entries = dict((entry[:10], entry.strip()) for entry in raw_entries.strip().split("\n\n") if entry and DATE_REGEX.match(entry))
 
-selected = set(entries.keys())
-trans_table = str.maketrans("", "", punctuation)
-for term in args.terms:
-	if args.punctuation:
-		selected = set(k for k in selected if re.search(term, entries[k], flags=args.case_sensitive|re.MULTILINE))
-	else:
-		term = term.translate(trans_table)
-		selected = set(k for k in selected if re.search(term, entries[k].translate(trans_table), flags=args.case_sensitive|re.MULTILINE))
-if selected and args.date_range:
-	first_date = min(selected)
-	last_date = (datetime.strptime(max(selected), "%Y-%m-%d") + timedelta(days=1)).strftime("%Y-%m-%d")
+selected = set()
+if args.date_range:
+	first_date = min(entries.keys())
+	last_date = (datetime.strptime(max(entries.keys()), "%Y-%m-%d") + timedelta(days=1)).strftime("%Y-%m-%d")
 	for date_range in args.date_range.split(","):
 		if ":" in date_range:
 			start_date, end_date = date_range.split(":")
 			start_date, end_date = (start_date or first_date, end_date or last_date)
 			start_date += "-01" * int((10 - len(start_date)) / 2)
 			end_date += "-01" * int((10 - len(end_date)) / 2)
-			selected = set(k for k in selected if (start_date <= k < end_date))
+			selected |= set(k for k in entries.keys() if (start_date <= k < end_date))
 		else:
-			selected = set(k for k in selected if k.startswith(date_range))
-selected = sorted(selected, reverse=args.reverse)
-if args.num_results > 0:
-	selected = selected[:args.num_results]
+			selected |= set(k for k in entries.keys() if k.startswith(date_range))
+else:
+	selected = set(entries.keys())
+if selected:
+	trans_table = str.maketrans("", "", punctuation)
+	for term in args.terms:
+		if args.punctuation:
+			selected = set(k for k in selected if re.search(term, entries[k], flags=args.case_sensitive|re.MULTILINE))
+		else:
+			term = term.translate(trans_table)
+			selected = set(k for k in selected if re.search(term, entries[k].translate(trans_table), flags=args.case_sensitive|re.MULTILINE))
+if selected:
+	selected = sorted(selected, reverse=args.reverse)
+	if args.num_results > 0:
+		selected = selected[:args.num_results]
 
 if args.action == "archive":
 	filename = "jrnl{}".format(datetime.now().strftime("%Y%m%d%H%M%S"))

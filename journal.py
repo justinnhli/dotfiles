@@ -119,7 +119,7 @@ elif args.action == "graph" and selected:
 	print()
 	print('\t// NODES')
 	print('\tnode [fontcolor="#4E9A06", shape="none"];')
-	print('\n'.join('\t"{}" [fontsize="{}"];'.format(node, len(entries[node].split()) / 100) for node in selected))
+	print('\n'.join('\t"{}" [fontsize="{}"];'.format(k, len(entries[k].split()) / 100) for k in selected))
 	print()
 	print('\t// EDGES')
 	print('\tedge [color="#555753"];')

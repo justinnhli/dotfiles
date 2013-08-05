@@ -101,11 +101,11 @@ elif args.action == "count" and selected:
 	table = []
 	for year, dates in zip(row_headers + ["all",], sections + [selected,]):
 		posts = len(dates)
-		lengths = tuple(len(entries[date].split()) for date in dates)
+		lengths = sorted(len(entries[date].split()) for date in dates)
 		words = sum(lengths)
-		maximum = max(lengths)
 		mean = round(words / posts)
-		median = sorted(lengths)[floor(posts / 2)]
+		median = lengths[floor(posts / 2)]
+		maximum = lengths[-1]
 		freq = ((datetime.strptime(dates[-1], "%Y-%m-%d") - datetime.strptime(dates[0], "%Y-%m-%d")).days + 1) / posts
 		table.append((year, str(posts), format(words, ",d"), str(mean), str(median), str(maximum), "{:.3f}".format(freq)))
 	widths = list(max(len(row[col]) for row in ([col_headers,] + table)) for col in range(0, len(col_headers)))

@@ -47,12 +47,8 @@ args.directory = realpath(expanduser(args.directory))
 args.ignores = set(realpath(expanduser(path)) for path in args.ignores)
 
 if stdin.isatty():
-	file_entries = []
 	journal_files = sorted(set("{}/{}".format(args.directory, f) for f in ls(args.directory) if f.endswith(".journal")) - args.ignores)
-	for journal in journal_files:
-		with open(journal, "r") as fd:
-			file_entries.append(fd.read().strip())
-	raw_entries = "\n\n".join(file_entries)
+	raw_entries = "\n\n".join(open(journal, "r").read().strip() for journal in journal_files)
 else:
 	raw_entries = stdin.read()
 if not raw_entries:

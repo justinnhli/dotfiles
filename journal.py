@@ -4,6 +4,7 @@ import re
 import tarfile
 from argparse import ArgumentParser
 from datetime import datetime, timedelta
+from itertools import chain, groupby
 from math import floor
 from os import chdir as cd, chmod, execvp, fork, listdir as ls, remove as rm, wait
 from os.path import basename, exists as file_exists, expanduser, realpath
@@ -92,17 +93,16 @@ if args.action == "archive":
 
 elif args.action == "count" and selected:
 	col_headers = ("YEAR", "POSTS", "WORDS", "MEAN", "MED", "MAX", "FREQ")
-	row_headers = sorted(set(k[:4] for k in selected), reverse=args.reverse)
-	sections = list(tuple(k for k in selected if k.startswith(year)) for year in row_headers)
 	table = []
-	for year, dates in zip(row_headers + ["all",], sections + [selected,]):
+	for year, dates in chain(groupby(selected, (lambda k: k[:4])), (("all", selected),)):
+		dates = list(dates)
 		posts = len(dates)
 		lengths = sorted(len(entries[date].split()) for date in dates)
 		words = sum(lengths)
 		mean = round(words / posts)
 		median = lengths[floor(posts / 2)]
 		maximum = lengths[-1]
-		freq = ((datetime.strptime(dates[-1], "%Y-%m-%d") - datetime.strptime(dates[0], "%Y-%m-%d")).days + 1) / posts
+		freq = ((datetime.strptime(max(dates), "%Y-%m-%d") - datetime.strptime(min(dates), "%Y-%m-%d")).days + 1) / posts
 		table.append((year, str(posts), format(words, ",d"), str(mean), str(median), str(maximum), "{:.3f}".format(freq)))
 	widths = list(max(len(row[col]) for row in ([col_headers,] + table)) for col in range(0, len(col_headers)))
 	print("  ".join(col.center(widths[i]) for i, col in enumerate(col_headers)))

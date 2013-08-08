@@ -120,7 +120,7 @@ elif args.action == "graph" and selected:
 	print('\t// EDGES')
 	print('\tedge [color="#555753"];')
 	ancestors = {}
-	for src in sorted(selected):
+	for src in sorted(selected, reverse=args.reverse):
 		dests = set(dest for dest in REF_REGEX.findall(entries[src]) if src > dest and dest in selected)
 		ancestors[src] = set().union(*(ancestors.get(parent, set()) for parent in dests))
 		for dest in sorted(dests - ancestors[src], reverse=args.reverse):

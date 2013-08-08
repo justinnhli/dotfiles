@@ -60,7 +60,7 @@ OPTIONS
 	  -d DATE_RANGE         only use entries in range
 	  -i                    case insensitive match
 	  -n NUM_RESULTS        max number of results
-	  -p                    do not match punctuation
+	  -p                    ignore punctuation
 
 	OUTPUT OPTIONS:
 	  -r                    reverse chronological order

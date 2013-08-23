@@ -112,20 +112,43 @@ elif args.action == "count" and selected:
 elif args.action == "graph" and selected:
 	print('digraph {')
 	print('\tgraph [size="48", model="subset", rankdir="{}"];'.format('TB' if args.reverse else 'BT'))
-	print()
-	print('\t// NODES')
 	print('\tnode [fontcolor="#4E9A06", shape="none"];')
+	print('\tedge [color="#555753"];')
+	print()
 	print('\n'.join('\t"{}" [fontsize="{}"];'.format(k, len(entries[k].split()) / 100) for k in selected))
 	print()
-	print('\t// EDGES')
-	print('\tedge [color="#555753"];')
+	disjoint_sets = dict((k, k) for k in selected)
 	ancestors = {}
-	for src in sorted(selected, reverse=args.reverse):
+	edges = dict((k, set()) for k in selected)
+	for src in sorted(selected):
 		dests = set(dest for dest in REF_REGEX.findall(entries[src]) if src > dest and dest in selected)
 		ancestors[src] = set().union(*(ancestors.get(parent, set()) for parent in dests))
-		for dest in sorted(dests - ancestors[src], reverse=args.reverse):
-			print('\t"{}" -> "{}";'.format(src, dest))
+		for dest in (dests - ancestors[src]):
+			edges[src].add('\t"{}" -> "{}";'.format(src, dest))
+			path = set((src, dest))
+			for rep in (src, dest):
+				while disjoint_sets[rep] != rep:
+					path.add(rep)
+					rep = disjoint_sets[rep]
+				path.add(rep)
+			for node in path:
+				disjoint_sets[node] = rep
 		ancestors[src] |= dests
+	for rep in disjoint_sets:
+		path = set()
+		while disjoint_sets[rep] != rep:
+			path.add(rep)
+			rep = disjoint_sets[rep]
+		path.add(rep)
+		for node in path:
+			disjoint_sets[node] = rep
+	groups = dict((k, list(v)) for k, v in groupby(sorted(selected, key=(lambda k: disjoint_sets[k])), (lambda k: disjoint_sets[k])))
+	for rep, srcs in sorted(groups.items(), reverse=(not args.reverse), key=(lambda x: len(x[1]))):
+		print('\t// component size {}'.format(len(srcs)))
+		for src in sorted(srcs, reverse=args.reverse):
+			if edges[src]:
+				print("\n".join(sorted(edges[src], reverse=args.reverse)))
+		print()
 	print('}')
 
 elif args.action == "list" and selected:

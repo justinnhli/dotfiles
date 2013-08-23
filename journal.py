@@ -6,7 +6,7 @@ from argparse import ArgumentParser
 from datetime import datetime, timedelta
 from itertools import chain, groupby
 from math import floor
-from os import chdir as cd, chmod, execvp, fork, listdir as ls, remove as rm, wait
+from os import chdir as cd, chmod, execvp, fork, listdir as ls, remove as rm, wait, walk
 from os.path import basename, exists as file_exists, expanduser, realpath
 from stat import S_IRUSR
 from string import punctuation
@@ -48,7 +48,10 @@ args.directory = realpath(expanduser(args.directory))
 args.ignores = set(realpath(expanduser(path)) for path in args.ignores)
 
 if stdin.isatty():
-	journal_files = sorted(set("{}/{}".format(args.directory, f) for f in ls(args.directory) if f.endswith(".journal")) - args.ignores)
+	journal_files = set()
+	for path, dirs, files in walk(args.directory):
+		journal_files.update("{}/{}".format(path, f) for f in files if f.endswith(".journal"))
+	journal_files = sorted(journal_files - args.ignores)
 	raw_entries = "\n\n".join(open(journal, "r").read().strip() for journal in journal_files)
 else:
 	raw_entries = stdin.read()
@@ -193,16 +196,13 @@ elif args.action == "show" and selected:
 elif args.action == "tag":
 	tags = {}
 	for journal in journal_files:
-		base_name = basename(journal)
 		with open(journal, "r") as fd:
 			text = fd.read()
 		for line_number, line in enumerate(text.splitlines(), start=1):
 			if DATE_REGEX.match(line):
 				tag = line[:10]
-				tags[tag] = (tag, base_name, line_number)
+				tags[tag] = (tag, journal, line_number)
 	tags_path = "{}/tags".format(args.directory)
-	if file_exists(tags_path):
-		rm(tags_path)
 	with open(tags_path, "w") as fd:
 		fd.write("\n".join("{}\t{}\t{}".format(*tag) for tag in sorted(tags.values())) + "\n")
 

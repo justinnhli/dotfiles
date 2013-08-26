@@ -33,7 +33,7 @@ group.add_argument("--directory",  dest="directory",       action="store",      
 group.add_argument("--ignore",     dest="ignores",         action="append",                         help="ignore specified file")
 group = arg_parser.add_argument_group("FILTER OPTIONS (APPLIES TO -[CGLS])")
 group.add_argument("-d",           dest="date_range",      action="store",                          help="only use entries in range")
-group.add_argument("-i",           dest="case_sensitive",  action="store_const",  const=False,      help="case insensitive match")
+group.add_argument("-i",           dest="case_sensitive",  action="store_const",  const=False,      help="ignore case-insensitivity")
 group.add_argument("-n",           dest="num_results",     action="store",        type=int,         help="max number of results")
 group.add_argument("-p",           dest="punctuation",     action="store_const",  const=False,      help="ignore punctuation")
 group = arg_parser.add_argument_group("OUTPUT OPTIONS")

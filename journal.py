@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 from itertools import chain, groupby
 from math import floor
 from os import chdir as cd, chmod, execvp, fork, listdir as ls, remove as rm, wait, walk
-from os.path import basename, exists as file_exists, expanduser, realpath
+from os.path import basename, exists as file_exists, expanduser, join as join_path, realpath
 from stat import S_IRUSR
 from string import punctuation
 from sys import stdin, stdout, argv
@@ -50,7 +50,7 @@ args.ignores = set(realpath(expanduser(path)) for path in args.ignores)
 if stdin.isatty():
 	journal_files = set()
 	for path, dirs, files in walk(args.directory):
-		journal_files.update("{}/{}".format(path, f) for f in files if f.endswith(".journal"))
+		journal_files.update(join_path(path, f) for f in files if f.endswith(".journal"))
 	journal_files = sorted(journal_files - args.ignores)
 	raw_entries = "\n\n".join(open(journal, "r").read().strip() for journal in journal_files)
 else:
@@ -92,7 +92,7 @@ if args.action == "archive":
 	filename = "jrnl{}".format(datetime.now().strftime("%Y%m%d%H%M%S"))
 	with tarfile.open("{}.tbz".format(filename), "w:bz2") as tar:
 		tar.add(args.directory, arcname=filename, filter=(lambda tarinfo: None if basename(tarinfo.name).startswith(".") else tarinfo))
-		tar.add(argv[0], arcname="{}/{}".format(filename, basename(argv[0])))
+		tar.add(argv[0], arcname=join_path(filename, basename(argv[0])))
 
 elif args.action == "count" and selected:
 	col_headers = ("YEAR", "POSTS", "WORDS", "MEAN", "MED", "MAX", "FREQ")
@@ -157,7 +157,7 @@ elif args.action == "list" and selected:
 	print("\n".join(selected))
 
 elif args.action == "show" and selected:
-	searchlog = "{}/log".format(args.directory)
+	searchlog = join_path(args.directory, "log")
 	if file_exists(searchlog):
 		command = ["-S",]
 		if args.case_sensitive:
@@ -201,7 +201,7 @@ elif args.action == "tag":
 			if DATE_REGEX.match(line):
 				tag = line[:10]
 				tags[tag] = (tag, journal, line_number)
-	tags_path = "{}/tags".format(args.directory)
+	tags_path = join_path(args.directory, "tags")
 	with open(tags_path, "w") as fd:
 		fd.write("\n".join("{}\t{}\t{}".format(*tag) for tag in sorted(tags.values())) + "\n")
 

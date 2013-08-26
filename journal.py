@@ -118,8 +118,6 @@ elif args.action == "graph" and selected:
 	print('\tnode [fontcolor="#4E9A06", shape="none"];')
 	print('\tedge [color="#555753"];')
 	print()
-	print('\n'.join('\t"{}" [fontsize="{}"];'.format(k, len(entries[k].split()) / 100) for k in selected))
-	print()
 	disjoint_sets = dict((k, k) for k in selected)
 	ancestors = {}
 	edges = dict((k, set()) for k in selected)
@@ -149,6 +147,7 @@ elif args.action == "graph" and selected:
 	for rep, srcs in sorted(groups.items(), reverse=(not args.reverse), key=(lambda x: len(x[1]))):
 		print('\t// component size {}'.format(len(srcs)))
 		for src in sorted(srcs, reverse=args.reverse):
+			print('\t"{}" [fontsize="{}"];'.format(src, len(entries[src].split()) / 100))
 			if edges[src]:
 				print("\n".join(sorted(edges[src], reverse=args.reverse)))
 		print()

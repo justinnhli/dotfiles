@@ -171,7 +171,7 @@ elif args.action == "show" and selected:
 					else:
 						options.append(" {} {}".format(option_string, option_value))
 		options = "-S" + "".join(sorted(options, key=(lambda x: (len(x) != 1, x.upper())))).replace(" -", "", 1)
-		terms = " ".join('"{}"'.format(term) for term in args.terms)
+		terms = " ".join('"{}"'.format(term) for term in sorted(args.terms))
 		with open(searchlog, "a") as fd:
 			fd.write("{}\t{} {}\n".format(datetime.today().isoformat(" "), options, terms))
 	text = "\n\n".join(entries[k] for k in selected)

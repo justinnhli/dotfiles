@@ -33,9 +33,9 @@ group.add_argument("--directory",  dest="directory",       action="store",      
 group.add_argument("--ignore",     dest="ignores",         action="append",                         help="ignore specified file")
 group = arg_parser.add_argument_group("FILTER OPTIONS (APPLIES TO -[CGLS])")
 group.add_argument("-d",           dest="date_range",      action="store",                          help="only use entries in range")
-group.add_argument("-i",           dest="case_sensitive",  action="store_const",  const=False,      help="ignore case-insensitivity")
+group.add_argument("-i",           dest="case_sensitive",  action="store_false",                    help="ignore case-insensitivity")
 group.add_argument("-n",           dest="num_results",     action="store",        type=int,         help="max number of results")
-group.add_argument("-p",           dest="punctuation",     action="store_const",  const=False,      help="ignore punctuation")
+group.add_argument("-p",           dest="punctuation",     action="store_false",                    help="ignore punctuation")
 group = arg_parser.add_argument_group("OUTPUT OPTIONS")
 group.add_argument("-r",           dest="reverse",         action="store_true",                     help="reverse chronological order")
 args = arg_parser.parse_args()
@@ -159,17 +159,21 @@ elif args.action == "list" and selected:
 elif args.action == "show" and selected:
 	searchlog = join_path(args.directory, "log")
 	if file_exists(searchlog):
-		command = ["-S",]
-		if args.case_sensitive:
-			command.append("i")
-		if args.reverse:
-			command.append("r")
-		if args.date_range:
-			command.append("d {} -".format(args.date_range))
-		if args.num_results:
-			command.append("n {} -".format(args.num_results))
+		args_dict = vars(args)
+		options = []
+		for option_string, option in vars(arg_parser)["_option_string_actions"].items():
+			if re.match("^-[a-gi-z]$", option_string):
+				option = vars(option)
+				option_value = args_dict[option["dest"]]
+				if option_value != option["default"]:
+					if option["const"] in (True, False):
+						options.append(option_string[1])
+					else:
+						options.append(" {} {}".format(option_string, option_value))
+		options = "-S" + "".join(sorted(options, key=(lambda x: (len(x) != 1, x.upper())))).replace(" -", "", 1)
+		terms = " ".join('"{}"'.format(term) for term in args.terms)
 		with open(searchlog, "a") as fd:
-			fd.write("{}\t{} {}\n".format(datetime.today().isoformat(" "), re.sub(" -$", "", "".join(command)), " ".join('"{}"'.format(term) for term in args.terms)))
+			fd.write("{}\t{} {}\n".format(datetime.today().isoformat(" "), options, terms))
 	text = "\n\n".join(entries[k] for k in selected)
 	if stdout.isatty():
 		temp_file = mkstemp(".journal")[1]

@@ -6,10 +6,10 @@ from argparse import ArgumentParser
 from datetime import datetime, timedelta
 from itertools import chain, groupby
 from math import floor
-from os import chdir as cd, chmod, execvp, fork, listdir as ls, remove as rm, wait, walk
+from os import chdir as cd, chmod, execvp, fork, remove as rm, wait, walk
 from os.path import basename, exists as file_exists, expanduser, join as join_path, realpath, relpath
 from stat import S_IRUSR
-from string import punctuation
+from string import punctuation as PUNCTUATION
 from sys import stdin, stdout, argv
 from tempfile import mkstemp
 
@@ -79,7 +79,7 @@ if selected:
 		for term in args.terms:
 			selected = set(k for k in selected if re.search(term, entries[k], flags=args.case_sensitive|re.MULTILINE))
 	else:
-		trans_table = str.maketrans("", "", punctuation)
+		trans_table = str.maketrans("", "", PUNCTUATION)
 		for term in args.terms:
 			term = term.translate(trans_table)
 			selected = set(k for k in selected if re.search(term, entries[k].translate(trans_table), flags=args.case_sensitive|re.MULTILINE))
@@ -127,6 +127,7 @@ elif args.action == "graph" and selected:
 		for dest in (dests - ancestors[src]):
 			edges[src].add('\t"{}" -> "{}";'.format(src, dest))
 			path = set((src, dest))
+			rep = dest
 			for rep in (src, dest):
 				while disjoint_sets[rep] != rep:
 					path.add(rep)

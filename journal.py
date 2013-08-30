@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 from itertools import chain, groupby
 from math import floor
 from os import chdir as cd, chmod, execvp, fork, listdir as ls, remove as rm, wait, walk
-from os.path import basename, exists as file_exists, expanduser, join as join_path, realpath
+from os.path import basename, exists as file_exists, expanduser, join as join_path, realpath, relpath
 from stat import S_IRUSR
 from string import punctuation
 from sys import stdin, stdout, argv
@@ -201,6 +201,7 @@ elif args.action == "tag":
 	for journal in journal_files:
 		with open(journal, "r") as fd:
 			text = fd.read()
+		journal = relpath(journal, args.directory)
 		for line_number, line in enumerate(text.splitlines(), start=1):
 			if DATE_REGEX.match(line):
 				tag = line[:10]

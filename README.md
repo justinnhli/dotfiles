@@ -48,7 +48,7 @@ OPTIONS
 	  -G                    graph entry references in DOT
 	  -L                    list entry dates
 	  -S                    show entry contents
-	  -T                    create tags file
+	  -U                    update tags and cache file
 	  -V                    verify journal sanity
 
 	INPUT OPTIONS:

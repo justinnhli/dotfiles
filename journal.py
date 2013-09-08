@@ -26,7 +26,7 @@ group.add_argument("-C",           dest="action",          action="store_const",
 group.add_argument("-G",           dest="action",          action="store_const",  const="graph",    help="graph entry references in DOT")
 group.add_argument("-L",           dest="action",          action="store_const",  const="list",     help="list entry dates")
 group.add_argument("-S",           dest="action",          action="store_const",  const="show",     help="show entry contents")
-group.add_argument("-T",           dest="action",          action="store_const",  const="tag",      help="create tags file")
+group.add_argument("-U",           dest="action",          action="store_const",  const="update",   help="update tags and cache file")
 group.add_argument("-V",           dest="action",          action="store_const",  const="verify",   help="verify journal sanity")
 group = arg_parser.add_argument_group("INPUT OPTIONS")
 group.add_argument("--directory",  dest="directory",       action="store",                          help="use journal files in directory")
@@ -47,12 +47,20 @@ if not stdin.isatty() and args.action in ("archive", "tag", "verify"):
 args.directory = realpath(expanduser(args.directory))
 args.ignores = set(realpath(expanduser(path)) for path in args.ignores)
 
+log_file = join_path(args.directory, "log")
+tags_file = join_path(args.directory, "tags")
+cache_file = join_path(args.directory, "cache")
+
 if stdin.isatty():
-	journal_files = set()
-	for path, dirs, files in walk(args.directory):
-		journal_files.update(join_path(path, f) for f in files if f.endswith(".journal"))
-	journal_files = sorted(journal_files - args.ignores)
-	raw_entries = "\n\n".join(open(journal, "r").read().strip() for journal in journal_files)
+	if args.action not in ("tag", "verify") and file_exists(cache_files):
+		with open(cache_file) as fd:
+			raw_entries = fd.read()
+	else:
+		journal_files = set()
+		for path, dirs, files in walk(args.directory):
+			journal_files.update(join_path(path, f) for f in files if f.endswith(".journal"))
+		journal_files = sorted(journal_files - args.ignores)
+		raw_entries = "\n\n".join(open(journal, "r").read().strip() for journal in journal_files)
 else:
 	raw_entries = stdin.read()
 if not raw_entries:
@@ -158,8 +166,7 @@ elif args.action == "list" and selected:
 	print("\n".join(selected))
 
 elif args.action == "show" and selected:
-	searchlog = join_path(args.directory, "log")
-	if file_exists(searchlog):
+	if file_exists(log_file):
 		args_dict = vars(args)
 		options = []
 		for option_string, option in vars(arg_parser)["_option_string_actions"].items():
@@ -173,7 +180,7 @@ elif args.action == "show" and selected:
 						options.append(" {} {}".format(option_string, option_value))
 		options = "-S" + "".join(sorted(options, key=(lambda x: (len(x) != 1, x.upper())))).replace(" -", "", 1)
 		terms = " ".join('"{}"'.format(term) for term in sorted(args.terms))
-		with open(searchlog, "a") as fd:
+		with open(log_file, "a") as fd:
 			fd.write("{}\t{} {}\n".format(datetime.today().isoformat(" "), options, terms))
 	text = "\n\n".join(entries[k] for k in selected)
 	if stdout.isatty():
@@ -197,7 +204,7 @@ elif args.action == "show" and selected:
 	else:
 		print(text)
 
-elif args.action == "tag":
+elif args.action == "update":
 	tags = {}
 	for journal in journal_files:
 		with open(journal, "r") as fd:
@@ -207,9 +214,10 @@ elif args.action == "tag":
 			if DATE_REGEX.match(line):
 				tag = line[:10]
 				tags[tag] = (tag, journal, line_number)
-	tags_path = join_path(args.directory, "tags")
-	with open(tags_path, "w") as fd:
+	with open(tags_file, "w") as fd:
 		fd.write("\n".join("{}\t{}\t{}".format(*tag) for tag in sorted(tags.values())) + "\n")
+	with open(cache_file, "w") as fd:
+		fd.write("\n\n".join(sorted(entries.values())))
 
 elif args.action == "verify":
 	errors = []

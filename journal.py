@@ -49,10 +49,10 @@ args.ignores = set(realpath(expanduser(path)) for path in args.ignores)
 
 log_file = join_path(args.directory, "log")
 tags_file = join_path(args.directory, "tags")
-cache_file = join_path(args.directory, "cache")
+cache_file = join_path(args.directory, ".cache")
 
 if stdin.isatty():
-	if args.action not in ("tag", "verify") and file_exists(cache_files):
+	if args.action not in ("tag", "verify") and file_exists(cache_file):
 		with open(cache_file) as fd:
 			raw_entries = fd.read()
 	else:

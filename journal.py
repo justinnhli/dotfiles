@@ -42,7 +42,7 @@ args = arg_parser.parse_args()
 
 if args.date_range and not all(dr and RANGE_REGEX.match(dr) for dr in args.date_range.split(",")):
 	arg_parser.error("argument -d: '{}' should be in format [YYYY[-MM[-DD]]][:][YYYY[-MM[-DD]]][,...]".format(args.date_range))
-if not stdin.isatty() and args.action in ("archive", "tag", "verify"):
+if not stdin.isatty() and args.action in ("archive", "update", "verify"):
 	arg_parser.error("argument -[ATV]: operation can only be performed on files")
 args.directory = realpath(expanduser(args.directory))
 args.ignores = set(realpath(expanduser(path)) for path in args.ignores)
@@ -52,7 +52,7 @@ tags_file = join_path(args.directory, "tags")
 cache_file = join_path(args.directory, ".cache")
 
 if stdin.isatty():
-	if args.action not in ("tag", "verify") and file_exists(cache_file):
+	if args.action not in ("update", "verify") and file_exists(cache_file):
 		with open(cache_file) as fd:
 			raw_entries = fd.read()
 	else:

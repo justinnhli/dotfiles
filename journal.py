@@ -9,7 +9,6 @@ from math import floor
 from os import chdir as cd, chmod, execvp, fork, remove as rm, wait, walk
 from os.path import basename, exists as file_exists, expanduser, join as join_path, realpath, relpath
 from stat import S_IRUSR
-from string import punctuation as PUNCTUATION
 from sys import stdin, stdout, argv
 from tempfile import mkstemp
 
@@ -35,7 +34,6 @@ group = arg_parser.add_argument_group("FILTER OPTIONS (APPLIES TO -[CGLS])")
 group.add_argument("-d",           dest="date_range",      action="store",                          help="only use entries in range")
 group.add_argument("-i",           dest="case_sensitive",  action="store_false",                    help="ignore case-insensitivity")
 group.add_argument("-n",           dest="num_results",     action="store",        type=int,         help="max number of results")
-group.add_argument("-p",           dest="punctuation",     action="store_false",                    help="ignore punctuation")
 group = arg_parser.add_argument_group("OUTPUT OPTIONS")
 group.add_argument("-r",           dest="reverse",         action="store_true",                     help="reverse chronological order")
 args = arg_parser.parse_args()
@@ -83,14 +81,8 @@ if args.date_range:
 else:
 	selected = set(entries.keys())
 if selected:
-	if args.punctuation:
-		for term in args.terms:
-			selected = set(k for k in selected if re.search(term, entries[k], flags=args.case_sensitive|re.MULTILINE))
-	else:
-		trans_table = str.maketrans("", "", PUNCTUATION)
-		for term in args.terms:
-			term = term.translate(trans_table)
-			selected = set(k for k in selected if re.search(term, entries[k].translate(trans_table), flags=args.case_sensitive|re.MULTILINE))
+	for term in args.terms:
+		selected = set(k for k in selected if re.search(term, entries[k], flags=args.case_sensitive|re.MULTILINE))
 if selected:
 	selected = sorted(selected, reverse=args.reverse)
 	if args.num_results > 0:

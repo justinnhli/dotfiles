@@ -17,7 +17,7 @@ RANGE_REGEX = re.compile("^([0-9]{4}(-[0-9]{2}(-[0-9]{2})?)?)?:?([0-9]{4}(-[0-9]
 REF_REGEX = re.compile("([0-9]{4}-[0-9]{2}-[0-9]{2})")
 
 arg_parser = ArgumentParser(usage="%(prog)s <operation> [options] [TERM ...]", description="a command line tool for viewing and maintaining a journal")
-arg_parser.set_defaults(directory="./", ignores=[], case_sensitive=re.IGNORECASE, num_results=0, punctuation=True, reverse=False)
+arg_parser.set_defaults(directory="./", ignores=[], case_sensitive=re.IGNORECASE, num_results=0, reverse=False)
 arg_parser.add_argument("terms",  metavar="TERM", nargs="*", help="pattern which must exist in entries")
 group = arg_parser.add_argument_group("OPERATIONS").add_mutually_exclusive_group(required=True)
 group.add_argument("-A",           dest="action",          action="store_const",  const="archive",  help="archive to datetimed tarball")

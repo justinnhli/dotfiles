@@ -60,10 +60,12 @@ OPTIONS
 	  -d DATE_RANGE         only use entries in range
 	  -i                    ignore case-insensitivity
 	  -n NUM_RESULTS        max number of results
-	  -p                    ignore punctuation
 
 	OUTPUT OPTIONS:
 	  -r                    reverse chronological order
+
+	MISC OPTIONS:
+	  --no-log              do not log search
 
 BUGS
 ----

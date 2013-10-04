@@ -13,20 +13,21 @@ DESCRIPTION
 verify, and create tags for a plain text journal. It expects journal files to
 have the extension `.journal` and the contents to conform to a (loose) syntax.
 Entries start with unindented dates in the form `YYYY-MM-DD`, optionally
-followed by `, WEEKDAY`. Entry contents starts on the next line, indented by at
-least one tab. Each line is a paragraph; consecutive lines must either be
+followed by `, WEEKDAY`. Entry contents begins on the next line, one paragraph
+per line, each indented by at least one tab. Consecutive lines must either be
 indented by the same level, by one more level, or by arbitrarily fewer levels
 (down to one) than the previous line. An empty line is required between entries.
+
 For example:
 
-    2012-03-29, Thursday
+    1970-01-01, Thursday
         This is the first paragraph.
         This is the second paragraph.
-            Lines can be indented one level further
-                for each line,
-        but can drop back arbitrarily far
+			An indented third paragraph.
+				A further-intended fourth paragraph.
+		An unindented fifth paragraph.
     
-    2012-03-30, Friday
+    1970-01-02, Friday
         The next entry.
 
 OPTIONS

@@ -17,7 +17,7 @@ RANGE_REGEX = re.compile("^([0-9]{4}(-[0-9]{2}(-[0-9]{2})?)?)?:?([0-9]{4}(-[0-9]
 REF_REGEX = re.compile("([0-9]{4}-[0-9]{2}-[0-9]{2})")
 
 arg_parser = ArgumentParser(usage="%(prog)s <operation> [options] [TERM ...]", description="a command line tool for viewing and maintaining a journal")
-arg_parser.set_defaults(directory="./", ignores=[], case_sensitive=re.IGNORECASE, num_results=0, reverse=False)
+arg_parser.set_defaults(directory="./", ignores=[], case_sensitive=re.IGNORECASE, num_results=0, reverse=False, log=True)
 arg_parser.add_argument("terms",  metavar="TERM", nargs="*", help="pattern which must exist in entries")
 group = arg_parser.add_argument_group("OPERATIONS").add_mutually_exclusive_group(required=True)
 group.add_argument("-A",           dest="action",          action="store_const",  const="archive",  help="archive to datetimed tarball")
@@ -36,6 +36,8 @@ group.add_argument("-i",           dest="case_sensitive",  action="store_false",
 group.add_argument("-n",           dest="num_results",     action="store",        type=int,         help="max number of results")
 group = arg_parser.add_argument_group("OUTPUT OPTIONS")
 group.add_argument("-r",           dest="reverse",         action="store_true",                     help="reverse chronological order")
+group = arg_parser.add_argument_group("MISC OPTIONS")
+group.add_argument("--no-log",     dest="log",             action="store_false",                    help="do not log search")
 args = arg_parser.parse_args()
 
 if args.date_range and not all(dr and RANGE_REGEX.match(dr) for dr in args.date_range.split(",")):
@@ -158,7 +160,7 @@ elif args.action == "list" and selected:
 	print("\n".join(selected))
 
 elif args.action == "show" and selected:
-	if file_exists(log_file):
+	if args.log and file_exists(log_file):
 		args_dict = vars(args)
 		options = []
 		for option_string, option in vars(arg_parser)["_option_string_actions"].items():

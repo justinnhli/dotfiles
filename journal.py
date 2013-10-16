@@ -15,6 +15,7 @@ from tempfile import mkstemp
 DATE_REGEX = re.compile("([0-9]{4}-[0-9]{2}-[0-9]{2})(, (Mon|Tues|Wednes|Thurs|Fri|Satur|Sun)day)?")
 RANGE_REGEX = re.compile("^([0-9]{4}(-[0-9]{2}(-[0-9]{2})?)?)?:?([0-9]{4}(-[0-9]{2}(-[0-9]{2})?)?)?$")
 REF_REGEX = re.compile("([0-9]{4}-[0-9]{2}-[0-9]{2})")
+DATE_LENGTH = 10
 
 arg_parser = ArgumentParser(usage="%(prog)s <operation> [options] [TERM ...]", description="a command line tool for viewing and maintaining a journal")
 arg_parser.set_defaults(directory="./", ignores=[], case_sensitive=re.IGNORECASE, num_results=0, reverse=False, log=True)
@@ -65,7 +66,7 @@ else:
 	raw_entries = stdin.read()
 if not raw_entries:
 	arg_parser.error("no journal entries found or specified")
-entries = dict((entry[:10], entry.strip()) for entry in raw_entries.strip().split("\n\n") if entry and DATE_REGEX.match(entry))
+entries = dict((entry[:DATE_LENGTH], entry.strip()) for entry in raw_entries.strip().split("\n\n") if entry and DATE_REGEX.match(entry))
 
 selected = set()
 if args.date_range:
@@ -75,8 +76,8 @@ if args.date_range:
 		if ":" in date_range:
 			start_date, end_date = date_range.split(":")
 			start_date, end_date = (start_date or first_date, end_date or last_date)
-			start_date += "-01" * int((10 - len(start_date)) / 2)
-			end_date += "-01" * int((10 - len(end_date)) / 2)
+			start_date += "-01" * int((DATE_LENGTH - len(start_date)) / 2)
+			end_date += "-01" * int((DATE_LENGTH - len(end_date)) / 2)
 			selected |= set(k for k in entries.keys() if (start_date <= k < end_date))
 		else:
 			selected |= set(k for k in entries.keys() if k.startswith(date_range))
@@ -206,7 +207,7 @@ elif args.action == "update":
 		journal = relpath(journal, args.directory)
 		for line_number, line in enumerate(text.splitlines(), start=1):
 			if DATE_REGEX.match(line):
-				tag = line[:10]
+				tag = line[:DATE_LENGTH]
 				tags.append((tag, journal, line_number))
 	with open(tags_file, "w") as fd:
 		fd.write("\n".join("{}\t{}\t{}".format(*tag) for tag in sorted(tags)))
@@ -243,12 +244,12 @@ elif args.action == "verify":
 				errors.append((journal, line_number, "multiple spaces"))
 			if indent == 0:
 				if DATE_REGEX.match(line):
-					cur_date = datetime.strptime(line[:10], "%Y-%m-%d")
+					cur_date = datetime.strptime(line[:DATE_LENGTH], "%Y-%m-%d")
 					if long_dates is None:
-						long_dates = (len(line) > 10)
-					if long_dates != (len(line) > 10):
+						long_dates = (len(line) > DATE_LENGTH)
+					if long_dates != (len(line) > DATE_LENGTH):
 						errors.append((journal, line_number, "inconsistent date format"))
-					if len(line) > 10 and line != cur_date.strftime("%Y-%m-%d, %A"):
+					if len(line) > DATE_LENGTH and line != cur_date.strftime("%Y-%m-%d, %A"):
 						errors.append((journal, line_number, "date correctness"))
 					if cur_date in dates:
 						errors.append((journal, line_number, "duplicate dates"))

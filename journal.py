@@ -199,7 +199,7 @@ elif args.action == "show" and selected:
 		print(text)
 
 elif args.action == "update":
-	tags = {}
+	tags = []
 	for journal in journal_files:
 		with open(journal, "r") as fd:
 			text = fd.read()
@@ -207,9 +207,9 @@ elif args.action == "update":
 		for line_number, line in enumerate(text.splitlines(), start=1):
 			if DATE_REGEX.match(line):
 				tag = line[:10]
-				tags[tag] = (tag, journal, line_number)
+				tags.append((tag, journal, line_number))
 	with open(tags_file, "w") as fd:
-		fd.write("\n".join("{}\t{}\t{}".format(*tag) for tag in sorted(tags.values())) + "\n")
+		fd.write("\n".join("{}\t{}\t{}".format(*tag) for tag in sorted(tags)))
 	with open(cache_file, "w") as fd:
 		fd.write("\n\n".join(sorted(entries.values())))
 

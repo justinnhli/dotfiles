@@ -15,6 +15,7 @@ from tempfile import mkstemp
 DATE_REGEX = re.compile("([0-9]{4}-[0-9]{2}-[0-9]{2})(, (Mon|Tues|Wednes|Thurs|Fri|Satur|Sun)day)?")
 RANGE_REGEX = re.compile("^([0-9]{4}(-[0-9]{2}(-[0-9]{2})?)?)?:?([0-9]{4}(-[0-9]{2}(-[0-9]{2})?)?)?$")
 REF_REGEX = re.compile("([0-9]{4}-[0-9]{2}-[0-9]{2})")
+YEAR_LENGTH = 4
 DATE_LENGTH = 10
 
 arg_parser = ArgumentParser(usage="%(prog)s <operation> [options] [TERM ...]", description="a command line tool for viewing and maintaining a journal")
@@ -100,7 +101,7 @@ if args.action == "archive":
 elif args.action == "count" and selected:
 	col_headers = ("YEAR", "POSTS", "WORDS", "MEAN", "MED", "MAX", "FREQ")
 	table = []
-	for year, dates in chain(groupby(selected, (lambda k: k[:4])), (("all", selected),)):
+	for year, dates in chain(groupby(selected, (lambda k: k[:YEAR_LENGTH])), (("all", selected),)):
 		dates = list(dates)
 		posts = len(dates)
 		lengths = sorted(len(entries[date].split()) for date in dates)

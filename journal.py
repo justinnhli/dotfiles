@@ -203,13 +203,12 @@ elif args.action == "show" and selected:
 elif args.action == "update":
 	tags = []
 	for journal in journal_files:
+		rel_path = relpath(journal, args.directory)
 		with open(journal, "r") as fd:
-			text = fd.read()
-		journal = relpath(journal, args.directory)
-		for line_number, line in enumerate(text.splitlines(), start=1):
+			lines = fd.readlines()
+		for line_number, line in enumerate(lines, start=1):
 			if DATE_REGEX.match(line):
-				tag = line[:DATE_LENGTH]
-				tags.append((tag, journal, line_number))
+				tags.append((line[:DATE_LENGTH], rel_path, line_number))
 	with open(tags_file, "w") as fd:
 		fd.write("\n".join("{}\t{}\t{}".format(*tag) for tag in sorted(tags)))
 	with open(cache_file, "w") as fd:

@@ -5,7 +5,7 @@ import tarfile
 from argparse import ArgumentParser
 from datetime import datetime, timedelta
 from itertools import chain, groupby
-from math import floor
+from math import floor, sqrt
 from os import chdir as cd, chmod, execvp, fork, remove as rm, wait, walk
 from os.path import basename, exists as file_exists, expanduser, join as join_path, realpath, relpath
 from stat import S_IRUSR
@@ -99,20 +99,25 @@ if args.action == "archive":
 		tar.add(argv[0], arcname=join_path(filename, basename(argv[0])))
 
 elif args.action == "count" and selected:
-	col_headers = ("YEAR", "POSTS", "WORDS", "MEAN", "MED", "MAX", "FREQ")
+	columns = (
+			("YEAR",  (lambda year, dates, posts, lengths: year)),
+			("POSTS", (lambda year, dates, posts, lengths: posts)),
+			("FREQ",  (lambda year, dates, posts, lengths: "{:.3f}".format(((datetime.strptime(max(dates), "%Y-%m-%d") - datetime.strptime(min(dates), "%Y-%m-%d")).days + 1) / posts))),
+			("WORDS", (lambda year, dates, posts, lengths: format(sum(lengths), ",d"))),
+			("MIN",   (lambda year, dates, posts, lengths: min(lengths))),
+			("MED",   (lambda year, dates, posts, lengths: sorted(lengths)[floor(posts / 2)])),
+			("MAX",   (lambda year, dates, posts, lengths: max(lengths))),
+			("MEAN",  (lambda year, dates, posts, lengths: round(sum(lengths) / posts))),
+			("STDEV", (lambda year, dates, posts, lengths: round(sqrt(sum((round(sum(lengths) / posts) - length) ** 2 for length in lengths) / posts)))),
+	)
 	table = []
 	for year, dates in chain(groupby(selected, (lambda k: k[:YEAR_LENGTH])), (("all", selected),)):
 		dates = list(dates)
 		posts = len(dates)
-		lengths = sorted(len(entries[date].split()) for date in dates)
-		words = sum(lengths)
-		mean = round(words / posts)
-		median = lengths[floor(posts / 2)]
-		maximum = lengths[-1]
-		freq = ((datetime.strptime(max(dates), "%Y-%m-%d") - datetime.strptime(min(dates), "%Y-%m-%d")).days + 1) / posts
-		table.append((year, str(posts), format(words, ",d"), str(mean), str(median), str(maximum), "{:.3f}".format(freq)))
-	widths = list(max(len(row[col]) for row in ([col_headers,] + table)) for col in range(0, len(col_headers)))
-	print("  ".join(col.center(widths[i]) for i, col in enumerate(col_headers)))
+		lengths = [len(entries[date].split()) for date in dates]
+		table.append([str(fn(year, dates, posts, lengths)) for field, fn in columns])
+	widths = list(max(len(row[col]) for row in ([[field for field, fn in columns],] + table)) for col in range(0, len(columns)))
+	print("  ".join(col.center(widths[i]) for i, col in enumerate(field for field, fn in columns)))
 	print("  ".join(width * "-" for width in widths))
 	print("\n".join("  ".join(col.rjust(widths[i]) for i, col in enumerate(row)) for row in table))
 

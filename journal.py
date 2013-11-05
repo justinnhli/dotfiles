@@ -102,7 +102,7 @@ elif args.action == "count" and selected:
 	columns = (
 			("YEAR",  (lambda year, dates, posts, lengths: year)),
 			("POSTS", (lambda year, dates, posts, lengths: posts)),
-			("FREQ",  (lambda year, dates, posts, lengths: "{:.3f}".format(((datetime.strptime(max(dates), "%Y-%m-%d") - datetime.strptime(min(dates), "%Y-%m-%d")).days + 1) / posts))),
+			("FREQ",  (lambda year, dates, posts, lengths: format(((datetime.strptime(max(dates), "%Y-%m-%d") - datetime.strptime(min(dates), "%Y-%m-%d")).days + 1) / posts, ".3f"))),
 			("WORDS", (lambda year, dates, posts, lengths: format(sum(lengths), ",d"))),
 			("MIN",   (lambda year, dates, posts, lengths: min(lengths))),
 			("MED",   (lambda year, dates, posts, lengths: sorted(lengths)[floor(posts / 2)])),

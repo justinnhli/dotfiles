@@ -100,23 +100,23 @@ if args.action == "archive":
 
 elif args.action == "count" and selected:
 	columns = (
-			("YEAR",  (lambda year, dates, posts, lengths: year)),
-			("POSTS", (lambda year, dates, posts, lengths: posts)),
-			("FREQ",  (lambda year, dates, posts, lengths: format(((datetime.strptime(max(dates), "%Y-%m-%d") - datetime.strptime(min(dates), "%Y-%m-%d")).days + 1) / posts, ".2f"))),
-			("SIZE",  (lambda year, dates, posts, lengths: format(sum(len(entries[k]) for k in dates), ",d"))),
-			("WORDS", (lambda year, dates, posts, lengths: format(sum(lengths), ",d"))),
-			("MIN",   (lambda year, dates, posts, lengths: min(lengths))),
-			("MED",   (lambda year, dates, posts, lengths: sorted(lengths)[floor(posts / 2)])),
-			("MAX",   (lambda year, dates, posts, lengths: max(lengths))),
-			("MEAN",  (lambda year, dates, posts, lengths: round(sum(lengths) / posts))),
-			("STDEV", (lambda year, dates, posts, lengths: round(sqrt(sum((round(sum(lengths) / posts) - length) ** 2 for length in lengths) / posts)))),
+			("YEAR",  (lambda y, p, ds, ls: y)),
+			("POSTS", (lambda y, p, ds, ls: p)),
+			("FREQ",  (lambda y, p, ds, ls: format(((datetime.strptime(max(ds), "%Y-%m-%d") - datetime.strptime(min(ds), "%Y-%m-%d")).days + 1) / p, ".2f"))),
+			("SIZE",  (lambda y, p, ds, ls: format(sum(len(entries[k]) for k in ds), ",d"))),
+			("WORDS", (lambda y, p, ds, ls: format(sum(ls), ",d"))),
+			("MIN",   (lambda y, p, ds, ls: min(ls))),
+			("MED",   (lambda y, p, ds, ls: sorted(ls)[floor(p / 2)])),
+			("MAX",   (lambda y, p, ds, ls: max(ls))),
+			("MEAN",  (lambda y, p, ds, ls: round(sum(ls) / p))),
+			("STDEV", (lambda y, p, ds, ls: round(sqrt(sum((round(sum(ls) / p) - length) ** 2 for length in ls) / p)))),
 	)
 	table = []
 	for year, dates in chain(groupby(selected, (lambda k: k[:YEAR_LENGTH])), (("all", selected),)):
 		dates = list(dates)
 		posts = len(dates)
 		lengths = [len(entries[date].split()) for date in dates]
-		table.append([str(fn(year, dates, posts, lengths)) for field, fn in columns])
+		table.append([str(fn(year, posts, dates, lengths)) for field, fn in columns])
 	widths = list(max(len(row[col]) for row in ([[field for field, fn in columns],] + table)) for col in range(0, len(columns)))
 	print("  ".join(col.center(widths[i]) for i, col in enumerate(field for field, fn in columns)))
 	print("  ".join(width * "-" for width in widths))

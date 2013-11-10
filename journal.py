@@ -16,6 +16,7 @@ DATE_REGEX = re.compile("([0-9]{4}-[0-9]{2}-[0-9]{2})(, (Mon|Tues|Wednes|Thurs|F
 RANGE_REGEX = re.compile("^([0-9]{4}(-[0-9]{2}(-[0-9]{2})?)?)?:?([0-9]{4}(-[0-9]{2}(-[0-9]{2})?)?)?$")
 REF_REGEX = re.compile("([0-9]{4}-[0-9]{2}-[0-9]{2})")
 YEAR_LENGTH = 4
+MONTH_LENGTH = 7
 DATE_LENGTH = 10
 
 arg_parser = ArgumentParser(usage="%(prog)s <operation> [options] [TERM ...]", description="a command line tool for viewing and maintaining a journal")

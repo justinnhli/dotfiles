@@ -233,21 +233,11 @@ elif args.action == "verify":
 			if not line:
 				continue
 			indent = len(re.match("\t*", line).group(0))
-			if indent == 0 and line[0] == " ":
-				errors.append((journal, line_number, "non-tab indentation"))
-				indent = len(re.match(" *", line).group(0))
 			if indent - prev_indent > 1:
-				errors.append((journal, line_number, "indentation"))
-			if line and line[-1] in ("\t", " "):
-				errors.append((journal, line_number, "end of line whitespace"))
-			if re.search("\t ", line):
-				errors.append((journal, line_number, "mixed tab/space indentation"))
-			if re.search("[^\t]\t", line):
-				errors.append((journal, line_number, "mid-line tab"))
-			if re.search("[^ -~\t]", line):
-				errors.append((journal, line_number, "non-ASCII characters"))
-			line = line.strip()
-			if not line.startswith("|") and "  " in line:
+				errors.append((journal, line_number, "unexpected indentation"))
+			if not re.search("^\t*[^ \t][ -~]*[^ \t]$", line):
+				errors.append((journal, line_number, "non-tab indentation, ending space, or non-ASCII character"))
+			if not line.strip().startswith("|") and "  " in line:
 				errors.append((journal, line_number, "multiple spaces"))
 			if indent == 0:
 				if DATE_REGEX.match(line):
@@ -262,7 +252,7 @@ elif args.action == "verify":
 						errors.append((journal, line_number, "duplicate dates"))
 					dates.add(cur_date)
 				else:
-					errors.append((journal, line_number, "indentation"))
+					errors.append((journal, line_number, "unindented text"))
 			prev_indent = indent
 	if errors:
 		print("\n".join("{}:{}: {}".format(*error) for error in errors))

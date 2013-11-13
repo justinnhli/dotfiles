@@ -23,25 +23,25 @@ arg_parser = ArgumentParser(usage="%(prog)s <operation> [options] [TERM ...]", d
 arg_parser.set_defaults(directory="./", ignores=[], icase=re.IGNORECASE, num_results=0, reverse=False, log=True, unit="year")
 arg_parser.add_argument("terms",  metavar="TERM", nargs="*", help="pattern which must exist in entries")
 group = arg_parser.add_argument_group("OPERATIONS").add_mutually_exclusive_group(required=True)
-group.add_argument("-A",           dest="action",       action="store_const",  const="archive",            help="archive to datetimed tarball")
-group.add_argument("-C",           dest="action",       action="store_const",  const="count",              help="count words and entries")
-group.add_argument("-G",           dest="action",       action="store_const",  const="graph",              help="graph entry references in DOT")
-group.add_argument("-L",           dest="action",       action="store_const",  const="list",               help="list entry dates")
-group.add_argument("-S",           dest="action",       action="store_const",  const="show",               help="show entry contents")
-group.add_argument("-U",           dest="action",       action="store_const",  const="update",             help="update tags and cache file")
-group.add_argument("-V",           dest="action",       action="store_const",  const="verify",             help="verify journal sanity")
-group = arg_parser.add_argument_group("INPUT OPTIONS")                                                     
-group.add_argument("--directory",  dest="directory",    action="store",                                    help="use journal files in directory")
-group.add_argument("--ignore",     dest="ignores",      action="append",                                   help="ignore specified file")
-group = arg_parser.add_argument_group("FILTER OPTIONS (APPLIES TO -[CGLS])")                                  
-group.add_argument("-d",           dest="date_range",   action="store",                                    help="only use entries in range")
-group.add_argument("-i",           dest="icase",        action="store_false",                              help="ignore case-insensitivity")
-group.add_argument("-n",           dest="num_results",  action="store",        type=int,                   help="max number of results")
-group = arg_parser.add_argument_group("OUTPUT OPTIONS")                                                       
-group.add_argument("-r",           dest="reverse",      action="store_true",                               help="reverse chronological order")
-group = arg_parser.add_argument_group("(OPERATION SPECIFIC) OPTIONS")                                         
-group.add_argument("--no-log",     dest="log",          action="store_false",                              help="[S] do not log search")
-group.add_argument("--unit",       dest="unit",         action="store",        choices=("year", "month"),  help="[C] tabulation unit")
+group.add_argument("-A",           dest="action",       action="store_const",  const="archive",                    help="archive to datetimed tarball")
+group.add_argument("-C",           dest="action",       action="store_const",  const="count",                      help="count words and entries")
+group.add_argument("-G",           dest="action",       action="store_const",  const="graph",                      help="graph entry references in DOT")
+group.add_argument("-L",           dest="action",       action="store_const",  const="list",                       help="list entry dates")
+group.add_argument("-S",           dest="action",       action="store_const",  const="show",                       help="show entry contents")
+group.add_argument("-U",           dest="action",       action="store_const",  const="update",                     help="update tags and cache file")
+group.add_argument("-V",           dest="action",       action="store_const",  const="verify",                     help="verify journal sanity")
+group = arg_parser.add_argument_group("INPUT OPTIONS")                                                             
+group.add_argument("--directory",  dest="directory",    action="store",                                            help="use journal files in directory")
+group.add_argument("--ignore",     dest="ignores",      action="append",                                           help="ignore specified file")
+group = arg_parser.add_argument_group("FILTER OPTIONS (APPLIES TO -[CGLS])")                                          
+group.add_argument("-d",           dest="date_range",   action="store",                                            help="only use entries in range")
+group.add_argument("-i",           dest="icase",        action="store_false",                                      help="ignore case-insensitivity")
+group.add_argument("-n",           dest="num_results",  action="store",        type=int,                           help="max number of results")
+group = arg_parser.add_argument_group("OUTPUT OPTIONS")                                                               
+group.add_argument("-r",           dest="reverse",      action="store_true",                                       help="reverse chronological order")
+group = arg_parser.add_argument_group("OPERATION-SPECIFIC OPTIONS")                                                 
+group.add_argument("--no-log",     dest="log",          action="store_false",                                      help="[S] do not log search")
+group.add_argument("--unit",       dest="unit",         action="store",        choices=("year", "month", "date"),  help="[C] tabulation unit")
 args = arg_parser.parse_args()
 
 if args.date_range and not all(dr and RANGE_REGEX.match(dr) for dr in args.date_range.split(",")):
@@ -102,7 +102,7 @@ if args.action == "archive":
 
 elif args.action == "count" and selected:
 	columns = (
-			("UNIT",  (lambda u, p, ds, ls: u)),
+			("PRD",   (lambda u, p, ds, ls: u)),
 			("POSTS", (lambda u, p, ds, ls: p)),
 			("FREQ",  (lambda u, p, ds, ls: format(((datetime.strptime(max(ds), "%Y-%m-%d") - datetime.strptime(min(ds), "%Y-%m-%d")).days + 1) / p, ".2f"))),
 			("SIZE",  (lambda u, p, ds, ls: format(sum(len(entries[k]) for k in ds), ",d"))),

@@ -65,8 +65,10 @@ OPTIONS
 	OUTPUT OPTIONS:
 	  -r                    reverse chronological order
 
-	MISC OPTIONS:
-	  --no-log              do not log search
+	OPERATION-SPECIFIC OPTIONS:
+	  --no-log              [S] do not log search
+	  --unit {year,month,date}
+							[C] tabulation unit
 
 BUGS
 ----

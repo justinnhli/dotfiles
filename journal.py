@@ -65,7 +65,7 @@ tags_file = join_path(args.directory, "tags")
 cache_file = join_path(args.directory, ".cache")
 index_file = join_path(args.directory, ".index")
 
-if file_exists(index_file):
+if args.use_cache and file_exists(index_file):
 	with open(index_file) as fd:
 		index = literal_eval("{" + fd.read() + "}")
 else:
@@ -74,7 +74,7 @@ else:
 entries = {}
 if not stdin.isatty():
 	raw_entries = stdin.read()
-elif args.action not in ("update", "verify") and file_exists(cache_file):
+elif args.action not in ("update", "verify") and args.use_cache and file_exists(cache_file):
 	with open(cache_file) as fd:
 		raw_entries = fd.read()
 else:
@@ -87,29 +87,37 @@ if not raw_entries:
 	arg_parser.error("no journal entries found or specified")
 entries.update((entry[:DATE_LENGTH], entry.strip()) for entry in raw_entries.strip().split("\n\n") if entry and DATE_REGEX.match(entry))
 
-selected = set()
+selected = set(entries.keys())
+search_terms = args.terms
+
+if index and any((term.lower() in index) for term in args.terms):
+	selected.intersection_update(*(index[term.lower()] for term in search_terms if term.lower() in index))
+	search_terms -= index.keys()
+
 if args.date_range:
-	first_date = min(entries.keys())
-	last_date = (datetime.strptime(max(entries.keys()), "%Y-%m-%d") + timedelta(days=1)).strftime("%Y-%m-%d")
+	first_date = min(selected)
+	last_date = (datetime.strptime(max(selected), "%Y-%m-%d") + timedelta(days=1)).strftime("%Y-%m-%d")
+	all_selected = selected
+	selected = set()
 	for date_range in args.date_range.split(","):
 		if ":" in date_range:
 			start_date, end_date = date_range.split(":")
 			start_date, end_date = (start_date or first_date, end_date or last_date)
 			start_date += "-01" * int((DATE_LENGTH - len(start_date)) / 2)
 			end_date += "-01" * int((DATE_LENGTH - len(end_date)) / 2)
-			selected |= set(k for k in entries.keys() if (start_date <= k < end_date))
+			selected |= set(k for k in all_selected if (start_date <= k < end_date))
 		else:
-			selected |= set(k for k in entries.keys() if k.startswith(date_range))
-else:
-	selected = set(entries.keys())
+			selected |= set(k for k in all_selected if k.startswith(date_range))
 
 index_updates = {}
 if selected:
-	for term in args.terms:
-		subset = set(filter(lambda k: re.search(term, entries[k], flags=args.icase|re.MULTILINE), selected))
-		if args.date_range is None and args.icase and not re.search("[^ -~]", term):
-			index_updates[term] = subset
-		selected = subset
+	if len(entries) == len(selected) and args.icase:
+		for term in search_terms:
+			index_updates[term] = set(filter(lambda k: re.search(term, entries[k], flags=args.icase|re.MULTILINE), entries.keys()))
+			selected &= index_updates[term]
+	else:
+		for term in search_terms:
+			selected = set(filter(lambda k: re.search(term, entries[k], flags=args.icase|re.MULTILINE), selected))
 
 if selected:
 	selected = sorted(selected, reverse=args.reverse)
@@ -244,7 +252,7 @@ elif args.action == "update":
 		fd.write("\n\n".join(sorted(entries.values())))
 	index.update(index_updates)
 	with open(index_file, "w") as fd:
-		fd.write("".join("\"{}\": {},\n".format(k.replace('"', '\\"'), v) for k, v in sorted(index.items())))
+		fd.write("".join("\"{}\": {},\n".format(k.replace('"', '\\"'), v) for k, v in sorted(index.items()) if len(v) < len(entries)))
 
 elif args.action == "verify":
 	errors = []

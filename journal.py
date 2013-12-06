@@ -51,6 +51,13 @@ if not stdin.isatty() and args.action in ("archive", "update", "verify"):
 args.directory = realpath(expanduser(args.directory))
 args.ignores = set(realpath(expanduser(path)) for path in args.ignores)
 
+if args.action == "archive":
+	filename = "jrnl{}".format(datetime.now().strftime("%Y%m%d%H%M%S"))
+	with tarfile.open("{}.tbz".format(filename), "w:bz2") as tar:
+		tar.add(args.directory, arcname=filename, filter=(lambda tarinfo: None if basename(tarinfo.name).startswith(".") else tarinfo))
+		tar.add(argv[0], arcname=join_path(filename, basename(argv[0])))
+	exit()
+
 log_file = join_path(args.directory, "log")
 tags_file = join_path(args.directory, "tags")
 cache_file = join_path(args.directory, ".cache")
@@ -94,13 +101,7 @@ if selected:
 	if args.num_results > 0:
 		selected = selected[:args.num_results]
 
-if args.action == "archive":
-	filename = "jrnl{}".format(datetime.now().strftime("%Y%m%d%H%M%S"))
-	with tarfile.open("{}.tbz".format(filename), "w:bz2") as tar:
-		tar.add(args.directory, arcname=filename, filter=(lambda tarinfo: None if basename(tarinfo.name).startswith(".") else tarinfo))
-		tar.add(argv[0], arcname=join_path(filename, basename(argv[0])))
-
-elif args.action == "count" and selected:
+if args.action == "count" and selected:
 	columns = (
 			("PRD",   (lambda u, p, ds, ls: u)),
 			("POSTS", (lambda u, p, ds, ls: p)),

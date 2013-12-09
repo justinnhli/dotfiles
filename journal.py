@@ -253,7 +253,7 @@ elif args.action == "update":
 		fd.write("\n\n".join(sorted(entries.values())))
 	index.update(index_updates)
 	with open(index_file, "w") as fd:
-		fd.write("".join("\"{}\": {},\n".format(k.replace('"', '\\"'), v) for k, v in sorted(index.items()) if len(v) < len(entries)))
+		fd.write("".join("\"{}\": {},\n".format(k.replace('"', '\\"'), sorted(v)) for k, v in sorted(index.items()) if len(v) < len(entries)))
 
 elif args.action == "verify":
 	errors = []

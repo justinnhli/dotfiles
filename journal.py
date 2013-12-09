@@ -129,7 +129,7 @@ if index_updates:
 		fd.write("".join("\"{}\": {},\n".format(k.lower().replace('"', '\\"'), sorted(v)) for k, v in index_updates.items()))
 
 if args.action == "count" and selected:
-	spacer = "  "
+	gap_size = 2
 	columns = (
 			("PRD",   (lambda u, p, ds, ls: u)),
 			("POSTS", (lambda u, p, ds, ls: p)),
@@ -150,9 +150,9 @@ if args.action == "count" and selected:
 		lengths = [len(entries[date].split()) for date in dates]
 		table.append([str(fn(unit, posts, dates, lengths)) for field, fn in columns])
 	widths = list(max(len(row[col]) for row in ([[field for field, fn in columns],] + table)) for col in range(0, len(columns)))
-	print(spacer.join(col.center(widths[i]) for i, col in enumerate(field for field, fn in columns)))
-	print(spacer.join(width * "-" for width in widths))
-	print("\n".join(spacer.join(col.rjust(widths[i]) for i, col in enumerate(row)) for row in table))
+	print((2 * " ").join(col.center(widths[i]) for i, col in enumerate(field for field, fn in columns)))
+	print((2 * " ").join(width * "-" for width in widths))
+	print("\n".join((2 * " ").join(col.rjust(widths[i]) for i, col in enumerate(row)) for row in table))
 
 elif args.action == "graph" and selected:
 	print('digraph {')

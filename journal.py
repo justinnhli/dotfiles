@@ -242,7 +242,7 @@ elif args.action == "update":
 	tags = []
 	for journal in journal_files:
 		rel_path = relpath(journal, args.directory)
-		with open(journal, "r") as fd:
+		with open(journal) as fd:
 			lines = fd.readlines()
 		for line_number, line in enumerate(lines, start=1):
 			if DATE_REGEX.match(line):
@@ -261,7 +261,7 @@ elif args.action == "verify":
 	prev_indent = 0
 	long_dates = None
 	for journal in journal_files:
-		with open(journal, "r") as fd:
+		with open(journal) as fd:
 			text = fd.read()
 		for line_number, line in enumerate(text.splitlines(), start=1):
 			if not line:

@@ -65,12 +65,6 @@ tags_file = join_path(args.directory, "tags")
 cache_file = join_path(args.directory, ".cache")
 index_file = join_path(args.directory, ".index")
 
-if args.use_cache and file_exists(index_file):
-	with open(index_file) as fd:
-		index = literal_eval("{" + fd.read() + "}")
-else:
-	index = {}
-
 entries = {}
 if not stdin.isatty():
 	raw_entries = stdin.read()
@@ -86,6 +80,16 @@ else:
 if not raw_entries:
 	arg_parser.error("no journal entries found or specified")
 entries.update((entry[:DATE_LENGTH], entry.strip()) for entry in raw_entries.strip().split("\n\n") if entry and DATE_REGEX.match(entry))
+
+index = {}
+if file_exists(index_file) and (args.action == "update" or args.use_cache):
+	with open(index_file) as fd:
+		index = literal_eval("{" + fd.read() + "}")
+
+if args.action == "update":
+	args.date_range = None
+	args.terms = list(index.keys())
+	index = {}
 
 selected = set(entries.keys())
 search_terms = args.terms

@@ -116,11 +116,11 @@ if args.date_range:
 index_updates = {}
 if len(entries) == len(selected) and args.icase:
 	for term in unindexed_terms:
-		index_updates[term] = set(filter(lambda k: re.search(term, entries[k], flags=args.icase|re.MULTILINE), entries.keys()))
+		index_updates[term] = set(k for k in entries.keys() if re.search(term, entries[k], flags=args.icase|re.MULTILINE))
 		selected &= index_updates[term]
 else:
 	for term in unindexed_terms:
-		selected = set(filter(lambda k: re.search(term, entries[k], flags=args.icase|re.MULTILINE), selected))
+		selected = set(k for k in selected if re.search(term, entries[k], flags=args.icase|re.MULTILINE))
 
 selected = sorted(selected, reverse=args.reverse)
 if args.num_results > 0:
@@ -145,7 +145,7 @@ if args.action == "count" and selected:
 			("STDEV", (lambda u, p, ds, ls: round(sqrt(sum((round(sum(ls) / p) - length) ** 2 for length in ls) / p)))),
 	)
 	table = []
-	unit_length =locals()[args.unit.upper() + "_LENGTH"]
+	unit_length = locals()[args.unit.upper() + "_LENGTH"]
 	for unit, dates in chain(groupby(selected, (lambda k: k[:unit_length])), (("all", selected),)):
 		dates = list(dates)
 		posts = len(dates)

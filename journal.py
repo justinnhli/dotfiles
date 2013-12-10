@@ -50,6 +50,7 @@ if args.date_range and not all(dr and RANGE_REGEX.match(dr) for dr in args.date_
 	arg_parser.error("argument -d: '{}' should be in format [YYYY[-MM[-DD]]][:][YYYY[-MM[-DD]]][,...]".format(args.date_range))
 if not stdin.isatty() and args.action in ("archive", "update", "verify"):
 	arg_parser.error("argument -[ATV]: operation can only be performed on files")
+args.terms = set(args.terms)
 args.directory = realpath(expanduser(args.directory))
 args.ignores = set(realpath(expanduser(path)) for path in args.ignores)
 
@@ -217,7 +218,7 @@ elif args.action == "show" and selected:
 					else:
 						options.append(" {} {}".format(option_string, option_value))
 		options = "-S" + "".join(sorted(options, key=(lambda x: (len(x) != 1, x.upper())))).replace(" -", "", 1)
-		terms = " ".join('"{}"'.format(term.replace('"', '\\"')) for term in sorted(args.terms))
+		terms = " ".join('"{}"'.format(term.replace('"', '\\"')) for term in args.terms)
 		with open(log_file, "a") as fd:
 			fd.write("{}\t{} {}\n".format(datetime.today().isoformat(" "), options, terms))
 	text = "\n\n".join(entries[k] for k in selected)

@@ -87,17 +87,16 @@ if file_exists(index_file) and (args.action == "update" or args.use_cache):
 	with open(index_file) as fd:
 		index = literal_eval("{" + fd.read() + "}")
 
+selected = set(entries.keys())
+indexed_terms = set(term for term in args.terms if term.lower() in index)
+unindexed_terms = set(term for term in args.terms if term not in index)
+
 if args.action == "update":
 	args.date_range = None
-	args.terms = list(index.keys())
-	index = {}
-
-selected = set(entries.keys())
-search_terms = args.terms
-
-if index and any((term.lower() in index) for term in args.terms):
-	selected.intersection_update(*(index[term.lower()] for term in search_terms if term.lower() in index))
-	search_terms -= index.keys()
+	indexed_terms = set(index.keys())
+	unindexed_terms = set()
+elif index and indexed_terms:
+	selected.intersection_update(*(index[term.lower()] for term in indexed_terms if term.lower() in index))
 
 if args.date_range:
 	first_date = min(selected)
@@ -115,19 +114,17 @@ if args.date_range:
 			selected |= set(k for k in all_selected if k.startswith(date_range))
 
 index_updates = {}
-if selected:
-	if len(entries) == len(selected) and args.icase:
-		for term in search_terms:
-			index_updates[term] = set(filter(lambda k: re.search(term, entries[k], flags=args.icase|re.MULTILINE), entries.keys()))
-			selected &= index_updates[term]
-	else:
-		for term in search_terms:
-			selected = set(filter(lambda k: re.search(term, entries[k], flags=args.icase|re.MULTILINE), selected))
+if len(entries) == len(selected) and args.icase:
+	for term in unindexed_terms:
+		index_updates[term] = set(filter(lambda k: re.search(term, entries[k], flags=args.icase|re.MULTILINE), entries.keys()))
+		selected &= index_updates[term]
+else:
+	for term in unindexed_terms:
+		selected = set(filter(lambda k: re.search(term, entries[k], flags=args.icase|re.MULTILINE), selected))
 
-if selected:
-	selected = sorted(selected, reverse=args.reverse)
-	if args.num_results > 0:
-		selected = selected[:args.num_results]
+selected = sorted(selected, reverse=args.reverse)
+if args.num_results > 0:
+	selected = selected[:args.num_results]
 
 if index_updates:
 	with open(index_file, "a") as fd:

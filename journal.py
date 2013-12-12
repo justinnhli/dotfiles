@@ -76,8 +76,12 @@ else:
 	journal_files = set()
 	for path, dirs, files in walk(args.directory):
 		journal_files.update(join_path(path, f) for f in files if f.endswith(".journal"))
-	journal_files = sorted(journal_files - args.ignores)
-	raw_entries = "\n\n".join(open(journal, "r").read().strip() for journal in journal_files)
+	journal_files -= args.ignores
+	file_entries = []
+	for journal in journal_files:
+		with open(journal) as fd:
+			file_entries.append(fd.read().strip())
+	raw_entries = "\n\n".join(file_entries)
 if not raw_entries:
 	arg_parser.error("no journal entries found or specified")
 entries.update((entry[:DATE_LENGTH], entry.strip()) for entry in raw_entries.strip().split("\n\n") if entry and DATE_REGEX.match(entry))

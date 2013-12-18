@@ -66,6 +66,8 @@ tags_file = join_path(args.directory, "tags") if stdin.isatty() else ""
 cache_file = join_path(args.directory, ".cache") if stdin.isatty() else ""
 index_file = join_path(args.directory, ".index") if stdin.isatty() else ""
 
+journal_files = set()
+raw_entries = ""
 entries = {}
 if not stdin.isatty():
 	raw_entries = stdin.read()
@@ -73,7 +75,6 @@ elif args.action not in ("update", "verify") and args.use_cache and file_exists(
 	with open(cache_file) as fd:
 		raw_entries = fd.read()
 else:
-	journal_files = set()
 	for path, dirs, files in walk(args.directory):
 		journal_files.update(join_path(path, f) for f in files if f.endswith(".journal"))
 	journal_files -= args.ignores
@@ -87,7 +88,7 @@ if not raw_entries:
 entries.update((entry[:DATE_LENGTH], entry.strip()) for entry in raw_entries.strip().split("\n\n") if entry and DATE_REGEX.match(entry))
 
 index = {}
-if file_exists(index_file) and (args.action == "update" or args.use_cache):
+if (args.action == "update" or args.use_cache) and file_exists(index_file):
 	with open(index_file) as fd:
 		index = literal_eval("{" + fd.read() + "}")
 
@@ -97,9 +98,10 @@ unindexed_terms = set(term for term in args.terms if term not in index)
 
 if args.action == "update":
 	args.date_range = None
+	args.icase = re.IGNORECASE
 	indexed_terms = set(index.keys())
 	unindexed_terms = set()
-elif index and indexed_terms:
+elif indexed_terms:
 	selected.intersection_update(*(index[term.lower()] for term in indexed_terms if term.lower() in index))
 
 if args.date_range:

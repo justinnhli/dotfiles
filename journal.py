@@ -251,7 +251,7 @@ elif args.action == "update":
 	for journal in journal_files:
 		rel_path = relpath(journal, args.directory)
 		with open(journal) as fd:
-			lines = fd.readlines()
+			lines = fd.read().splitlines()
 		for line_number, line in enumerate(lines, start=1):
 			if DATE_REGEX.match(line):
 				tags.append((line[:DATE_LENGTH], rel_path, line_number))
@@ -266,12 +266,12 @@ elif args.action == "update":
 elif args.action == "verify":
 	errors = []
 	dates = set()
-	prev_indent = 0
 	long_dates = None
 	for journal in journal_files:
 		with open(journal) as fd:
-			text = fd.read()
-		for line_number, line in enumerate(text.splitlines(), start=1):
+			lines = fd.read().splitlines()
+		prev_indent = 0
+		for line_number, line in enumerate(lines, start=1):
 			if not line:
 				continue
 			indent = len(re.match("\t*", line).group(0))

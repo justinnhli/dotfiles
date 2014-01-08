@@ -4,6 +4,7 @@ import re
 import tarfile
 from ast import literal_eval
 from argparse import ArgumentParser
+from collections import defaultdict
 from datetime import datetime, timedelta
 from itertools import chain, groupby
 from math import floor, sqrt
@@ -176,25 +177,18 @@ elif args.action == "graph" and selected:
 		ancestors[src] = set().union(*(ancestors.get(parent, set()) for parent in dests))
 		for dest in (dests - ancestors[src]):
 			edges[src].add('\t"{}" -> "{}";'.format(src, dest))
-			path = set((src, dest))
 			rep = dest
-			for rep in (src, dest):
-				while disjoint_sets[rep] != rep:
-					path.add(rep)
-					rep = disjoint_sets[rep]
-				path.add(rep)
-			for node in path:
-				disjoint_sets[node] = rep
+			while disjoint_sets[rep] != rep:
+				rep, disjoint_sets[rep] = disjoint_sets[rep], src
+			disjoint_sets[rep] = src
 		ancestors[src] |= dests
+	groups = defaultdict(set)
 	for rep in disjoint_sets:
-		path = set()
+		path = set((rep,))
 		while disjoint_sets[rep] != rep:
 			path.add(rep)
 			rep = disjoint_sets[rep]
-		path.add(rep)
-		for node in path:
-			disjoint_sets[node] = rep
-	groups = dict((k, list(v)) for k, v in groupby(sorted(selected, key=(lambda k: disjoint_sets[k])), (lambda k: disjoint_sets[k])))
+		groups[rep] |= path
 	for rep, srcs in sorted(groups.items(), reverse=(not args.reverse), key=(lambda x: len(x[1]))):
 		print('\t// component size {}'.format(len(srcs)))
 		for src in sorted(srcs, reverse=args.reverse):

@@ -178,9 +178,8 @@ elif args.action == "graph" and selected:
 		for dest in (dests - ancestors[src]):
 			edges[src].add('\t"{}" -> "{}";'.format(src, dest))
 			rep = dest
-			while disjoint_sets[rep] != rep:
+			while disjoint_sets[rep] != src:
 				disjoint_sets[rep], rep = src, disjoint_sets[rep]
-			disjoint_sets[rep] = src
 		ancestors[src] |= dests
 	groups = defaultdict(set)
 	for rep in disjoint_sets:
@@ -189,8 +188,8 @@ elif args.action == "graph" and selected:
 			path.add(rep)
 			rep = disjoint_sets[rep]
 		groups[rep] |= path
-	for rep, srcs in sorted(groups.items(), key=(lambda x: len(x[1])), reverse=(not args.reverse)):
-		print('\t// component size {}'.format(len(srcs)))
+	for rep, srcs in sorted(groups.items(), key=(lambda kv: (len(kv[1]), min(kv[1]))), reverse=(not args.reverse)):
+		print('\t// component size = {}'.format(len(srcs)))
 		for src in sorted(srcs, reverse=args.reverse):
 			print('\t"{}" [fontsize="{}"];'.format(src, len(entries[src].split()) / 100))
 			if edges[src]:

@@ -95,13 +95,17 @@ if (args.action == "update" or args.use_cache) and file_exists(index_file):
 
 selected = set(entries.keys())
 indexed_terms = set(term for term in args.terms if term.lower() in index)
-unindexed_terms = set(term for term in args.terms if term not in index)
+unindexed_terms = set()
+if args.icase:
+	unindexed_terms = set(term for term in args.terms if term not in index)
+else:
+	unindexed_terms = args.terms
 
 if args.action == "update":
 	args.date_range = None
 	args.icase = re.IGNORECASE
-	indexed_terms = set(index.keys())
-	unindexed_terms = set()
+	indexed_terms = set()
+	unindexed_terms = set(index.keys())
 elif indexed_terms:
 	selected.intersection_update(*(index[term.lower()] for term in indexed_terms if term.lower() in index))
 

@@ -143,8 +143,9 @@ if index_updates:
 
 if args.action == "count" and selected:
 	gap_size = 2
+	gap = gap_size * " "
 	columns = (
-		("PRD",   (lambda u, p, ds, ls: u)),
+		("DATE",  (lambda u, p, ds, ls: u)),
 		("POSTS", (lambda u, p, ds, ls: p)),
 		("FREQ",  (lambda u, p, ds, ls: format(((datetime.strptime(max(ds), "%Y-%m-%d") - datetime.strptime(min(ds), "%Y-%m-%d")).days + 1) / p, ".2f"))),
 		("SIZE",  (lambda u, p, ds, ls: format(sum(len(entries[k]) for k in ds), ",d"))),
@@ -158,14 +159,15 @@ if args.action == "count" and selected:
 	table = []
 	unit_length = locals()[args.unit.upper() + "_LENGTH"]
 	for unit, dates in chain(groupby(selected, (lambda k: k[:unit_length])), (("all", selected),)):
-		dates = list(dates)
+		dates = tuple(dates)
 		posts = len(dates)
-		lengths = [len(entries[date].split()) for date in dates]
-		table.append([str(fn(unit, posts, dates, lengths)) for field, fn in columns])
-	widths = list(max(len(row[col]) for row in ([[field for field, fn in columns]] + table)) for col in range(0, len(columns)))
-	print((2 * " ").join(col.center(widths[i]) for i, col in enumerate(field for field, fn in columns)))
-	print((2 * " ").join(width * "-" for width in widths))
-	print("\n".join((2 * " ").join(col.rjust(widths[i]) for i, col in enumerate(row)) for row in table))
+		lengths = tuple(len(entries[date].split()) for date in dates)
+		table.append(tuple(str(fn(unit, posts, dates, lengths)) for field, fn in columns))
+	header = tuple(field for field, fn in columns)
+	widths = tuple(max(len(row[col]) for row in chain([header], table)) for col in range(len(columns)))
+	print(gap.join(col.center(widths[i]) for i, col in enumerate(header)))
+	print(gap.join(width * "-" for width in widths))
+	print("\n".join(gap.join(col.rjust(widths[i]) for i, col in enumerate(row)) for row in table))
 
 elif args.action == "graph" and selected:
 	print('digraph {')
@@ -238,7 +240,7 @@ elif args.action == "show" and selected:
 					vim_args[-1] += " nosmartcase"
 				else:
 					vim_args[-1] += " noignorecase"
-				vim_args.extend(["-c", "let @/=\"\\\\v" + "|".join("({})".format(term) for term in args.terms).replace('"', r'\"').replace("@", r"\\@") + "\""])
+				vim_args.extend(("-c", "let @/=\"\\\\v" + "|".join("({})".format(term) for term in args.terms).replace('"', r'\"').replace("@", r"\\@") + "\""))
 			execvp("vim", vim_args)
 	else:
 		print(text)

@@ -120,7 +120,7 @@ if args.date_range:
 			start_date, end_date = (start_date or first_date, end_date or last_date)
 			start_date += "-01" * int((DATE_LENGTH - len(start_date)) / 2)
 			end_date += "-01" * int((DATE_LENGTH - len(end_date)) / 2)
-			selected |= set(k for k in all_selected if (start_date <= k < end_date))
+			selected |= set(k for k in all_selected if start_date <= k < end_date)
 		else:
 			selected |= set(k for k in all_selected if k.startswith(date_range))
 
@@ -179,7 +179,7 @@ elif args.action == "graph" and selected:
 	for src in sorted(selected):
 		dests = set(dest for dest in REF_REGEX.findall(entries[src]) if src > dest and dest in selected)
 		ancestors[src] = set().union(*(ancestors.get(parent, set()) for parent in dests))
-		for dest in (dests - ancestors[src]):
+		for dest in dests - ancestors[src]:
 			edges[src].add('\t"{}" -> "{}";'.format(src, dest))
 			rep = dest
 			while disjoint_sets[rep] != src:

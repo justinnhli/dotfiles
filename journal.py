@@ -127,11 +127,11 @@ if args.date_range:
 index_updates = {}
 if len(entries) == len(selected) and args.icase:
 	for term in unindexed_terms:
-		index_updates[term] = set(k for k in entries.keys() if re.search(term, entries[k], flags=args.icase|re.MULTILINE))
+		index_updates[term] = set(k for k in entries.keys() if re.search(term, entries[k], flags=(args.icase | re.MULTILINE)))
 		selected &= index_updates[term]
 else:
 	for term in unindexed_terms:
-		selected = set(k for k in selected if re.search(term, entries[k], flags=args.icase|re.MULTILINE))
+		selected = set(k for k in selected if re.search(term, entries[k], flags=(args.icase | re.MULTILINE)))
 
 selected = sorted(selected, reverse=args.reverse)
 if args.num_results > 0:
@@ -144,16 +144,16 @@ if index_updates:
 if args.action == "count" and selected:
 	gap_size = 2
 	columns = (
-			("PRD",   (lambda u, p, ds, ls: u)),
-			("POSTS", (lambda u, p, ds, ls: p)),
-			("FREQ",  (lambda u, p, ds, ls: format(((datetime.strptime(max(ds), "%Y-%m-%d") - datetime.strptime(min(ds), "%Y-%m-%d")).days + 1) / p, ".2f"))),
-			("SIZE",  (lambda u, p, ds, ls: format(sum(len(entries[k]) for k in ds), ",d"))),
-			("WORDS", (lambda u, p, ds, ls: format(sum(ls), ",d"))),
-			("MIN",   (lambda u, p, ds, ls: min(ls))),
-			("MED",   (lambda u, p, ds, ls: sorted(ls)[floor(p / 2)])),
-			("MAX",   (lambda u, p, ds, ls: max(ls))),
-			("MEAN",  (lambda u, p, ds, ls: round(sum(ls) / p))),
-			("STDEV", (lambda u, p, ds, ls: round(sqrt(sum((round(sum(ls) / p) - length) ** 2 for length in ls) / p)))),
+		("PRD",   (lambda u, p, ds, ls: u)),
+		("POSTS", (lambda u, p, ds, ls: p)),
+		("FREQ",  (lambda u, p, ds, ls: format(((datetime.strptime(max(ds), "%Y-%m-%d") - datetime.strptime(min(ds), "%Y-%m-%d")).days + 1) / p, ".2f"))),
+		("SIZE",  (lambda u, p, ds, ls: format(sum(len(entries[k]) for k in ds), ",d"))),
+		("WORDS", (lambda u, p, ds, ls: format(sum(ls), ",d"))),
+		("MIN",   (lambda u, p, ds, ls: min(ls))),
+		("MED",   (lambda u, p, ds, ls: sorted(ls)[floor(p / 2)])),
+		("MAX",   (lambda u, p, ds, ls: max(ls))),
+		("MEAN",  (lambda u, p, ds, ls: round(sum(ls) / p))),
+		("STDEV", (lambda u, p, ds, ls: round(sqrt(sum((round(sum(ls) / p) - length) ** 2 for length in ls) / p)))),
 	)
 	table = []
 	unit_length = locals()[args.unit.upper() + "_LENGTH"]
@@ -162,7 +162,7 @@ if args.action == "count" and selected:
 		posts = len(dates)
 		lengths = [len(entries[date].split()) for date in dates]
 		table.append([str(fn(unit, posts, dates, lengths)) for field, fn in columns])
-	widths = list(max(len(row[col]) for row in ([[field for field, fn in columns],] + table)) for col in range(0, len(columns)))
+	widths = list(max(len(row[col]) for row in ([[field for field, fn in columns]] + table)) for col in range(0, len(columns)))
 	print((2 * " ").join(col.center(widths[i]) for i, col in enumerate(field for field, fn in columns)))
 	print((2 * " ").join(width * "-" for width in widths))
 	print("\n".join((2 * " ").join(col.rjust(widths[i]) for i, col in enumerate(row)) for row in table))

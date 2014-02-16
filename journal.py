@@ -14,6 +14,7 @@ from stat import S_IRUSR
 from sys import stdin, stdout, argv
 from tempfile import mkstemp
 
+FILE_EXTENSION = ".journal"
 DATE_REGEX = re.compile("([0-9]{4}-[0-9]{2}-[0-9]{2})(, (Mon|Tues|Wednes|Thurs|Fri|Satur|Sun)day)?")
 RANGE_REGEX = re.compile("^([0-9]{4}(-[0-9]{2}(-[0-9]{2})?)?)?:?([0-9]{4}(-[0-9]{2}(-[0-9]{2})?)?)?$")
 REF_REGEX = re.compile("([0-9]{4}-[0-9]{2}-[0-9]{2})")
@@ -77,7 +78,7 @@ elif args.action not in ("update", "verify") and args.use_cache and file_exists(
         raw_entries = fd.read()
 else:
     for path, dirs, files in walk(args.directory):
-        journal_files.update(join_path(path, f) for f in files if f.endswith(".journal"))
+        journal_files.update(join_path(path, f) for f in files if f.endswith(FILE_EXTENSION))
     journal_files -= args.ignores
     file_entries = []
     for journal in journal_files:
@@ -225,7 +226,7 @@ elif args.action == "show" and selected:
             fd.write("{}\t{} {}\n".format(datetime.today().isoformat(" "), options, terms))
     text = "\n\n".join(entries[k] for k in selected)
     if stdout.isatty():
-        temp_file = mkstemp(".journal")[1]
+        temp_file = mkstemp(FILE_EXTENSION)[1]
         with open(temp_file, "w") as fd:
             fd.write(text)
         chmod(temp_file, S_IRUSR)
@@ -284,7 +285,7 @@ elif args.action == "verify":
                 if DATE_REGEX.match(line):
                     entry_date = line[:DATE_LENGTH]
                     cur_date = datetime.strptime(entry_date, "%Y-%m-%d")
-                    if not entry_date.startswith(re.sub(".journal", "", basename(journal))):
+                    if not entry_date.startswith(re.sub(FILE_EXTENSION, "", basename(journal))):
                         errors.append(journal, line_number, "filename doesn't match entry")
                     if long_dates is None:
                         long_dates = (len(line) > DATE_LENGTH)

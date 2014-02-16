@@ -282,12 +282,15 @@ elif args.action == "verify":
                 errors.append((journal, line_number, "multiple spaces"))
             if indent == 0:
                 if DATE_REGEX.match(line):
-                    cur_date = datetime.strptime(line[:DATE_LENGTH], "%Y-%m-%d")
+                    entry_date = line[:DATE_LENGTH]
+                    cur_date = datetime.strptime(entry_date, "%Y-%m-%d")
+                    if not entry_date.startswith(re.sub(".journal", "", basename(journal))):
+                        errors.append(journal, line_number, "filename doesn't match entry")
                     if long_dates is None:
                         long_dates = (len(line) > DATE_LENGTH)
-                    if long_dates != (len(line) > DATE_LENGTH):
+                    elif long_dates != (len(line) > DATE_LENGTH):
                         errors.append((journal, line_number, "inconsistent date format"))
-                    if len(line) > DATE_LENGTH and line != cur_date.strftime("%Y-%m-%d, %A"):
+                    if long_dates and line != cur_date.strftime("%Y-%m-%d, %A"):
                         errors.append((journal, line_number, "date correctness"))
                     if cur_date in dates:
                         errors.append((journal, line_number, "duplicate dates"))

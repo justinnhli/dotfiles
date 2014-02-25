@@ -23,29 +23,29 @@ MONTH_LENGTH = 7
 DATE_LENGTH = 10
 
 arg_parser = ArgumentParser(usage="%(prog)s <operation> [options] [TERM ...]", description="a command line tool for viewing and maintaining a journal")
-arg_parser.set_defaults(directory="./", ignores=[], icase=re.IGNORECASE, num_results=0, reverse=False, log=True, unit="year", use_cache=True)
+arg_parser.set_defaults(directory="./", ignores=[], icase=re.IGNORECASE, num_results=0, reverse=False, log=True, unit="year", use_cache="default")
 arg_parser.add_argument("terms",  metavar="TERM", nargs="*", help="pattern which must exist in entries")
 group = arg_parser.add_argument_group("OPERATIONS").add_mutually_exclusive_group(required=True)
-group.add_argument("-A",           dest="action",      action="store_const", const="archive",                   help="archive to datetimed tarball")
-group.add_argument("-C",           dest="action",      action="store_const", const="count",                     help="count words and entries")
-group.add_argument("-G",           dest="action",      action="store_const", const="graph",                     help="graph entry references in DOT")
-group.add_argument("-L",           dest="action",      action="store_const", const="list",                      help="list entry dates")
-group.add_argument("-S",           dest="action",      action="store_const", const="show",                      help="show entry contents")
-group.add_argument("-U",           dest="action",      action="store_const", const="update",                    help="update tags and cache file")
-group.add_argument("-V",           dest="action",      action="store_const", const="verify",                    help="verify journal sanity")
+group.add_argument("-A",          dest="action",      action="store_const", const="archive",                   help="archive to datetimed tarball")
+group.add_argument("-C",          dest="action",      action="store_const", const="count",                     help="count words and entries")
+group.add_argument("-G",          dest="action",      action="store_const", const="graph",                     help="graph entry references in DOT")
+group.add_argument("-L",          dest="action",      action="store_const", const="list",                      help="list entry dates")
+group.add_argument("-S",          dest="action",      action="store_const", const="show",                      help="show entry contents")
+group.add_argument("-U",          dest="action",      action="store_const", const="update",                    help="update tags and cache file")
+group.add_argument("-V",          dest="action",      action="store_const", const="verify",                    help="verify journal sanity")
 group = arg_parser.add_argument_group("INPUT OPTIONS")
-group.add_argument("--directory",  dest="directory",   action="store",                                          help="use journal files in directory")
-group.add_argument("--ignore",     dest="ignores",     action="append",                                         help="ignore specified file")
-group.add_argument("--skip-cache", dest="use_cache",   action="store_false",                                    help="do not use cached entries and indices")
+group.add_argument("--directory", dest="directory",   action="store",                                          help="use journal files in directory")
+group.add_argument("--ignore",    dest="ignores",     action="append",                                         help="ignore specified file")
+group.add_argument("--use-cache", dest="use_cache",   action="store",       choices=("default", "yes", "no"),  help="use cached entries and indices")
 group = arg_parser.add_argument_group("FILTER OPTIONS (APPLIES TO -[CGLS])")
-group.add_argument("-d",           dest="date_range",  action="store",                                          help="only use entries in range")
-group.add_argument("-i",           dest="icase",       action="store_false",                                    help="ignore case-insensitivity")
-group.add_argument("-n",           dest="num_results", action="store",       type=int,                          help="max number of results")
+group.add_argument("-d",          dest="date_range",  action="store",                                          help="only use entries in range")
+group.add_argument("-i",          dest="icase",       action="store_false",                                    help="ignore case-insensitivity")
+group.add_argument("-n",          dest="num_results", action="store",       type=int,                          help="max number of results")
 group = arg_parser.add_argument_group("OUTPUT OPTIONS")
-group.add_argument("-r",           dest="reverse",     action="store_true",                                     help="reverse chronological order")
+group.add_argument("-r",          dest="reverse",     action="store_true",                                     help="reverse chronological order")
 group = arg_parser.add_argument_group("OPERATION-SPECIFIC OPTIONS")
-group.add_argument("--no-log",     dest="log",         action="store_false",                                    help="[S] do not log search")
-group.add_argument("--unit",       dest="unit",        action="store",       choices=("year", "month", "date"), help="[C] tabulation unit")
+group.add_argument("--no-log",    dest="log",         action="store_false",                                    help="[S] do not log search")
+group.add_argument("--unit",      dest="unit",        action="store",       choices=("year", "month", "date"), help="[C] tabulation unit")
 args = arg_parser.parse_args()
 
 if args.date_range and not all(dr and RANGE_REGEX.match(dr) for dr in args.date_range.split(",")):
@@ -73,7 +73,7 @@ raw_entries = ""
 entries = {}
 if not stdin.isatty():
     raw_entries = stdin.read()
-elif args.action not in ("update", "verify") and args.use_cache and file_exists(cache_file):
+elif file_exists(cache_file) and (args.use_cache == "yes" or (args.action not in ("update", "verify") and args.use_cache == "default")):
     with open(cache_file) as fd:
         raw_entries = fd.read()
 else:
@@ -90,7 +90,7 @@ if not raw_entries:
 entries.update((entry[:DATE_LENGTH], entry.strip()) for entry in raw_entries.strip().split("\n\n") if entry and DATE_REGEX.match(entry))
 
 index = {}
-if (args.action == "update" or args.use_cache) and file_exists(index_file):
+if file_exists(index_file) and args.use_cache != "no":
     with open(index_file) as fd:
         index = literal_eval("{" + fd.read() + "}")
 
@@ -208,7 +208,7 @@ elif args.action == "list" and selected:
     print("\n".join(selected))
 
 elif args.action == "show" and selected:
-    if args.log and file_exists(log_file):
+    if file_exists(log_file) and args.log:
         args_dict = vars(args)
         options = []
         for option_string, option in vars(arg_parser)["_option_string_actions"].items():

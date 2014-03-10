@@ -301,6 +301,9 @@ elif args.action == "verify":
             prev_indent = indent
     if errors:
         print("\n".join("{}:{}: {}".format(*error) for error in errors))
-    for key, value in entries.items():
+    errors = []
+    for key, value in sorted(entries.items()):
         if value.count('"') % 2:
-            errors.append(("odd quotation marks", datetime.strptime(key, "%Y-%m-%d"), re.sub("^.*\n", "", value)))
+            errors.append((key, "odd quotation marks"))
+    if errors:
+        print("\n".join("{}: {}".format(*error) for error in errors))

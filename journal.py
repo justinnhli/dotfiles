@@ -286,7 +286,7 @@ elif args.action == "verify":
                     entry_date = line[:DATE_LENGTH]
                     cur_date = datetime.strptime(entry_date, "%Y-%m-%d")
                     if not entry_date.startswith(re.sub(FILE_EXTENSION, "", basename(journal))):
-                        errors.append(journal, line_number, "filename doesn't match entry")
+                        errors.append((journal, line_number, "filename doesn't match entry"))
                     if long_dates is None:
                         long_dates = (len(line) > DATE_LENGTH)
                     elif long_dates != (len(line) > DATE_LENGTH):

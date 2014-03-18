@@ -4,7 +4,7 @@ import re
 import tarfile
 from ast import literal_eval
 from argparse import ArgumentParser
-from collections import defaultdict
+from collections import defaultdict, OrderedDict
 from datetime import datetime, timedelta
 from itertools import chain, groupby
 from math import floor, sqrt
@@ -145,7 +145,7 @@ if index_updates:
 if args.action == "count" and selected:
     gap_size = 2
     gap = gap_size * " "
-    columns = (
+    columns = OrderedDict([
         ("DATE",  (lambda u, p, ds, ls: u)),
         ("POSTS", (lambda u, p, ds, ls: p)),
         ("FREQ",  (lambda u, p, ds, ls: format(((datetime.strptime(max(ds), "%Y-%m-%d") - datetime.strptime(min(ds), "%Y-%m-%d")).days + 1) / p, ".2f"))),
@@ -156,16 +156,17 @@ if args.action == "count" and selected:
         ("MAX",   (lambda u, p, ds, ls: max(ls))),
         ("MEAN",  (lambda u, p, ds, ls: round(sum(ls) / p))),
         ("STDEV", (lambda u, p, ds, ls: round(sqrt(sum((round(sum(ls) / p) - length) ** 2 for length in ls) / p)))),
-    )
+    ])
     table = []
     unit_length = locals()[args.unit.upper() + "_LENGTH"]
+    length_map = dict((date, len(entries[date].split())) for date in selected)
     for unit, dates in chain(groupby(selected, (lambda k: k[:unit_length])), (("all", selected),)):
         dates = tuple(dates)
         posts = len(dates)
-        lengths = tuple(len(entries[date].split()) for date in dates)
-        table.append(tuple(str(fn(unit, posts, dates, lengths)) for field, fn in columns))
-    header = tuple(field for field, fn in columns)
-    widths = tuple(max(len(row[col]) for row in chain([header], table)) for col in range(len(columns)))
+        lengths = tuple(length_map[date] for date in dates)
+        table.append(tuple(str(fn(unit, posts, dates, lengths)) for fn in columns.values()))
+    header = tuple(columns.keys())
+    widths = tuple(max(len(row[col]) for row in chain([header,], table)) for col in range(len(columns)))
     print(gap.join(col.center(widths[i]) for i, col in enumerate(header)))
     print(gap.join(width * "-" for width in widths))
     print("\n".join(gap.join(col.rjust(widths[i]) for i, col in enumerate(row)) for row in table))

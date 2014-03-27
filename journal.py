@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.4
 
 import re
 import tarfile
@@ -11,6 +11,7 @@ from math import floor, sqrt
 from os import chdir as cd, chmod, execvp, fork, remove as rm, wait, walk
 from os.path import basename, exists as file_exists, expanduser, join as join_path, realpath, relpath
 from stat import S_IRUSR
+from statistics import mean, median, stdev
 from sys import stdin, stdout, argv
 from tempfile import mkstemp
 
@@ -152,10 +153,10 @@ if args.action == "count" and selected:
         ("SIZE",  (lambda u, p, ds, ls: format(sum(len(entries[k]) for k in ds), ",d"))),
         ("WORDS", (lambda u, p, ds, ls: format(sum(ls), ",d"))),
         ("MIN",   (lambda u, p, ds, ls: min(ls))),
-        ("MED",   (lambda u, p, ds, ls: sorted(ls)[floor(p / 2)])),
+        ("MED",   (lambda u, p, ds, ls: round(mean(ls)))),
         ("MAX",   (lambda u, p, ds, ls: max(ls))),
         ("MEAN",  (lambda u, p, ds, ls: round(sum(ls) / p))),
-        ("STDEV", (lambda u, p, ds, ls: round(sqrt(sum((round(sum(ls) / p) - length) ** 2 for length in ls) / p)))),
+        ("STDEV", (lambda u, p, ds, ls: round(stdev(ls)))),
     ])
     table = []
     unit_length = locals()[args.unit.upper() + "_LENGTH"]

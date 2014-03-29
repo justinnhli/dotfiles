@@ -7,7 +7,6 @@ from argparse import ArgumentParser
 from collections import defaultdict, OrderedDict
 from datetime import datetime, timedelta
 from itertools import chain, groupby
-from math import floor, sqrt
 from os import chdir as cd, chmod, execvp, fork, remove as rm, wait, walk
 from os.path import basename, exists as file_exists, expanduser, join as join_path, realpath, relpath
 from stat import S_IRUSR
@@ -153,9 +152,9 @@ if args.action == "count" and selected:
         ("SIZE",  (lambda u, p, ds, ls: format(sum(len(entries[k]) for k in ds), ",d"))),
         ("WORDS", (lambda u, p, ds, ls: format(sum(ls), ",d"))),
         ("MIN",   (lambda u, p, ds, ls: min(ls))),
-        ("MED",   (lambda u, p, ds, ls: round(mean(ls)))),
+        ("MED",   (lambda u, p, ds, ls: round(median(ls)))),
         ("MAX",   (lambda u, p, ds, ls: max(ls))),
-        ("MEAN",  (lambda u, p, ds, ls: round(sum(ls) / p))),
+        ("MEAN",  (lambda u, p, ds, ls: round(mean(ls)))),
         ("STDEV", (lambda u, p, ds, ls: round(stdev(ls)))),
     ])
     table = []

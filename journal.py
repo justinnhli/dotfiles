@@ -126,13 +126,13 @@ if args.date_range:
             selected |= set(k for k in all_selected if k.startswith(date_range))
 
 index_updates = {}
-if len(entries) == len(selected) and args.icase:
+if len(entries) == len(selected):
     for term in unindexed_terms:
-        index_updates[term] = set(k for k in entries.keys() if re.search(term, entries[k], flags=(args.icase | re.MULTILINE)))
+        term = term.lower()
+        index_updates[term] = set(k for k in entries.keys() if re.search(term, entries[k], flags=(re.IGNORECASE | re.MULTILINE)))
         selected &= index_updates[term]
-else:
-    for term in unindexed_terms:
-        selected = set(k for k in selected if re.search(term, entries[k], flags=(args.icase | re.MULTILINE)))
+for term in unindexed_terms:
+    selected = set(k for k in selected if re.search(term, entries[k], flags=(args.icase | re.MULTILINE)))
 
 selected = sorted(selected, reverse=args.reverse)
 if args.num_results > 0:

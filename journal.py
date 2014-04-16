@@ -171,6 +171,24 @@ if len(entries) == len(selected):
         term = term.lower()
         index_updates[term] = set(k for k in entries.keys() if re.search(term, entries[k], flags=(re.IGNORECASE | re.MULTILINE)))
         selected &= index_updates[term]
+
+if args.action == "update":
+    tags = []
+    for journal in journal_files:
+        rel_path = relpath(journal, args.directory)
+        with open(journal) as fd:
+            lines = fd.read().splitlines()
+        for line_number, line in enumerate(lines, start=1):
+            if DATE_REGEX.match(line):
+                tags.append((line[:DATE_LENGTH], rel_path, line_number))
+    with open(tags_file, "w") as fd:
+        fd.write("\n".join("{}\t{}\t{}".format(*tag) for tag in sorted(tags)))
+    with open(cache_file, "w") as fd:
+        fd.write("\n\n".join(sorted(entries.values())))
+    with open(index_file, "w") as fd:
+        fd.write("".join("\"{}\": {},\n".format(k.replace('"', '\\"'), sorted(v)) for k, v in sorted(index_updates.items())))
+    exit()
+
 for term in unindexed_terms:
     selected = set(k for k in selected if re.search(term, entries[k], flags=(args.icase | re.MULTILINE)))
 
@@ -286,20 +304,3 @@ elif args.action == "show" and selected:
             execvp("vim", vim_args)
     else:
         print(text)
-
-elif args.action == "update":
-    tags = []
-    for journal in journal_files:
-        rel_path = relpath(journal, args.directory)
-        with open(journal) as fd:
-            lines = fd.read().splitlines()
-        for line_number, line in enumerate(lines, start=1):
-            if DATE_REGEX.match(line):
-                tags.append((line[:DATE_LENGTH], rel_path, line_number))
-    with open(tags_file, "w") as fd:
-        fd.write("\n".join("{}\t{}\t{}".format(*tag) for tag in sorted(tags)))
-    with open(cache_file, "w") as fd:
-        fd.write("\n\n".join(sorted(entries.values())))
-    index.update(index_updates)
-    with open(index_file, "w") as fd:
-        fd.write("".join("\"{}\": {},\n".format(k.replace('"', '\\"'), sorted(v)) for k, v in sorted(index.items())))

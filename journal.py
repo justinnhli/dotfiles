@@ -189,18 +189,21 @@ if args.action == "update":
         fd.write("".join("\"{}\": {},\n".format(k.replace('"', '\\"'), sorted(v)) for k, v in sorted(index_updates.items())))
     exit()
 
+if index_updates:
+    with open(index_file, "a") as fd:
+        fd.write("".join("\"{}\": {},\n".format(k.lower().replace('"', '\\"'), sorted(v)) for k, v in index_updates.items()))
+
 for term in unindexed_terms:
     selected = set(k for k in selected if re.search(term, entries[k], flags=(args.icase | re.MULTILINE)))
+
+if not selected:
+    exit()
 
 selected = sorted(selected, reverse=args.reverse)
 if args.num_results > 0:
     selected = selected[:args.num_results]
 
-if index_updates:
-    with open(index_file, "a") as fd:
-        fd.write("".join("\"{}\": {},\n".format(k.lower().replace('"', '\\"'), sorted(v)) for k, v in index_updates.items()))
-
-if args.action == "count" and selected:
+if args.action == "count":
     gap_size = 2
     gap = gap_size * " "
     columns = OrderedDict([
@@ -229,7 +232,7 @@ if args.action == "count" and selected:
     print(gap.join(width * "-" for width in widths))
     print("\n".join(gap.join(col.rjust(widths[i]) for i, col in enumerate(row)) for row in table))
 
-elif args.action == "graph" and selected:
+elif args.action == "graph":
     print('digraph {')
     print('\tgraph [size="48", model="subset", rankdir="{}"];'.format('TB' if args.reverse else 'BT'))
     print('\tnode [fontcolor="#4E9A06", shape="none"];')
@@ -263,10 +266,10 @@ elif args.action == "graph" and selected:
         print()
     print('}')
 
-elif args.action == "list" and selected:
+elif args.action == "list":
     print("\n".join(selected))
 
-elif args.action == "show" and selected:
+elif args.action == "show":
     if file_exists(log_file) and args.log:
         args_dict = vars(args)
         options = []

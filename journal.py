@@ -24,7 +24,7 @@ DATE_LENGTH = 10
 
 arg_parser = ArgumentParser(usage="%(prog)s <operation> [options] [TERM ...]", description="a command line tool for viewing and maintaining a journal")
 arg_parser.set_defaults(directory="./", ignores=[], icase=re.IGNORECASE, num_results=0, reverse=False, log=True, unit="year", use_cache="default")
-arg_parser.add_argument("terms",  metavar="TERM", nargs="*", help="pattern which must exist in entries")
+arg_parser.add_argument("terms", metavar="TERM", nargs="*", help="pattern which must exist in entries")
 group = arg_parser.add_argument_group("OPERATIONS").add_mutually_exclusive_group(required=True)
 group.add_argument("-A",          dest="action",      action="store_const", const="archive",                   help="archive to datetimed tarball")
 group.add_argument("-C",          dest="action",      action="store_const", const="count",                     help="count words and entries")

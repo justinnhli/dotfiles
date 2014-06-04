@@ -216,7 +216,7 @@ if args.action == "count":
         ("MED",   (lambda u, p, ds, ls: round(median(ls)))),
         ("MAX",   (lambda u, p, ds, ls: max(ls))),
         ("MEAN",  (lambda u, p, ds, ls: round(mean(ls)))),
-        ("STDEV", (lambda u, p, ds, ls: round(stdev(ls)))),
+        ("STDEV", (lambda u, p, ds, ls: round(stdev(ls)) if len(ls) > 1 else 0)),
     ])
     table = []
     unit_length = locals()[args.unit.upper() + "_LENGTH"]

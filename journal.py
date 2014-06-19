@@ -89,52 +89,6 @@ if not raw_entries:
     arg_parser.error("no journal entries found or specified")
 entries.update((entry[:DATE_LENGTH], entry.strip()) for entry in raw_entries.strip().split("\n\n") if entry and DATE_REGEX.match(entry))
 
-if args.action == "verify":
-    errors = []
-    dates = set()
-    long_dates = None
-    for journal in journal_files:
-        with open(journal) as fd:
-            lines = fd.read().splitlines()
-        prev_indent = 0
-        for line_number, line in enumerate(lines, start=1):
-            if not line:
-                continue
-            indent = len(re.match("\t*", line).group(0))
-            if indent - prev_indent > 1:
-                errors.append((journal, line_number, "unexpected indentation"))
-            if not re.search("^\t*[^ \t][ -~]*[^ \t]$", line):
-                errors.append((journal, line_number, "non-tab indentation, ending space, or non-ASCII character"))
-            if not line.strip().startswith("|") and "  " in line:
-                errors.append((journal, line_number, "multiple spaces"))
-            if indent == 0:
-                if DATE_REGEX.match(line):
-                    entry_date = line[:DATE_LENGTH]
-                    cur_date = datetime.strptime(entry_date, "%Y-%m-%d")
-                    if not entry_date.startswith(re.sub(FILE_EXTENSION, "", basename(journal))):
-                        errors.append((journal, line_number, "filename doesn't match entry"))
-                    if long_dates is None:
-                        long_dates = (len(line) > DATE_LENGTH)
-                    elif long_dates != (len(line) > DATE_LENGTH):
-                        errors.append((journal, line_number, "inconsistent date format"))
-                    if long_dates and line != cur_date.strftime("%Y-%m-%d, %A"):
-                        errors.append((journal, line_number, "date correctness"))
-                    if cur_date in dates:
-                        errors.append((journal, line_number, "duplicate dates"))
-                    dates.add(cur_date)
-                else:
-                    errors.append((journal, line_number, "unindented text"))
-            prev_indent = indent
-    if errors:
-        print("\n".join("{}:{}: {}".format(*error) for error in errors))
-    errors = []
-    for key, value in sorted(entries.items()):
-        if value.count('"') % 2:
-            errors.append((key, "odd quotation marks"))
-    if errors:
-        print("\n".join("{}: {}".format(*error) for error in errors))
-    exit()
-
 index = {}
 if file_exists(index_file) and args.use_cache != "no":
     with open(index_file) as fd:
@@ -307,3 +261,48 @@ elif args.action == "show":
             execvp("vim", vim_args)
     else:
         print(text)
+
+elif args.action == "verify":
+    errors = []
+    dates = set()
+    long_dates = None
+    for journal in journal_files:
+        with open(journal) as fd:
+            lines = fd.read().splitlines()
+        prev_indent = 0
+        for line_number, line in enumerate(lines, start=1):
+            if not line:
+                continue
+            indent = len(re.match("\t*", line).group(0))
+            if indent - prev_indent > 1:
+                errors.append((journal, line_number, "unexpected indentation"))
+            if not re.search("^\t*[^ \t][ -~]*[^ \t]$", line):
+                errors.append((journal, line_number, "non-tab indentation, ending space, or non-ASCII character"))
+            if not line.strip().startswith("|") and "  " in line:
+                errors.append((journal, line_number, "multiple spaces"))
+            if indent == 0:
+                if DATE_REGEX.match(line):
+                    entry_date = line[:DATE_LENGTH]
+                    cur_date = datetime.strptime(entry_date, "%Y-%m-%d")
+                    if not entry_date.startswith(re.sub(FILE_EXTENSION, "", basename(journal))):
+                        errors.append((journal, line_number, "filename doesn't match entry"))
+                    if long_dates is None:
+                        long_dates = (len(line) > DATE_LENGTH)
+                    elif long_dates != (len(line) > DATE_LENGTH):
+                        errors.append((journal, line_number, "inconsistent date format"))
+                    if long_dates and line != cur_date.strftime("%Y-%m-%d, %A"):
+                        errors.append((journal, line_number, "date correctness"))
+                    if cur_date in dates:
+                        errors.append((journal, line_number, "duplicate dates"))
+                    dates.add(cur_date)
+                else:
+                    errors.append((journal, line_number, "unindented text"))
+            prev_indent = indent
+    if errors:
+        print("\n".join("{}:{}: {}".format(*error) for error in errors))
+    errors = []
+    for key, value in sorted(entries.items()):
+        if value.count('"') % 2:
+            errors.append((key, "odd quotation marks"))
+    if errors:
+        print("\n".join("{}: {}".format(*error) for error in errors))

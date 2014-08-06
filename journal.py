@@ -57,7 +57,7 @@ args.directory = realpath(expanduser(args.directory))
 args.ignores = set(realpath(expanduser(path)) for path in args.ignores)
 
 if args.action == "archive":
-    filename = "jrnl{}".format(datetime.now().strftime("%Y%m%d%H%M%S"))
+    filename = "jrnl" + datetime.now().strftime("%Y%m%d%H%M%S")
     with tarfile.open("{}.tbz".format(filename), "w:bz2") as tar:
         tar.add(args.directory, arcname=filename, filter=(lambda tarinfo: None if basename(tarinfo.name).startswith(".") else tarinfo))
         tar.add(argv[0], arcname=join_path(filename, basename(argv[0])))
@@ -160,7 +160,7 @@ if args.num_results > 0:
 if args.action == "count":
     gap_size = 2
     gap = gap_size * " "
-    columns = OrderedDict([
+    columns = OrderedDict((
         ("DATE",  (lambda u, p, ds, ls: u)),
         ("POSTS", (lambda u, p, ds, ls: p)),
         ("FREQ",  (lambda u, p, ds, ls: format(((datetime.strptime(max(ds), "%Y-%m-%d") - datetime.strptime(min(ds), "%Y-%m-%d")).days + 1) / p, ".2f"))),
@@ -171,27 +171,22 @@ if args.action == "count":
         ("MAX",   (lambda u, p, ds, ls: max(ls))),
         ("MEAN",  (lambda u, p, ds, ls: round(mean(ls)))),
         ("STDEV", (lambda u, p, ds, ls: round(stdev(ls)) if len(ls) > 1 else 0)),
-    ])
-    table = []
+    ))
     unit_length = locals()[args.unit.upper() + "_LENGTH"]
     length_map = dict((date, len(entries[date].split())) for date in selected)
+    table = []
     for unit, dates in chain(groupby(selected, (lambda k: k[:unit_length])), (("all", selected),)):
         dates = tuple(dates)
         posts = len(dates)
         lengths = tuple(length_map[date] for date in dates)
         table.append(tuple(str(fn(unit, posts, dates, lengths)) for fn in columns.values()))
     header = tuple(columns.keys())
-    widths = tuple(max(len(row[col]) for row in chain([header,], table)) for col in range(len(columns)))
+    widths = tuple(max(len(row[col]) for row in chain((header,), table)) for col in range(len(columns)))
     print(gap.join(col.center(widths[i]) for i, col in enumerate(header)))
     print(gap.join(width * "-" for width in widths))
     print("\n".join(gap.join(col.rjust(widths[i]) for i, col in enumerate(row)) for row in table))
 
 elif args.action == "graph":
-    print('digraph {')
-    print('\tgraph [size="48", model="subset", rankdir="{}"];'.format('TB' if args.reverse else 'BT'))
-    print('\tnode [fontcolor="#4E9A06", shape="none"];')
-    print('\tedge [color="#555753"];')
-    print()
     disjoint_sets = dict((k, k) for k in selected)
     ancestors = {}
     edges = dict((k, set()) for k in selected)
@@ -199,25 +194,29 @@ elif args.action == "graph":
         dests = set(dest for dest in REF_REGEX.findall(entries[src]) if src > dest and dest in selected)
         ancestors[src] = set().union(*(ancestors.get(parent, set()) for parent in dests))
         for dest in dests - ancestors[src]:
-            edges[src].add('\t"{}" -> "{}";'.format(src, dest))
-            rep = dest
-            while disjoint_sets[rep] != src:
-                disjoint_sets[rep], rep = src, disjoint_sets[rep]
+            edges[src].add(dest)
+            while disjoint_sets[dest] != src:
+                disjoint_sets[dest], dest = src, disjoint_sets[dest]
         ancestors[src] |= dests
-    groups = defaultdict(set)
+    components = defaultdict(set)
     for rep in disjoint_sets:
         path = set((rep,))
         while disjoint_sets[rep] != rep:
             path.add(rep)
             rep = disjoint_sets[rep]
-        groups[rep] |= path
-    for rep, srcs in sorted(groups.items(), key=(lambda kv: (len(kv[1]), min(kv[1]))), reverse=(not args.reverse)):
+        components[rep] |= path
+    print('digraph {')
+    print('\tgraph [size="48", model="subset", rankdir="{}"];'.format('TB' if args.reverse else 'BT'))
+    print('\tnode [fontcolor="#4E9A06", shape="none"];')
+    print('\tedge [color="#555753"];')
+    print("")
+    for srcs in sorted(components.values(), key=(lambda s: (len(s), min(s))), reverse=(not args.reverse)):
         print('\t// component size = {}'.format(len(srcs)))
         for src in sorted(srcs, reverse=args.reverse):
             print('\t"{}" [fontsize="{}"];'.format(src, len(entries[src].split()) / 100))
             if edges[src]:
-                print("\n".join(sorted(edges[src], reverse=args.reverse)))
-        print()
+                print("\n".join('\t"{}" -> "{}"'.format(src, dest) for dest in sorted(edges[src], reverse=args.reverse)))
+        print("")
     print('}')
 
 elif args.action == "list":
@@ -225,14 +224,12 @@ elif args.action == "list":
 
 elif args.action == "show":
     if file_exists(log_file) and args.log:
-        args_dict = vars(args)
         options = []
-        for option_string, option in vars(arg_parser)["_option_string_actions"].items():
+        for option_string, option in arg_parser._option_string_actions.items():
             if re.match("^-[a-gi-z]$", option_string):
-                option = vars(option)
-                option_value = args_dict[option["dest"]]
-                if option_value != option["default"]:
-                    if option["const"] in (True, False):
+                option_value = getattr(args, option.dest)
+                if option_value != option.default:
+                    if option.const in (True, False):
                         options.append(option_string[1])
                     else:
                         options.append(" {} {}".format(option_string, option_value))
@@ -253,10 +250,7 @@ elif args.action == "show":
             cd(args.directory)
             vim_args = ["nvim", temp_file, "-c", "set hlsearch nospell"]
             if args.terms:
-                if args.icase:
-                    vim_args[-1] += " nosmartcase"
-                else:
-                    vim_args[-1] += " noignorecase"
+                vim_args[-1] += " " + ("noignorecase" if args.icase else "nosmartcase")
                 vim_args.extend(("-c", "let @/=\"\\\\v" + "|".join("({})".format(term) for term in args.terms).replace('"', r'\"').replace("@", r"\\@") + "\""))
             execvp("nvim", vim_args)
     else:

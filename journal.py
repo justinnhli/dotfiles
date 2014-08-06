@@ -90,7 +90,8 @@ if not raw_entries:
 entries.update((entry[:DATE_LENGTH], entry.strip()) for entry in raw_entries.strip().split("\n\n") if entry and DATE_REGEX.match(entry))
 
 index = {}
-if file_exists(index_file) and args.use_cache != "no":
+index_metadata = {}
+if file_exists(index_file):
     with open(index_file) as fd:
         index = literal_eval("{" + fd.read() + "}")
 

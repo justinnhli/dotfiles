@@ -52,9 +52,10 @@ if args.date_range and not all(dr and RANGE_REGEX.match(dr) for dr in args.date_
     arg_parser.error("argument -d: '{}' should be in format [YYYY[-MM[-DD]]][:][YYYY[-MM[-DD]]][,...]".format(args.date_range))
 if not stdin.isatty() and args.action in ("archive", "update", "verify"):
     arg_parser.error("argument -[ATV]: operation can only be performed on files")
-args.terms = set(args.terms)
 args.directory = realpath(expanduser(args.directory))
 args.ignores = set(realpath(expanduser(path)) for path in args.ignores)
+args.use_cache = args.use_cache == "yes" or (args.use_cache == "default" and args.action not in ("update", "verify"))
+args.terms = set(args.terms)
 
 if args.action == "archive":
     filename = "jrnl" + datetime.now().strftime("%Y%m%d%H%M%S")
@@ -73,7 +74,7 @@ raw_entries = ""
 entries = {}
 if not stdin.isatty():
     raw_entries = stdin.read()
-elif file_exists(cache_file) and (args.use_cache == "yes" or (args.action not in ("update", "verify") and args.use_cache == "default")):
+elif file_exists(cache_file) and args.use_cache:
     with open(cache_file) as fd:
         raw_entries = fd.read()
 else:

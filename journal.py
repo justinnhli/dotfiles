@@ -64,7 +64,7 @@ if args.action == "archive":
         tar.add(argv[0], arcname=join_path(filename, basename(argv[0])))
     exit()
 
-log_file = join_path(args.directory, "log") if stdin.isatty() else ""
+log_file = join_path(args.directory, ".log") if stdin.isatty() else ""
 tags_file = join_path(args.directory, "tags") if stdin.isatty() else ""
 cache_file = join_path(args.directory, ".cache") if stdin.isatty() else ""
 index_file = join_path(args.directory, ".index") if stdin.isatty() else ""

@@ -294,11 +294,16 @@ elif args.action == "verify":
                 else:
                     errors.append((journal, line_number, "unindented text"))
             prev_indent = indent
+    has_errors = False
     if errors:
         print("\n".join("{}:{}: {}".format(*error) for error in errors))
+        has_errors = True
     errors = []
     for key, value in sorted(entries.items()):
         if value.count('"') % 2:
             errors.append((key, "odd quotation marks"))
     if errors:
         print("\n".join("{}: {}".format(*error) for error in errors))
+        has_errors = True
+    if has_errors:
+        exit(1)

@@ -91,10 +91,10 @@ if not raw_entries:
 entries.update((entry[:DATE_LENGTH], entry.strip()) for entry in raw_entries.strip().split("\n\n") if entry and DATE_REGEX.match(entry))
 
 index = {}
-index_metadata = {}
 if file_exists(index_file):
     with open(index_file) as fd:
-        index = literal_eval("{" + fd.read() + "}")
+        index_entries = (line for line in fd.read().splitlines() if not line.startswith("#"))
+    index = literal_eval("{" + "".join(index_entries) + "}")
 
 selected = set(entries.keys())
 unindexed_terms = set()

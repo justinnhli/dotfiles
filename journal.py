@@ -59,7 +59,7 @@ args.terms = set(args.terms)
 
 if args.action == "archive":
     filename = "jrnl" + datetime.now().strftime("%Y%m%d%H%M%S")
-    with tarfile.open("{}.tbz".format(filename), "w:bz2") as tar:
+    with tarfile.open("{}.txz".format(filename), "w:xz") as tar:
         tar.add(args.directory, arcname=filename, filter=(lambda tarinfo: None if basename(tarinfo.name).startswith(".") else tarinfo))
         tar.add(argv[0], arcname=join_path(filename, basename(argv[0])))
     exit()

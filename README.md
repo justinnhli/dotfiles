@@ -33,44 +33,44 @@ For example:
 OPTIONS
 -------
 
-	usage: journal.py <operation> [options] [TERM ...]
+    usage: journal.py <operation> [options] [TERM ...]
 
-	a command line tool for viewing and maintaining a journal
+    a command line tool for viewing and maintaining a journal
 
-	positional arguments:
-	  TERM                  pattern which must exist in entries
+    positional arguments:
+      TERM                  pattern which must exist in entries
 
-	optional arguments:
-	  -h, --help            show this help message and exit
+    optional arguments:
+      -h, --help            show this help message and exit
 
-	OPERATIONS:
-	  -A                    archive to datetimed tarball
-	  -C                    count words and entries
-	  -G                    graph entry references in DOT
-	  -L                    list entry dates
-	  -S                    show entry contents
-	  -U                    update tags and cache file
-	  -V                    verify journal sanity
+    OPERATIONS:
+      -A                    archive to datetimed tarball
+      -C                    count words and entries
+      -G                    graph entry references in DOT
+      -L                    list entry dates
+      -S                    show entry contents
+      -U                    update tags and cache file
+      -V                    verify journal sanity
 
-	INPUT OPTIONS:
-	  --directory DIRECTORY
-							use journal files in directory
-	  --ignore IGNORES      ignore specified file
-	  --use-cache {default,yes,no}
-							use cached entries and indices
+    INPUT OPTIONS:
+      --directory DIRECTORY
+			    use journal files in directory
+      --ignore IGNORES      ignore specified file
+      --use-cache {default,yes,no}
+			    use cached entries and indices
 
-	FILTER OPTIONS (APPLIES TO -[CGLS]):
-	  -d DATE_RANGE         only use entries in range
-	  -i                    ignore case-insensitivity
-	  -n NUM_RESULTS        max number of results
+    FILTER OPTIONS (APPLIES TO -[CGLS]):
+      -d DATE_RANGE         only use entries in range
+      -i                    ignore case-insensitivity
+      -n NUM_RESULTS        max number of results
 
-	OUTPUT OPTIONS:
-	  -r                    reverse chronological order
+    OUTPUT OPTIONS:
+      -r                    reverse chronological order
 
-	OPERATION-SPECIFIC OPTIONS:
-	  --no-log              [S] do not log search
-	  --unit {year,month,date}
-							[C] tabulation unit
+    OPERATION-SPECIFIC OPTIONS:
+      --no-log              [S] do not log search
+      --unit {year,month,date}
+			    [C] tabulation unit
 
 BUGS
 ----

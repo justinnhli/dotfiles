@@ -8,7 +8,7 @@ from collections import defaultdict, OrderedDict
 from datetime import datetime, timedelta
 from itertools import chain, groupby
 from os import chdir as cd, chmod, execvp, fork, remove as rm, wait, walk
-from os.path import basename, exists as file_exists, expanduser, join as join_path, realpath, relpath
+from os.path import basename, exists as file_exists, expanduser, getmtime, join as join_path, realpath, relpath
 from stat import S_IRUSR
 from statistics import mean, median, stdev
 from sys import stdin, stdout, argv
@@ -91,15 +91,26 @@ if not raw_entries:
 entries.update((entry[:DATE_LENGTH], entry.strip()) for entry in raw_entries.strip().split("\n\n") if entry and DATE_REGEX.match(entry))
 
 index = {}
+index_metadata = {}
 if file_exists(index_file):
     with open(index_file) as fd:
-        index_entries = (line for line in fd.read().splitlines() if not line.startswith("#"))
-    index = literal_eval("{" + "".join(index_entries) + "}")
+        index_metadata = literal_eval("{" + fd.readline()[2:] + "}")
+        index = literal_eval("{" + "".join(line for line in fd.read().splitlines() if not line.startswith("#")) + "}")
+
+entry_file_map = {}
+if file_exists(tags_file):
+    with open(tags_file) as fd:
+        entry_file_map = dict(line.split()[0:2] for line in fd.read().splitlines())
 
 selected = set(entries.keys())
 unindexed_terms = set()
 if args.action == "update":
-    args.date_range = None
+    if args.use_cache:
+        update_timestamp = datetime.strptime(index_metadata["updated"], "%Y-%m-%d").timestamp()
+        args.date_rate = ",".join(k for k, v in entry_file_map.items() if getmtime(v) > update_timestamp)
+    else:
+        args.date_range = None
+    args.date_range = None # TODO remove when incremental updates are properly written out
     args.icase = re.IGNORECASE
     unindexed_terms = set(index.keys())
 else:

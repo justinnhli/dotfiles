@@ -90,7 +90,7 @@ if not raw_entries:
     arg_parser.error("no journal entries found or specified")
 entries.update((entry[:DATE_LENGTH], entry.strip()) for entry in raw_entries.strip().split("\n\n") if entry and DATE_REGEX.match(entry))
 
-index = {}
+index = defaultdict(set)
 index_metadata = {}
 if file_exists(index_file):
     with open(index_file) as fd:
@@ -105,14 +105,14 @@ if file_exists(tags_file):
 selected = set(entries.keys())
 unindexed_terms = set()
 if args.action == "update":
-    if args.use_cache:
-        update_timestamp = datetime.strptime(index_metadata["updated"], "%Y-%m-%d").timestamp()
-        args.date_rate = ",".join(k for k, v in entry_file_map.items() if getmtime(v) > update_timestamp)
-    else:
-        args.date_range = None
-    args.date_range = None # TODO remove when incremental updates are properly written out
+    args.date_range = None
     args.icase = re.IGNORECASE
     unindexed_terms = set(index.keys())
+    if args.use_cache: # FIXME I'm not sure the logic for use_cache is correct throughout
+        update_timestamp = datetime.strptime(index_metadata["updated"], "%Y-%m-%d").timestamp()
+        selected = set(k for k, v in entry_file_map.items() if getmtime(v) > update_timestamp)
+        for term in index:
+            index[term] -= selected
 else:
     selected.intersection_update(*(index[term.lower()] for term in args.terms if term.lower() in index))
     unindexed_terms = set(term for term in args.terms if term not in index)
@@ -132,8 +132,8 @@ if args.date_range:
         else:
             selected |= set(k for k in all_selected if k.startswith(date_range))
 
-index_updates = {}
-if len(entries) == len(selected):
+index_updates = defaultdict(set)
+if args.action == "update" or len(entries) == len(selected):
     for term in unindexed_terms:
         term = term.lower()
         index_updates[term] = set(k for k in entries.keys() if re.search(term, entries[k], flags=(re.IGNORECASE | re.MULTILINE)))
@@ -153,7 +153,8 @@ if args.action == "update":
     with open(cache_file, "w") as fd:
         fd.write("\n\n".join(sorted(entries.values())))
     with open(index_file, "w") as fd:
-        fd.write("".join("\"{}\": {},\n".format(k.replace('"', '\\"'), sorted(v)) for k, v in sorted(index_updates.items())))
+        for term in sorted(set(index_updates) & set(index_updates)):
+            fd.write("\"{}\": {},\n".format(term.replace('"', '\\"'), sorted(index[term] | index_updates[term])))
     exit()
 
 if index_updates:

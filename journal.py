@@ -23,7 +23,7 @@ MONTH_LENGTH = 7
 DATE_LENGTH = 10
 
 arg_parser = ArgumentParser(usage="%(prog)s <operation> [options] [TERM ...]", description="a command line tool for viewing and maintaining a journal")
-arg_parser.set_defaults(directory="./", ignores=[], icase=re.IGNORECASE, num_results=0, reverse=False, log=True, unit="year", use_cache="default")
+arg_parser.set_defaults(directory="./", ignores=[], icase=re.IGNORECASE, num_results=0, reverse=False, log=True, unit="year", use_cache="yes", use_index="yes")
 arg_parser.add_argument("terms", metavar="TERM", nargs="*", help="pattern which must exist in entries")
 group = arg_parser.add_argument_group("OPERATIONS").add_mutually_exclusive_group(required=True)
 group.add_argument("-A",          dest="action",      action="store_const", const="archive",                   help="archive to datetimed tarball")
@@ -36,7 +36,8 @@ group.add_argument("-V",          dest="action",      action="store_const", cons
 group = arg_parser.add_argument_group("INPUT OPTIONS")
 group.add_argument("--directory", dest="directory",   action="store",                                          help="use journal files in directory")
 group.add_argument("--ignore",    dest="ignores",     action="append",                                         help="ignore specified file")
-group.add_argument("--use-cache", dest="use_cache",   action="store",       choices=("default", "yes", "no"),  help="use cached entries and indices")
+group.add_argument("--use-cache", dest="use_cache",   action="store",       choices=("yes", "no"),             help="use cached entries and indices")
+group.add_argument("--use-index", dest="use_index",   action="store",       choices=("yes", "no"),             help="use cached entries and indices")
 group = arg_parser.add_argument_group("FILTER OPTIONS (APPLIES TO -[CGLS])")
 group.add_argument("-d",          dest="date_range",  action="store",                                          help="only use entries in range")
 group.add_argument("-i",          dest="icase",       action="store_false",                                    help="ignore case-insensitivity")
@@ -54,8 +55,14 @@ if not stdin.isatty() and args.action in ("archive", "update", "verify"):
     arg_parser.error("argument -[ATV]: operation can only be performed on files")
 args.directory = realpath(expanduser(args.directory))
 args.ignores = set(realpath(expanduser(path)) for path in args.ignores)
-args.use_cache = args.use_cache == "yes" or (args.use_cache == "default" and args.action not in ("update", "verify"))
 args.terms = set(args.terms)
+if args.action in ("update", "verify"):
+    args.date_range = None
+    args.icase = re.IGNORECASE
+    args.use_cache = "no"
+    args.use_index = "yes"
+args.use_cache = (args.use_cache == "yes")
+args.use_index = (args.use_index == "yes")
 
 if args.action == "archive":
     filename = "jrnl" + datetime.now().strftime("%Y%m%d%H%M%S")
@@ -107,10 +114,8 @@ if file_exists(tags_file):
 selected = set(entries.keys())
 unindexed_terms = set()
 if args.action == "update":
-    args.date_range = None
-    args.icase = re.IGNORECASE
     unindexed_terms = set(index.keys())
-    if args.use_cache: # FIXME I'm not sure the logic for use_cache is correct throughout
+    if args.use_index:
         update_timestamp = datetime.strptime(index_metadata["updated"], "%Y-%m-%d").timestamp()
         selected = set(k for k, v in entry_file_map.items() if getmtime(v) > update_timestamp)
         for term in index:
@@ -135,10 +140,14 @@ if args.date_range:
             selected |= set(k for k in all_selected if k.startswith(date_range))
 
 index_updates = defaultdict(set)
-if selected and (args.action == "update" or len(entries) == len(selected)):
+if args.action == "update" and selected:
     for term in unindexed_terms:
         term = term.lower()
         index_updates[term] = set(k for k in selected if re.search(term, entries[k], flags=(re.IGNORECASE | re.MULTILINE)))
+if len(entries) == len(selected):
+    for term in unindexed_terms:
+        term = term.lower()
+        index_updates[term] = set(k for k in entries if re.search(term, entries[k], flags=(re.IGNORECASE | re.MULTILINE)))
         selected &= index_updates[term]
 
 if args.action == "update":

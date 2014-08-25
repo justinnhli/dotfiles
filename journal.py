@@ -139,15 +139,16 @@ if args.date_range:
         else:
             selected |= set(k for k in all_selected if k.startswith(date_range))
 
+# FIXME this code is UGLY
 index_updates = defaultdict(set)
 if args.action == "update" and selected:
     for term in unindexed_terms:
         term = term.lower()
         index_updates[term] = set(k for k in selected if re.search(term, entries[k], flags=(re.IGNORECASE | re.MULTILINE)))
-if len(entries) == len(selected):
+elif len(entries) == len(selected):
     for term in unindexed_terms:
         term = term.lower()
-        index_updates[term] = set(k for k in entries if re.search(term, entries[k], flags=(re.IGNORECASE | re.MULTILINE)))
+        index_updates[term] = set(k for k in entries.keys() if re.search(term, entries[k], flags=(re.IGNORECASE | re.MULTILINE)))
         selected &= index_updates[term]
 
 if args.action == "update":
@@ -165,7 +166,7 @@ if args.action == "update":
         fd.write("\n\n".join(sorted(entries.values())))
     with open(index_file, "w") as fd:
         fd.write('# "updated":"{}"\n'.format(datetime.now().strftime("%Y-%m-%d")))
-        for term in sorted(set(index) | set(index_updates)):
+        for term in sorted(set(index.keys()) | set(index_updates.keys())):
             fd.write("\"{}\": {},\n".format(term.replace('"', '\\"'), sorted(index[term] | index_updates[term])))
     exit()
 

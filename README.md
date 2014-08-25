@@ -56,8 +56,8 @@ OPTIONS
       --directory DIRECTORY
 			    use journal files in directory
       --ignore IGNORES      ignore specified file
-      --use-cache {default,yes,no}
-			    use cached entries and indices
+      --use-cache {yes,no}  use cached entries
+      --use-index {yes,no}  use cached indices
 
     FILTER OPTIONS (APPLIES TO -[CGLS]):
       -d DATE_RANGE         only use entries in range

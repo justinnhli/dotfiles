@@ -96,6 +96,8 @@ if file_exists(index_file):
     with open(index_file) as fd:
         index_metadata = literal_eval("{" + fd.readline()[2:] + "}")
         index = literal_eval("{" + "".join(line for line in fd.read().splitlines() if not line.startswith("#")) + "}")
+        for term in index:
+            index[term] = set(index[term])
 
 entry_file_map = {}
 if file_exists(tags_file):
@@ -133,10 +135,10 @@ if args.date_range:
             selected |= set(k for k in all_selected if k.startswith(date_range))
 
 index_updates = defaultdict(set)
-if args.action == "update" or len(entries) == len(selected):
+if selected and (args.action == "update" or len(entries) == len(selected)):
     for term in unindexed_terms:
         term = term.lower()
-        index_updates[term] = set(k for k in entries.keys() if re.search(term, entries[k], flags=(re.IGNORECASE | re.MULTILINE)))
+        index_updates[term] = set(k for k in selected if re.search(term, entries[k], flags=(re.IGNORECASE | re.MULTILINE)))
         selected &= index_updates[term]
 
 if args.action == "update":
@@ -153,7 +155,8 @@ if args.action == "update":
     with open(cache_file, "w") as fd:
         fd.write("\n\n".join(sorted(entries.values())))
     with open(index_file, "w") as fd:
-        for term in sorted(set(index_updates) & set(index_updates)):
+        fd.write('# "updated":"{}"\n'.format(datetime.now().strftime("%Y-%m-%d")))
+        for term in sorted(set(index) | set(index_updates)):
             fd.write("\"{}\": {},\n".format(term.replace('"', '\\"'), sorted(index[term] | index_updates[term])))
     exit()
 

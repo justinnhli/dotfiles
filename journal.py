@@ -49,16 +49,19 @@ group.add_argument("--no-log",    dest="log",         action="store_false",     
 group.add_argument("--unit",      dest="unit",        action="store",       choices=("year", "month", "date"), help="[C] tabulation unit")
 args = arg_parser.parse_args()
 
+is_maintenance_op = (args.action in ("archive", "update", "archive"))
+
 if args.date_range and not all(dr and RANGE_REGEX.match(dr) for dr in args.date_range.split(",")):
     arg_parser.error("argument -d: '{}' should be in format [YYYY[-MM[-DD]]][:][YYYY[-MM[-DD]]][,...]".format(args.date_range))
-if not stdin.isatty() and args.action in ("archive", "update", "verify"):
+if not stdin.isatty() and is_maintenance_op:
     arg_parser.error("argument -[ATV]: operation can only be performed on files")
 args.directory = realpath(expanduser(args.directory))
 args.ignores = set(realpath(expanduser(path)) for path in args.ignores)
 args.terms = set(args.terms)
-if args.action in ("update", "verify"):
+if is_maintenance_op:
     args.date_range = None
     args.icase = re.IGNORECASE
+    args.reverse = False
     args.use_cache = "no"
     args.use_index = "yes"
 args.use_cache = (args.use_cache == "yes")
@@ -170,19 +173,21 @@ if args.action == "update":
             fd.write("\"{}\": {},\n".format(term.replace('"', '\\"'), sorted(index[term] | index_updates[term])))
     exit()
 
-if index_updates:
+if not is_maintenance_op and index_updates:
     with open(index_file, "a") as fd:
         fd.write("".join("\"{}\": {},\n".format(k.lower().replace('"', '\\"'), sorted(v)) for k, v in index_updates.items()))
 
-for term in unindexed_terms:
-    selected = set(k for k in selected if re.search(term, entries[k], flags=(args.icase | re.MULTILINE)))
+if not is_maintenance_op:
+    for term in unindexed_terms:
+        selected = set(k for k in selected if re.search(term, entries[k], flags=(args.icase | re.MULTILINE)))
 
 if not selected:
     exit()
 
-selected = sorted(selected, reverse=args.reverse)
-if args.num_results > 0:
-    selected = selected[:args.num_results]
+if not is_maintenance_op:
+    selected = sorted(selected, reverse=args.reverse)
+    if args.num_results > 0:
+        selected = selected[:args.num_results]
 
 if args.action == "count":
     gap_size = 2

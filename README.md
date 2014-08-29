@@ -25,7 +25,7 @@ For example:
         This is the second paragraph.
 			An indented third paragraph.
 				A further-intended fourth paragraph.
-		An unindented fifth paragraph.
+	An minimally indented fifth paragraph.
     
     1970-01-02, Friday
         The next entry.

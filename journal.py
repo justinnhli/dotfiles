@@ -174,21 +174,19 @@ if args.action == "update":
             fd.write("\"{}\": {},\n".format(term.replace('"', '\\"'), sorted(index[term] | index_updates[term])))
     exit()
 
-if not is_maintenance_op and index_updates:
+for term in unindexed_terms:
+    selected = set(k for k in selected if re.search(term, entries[k], flags=(args.icase | re.MULTILINE)))
+
+selected = sorted(selected, reverse=args.reverse)
+if args.num_results:
+    selected = selected[:args.num_results]
+
+if index_updates:
     with open(index_file, "a") as fd:
         fd.write("".join("\"{}\": {},\n".format(k.lower().replace('"', '\\"'), sorted(v)) for k, v in index_updates.items()))
 
-if not is_maintenance_op:
-    for term in unindexed_terms:
-        selected = set(k for k in selected if re.search(term, entries[k], flags=(args.icase | re.MULTILINE)))
-
 if not selected:
     exit()
-
-if not is_maintenance_op:
-    selected = sorted(selected, reverse=args.reverse)
-    if args.num_results:
-        selected = selected[:args.num_results]
 
 if args.action == "count":
     gap_size = 2

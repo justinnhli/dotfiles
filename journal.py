@@ -61,11 +61,13 @@ args.directory = realpath(expanduser(args.directory))
 args.ignores = set(realpath(expanduser(path)) for path in args.ignores)
 args.terms = set(args.terms)
 if is_maintenance_op:
+    # FIXME should use the default value for robustness, except for use_cache
     args.date_range = None
     args.icase = re.IGNORECASE
     args.reverse = False
     args.use_cache = "no"
     args.use_index = "yes"
+    args.terms = set()
 args.use_cache = (args.use_cache == "yes")
 args.use_index = (args.use_index == "yes")
 

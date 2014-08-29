@@ -35,7 +35,7 @@ OPTIONS
 
     usage: journal.py <operation> [options] [TERM ...]
 
-    a command line tool for viewing and maintaining a journal
+    A command line tool for viewing and maintaining a journal.
 
     positional arguments:
       TERM                  pattern which must exist in entries

@@ -18,14 +18,14 @@ per line, each indented by at least one tab. Consecutive lines must either be
 indented by the same level, by one more level, or by arbitrarily fewer levels
 (down to one) than the previous line. An empty line is required between entries.
 
-For example:
+For example (tabs replaced by spaces due to technical constraints):
 
     1970-01-01, Thursday
         This is the first paragraph.
         This is the second paragraph.
-			An indented third paragraph.
-				A further-intended fourth paragraph.
-		An unindented fifth paragraph.
+            An indented third paragraph.
+                A further-intended fourth paragraph.
+        An minimally indented fifth paragraph.
     
     1970-01-02, Friday
         The next entry.
@@ -54,7 +54,7 @@ OPTIONS
 
     INPUT OPTIONS:
       --directory DIRECTORY
-			    use journal files in directory
+                use journal files in directory
       --ignore IGNORES      ignore specified file
       --use-cache {yes,no}  use cached entries
       --use-index {yes,no}  use cached indices
@@ -70,7 +70,7 @@ OPTIONS
     OPERATION-SPECIFIC OPTIONS:
       --no-log              [S] do not log search
       --unit {year,month,date}
-			    [C] tabulation unit
+                [C] tabulation unit
 
 BUGS
 ----

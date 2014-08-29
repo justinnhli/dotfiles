@@ -130,7 +130,6 @@ else:
 if args.date_range:
     first_date = min(selected)
     last_date = (datetime.strptime(max(selected), "%Y-%m-%d") + timedelta(days=1)).strftime("%Y-%m-%d")
-    all_selected = selected
     selected = set()
     for date_range in args.date_range.split(","):
         if ":" in date_range:
@@ -138,9 +137,9 @@ if args.date_range:
             start_date, end_date = (start_date or first_date, end_date or last_date)
             start_date += "-01" * int((DATE_LENGTH - len(start_date)) / 3)
             end_date += "-01" * int((DATE_LENGTH - len(end_date)) / 3)
-            selected |= set(k for k in all_selected if start_date <= k < end_date)
+            selected |= set(k for k in entries if start_date <= k < end_date)
         else:
-            selected |= set(k for k in all_selected if k.startswith(date_range))
+            selected |= set(k for k in entries if k.startswith(date_range))
 
 # FIXME this code is UGLY
 index_updates = defaultdict(set)

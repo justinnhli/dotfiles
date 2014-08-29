@@ -23,7 +23,7 @@ MONTH_LENGTH = 7
 DATE_LENGTH = 10
 
 arg_parser = ArgumentParser(usage="%(prog)s <operation> [options] [TERM ...]", description="a command line tool for viewing and maintaining a journal")
-arg_parser.set_defaults(directory="./", ignores=[], icase=re.IGNORECASE, num_results=0, reverse=False, log=True, unit="year", use_cache="yes", use_index="yes")
+arg_parser.set_defaults(directory="./", ignores=[], icase=re.IGNORECASE, reverse=False, log=True, unit="year", use_cache="yes", use_index="yes")
 arg_parser.add_argument("terms", metavar="TERM", nargs="*", help="pattern which must exist in entries")
 group = arg_parser.add_argument_group("OPERATIONS").add_mutually_exclusive_group(required=True)
 group.add_argument("-A",          dest="action",      action="store_const", const="archive",                   help="archive to datetimed tarball")
@@ -53,6 +53,8 @@ is_maintenance_op = (args.action in ("archive", "update", "archive"))
 
 if args.date_range and not all(dr and RANGE_REGEX.match(dr) for dr in args.date_range.split(",")):
     arg_parser.error("argument -d: '{}' should be in format [YYYY[-MM[-DD]]][:][YYYY[-MM[-DD]]][,...]".format(args.date_range))
+if args.num_results is not None and args.num_results < 1:
+    arg_parser.error("argument -n: '{}' should be a positive integer".format(args.num_results))
 if not stdin.isatty() and is_maintenance_op:
     arg_parser.error("argument -[ATV]: operation can only be performed on files")
 args.directory = realpath(expanduser(args.directory))
@@ -185,7 +187,7 @@ if not selected:
 
 if not is_maintenance_op:
     selected = sorted(selected, reverse=args.reverse)
-    if args.num_results > 0:
+    if args.num_results:
         selected = selected[:args.num_results]
 
 if args.action == "count":

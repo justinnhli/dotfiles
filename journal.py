@@ -118,11 +118,10 @@ if file_exists(tags_file):
 selected = set(entries.keys())
 unindexed_terms = set()
 if args.action == "update":
-    # FIXME this will miss any entries not in the cache
     unindexed_terms = set(index.keys())
     if args.use_index and entry_file_map:
         update_timestamp = datetime.strptime(index_metadata["updated"], "%Y-%m-%d").timestamp()
-        selected = set(k for k, v in entry_file_map.items() if getmtime(v) > update_timestamp)
+        selected -= set(k for k, v in entry_file_map.items() if getmtime(v) < update_timestamp)
         for term in index:
             index[term] -= selected
 else:

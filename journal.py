@@ -282,7 +282,7 @@ elif args.action == "show":
             cd(args.directory)
             vim_args = ["nvim", temp_file, "-c", "set hlsearch nospell"]
             if args.terms:
-                vim_args[-1] += " " + ("noignorecase" if args.icase else "nosmartcase")
+                vim_args[-1] += " " + ("nosmartcase" if args.icase else "noignorecase")
                 vim_args.extend(("-c", r'let @/="\\v' + "|".join("({})".format(term) for term in args.terms).replace('"', r'\"').replace("@", r"\\@") + "\""))
             execvp("nvim", vim_args)
     else:

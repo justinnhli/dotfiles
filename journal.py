@@ -49,23 +49,22 @@ group.add_argument("--no-log",    dest="log",         action="store_false",     
 group.add_argument("--unit",      dest="unit",        action="store",       choices=("year", "month", "date"), help="[C] tabulation unit")
 args = arg_parser.parse_args()
 
-is_maintenance_op = (args.action in ("archive", "update", "archive"))
-
-if args.date_range and not all(dr and RANGE_REGEX.match(dr) for dr in args.date_range.split(",")):
-    arg_parser.error("argument -d: '{}' should be in format [YYYY[-MM[-DD]]][:][YYYY[-MM[-DD]]][,...]".format(args.date_range))
-if args.num_results is not None and args.num_results < 1:
-    arg_parser.error("argument -n: '{}' should be a positive integer".format(args.num_results))
-if not stdin.isatty() and is_maintenance_op:
-    arg_parser.error("argument -[ATV]: operation can only be performed on files")
-args.directory = realpath(expanduser(args.directory))
-args.ignores = set(realpath(expanduser(path)) for path in args.ignores)
-args.terms = set(args.terms)
-if is_maintenance_op:
+if args.action in ("archive", "update", "archive"):
+    if not stdin.isatty():
+        arg_parser.error("argument -[AUV]: operation can only be performed on files")
     for option_dest in ("date_range", "icase", "terms"):
         for option_string, option in arg_parser._option_string_actions.items():
             if option_dest == option.dest:
                 setattr(args, option_dest, option.default)
     args.use_cache = "no"
+
+if args.date_range and not all(dr and RANGE_REGEX.match(dr) for dr in args.date_range.split(",")):
+    arg_parser.error("argument -d: '{}' should be in format [YYYY[-MM[-DD]]][:][YYYY[-MM[-DD]]][,...]".format(args.date_range))
+if args.num_results is not None and args.num_results < 1:
+    arg_parser.error("argument -n: '{}' should be a positive integer".format(args.num_results))
+args.directory = realpath(expanduser(args.directory))
+args.ignores = set(realpath(expanduser(path)) for path in args.ignores)
+args.terms = set(args.terms)
 args.use_cache = (args.use_cache == "yes")
 args.use_index = (args.use_index == "yes")
 

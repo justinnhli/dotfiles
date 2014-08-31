@@ -180,7 +180,7 @@ selected = sorted(selected, reverse=args.reverse)
 if args.num_results:
     selected = selected[:args.num_results]
 
-if index_updates:
+if stdin.isatty() and index_updates:
     with open(index_file, "a") as fd:
         fd.write("".join("\"{}\": {},\n".format(k.lower().replace('"', '\\"'), sorted(v)) for k, v in index_updates.items()))
 
@@ -253,7 +253,7 @@ elif args.action == "list":
     print("\n".join(selected))
 
 elif args.action == "show":
-    if file_exists(log_file) and args.log:
+    if stdin.isatty() and file_exists(log_file) and args.log:
         options = []
         for option_string, option in arg_parser._option_string_actions.items():
             if re.match("^-[a-gi-z]$", option_string):

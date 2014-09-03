@@ -41,13 +41,13 @@ group.add_argument("--use-index",  dest="use_index",   action="store",       cho
 group = arg_parser.add_argument_group("FILTER OPTIONS (APPLIES TO -[CGLS])")
 group.add_argument("-d",           dest="date_range",  action="store",                                          help="only use entries in range")
 group.add_argument("-i",           dest="icase",       action="store_false",                                    help="ignore case-insensitivity")
-group.add_argument("-n",           dest="num_results", action="store",       type=int,                          help="max number of results")
+group.add_argument("-n",           dest="num_results", action="store",       type=int,                          help="limit number of results")
 group = arg_parser.add_argument_group("OUTPUT OPTIONS")
 group.add_argument("-r",           dest="reverse",     action="store_true",                                     help="reverse chronological order")
 group = arg_parser.add_argument_group("OPERATION-SPECIFIC OPTIONS")
 group.add_argument("--no-log",     dest="log",         action="store_false",                                    help="[S] do not log search")
 group.add_argument("--no-headers", dest="headers",     action="store_false",                                    help="[C] do not print headers")
-group.add_argument("--unit",       dest="unit",        action="store",       choices=("year", "month", "date"), help="[C] tabulation unit")
+group.add_argument("--unit",       dest="unit",        action="store",       choices=("year", "month", "date"), help="[C] set tabulation unit")
 args = arg_parser.parse_args()
 
 if args.action in ("archive", "update", "archive"):

@@ -62,7 +62,7 @@ OPTIONS
     FILTER OPTIONS (APPLIES TO -[CGLS]):
       -d DATE_RANGE         only use entries in range
       -i                    ignore case-insensitivity
-      -n NUM_RESULTS        max number of results
+      -n NUM_RESULTS        limit number of results
 
     OUTPUT OPTIONS:
       -r                    reverse chronological order
@@ -71,7 +71,7 @@ OPTIONS
       --no-log              [S] do not log search
       --no-headers          [C] do not print headers
       --unit {year,month,date}
-                            [C] tabulation unit
+                            [C] set tabulation unit
 
 BUGS
 ----

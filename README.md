@@ -54,7 +54,7 @@ OPTIONS
 
     INPUT OPTIONS:
       --directory DIRECTORY
-                use journal files in directory
+                            use journal files in directory
       --ignore IGNORES      ignore specified file
       --use-cache {yes,no}  use cached entries
       --use-index {yes,no}  use cached indices
@@ -69,8 +69,9 @@ OPTIONS
 
     OPERATION-SPECIFIC OPTIONS:
       --no-log              [S] do not log search
+      --no-headers          [C] do not print headers
       --unit {year,month,date}
-                [C] tabulation unit
+                            [C] tabulation unit
 
 BUGS
 ----

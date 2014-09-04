@@ -5,6 +5,7 @@ import tarfile
 from ast import literal_eval
 from argparse import ArgumentParser
 from collections import defaultdict, OrderedDict
+from copy import copy
 from datetime import datetime, timedelta
 from itertools import chain, groupby
 from os import chdir as cd, chmod, execvp, fork, remove as rm, wait, walk
@@ -129,10 +130,10 @@ else:
     selected.intersection_update(*(index[term.lower()] for term in args.terms if term.lower() in index))
     unindexed_terms = set(term for term in args.terms if term not in index)
 
+candidates = copy(selected)
 if args.date_range:
     first_date = min(selected)
     last_date = (datetime.strptime(max(selected), "%Y-%m-%d") + timedelta(days=1)).strftime("%Y-%m-%d")
-    all_selected = selected
     selected = set()
     for date_range in args.date_range.split(","):
         if ":" in date_range:
@@ -140,20 +141,16 @@ if args.date_range:
             start_date, end_date = (start_date or first_date, end_date or last_date)
             start_date += "-01" * int((DATE_LENGTH - len(start_date)) / 3)
             end_date += "-01" * int((DATE_LENGTH - len(end_date)) / 3)
-            selected |= set(k for k in all_selected if start_date <= k < end_date)
+            selected |= set(k for k in candidates if start_date <= k < end_date)
         else:
-            selected |= set(k for k in all_selected if k.startswith(date_range))
+            selected |= set(k for k in candidates if k.startswith(date_range))
 
-# FIXME this code is UGLY
+candidates = copy(selected)
 index_updates = defaultdict(set)
-if args.action == "update" and selected:
+if args.action == "update" or len(entries) == len(candidates):
     for term in unindexed_terms:
         term = term.lower()
-        index_updates[term] = set(k for k in selected if re.search(term, entries[k], flags=(re.IGNORECASE | re.MULTILINE)))
-elif len(entries) == len(selected):
-    for term in unindexed_terms:
-        term = term.lower()
-        index_updates[term] = set(k for k in entries.keys() if re.search(term, entries[k], flags=(re.IGNORECASE | re.MULTILINE)))
+        index_updates[term] = set(k for k in candidates if re.search(term, entries[k], flags=(re.IGNORECASE | re.MULTILINE)))
         selected &= index_updates[term]
 
 if args.action == "update":

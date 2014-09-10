@@ -51,7 +51,7 @@ group.add_argument("--no-headers", dest="headers",     action="store_false",    
 group.add_argument("--unit",       dest="unit",        action="store",       choices=("year", "month", "date"), help="[C] set tabulation unit")
 args = arg_parser.parse_args()
 
-if args.action in ("archive", "update", "archive"):
+if args.action in ("archive", "update", "verify"):
     if not stdin.isatty():
         arg_parser.error("argument -[AUV]: operation can only be performed on files")
     for option_dest in ("date_range", "icase", "terms"):

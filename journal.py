@@ -300,7 +300,7 @@ elif args.action == "verify":
             indent = len(re.match("\t*", line).group(0))
             if indent - prev_indent > 1:
                 errors.append((journal, line_number, "unexpected indentation"))
-            if not re.search("^\t*[^ \t][ -~]*[^ \t]$", line):
+            if not re.search("^\t*([^ \t][ -~]*)?[^ \t]$", line):
                 errors.append((journal, line_number, "non-tab indentation, ending space, or non-ASCII character"))
             if not line.strip().startswith("|") and "  " in line:
                 errors.append((journal, line_number, "multiple spaces"))

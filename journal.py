@@ -266,7 +266,7 @@ elif args.action == "show":
         options = "-S" + "".join(sorted(options, key=(lambda x: (len(x) != 1, x.upper())))).replace(" -", "", 1)
         terms = " ".join('"{}"'.format(term.replace('"', '\\"')) for term in sorted(args.terms))
         with open(log_file, "a") as fd:
-            fd.write("{}\t{} {}\n".format(datetime.today().isoformat(" "), options, terms))
+            fd.write("{}\t{} {}\n".format(datetime.today().isoformat(" "), options, terms).strip())
     text = "\n\n".join(entries[k] for k in selected)
     if stdout.isatty():
         temp_file = mkstemp(FILE_EXTENSION)[1]

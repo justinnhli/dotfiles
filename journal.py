@@ -295,37 +295,35 @@ elif args.action == "verify":
             lines = fd.read().splitlines()
         prev_indent = 0
         for line_number, line in enumerate(lines, start=1):
-            if line:
-                indent = len(re.match("\t*", line).group(0))
-                if indent - prev_indent > 1:
-                    errors.append((journal, line_number, "unexpected indentation"))
-                if not re.search("^\t*([^ \t][ -~]*)?[^ \t]$", line):
-                    errors.append((journal, line_number, "non-tab indentation, ending space, or non-ASCII character"))
-                if not line.strip().startswith("|") and "  " in line:
-                    errors.append((journal, line_number, "multiple spaces"))
-                if indent == 0:
-                    if DATE_REGEX.match(line):
-                        entry_date = line[:DATE_LENGTH]
-                        cur_date = datetime.strptime(entry_date, "%Y-%m-%d")
-                        if prev_indent != 0:
-                            errors.append((journal, line_number, "no empty line between entries"))
-                        if not entry_date.startswith(re.sub(FILE_EXTENSION, "", basename(journal))):
-                            errors.append((journal, line_number, "filename doesn't match entry"))
-                        if long_dates is None:
-                            long_dates = (len(line) > DATE_LENGTH)
-                        elif long_dates != (len(line) > DATE_LENGTH):
-                            errors.append((journal, line_number, "inconsistent date format"))
-                        if long_dates and line != cur_date.strftime("%Y-%m-%d, %A"):
-                            errors.append((journal, line_number, "date correctness"))
-                        if cur_date in dates:
-                            errors.append((journal, line_number, "duplicate dates"))
-                        dates.add(cur_date)
-                    else:
+            indent = len(re.match("\t*", line).group(0))
+            if not re.search("^(\t*([^ \t][ -~]*)?[^ \t])?$", line):
+                errors.append((journal, line_number, "non-tab indentation, ending blank, or non-ASCII character"))
+            if not line.strip().startswith("|") and "  " in line:
+                errors.append((journal, line_number, "multiple spaces"))
+            if indent == 0:
+                if DATE_REGEX.match(line):
+                    entry_date = line[:DATE_LENGTH]
+                    cur_date = datetime.strptime(entry_date, "%Y-%m-%d")
+                    if prev_indent != 0:
+                        errors.append((journal, line_number, "no empty line between entries"))
+                    if not entry_date.startswith(re.sub(FILE_EXTENSION, "", basename(journal))):
+                        errors.append((journal, line_number, "filename doesn't match entry"))
+                    if long_dates is None:
+                        long_dates = (len(line) > DATE_LENGTH)
+                    elif long_dates != (len(line) > DATE_LENGTH):
+                        errors.append((journal, line_number, "inconsistent date format"))
+                    if long_dates and line != cur_date.strftime("%Y-%m-%d, %A"):
+                        errors.append((journal, line_number, "date correctness"))
+                    if cur_date in dates:
+                        errors.append((journal, line_number, "duplicate dates"))
+                    dates.add(cur_date)
+                else:
+                    if line:
                         errors.append((journal, line_number, "unindented text"))
-            else:
-                if prev_indent == 0:
-                    errors.append((journal, line_number, "consecutive unindented lines"))
-                indent = 0
+                    if prev_indent == 0:
+                        errors.append((journal, line_number, "consecutive unindented lines"))
+            elif indent - prev_indent > 1:
+                errors.append((journal, line_number, "unexpected indentation"))
             prev_indent = indent
     has_errors = False
     if errors:

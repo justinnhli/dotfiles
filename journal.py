@@ -24,7 +24,7 @@ MONTH_LENGTH = 7
 DATE_LENGTH = 10
 
 arg_parser = ArgumentParser(usage="%(prog)s <operation> [options] [TERM ...]", description="A command line tool for viewing and maintaining a journal.")
-arg_parser.set_defaults(directory="./", headers=True, ignores=[], icase=re.IGNORECASE, reverse=False, log=True, unit="year", use_cache="yes", use_index="yes")
+arg_parser.set_defaults(directory="./", headers=True, ignores=[], icase=re.IGNORECASE, reverse=False, log=True, unit="year", use_cache="yes")
 arg_parser.add_argument("terms", metavar="TERM", nargs="*", help="pattern which must exist in entries")
 group = arg_parser.add_argument_group("OPERATIONS").add_mutually_exclusive_group(required=True)
 group.add_argument("-A",           dest="action",      action="store_const", const="archive",                   help="archive to datetimed tarball")
@@ -37,8 +37,7 @@ group.add_argument("-V",           dest="action",      action="store_const", con
 group = arg_parser.add_argument_group("INPUT OPTIONS")
 group.add_argument("--directory",  dest="directory",   action="store",                                          help="use journal files in directory")
 group.add_argument("--ignore",     dest="ignores",     action="append",                                         help="ignore specified file")
-group.add_argument("--use-cache",  dest="use_cache",   action="store",       choices=("yes", "no"),             help="use cached entries")
-group.add_argument("--use-index",  dest="use_index",   action="store",       choices=("yes", "no"),             help="use cached indices")
+group.add_argument("--use-cache",  dest="use_cache",   action="store",       choices=("yes", "no"),             help="use cached entries and indices")
 group = arg_parser.add_argument_group("FILTER OPTIONS (APPLIES TO -[CGLS])")
 group.add_argument("-d",           dest="date_range",  action="store",                                          help="only use entries in range")
 group.add_argument("-i",           dest="icase",       action="store_false",                                    help="ignore case-insensitivity")
@@ -58,7 +57,6 @@ if args.action in ("archive", "update", "verify"):
         for option_string, option in arg_parser._option_string_actions.items():
             if option_dest == option.dest:
                 setattr(args, option_dest, option.default)
-    args.use_cache = "no"
 
 if args.date_range and not all(dr and RANGE_REGEX.match(dr) for dr in args.date_range.split(",")):
     arg_parser.error("argument -d: '{}' should be in format [YYYY[-MM[-DD]]][:][YYYY[-MM[-DD]]][,...]".format(args.date_range))
@@ -67,8 +65,6 @@ if args.num_results is not None and args.num_results < 1:
 args.directory = realpath(expanduser(args.directory))
 args.ignores = set(realpath(expanduser(path)) for path in args.ignores)
 args.terms = set(args.terms)
-args.use_cache = (args.use_cache == "yes")
-args.use_index = (args.use_index == "yes")
 
 if args.action == "archive":
     filename = "jrnl" + datetime.now().strftime("%Y%m%d%H%M%S")
@@ -82,12 +78,15 @@ tags_file = join_path(args.directory, "tags") if stdin.isatty() else ""
 cache_file = join_path(args.directory, ".cache") if stdin.isatty() else ""
 index_file = join_path(args.directory, ".index") if stdin.isatty() else ""
 
+use_cache = (not is_maintenance_action and args.use_cache == "yes")
+use_index = (args.use_cache == "yes")
+
 journal_files = set()
 raw_entries = ""
 entries = {}
 if not stdin.isatty():
     raw_entries = stdin.read()
-elif file_exists(cache_file) and args.use_cache:
+elif file_exists(cache_file) and use_cache:
     with open(cache_file) as fd:
         raw_entries = fd.read()
 else:
@@ -121,7 +120,7 @@ selected = set(entries.keys())
 unindexed_terms = set()
 if args.action == "update":
     unindexed_terms = set(index.keys())
-    if args.use_index and entry_file_map:
+    if use_index and entry_file_map:
         update_timestamp = datetime.strptime(index_metadata["updated"], "%Y-%m-%d").timestamp()
         selected -= set(k for k, v in entry_file_map.items() if getmtime(v) < update_timestamp)
         for term in index:

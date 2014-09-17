@@ -187,9 +187,24 @@ selected = sorted(selected, reverse=args.reverse)
 if args.num_results:
     selected = selected[:args.num_results]
 
-if stdin.isatty() and index_updates:
-    with open(index_file, "a") as fd:
-        fd.write("".join("\"{}\": {},\n".format(k.lower().replace('"', '\\"'), sorted(v)) for k, v in index_updates.items()))
+if stdin.isatty():
+    if index_updates:
+        with open(index_file, "a") as fd:
+            fd.write("".join("\"{}\": {},\n".format(k.lower().replace('"', '\\"'), sorted(v)) for k, v in index_updates.items()))
+    if args.action == "show" and args.log and file_exists(log_file):
+        options = []
+        for option_string, option in arg_parser._option_string_actions.items():
+            if re.match("^-[a-gi-z]$", option_string):
+                option_value = getattr(args, option.dest)
+                if option_value != option.default:
+                    if option.const in (True, False):
+                        options.append(option_string[1])
+                    else:
+                        options.append(" {} {}".format(option_string, option_value))
+        options = "-S" + "".join(sorted(options, key=(lambda x: (len(x) != 1, x.upper())))).replace(" -", "", 1)
+        terms = " ".join('"{}"'.format(term.replace('"', '\\"')) for term in sorted(args.terms))
+        with open(log_file, "a") as fd:
+            fd.write("{}\t{} {}".format(datetime.today().isoformat(" "), options, terms).strip() + "\n")
 
 if not selected:
     exit()
@@ -261,20 +276,6 @@ elif args.action == "list":
     print("\n".join(selected))
 
 elif args.action == "show":
-    if stdin.isatty() and file_exists(log_file) and args.log:
-        options = []
-        for option_string, option in arg_parser._option_string_actions.items():
-            if re.match("^-[a-gi-z]$", option_string):
-                option_value = getattr(args, option.dest)
-                if option_value != option.default:
-                    if option.const in (True, False):
-                        options.append(option_string[1])
-                    else:
-                        options.append(" {} {}".format(option_string, option_value))
-        options = "-S" + "".join(sorted(options, key=(lambda x: (len(x) != 1, x.upper())))).replace(" -", "", 1)
-        terms = " ".join('"{}"'.format(term.replace('"', '\\"')) for term in sorted(args.terms))
-        with open(log_file, "a") as fd:
-            fd.write("{}\t{} {}".format(datetime.today().isoformat(" "), options, terms).strip() + "\n")
     text = "\n\n".join(entries[k] for k in selected)
     if stdout.isatty():
         temp_file = mkstemp(FILE_EXTENSION)[1]

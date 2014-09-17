@@ -50,7 +50,9 @@ group.add_argument("--no-headers", dest="headers",     action="store_false",    
 group.add_argument("--unit",       dest="unit",        action="store",       choices=("year", "month", "date"), help="[C] set tabulation unit")
 args = arg_parser.parse_args()
 
-if args.action in ("archive", "update", "verify"):
+is_maintenance_action = args.action in ("archive", "update", "verify")
+
+if is_maintenance_action:
     if not stdin.isatty():
         arg_parser.error("argument -[AUV]: operation can only be performed on files")
     for option_dest in ("date_range", "icase", "terms"):
@@ -116,16 +118,23 @@ if file_exists(tags_file):
     with open(tags_file) as fd:
         entry_file_map = dict(line.split()[0:2] for line in fd.read().splitlines())
 
-selected = set(entries.keys())
-unindexed_terms = set()
+changed_files = copy(journal_files)
+changed_entries = set(entries.keys())
+if is_maintenance_action and use_index and entry_file_map:
+    update_timestamp = datetime.strptime(index_metadata["updated"], "%Y-%m-%d").timestamp()
+    for entry, file in entry_file_map.items():
+        if getmtime(file) < update_timestamp:
+            changed_files.discard(join_path(args.directory, file))
+            changed_entries.remove(entry)
+    for term in index:
+        index[term] -= changed_entries
+
+selected = changed_entries
+unindexed_terms = args.terms
 if args.action == "update":
+    selected = changed_entries
     unindexed_terms = set(index.keys())
-    if use_index and entry_file_map:
-        update_timestamp = datetime.strptime(index_metadata["updated"], "%Y-%m-%d").timestamp()
-        selected -= set(k for k, v in entry_file_map.items() if getmtime(v) < update_timestamp)
-        for term in index:
-            index[term] -= selected
-else:
+elif use_index:
     selected.intersection_update(*(index[term.lower()] for term in args.terms if term.lower() in index))
     unindexed_terms = set(term for term in args.terms if term not in index)
 
@@ -289,7 +298,7 @@ elif args.action == "verify":
     errors = []
     dates = set()
     long_dates = None
-    for journal in journal_files:
+    for journal in changed_files:
         with open(journal) as fd:
             lines = fd.read().splitlines()
         prev_indent = 0

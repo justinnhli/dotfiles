@@ -88,17 +88,16 @@ tags_file = join_path(args.directory, TAGS_FILE) if stdin.isatty() else ""
 cache_file = join_path(args.directory, CACHE_FILE) if stdin.isatty() else ""
 index_file = join_path(args.directory, INDEX_FILE) if stdin.isatty() else ""
 
-cache_files_status = set(file_exists(file) for file in (metadata_file, tags_file, cache_file, index_file))
-if len(cache_files_status) != 1:
-    if args.op == "update":
-        cache_files_status = False
-    else:
-        arg_parser.error("argument -[CGLSV]: cache files corrupted; please run -U first")
+cache_files_exist = set(file_exists(file) for file in (metadata_file, tags_file, cache_file, index_file))
+if len(cache_files_exist) == 1:
+    cache_files_exist = cache_files_exist.pop()
+elif args.op == "update":
+    cache_files_exist = False
 else:
-    cache_files_status = cache_files_status.pop()
+    arg_parser.error("argument -[CGLSV]: cache files corrupted; please run -U first")
 
-use_cache = (not is_maintenance_op and args.use_cache == "yes" and cache_files_status)
-use_index = (args.use_cache == "yes" and cache_files_status)
+use_index = (args.use_cache == "yes" and cache_files_exist)
+use_cache = (not is_maintenance_op and use_index)
 
 journal_files = set()
 entries = ""

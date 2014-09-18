@@ -23,6 +23,11 @@ YEAR_LENGTH = 4
 MONTH_LENGTH = 7
 DATE_LENGTH = 10
 
+LOG_FILE = ".log"
+TAGS_FILE = "tags"
+CACHE_FILE = ".cache"
+INDEX_FILE = ".index"
+
 arg_parser = ArgumentParser(usage="%(prog)s <operation> [options] [TERM ...]", description="A command line tool for viewing and maintaining a journal.")
 arg_parser.set_defaults(directory="./", headers=True, ignores=[], icase=re.IGNORECASE, reverse=False, log=True, unit="year", use_cache="yes")
 arg_parser.add_argument("terms", metavar="TERM", nargs="*", help="pattern which must exist in entries")
@@ -75,10 +80,10 @@ if args.action == "archive":
         tar.add(argv[0], arcname=join_path(filename, basename(argv[0])))
     exit()
 
-log_file = join_path(args.directory, ".log") if stdin.isatty() else ""
-tags_file = join_path(args.directory, "tags") if stdin.isatty() else ""
-cache_file = join_path(args.directory, ".cache") if stdin.isatty() else ""
-index_file = join_path(args.directory, ".index") if stdin.isatty() else ""
+log_file = join_path(args.directory, LOG_FILE) if stdin.isatty() else ""
+tags_file = join_path(args.directory, TAGS_FILE) if stdin.isatty() else ""
+cache_file = join_path(args.directory, CACHE_FILE) if stdin.isatty() else ""
+index_file = join_path(args.directory, INDEX_FILE) if stdin.isatty() else ""
 
 use_cache = (not is_maintenance_action and args.use_cache == "yes")
 use_index = (args.use_cache == "yes")

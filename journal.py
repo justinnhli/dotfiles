@@ -175,9 +175,9 @@ if args.action == "update":
             if DATE_REGEX.match(line):
                 entry_file_map[line[:DATE_LENGTH]] = (rel_path, line_number)
     with open(tags_file, "w") as fd:
-        fd.write("\n".join("{}\t{}\t{}".format(*tag) for tag in sorted(tags)))
+        fd.write("\n".join("{}\t{}\t{}".format(entry, *fileline) for entry, fileline in sorted(entry_file_map.items())) + "\n")
     with open(cache_file, "w") as fd:
-        fd.write("\n\n".join(sorted(entries.values())))
+        fd.write("\n\n".join(sorted(entries.values())) + "\n")
     with open(index_file, "w") as fd:
         fd.write('# "updated":"{}"\n'.format(datetime.now().strftime("%Y-%m-%d")))
         for term in sorted(set(index.keys()) | set(index_updates.keys())):

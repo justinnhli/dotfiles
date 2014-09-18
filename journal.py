@@ -183,13 +183,6 @@ if args.action == "update":
             fd.write("\"{}\": {},\n".format(term.replace('"', '\\"'), sorted(index[term] | index_updates[term])))
     exit()
 
-for term in unindexed_terms:
-    selected = set(k for k in selected if re.search(term, entries[k], flags=(args.icase | re.MULTILINE)))
-
-selected = sorted(selected, reverse=args.reverse)
-if args.num_results:
-    selected = selected[:args.num_results]
-
 if stdin.isatty():
     if index_updates:
         with open(index_file, "a") as fd:
@@ -208,6 +201,13 @@ if stdin.isatty():
         terms = " ".join('"{}"'.format(term.replace('"', '\\"')) for term in sorted(args.terms))
         with open(log_file, "a") as fd:
             fd.write("{}\t{} {}".format(datetime.today().isoformat(" "), options, terms).strip() + "\n")
+
+for term in unindexed_terms:
+    selected = set(k for k in selected if re.search(term, entries[k], flags=(args.icase | re.MULTILINE)))
+
+selected = sorted(selected, reverse=args.reverse)
+if args.num_results:
+    selected = selected[:args.num_results]
 
 if not selected:
     exit()

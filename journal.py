@@ -118,21 +118,20 @@ if file_exists(tags_file):
     with open(tags_file) as fd:
         entry_file_map = dict(line.split()[0:2] for line in fd.read().splitlines())
 
+selected = set(entries.keys())
+
 changed_files = copy(journal_files)
-changed_entries = set(entries.keys())
 if is_maintenance_action and use_index and entry_file_map:
     update_timestamp = datetime.strptime(index_metadata["updated"], "%Y-%m-%d").timestamp()
     for entry, file in entry_file_map.items():
         if getmtime(file) < update_timestamp:
             changed_files.discard(join_path(args.directory, file))
-            changed_entries.remove(entry)
+            selected.remove(entry)
     for term in index:
-        index[term] -= changed_entries
+        index[term] -= selected
 
-selected = changed_entries
 unindexed_terms = args.terms
 if args.action == "update":
-    selected = changed_entries
     unindexed_terms = set(index.keys())
 elif use_index:
     selected.intersection_update(*(index[term.lower()] for term in args.terms if term.lower() in index))

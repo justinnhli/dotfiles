@@ -85,8 +85,17 @@ tags_file = join_path(args.directory, TAGS_FILE) if stdin.isatty() else ""
 cache_file = join_path(args.directory, CACHE_FILE) if stdin.isatty() else ""
 index_file = join_path(args.directory, INDEX_FILE) if stdin.isatty() else ""
 
-use_cache = (not is_maintenance_action and args.use_cache == "yes")
-use_index = (args.use_cache == "yes")
+cache_files_status = set(file_exists(file) for file in (tags_file, cache_file, index_file))
+if len(cache_files_status) != 1:
+    if args.action == "update":
+        cache_files_status = False
+    else:
+        arg_parser.error("argument -[CGLSV]: cache files corrupted; please run -U first")
+else:
+    cache_files_status = cache_files_status.pop()
+
+use_cache = (not is_maintenance_action and args.use_cache == "yes" and cache_files_status)
+use_index = (args.use_cache == "yes" and cache_files_status)
 
 journal_files = set()
 entries = ""
@@ -110,15 +119,13 @@ entries = dict((entry[:DATE_LENGTH], entry.strip()) for entry in entries.strip()
 
 index = defaultdict(set)
 index_metadata = {}
-if file_exists(index_file):
+entry_file_map = {}
+if use_index:
     with open(index_file) as fd:
         index_metadata = literal_eval("{" + fd.readline()[2:] + "}")
         index = literal_eval("{" + "".join(line for line in fd.read().splitlines() if not line.startswith("#")) + "}")
         for term in index:
             index[term] = set(index[term])
-
-entry_file_map = {}
-if file_exists(tags_file):
     with open(tags_file) as fd:
         for line in fd.read().splitlines():
             entry, file, line_number = line.split()
@@ -126,7 +133,7 @@ if file_exists(tags_file):
 
 selected = set(entries.keys())
 
-if is_maintenance_action and use_index and entry_file_map:
+if is_maintenance_action and use_index:
     update_timestamp = datetime.strptime(index_metadata["updated"], "%Y-%m-%d").timestamp()
     for entry, file_line in entry_file_map.items():
         file = file_line[0]

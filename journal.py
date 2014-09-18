@@ -166,7 +166,6 @@ if args.action == "update" or len(entries) == len(candidates):
         selected &= index_updates[term]
 
 if args.action == "update":
-    tags = []
     for journal in journal_files:
         rel_path = relpath(journal, args.directory)
         with open(journal) as fd:

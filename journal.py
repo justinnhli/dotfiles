@@ -136,7 +136,7 @@ if stdin.isatty() and args.action == "show" and args.log and file_exists(log_fil
 
 metadata = {}
 index = defaultdict(set)
-entry_file_map = {}
+tags = {}
 if use_index:
     with open(metadata_file) as fd:
         metadata = literal_eval("{" + fd.read() + "}")
@@ -147,13 +147,13 @@ if use_index:
     with open(tags_file) as fd:
         for line in fd.read().splitlines():
             entry, file, line_number = line.split()
-            entry_file_map[entry] = (file, line_number)
+            tags[entry] = (file, line_number)
 
 selected = set(entries.keys())
 
 if is_maintenance_action and use_index:
     update_timestamp = datetime.strptime(metadata["updated"], "%Y-%m-%d").timestamp()
-    for entry, file_line in entry_file_map.items():
+    for entry, file_line in tags.items():
         file = file_line[0]
         if getmtime(file) < update_timestamp:
             journal_files.discard(join_path(args.directory, file))
@@ -197,11 +197,11 @@ if args.action == "update":
             lines = fd.read().splitlines()
         for line_number, line in enumerate(lines, start=1):
             if DATE_REGEX.match(line):
-                entry_file_map[line[:DATE_LENGTH]] = (rel_path, line_number)
+                tags[line[:DATE_LENGTH]] = (rel_path, line_number)
     with open(metadata_file, "w") as fd:
         fd.write('"updated":"{}",'.format(datetime.now().strftime("%Y-%m-%d")) + "\n")
     with open(tags_file, "w") as fd:
-        fd.write("\n".join("{}\t{}\t{}".format(entry, *fileline) for entry, fileline in sorted(entry_file_map.items())) + "\n")
+        fd.write("\n".join("{}\t{}\t{}".format(entry, *fileline) for entry, fileline in sorted(tags.items())) + "\n")
     with open(cache_file, "w") as fd:
         fd.write("\n\n".join(sorted(entries.values())) + "\n")
     with open(index_file, "w") as fd:

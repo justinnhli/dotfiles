@@ -89,13 +89,12 @@ use_cache = (not is_maintenance_action and args.use_cache == "yes")
 use_index = (args.use_cache == "yes")
 
 journal_files = set()
-raw_entries = ""
-entries = {}
+entries = ""
 if not stdin.isatty():
-    raw_entries = stdin.read()
-elif file_exists(cache_file) and use_cache:
+    entries = stdin.read()
+elif use_cache:
     with open(cache_file) as fd:
-        raw_entries = fd.read()
+        entries = fd.read()
 else:
     for path, dirs, files in walk(args.directory):
         journal_files.update(join_path(path, f) for f in files if f.endswith(FILE_EXTENSION))
@@ -104,10 +103,10 @@ else:
     for journal in journal_files:
         with open(journal) as fd:
             file_entries.append(fd.read().strip())
-    raw_entries = "\n\n".join(file_entries)
-if not raw_entries:
+    entries = "\n\n".join(file_entries)
+if not entries:
     arg_parser.error("no journal entries found or specified")
-entries.update((entry[:DATE_LENGTH], entry.strip()) for entry in raw_entries.strip().split("\n\n") if entry and DATE_REGEX.match(entry))
+entries = dict((entry[:DATE_LENGTH], entry.strip()) for entry in entries.strip().split("\n\n") if entry and DATE_REGEX.match(entry))
 
 index = defaultdict(set)
 index_metadata = {}

@@ -24,6 +24,7 @@ MONTH_LENGTH = 7
 DATE_LENGTH = 10
 
 LOG_FILE = ".log"
+METADATA_FILE = ".metadata"
 TAGS_FILE = "tags"
 CACHE_FILE = ".cache"
 INDEX_FILE = ".index"
@@ -81,11 +82,12 @@ if args.action == "archive":
     exit()
 
 log_file = join_path(args.directory, LOG_FILE) if stdin.isatty() else ""
+metadata_file = join_path(args.directory, METADATA_FILE) if stdin.isatty() else ""
 tags_file = join_path(args.directory, TAGS_FILE) if stdin.isatty() else ""
 cache_file = join_path(args.directory, CACHE_FILE) if stdin.isatty() else ""
 index_file = join_path(args.directory, INDEX_FILE) if stdin.isatty() else ""
 
-cache_files_status = set(file_exists(file) for file in (tags_file, cache_file, index_file))
+cache_files_status = set(file_exists(file) for file in (metadata_file, tags_file, cache_file, index_file))
 if len(cache_files_status) != 1:
     if args.action == "update":
         cache_files_status = False
@@ -117,13 +119,14 @@ if not entries:
     arg_parser.error("no journal entries found or specified")
 entries = dict((entry[:DATE_LENGTH], entry.strip()) for entry in entries.strip().split("\n\n") if entry and DATE_REGEX.match(entry))
 
+metadata = {}
 index = defaultdict(set)
-index_metadata = {}
 entry_file_map = {}
 if use_index:
+    with open(metadata_file) as fd:
+        metadata = literal_eval("{" + fd.read() + "}")
     with open(index_file) as fd:
-        index_metadata = literal_eval("{" + fd.readline()[2:] + "}")
-        index = literal_eval("{" + "".join(line for line in fd.read().splitlines() if not line.startswith("#")) + "}")
+        index = literal_eval("{" + fd.read() + "}")
         for term in index:
             index[term] = set(index[term])
     with open(tags_file) as fd:
@@ -134,7 +137,7 @@ if use_index:
 selected = set(entries.keys())
 
 if is_maintenance_action and use_index:
-    update_timestamp = datetime.strptime(index_metadata["updated"], "%Y-%m-%d").timestamp()
+    update_timestamp = datetime.strptime(metadata["updated"], "%Y-%m-%d").timestamp()
     for entry, file_line in entry_file_map.items():
         file = file_line[0]
         if getmtime(file) < update_timestamp:
@@ -180,12 +183,13 @@ if args.action == "update":
         for line_number, line in enumerate(lines, start=1):
             if DATE_REGEX.match(line):
                 entry_file_map[line[:DATE_LENGTH]] = (rel_path, line_number)
+    with open(metadata_file, "w") as fd:
+        fd.write('"updated":"{}",'.format(datetime.now().strftime("%Y-%m-%d")) + "\n")
     with open(tags_file, "w") as fd:
         fd.write("\n".join("{}\t{}\t{}".format(entry, *fileline) for entry, fileline in sorted(entry_file_map.items())) + "\n")
     with open(cache_file, "w") as fd:
         fd.write("\n\n".join(sorted(entries.values())) + "\n")
     with open(index_file, "w") as fd:
-        fd.write('# "updated":"{}"\n'.format(datetime.now().strftime("%Y-%m-%d")))
         for term in sorted(set(index.keys()) | set(index_updates.keys())):
             fd.write("\"{}\": {},\n".format(term.replace('"', '\\"'), sorted(index[term] | index_updates[term])))
     exit()

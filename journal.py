@@ -148,8 +148,7 @@ if args.date_range:
         if ":" in date_range:
             start_date, end_date = date_range.split(":")
             start_date, end_date = (start_date or first_date, end_date or last_date)
-            start_date += "-01" * int((DATE_LENGTH - len(start_date)) / 3)
-            end_date += "-01" * int((DATE_LENGTH - len(end_date)) / 3)
+            start_date, end_date = (date + "-01" * int((DATE_LENGTH - len(date)) / len("-01")) for date in (start_date, end_date))
             selected |= set(k for k in candidates if start_date <= k < end_date)
         else:
             selected |= set(k for k in candidates if k.startswith(date_range))

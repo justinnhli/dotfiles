@@ -33,13 +33,13 @@ arg_parser = ArgumentParser(usage="%(prog)s <operation> [options] [TERM ...]", d
 arg_parser.set_defaults(directory="./", headers=True, ignores=[], icase=re.IGNORECASE, reverse=False, log=True, unit="year", use_cache="yes")
 arg_parser.add_argument("terms", metavar="TERM", nargs="*", help="pattern which must exist in entries")
 group = arg_parser.add_argument_group("OPERATIONS").add_mutually_exclusive_group(required=True)
-group.add_argument("-A",           dest="action",      action="store_const", const="archive",                   help="archive to datetimed tarball")
-group.add_argument("-C",           dest="action",      action="store_const", const="count",                     help="count words and entries")
-group.add_argument("-G",           dest="action",      action="store_const", const="graph",                     help="graph entry references in DOT")
-group.add_argument("-L",           dest="action",      action="store_const", const="list",                      help="list entry dates")
-group.add_argument("-S",           dest="action",      action="store_const", const="show",                      help="show entry contents")
-group.add_argument("-U",           dest="action",      action="store_const", const="update",                    help="update tags and cache file")
-group.add_argument("-V",           dest="action",      action="store_const", const="verify",                    help="verify journal sanity")
+group.add_argument("-A",           dest="op",          action="store_const", const="archive",                   help="archive to datetimed tarball")
+group.add_argument("-C",           dest="op",          action="store_const", const="count",                     help="count words and entries")
+group.add_argument("-G",           dest="op",          action="store_const", const="graph",                     help="graph entry references in DOT")
+group.add_argument("-L",           dest="op",          action="store_const", const="list",                      help="list entry dates")
+group.add_argument("-S",           dest="op",          action="store_const", const="show",                      help="show entry contents")
+group.add_argument("-U",           dest="op",          action="store_const", const="update",                    help="update tags and cache file")
+group.add_argument("-V",           dest="op",          action="store_const", const="verify",                    help="verify journal sanity")
 group = arg_parser.add_argument_group("INPUT OPTIONS")
 group.add_argument("--directory",  dest="directory",   action="store",                                          help="use journal files in directory")
 group.add_argument("--ignore",     dest="ignores",     action="append",                                         help="ignore specified file")
@@ -54,11 +54,12 @@ group = arg_parser.add_argument_group("OPERATION-SPECIFIC OPTIONS")
 group.add_argument("--no-log",     dest="log",         action="store_false",                                    help="[S] do not log search")
 group.add_argument("--no-headers", dest="headers",     action="store_false",                                    help="[C] do not print headers")
 group.add_argument("--unit",       dest="unit",        action="store",       choices=("year", "month", "date"), help="[C] set tabulation unit")
+
 args = arg_parser.parse_args()
 
-is_maintenance_action = args.action in ("archive", "update", "verify")
+is_maintenance_op = args.op in ("archive", "update", "verify")
 
-if is_maintenance_action:
+if is_maintenance_op:
     if not stdin.isatty():
         arg_parser.error("argument -[AUV]: operation can only be performed on files")
     for option_dest in ("date_range", "icase", "terms"):
@@ -74,7 +75,7 @@ args.directory = realpath(expanduser(args.directory))
 args.ignores = set(realpath(expanduser(path)) for path in args.ignores)
 args.terms = set(args.terms)
 
-if args.action == "archive":
+if args.op == "archive":
     filename = "jrnl" + datetime.now().strftime("%Y%m%d%H%M%S")
     with tarfile.open("{}.txz".format(filename), "w:xz") as tar:
         tar.add(args.directory, arcname=filename, filter=(lambda tarinfo: None if basename(tarinfo.name).startswith(".") else tarinfo))
@@ -89,14 +90,14 @@ index_file = join_path(args.directory, INDEX_FILE) if stdin.isatty() else ""
 
 cache_files_status = set(file_exists(file) for file in (metadata_file, tags_file, cache_file, index_file))
 if len(cache_files_status) != 1:
-    if args.action == "update":
+    if args.op == "update":
         cache_files_status = False
     else:
         arg_parser.error("argument -[CGLSV]: cache files corrupted; please run -U first")
 else:
     cache_files_status = cache_files_status.pop()
 
-use_cache = (not is_maintenance_action and args.use_cache == "yes" and cache_files_status)
+use_cache = (not is_maintenance_op and args.use_cache == "yes" and cache_files_status)
 use_index = (args.use_cache == "yes" and cache_files_status)
 
 journal_files = set()
@@ -119,7 +120,7 @@ if not entries:
     arg_parser.error("no journal entries found or specified")
 entries = dict((entry[:DATE_LENGTH], entry.strip()) for entry in entries.strip().split("\n\n") if entry and DATE_REGEX.match(entry))
 
-if stdin.isatty() and args.action == "show" and args.log and file_exists(log_file):
+if stdin.isatty() and args.op == "show" and args.log and file_exists(log_file):
     options = []
     for option_string, option in arg_parser._option_string_actions.items():
         if re.match("^-[a-gi-z]$", option_string):
@@ -151,7 +152,7 @@ if use_index:
 
 selected = set(entries.keys())
 
-if is_maintenance_action and use_index:
+if is_maintenance_op and use_index:
     update_timestamp = datetime.strptime(metadata["updated"], "%Y-%m-%d").timestamp()
     for entry, file_line in tags.items():
         file = file_line[0]
@@ -162,7 +163,7 @@ if is_maintenance_action and use_index:
         index[term] -= selected
 
 unindexed_terms = args.terms
-if args.action == "update":
+if args.op == "update":
     unindexed_terms = set(index.keys())
 elif use_index:
     selected.intersection_update(*(index[term.lower()] for term in args.terms if term.lower() in index))
@@ -184,13 +185,13 @@ if args.date_range:
 
 candidates = copy(selected)
 index_updates = defaultdict(set)
-if args.action == "update" or len(entries) == len(candidates):
+if args.op == "update" or len(entries) == len(candidates):
     for term in unindexed_terms:
         term = term.lower()
         index_updates[term] = set(k for k in candidates if re.search(term, entries[k], flags=(re.IGNORECASE | re.MULTILINE)))
         selected &= index_updates[term]
 
-if args.action == "update":
+if args.op == "update":
     for journal in journal_files:
         rel_path = relpath(journal, args.directory)
         with open(journal) as fd:
@@ -223,7 +224,7 @@ if args.num_results:
 if not selected:
     exit()
 
-if args.action == "count":
+if args.op == "count":
     gap_size = 2
     gap = gap_size * " "
     columns = OrderedDict((
@@ -253,7 +254,7 @@ if args.action == "count":
         print(gap.join(width * "-" for width in widths))
     print("\n".join(gap.join(col.rjust(widths[i]) for i, col in enumerate(row)) for row in table))
 
-elif args.action == "graph":
+elif args.op == "graph":
     disjoint_sets = dict((k, k) for k in selected)
     ancestors = {}
     edges = dict((k, set()) for k in selected)
@@ -286,10 +287,10 @@ elif args.action == "graph":
         print("")
     print('}')
 
-elif args.action == "list":
+elif args.op == "list":
     print("\n".join(selected))
 
-elif args.action == "show":
+elif args.op == "show":
     text = "\n\n".join(entries[k] for k in selected)
     if stdout.isatty():
         temp_file = mkstemp(FILE_EXTENSION)[1]
@@ -309,7 +310,7 @@ elif args.action == "show":
     else:
         print(text)
 
-elif args.action == "verify":
+elif args.op == "verify":
     errors = []
     dates = set()
     long_dates = None

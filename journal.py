@@ -116,16 +116,18 @@ if file_exists(index_file):
 entry_file_map = {}
 if file_exists(tags_file):
     with open(tags_file) as fd:
-        entry_file_map = dict(line.split()[0:2] for line in fd.read().splitlines())
+        for line in fd.read().splitlines():
+            entry, file, line_number = line.split()
+            entry_file_map[entry] = (file, line_number)
 
 selected = set(entries.keys())
 
-changed_files = copy(journal_files)
 if is_maintenance_action and use_index and entry_file_map:
     update_timestamp = datetime.strptime(index_metadata["updated"], "%Y-%m-%d").timestamp()
-    for entry, file in entry_file_map.items():
+    for entry, file_line in entry_file_map.items():
+        file = file_line[0]
         if getmtime(file) < update_timestamp:
-            changed_files.discard(join_path(args.directory, file))
+            journal_files.discard(join_path(args.directory, file))
             selected.remove(entry)
     for term in index:
         index[term] -= selected
@@ -168,7 +170,7 @@ if args.action == "update":
             lines = fd.read().splitlines()
         for line_number, line in enumerate(lines, start=1):
             if DATE_REGEX.match(line):
-                tags.append((line[:DATE_LENGTH], rel_path, line_number))
+                entry_file_map[line[:DATE_LENGTH]] = (rel_path, line_number)
     with open(tags_file, "w") as fd:
         fd.write("\n".join("{}\t{}\t{}".format(*tag) for tag in sorted(tags)))
     with open(cache_file, "w") as fd:
@@ -298,7 +300,7 @@ elif args.action == "verify":
     errors = []
     dates = set()
     long_dates = None
-    for journal in changed_files:
+    for journal in journal_files:
         with open(journal) as fd:
             lines = fd.read().splitlines()
         prev_indent = 0

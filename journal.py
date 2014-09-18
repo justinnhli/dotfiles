@@ -209,10 +209,9 @@ if args.action == "update":
             fd.write("\"{}\": {},\n".format(term.replace('"', '\\"'), sorted(index[term] | index_updates[term])))
     exit()
 
-if stdin.isatty():
-    if index_updates:
-        with open(index_file, "a") as fd:
-            fd.write("".join("\"{}\": {},\n".format(k.lower().replace('"', '\\"'), sorted(v)) for k, v in index_updates.items()))
+if stdin.isatty() and index_updates:
+    with open(index_file, "a") as fd:
+        fd.write("".join("\"{}\": {},\n".format(k.lower().replace('"', '\\"'), sorted(v)) for k, v in index_updates.items()))
 
 for term in unindexed_terms:
     selected = set(k for k in selected if re.search(term, entries[k], flags=(args.icase | re.MULTILINE)))

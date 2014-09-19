@@ -249,11 +249,11 @@ if args.op == "count":
 
 elif args.op == "graph":
     disjoint_sets = dict((k, k) for k in selected)
-    ancestors = {}
+    ancestors = defaultdict(set)
     edges = dict((k, set()) for k in selected)
     for src in sorted(selected):
         dests = set(dest for dest in REF_REGEX.findall(entries[src]) if src > dest and dest in selected)
-        ancestors[src] = set().union(*(ancestors.get(parent, set()) for parent in dests))
+        ancestors[src] = set().union(*(ancestors[parent] for parent in dests))
         for dest in dests - ancestors[src]:
             edges[src].add(dest)
             while disjoint_sets[dest] != src:

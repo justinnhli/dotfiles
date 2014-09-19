@@ -12,7 +12,7 @@ from os import chdir as cd, chmod, execvp, fork, remove as rm, wait, walk
 from os.path import basename, exists as file_exists, expanduser, getmtime, join as join_path, realpath, relpath
 from stat import S_IRUSR
 from statistics import mean, median, stdev
-from sys import stdin, stdout, argv
+from sys import stdout, argv
 from tempfile import mkstemp
 
 FILE_EXTENSION = ".journal"
@@ -58,8 +58,6 @@ args = arg_parser.parse_args()
 
 is_maintenance_op = args.op in ("archive", "update", "verify")
 if is_maintenance_op:
-    if not stdin.isatty():
-        arg_parser.error("argument -[AUV]: operation can only be performed on files")
     for option_dest in ("date_range", "icase", "terms"):
         for option_string, option in arg_parser._option_string_actions.items():
             if option_dest == option.dest:
@@ -80,11 +78,11 @@ if args.op == "archive":
         tar.add(argv[0], arcname=join_path(filename, basename(argv[0])))
     exit()
 
-log_file = join_path(args.directory, LOG_FILE) if stdin.isatty() else ""
-metadata_file = join_path(args.directory, METADATA_FILE) if stdin.isatty() else ""
-tags_file = join_path(args.directory, TAGS_FILE) if stdin.isatty() else ""
-cache_file = join_path(args.directory, CACHE_FILE) if stdin.isatty() else ""
-index_file = join_path(args.directory, INDEX_FILE) if stdin.isatty() else ""
+log_file = join_path(args.directory, LOG_FILE)
+metadata_file = join_path(args.directory, METADATA_FILE)
+tags_file = join_path(args.directory, TAGS_FILE)
+cache_file = join_path(args.directory, CACHE_FILE)
+index_file = join_path(args.directory, INDEX_FILE)
 
 cache_files_exist = set(file_exists(file) for file in (metadata_file, tags_file, cache_file, index_file))
 if len(cache_files_exist) == 1:
@@ -99,9 +97,7 @@ use_cache = (not is_maintenance_op and use_index)
 
 journal_files = set()
 entries = ""
-if not stdin.isatty():
-    entries = stdin.read()
-elif use_cache:
+if use_cache:
     with open(cache_file) as fd:
         entries = fd.read()
 else:
@@ -117,7 +113,7 @@ if not entries:
     arg_parser.error("no journal entries found or specified")
 entries = dict((entry[:DATE_LENGTH], entry.strip()) for entry in entries.strip().split("\n\n") if entry and DATE_REGEX.match(entry))
 
-if stdin.isatty() and args.op == "show" and args.log and file_exists(log_file):
+if args.op == "show" and args.log and file_exists(log_file):
     options = []
     for option_string, option in arg_parser._option_string_actions.items():
         if re.match("^-[a-gi-z]$", option_string):
@@ -207,7 +203,7 @@ if args.op == "update":
             fd.write("\"{}\": {},\n".format(term.replace('"', '\\"'), sorted(index[term] | index_updates[term])))
     exit()
 
-if stdin.isatty() and index_updates:
+if index_updates:
     with open(index_file, "a") as fd:
         fd.write("".join("\"{}\": {},\n".format(k.lower().replace('"', '\\"'), sorted(v)) for k, v in index_updates.items()))
 

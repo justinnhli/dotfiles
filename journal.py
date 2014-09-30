@@ -184,38 +184,21 @@ if args.op == "update" or len(entries) == len(candidates):
         index_updates[term] = set(k for k in candidates if re.search(term, entries[k], flags=(re.IGNORECASE | re.MULTILINE)))
         selected &= index_updates[term]
 
-if args.op == "update":
-    for journal in journal_files:
-        rel_path = relpath(journal, args.directory)
-        with open(journal) as fd:
-            lines = fd.read().splitlines()
-        for line_number, line in enumerate(lines, start=1):
-            if DATE_REGEX.match(line):
-                tags[line[:DATE_LENGTH]] = (rel_path, line_number)
-    with open(metadata_file, "w") as fd:
-        fd.write('"updated":"{}",'.format(datetime.now().strftime("%Y-%m-%d")) + "\n")
-    with open(tags_file, "w") as fd:
-        fd.write("\n".join("{}\t{}\t{}".format(entry, *fileline) for entry, fileline in sorted(tags.items())) + "\n")
-    with open(cache_file, "w") as fd:
-        fd.write("\n\n".join(sorted(entries.values())) + "\n")
-    with open(index_file, "w") as fd:
-        for term in sorted(set(index.keys()) | set(index_updates.keys())):
-            fd.write("\"{}\": {},\n".format(term.replace('"', '\\"'), sorted(index[term] | index_updates[term])))
-    exit()
+if not is_maintenance_op:
+    if index_updates:
+        with open(index_file, "a") as fd:
+            fd.write("".join("\"{}\": {},\n".format(k.lower().replace('"', '\\"'), sorted(v)) for k, v in index_updates.items()))
 
-if index_updates:
-    with open(index_file, "a") as fd:
-        fd.write("".join("\"{}\": {},\n".format(k.lower().replace('"', '\\"'), sorted(v)) for k, v in index_updates.items()))
+    if not is_maintenance_op:
+        for term in unindexed_terms:
+            selected = set(k for k in selected if re.search(term, entries[k], flags=(args.icase | re.MULTILINE)))
 
-for term in unindexed_terms:
-    selected = set(k for k in selected if re.search(term, entries[k], flags=(args.icase | re.MULTILINE)))
+    selected = sorted(selected, reverse=args.reverse)
+    if args.num_results:
+        selected = selected[:args.num_results]
 
-selected = sorted(selected, reverse=args.reverse)
-if args.num_results:
-    selected = selected[:args.num_results]
-
-if not selected:
-    exit()
+    if not selected:
+        exit()
 
 if args.op == "count":
     gap_size = 2
@@ -303,6 +286,24 @@ elif args.op == "show":
     else:
         print(text)
 
+elif args.op == "update":
+    for journal in journal_files:
+        rel_path = relpath(journal, args.directory)
+        with open(journal) as fd:
+            lines = fd.read().splitlines()
+        for line_number, line in enumerate(lines, start=1):
+            if DATE_REGEX.match(line):
+                tags[line[:DATE_LENGTH]] = (rel_path, line_number)
+    with open(metadata_file, "w") as fd:
+        fd.write('"updated":"{}",'.format(datetime.now().strftime("%Y-%m-%d")) + "\n")
+    with open(tags_file, "w") as fd:
+        fd.write("\n".join("{}\t{}\t{}".format(entry, *fileline) for entry, fileline in sorted(tags.items())) + "\n")
+    with open(cache_file, "w") as fd:
+        fd.write("\n\n".join(sorted(entries.values())) + "\n")
+    with open(index_file, "w") as fd:
+        for term in sorted(set(index.keys()) | set(index_updates.keys())):
+            fd.write("\"{}\": {},\n".format(term.replace('"', '\\"'), sorted(index[term] | index_updates[term])))
+
 elif args.op == "verify":
     errors = []
     dates = set()
@@ -342,6 +343,8 @@ elif args.op == "verify":
             elif indent - prev_indent > 1:
                 errors.append((journal, line_number, "unexpected indentation"))
             prev_indent = indent
+        if prev_indent == 0:
+            errors.append((journal, len(lines), "file ends on blank line"))
     has_errors = False
     if errors:
         print("\n".join("{}:{}: {}".format(*error) for error in errors))

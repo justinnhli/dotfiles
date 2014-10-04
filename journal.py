@@ -90,7 +90,7 @@ if len(cache_files_exist) == 1:
 elif args.op == "update":
     cache_files_exist = False
 else:
-    arg_parser.error("argument -[CGLSV]: cache files corrupted; please run -U first")
+    arg_parser.error("argument -[CGLSV]: cache files corrupted or not found; please run -U first")
 
 use_index = (args.use_cache == "yes" and cache_files_exist)
 use_cache = (not is_maintenance_op and use_index)

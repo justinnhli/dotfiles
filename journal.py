@@ -345,16 +345,6 @@ elif args.op == "verify":
             prev_indent = indent
         if prev_indent == 0:
             errors.append((journal, len(lines), "file ends on blank line"))
-    has_errors = False
     if errors:
         print("\n".join("{}:{}: {}".format(*error) for error in errors))
-        has_errors = True
-    errors = []
-    for key, value in sorted(entries.items()):
-        if value.count('"') % 2:
-            errors.append((key, "odd quotation marks"))
-    if errors:
-        print("\n".join("{}: {}".format(*error) for error in errors))
-        has_errors = True
-    if has_errors:
         exit(1)

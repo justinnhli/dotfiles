@@ -1,0 +1,12 @@
+[user]
+	name = justinnhli
+	email = justinnhli@gmail.com
+[core]
+	editor = nvim
+	excludesfile = ~/.gitignore
+[diff]
+	tool = nvim -d
+[merge]
+	tool = nvim -d
+[push]
+	default = simple

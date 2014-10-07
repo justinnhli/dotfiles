@@ -1,0 +1,476 @@
+set nocompatible
+
+if has("nvim")
+	runtime! plugin/python_setup.vim
+endif
+
+if filereadable(expand("~/.nvim/bundle/vim-pathogen/autoload/pathogen.vim"))
+	source ~/.nvim/bundle/vim-pathogen/autoload/pathogen.vim
+	execute pathogen#infect()
+endif
+
+if isdirectory('/usr/share/vim/vim74')
+	let &runtimepath = &runtimepath.',/usr/share/vim/vim74'
+endif
+
+" commands {
+	command! -nargs=0 CloseRightTabs :call CloseRightTabs()
+	command! -nargs=1 MoveToRelTab :call MoveToRelTab(<q-args>)
+" }
+
+" functions {
+	function! UnicodeToAscii()
+		%s/[′‘’]/'/eg
+		%s/’’/"/eg
+		%s/‘‘/"/eg
+		%s/[“”]/"/eg
+		%s/…/.../eg
+		%s/[–—―]/ - /eg
+		%s/ / /eg " U+200A (hair space)
+	endfunction
+
+	function! FoldToIndent()
+		set foldenable
+		exe "set foldlevel=".foldlevel('.')
+	endfunction
+
+	function! CloseRightTabs()
+		let cur=tabpagenr()
+		while cur < tabpagenr('$')
+			exe 'tabclose' . ' ' . (cur + 1)
+		endwhile
+	endfunction
+
+	function! MoveToRelTab(n)
+		let l:num_tabs = tabpagenr("$")
+		let l:cur_tab = tabpagenr()
+		let l:cur_win = winnr('#')
+		let l:cur_buf = bufnr('%')
+		let l:new_tab = a:n + l:cur_tab
+		if a:n == 0 || (l:num_tabs == 1 && winnr("$") == 1)
+			return
+		endif
+		if l:new_tab < 1
+			exec "0tabnew"
+			let l:cur_tab += 1
+		elseif l:new_tab > l:num_tabs
+			exec "tablast"
+			exec "tabnew"
+		else
+			if a:n < 0
+				if l:num_tabs == tabpagenr('$')
+					exec "tabprev ".abs(a:n)
+				elseif a:n != -1
+					exec "tabprev ".(abs(a:n)-1)
+				endif
+			else
+				if l:num_tabs == tabpagenr('$')
+					exec "tabnext ".l:new_tab
+				elseif a:n != 1
+					exec "tabnext ".(l:new_tab-1)
+				endif
+			endif
+			vert botright split
+		endif
+		exec "b".l:cur_buf
+		let l:new_tab = tabpagenr()
+		exec "tabnext".l:cur_tab
+		exec l:cur_win."wincmd c"
+		if l:new_tab > l:num_tabs
+			exec "tabnext".(l:new_tab-1)
+		else
+			exec "tabnext".l:new_tab
+		endif
+		" FIXME fails when new_tab is the highest tab
+	endfunction
+
+	function! MyTabLine()
+		let s = ''
+		let t = tabpagenr()
+		for i in range(tabpagenr('$'))
+			let buflist = tabpagebuflist(i+1)
+			let winnr = tabpagewinnr(i+1)
+			let bufnr = buflist[winnr - 1]
+			let file = bufname(bufnr)
+			" set highlighting
+			let s .= (i+1 == t ? '%#TabLineSel#' : '%#TabLine#')
+			let s .= ' '
+			" set filename
+			if file == ''
+				let s .= '[No Name]'
+			else
+				let s .= fnamemodify(file, ':p:t')
+			endif
+			" set window number and modified flag
+			let s .= ' ['
+			let s .= tabpagewinnr(i+1,'$')
+			for b in buflist
+				if getbufvar(b, "&modified" )
+					let s .= '+'
+					break
+				endif
+			endfor
+			let s .= '] '
+		endfor
+		let s .= '%T%#TabLineFill#%='
+		return s
+	endfunction
+
+	function! SetMkfile()
+		let filemk = "Makefile"
+		let pathmk = "./"
+		let depth = 1
+		while depth < 4
+			if filereadable(pathmk . filemk)
+				return pathmk
+			endif
+			let depth += 1
+			let pathmk = "../" . pathmk
+		endwhile
+		return "."
+	endf
+" }
+
+" sessions {
+	set   history=250
+	if filereadable(expand("~/.nvim/viminfo"))
+		set   viminfo='50,<100,h,n~/.nvim/viminfo
+	else
+		set   viminfo='50,<100,h,n~/.viminfo
+	endif
+	if has("persistent_undo")
+		set   undofile
+	endif
+" }
+
+" vim GUI {
+	set   confirm
+	set   display=lastline,uhex
+	set noerrorbells
+	set guioptions-=T
+	set guioptions-=L
+	set guioptions-=r
+	set   laststatus=2
+	set   lazyredraw
+	if has("linebreak")
+		set   linebreak
+	endif
+	let   netrw_liststyle=3
+	set   number
+	if has("cmdline_info")
+		set   showcmd
+	endif
+	if has("windows")
+		set   splitbelow
+	endif
+	if has("vertsplit")
+		set   splitright
+	endif
+	if has("statusline")
+		set   statusline=%n\ %f%(\ %M%)\ [%{&ff}]%r%y%#warningmsg#%{&paste?'[paste]':''}%*%=%<%1.30{getcwd()}\ (%l/%L,%c)%4P
+	endif
+	if has("windows")
+		set showtabline=2
+		set tabline=%!MyTabLine()
+	endif
+	set   title
+	if has('gui_running')
+		set   visualbell
+	else
+		set novisualbell
+	endif
+	set nowrap
+	if has("wildmenu")
+		set   wildmenu
+		set   wildmode=longest:full
+		set   wildignore+=*.pyc
+	endif
+	let g:netrw_winsize=50
+" }
+
+" settings {
+	filetype plugin on
+	filetype indent on
+	set   autoindent
+	set   autoread
+	if has("multi_byte")
+		set nobomb
+	endif
+	set   backspace=indent,eol,start
+	if has("insert_expand")
+		set   completeopt=menu,menuone
+	endif
+	if has("multi_byte")
+		set   encoding=utf-8
+	endif
+	set noesckeys
+	if has("multi_byte")
+		set   fileencoding=utf-8
+	endif
+	if has("folding")
+		set   foldclose=all
+		set nofoldenable
+		set   foldmethod=syntax
+		set   foldminlines=0
+	endif
+	if has("extra_search")
+		set   hlsearch
+	endif
+	set   ignorecase
+	if has("insert_expand")
+		set noinfercase
+	endif
+	if has("extra_search")
+		set   incsearch
+	endif
+	set   scrolloff=1
+	set   shiftwidth=4
+	set   sidescroll=1
+	set   sidescrolloff=10
+	set   smartcase
+	if has("syntax")
+		set   spell
+		set   spellcapcheck=
+	endif
+	set nostartofline
+	set   tabstop=4
+	set   whichwrap=b,s,<,>,h,l,[,]
+" }
+
+" plugins {
+	" clever-f
+	let   g:clever_f_fix_key_direction=1
+	let   g:clever_f_timeout_ms=5000
+	" gundo
+	let   g:gundo_prefer_python3 = 1
+	"python syntax
+	let   python_highlight_all = 1
+" }
+
+" highlighting and color {
+	set t_Co=256
+	if has("syntax")
+		syntax enable
+	endif
+	set background=light
+	highlight Search ctermfg=black ctermbg=yellow
+	highlight SpellBad cterm=bold,underline ctermbg=none ctermfg=red gui=bold,underline guifg=red
+	highlight SpellLocal cterm=bold,underline ctermbg=none ctermfg=darkred gui=bold,underline guifg=darkred
+	highlight TabLine cterm=none ctermfg=black ctermbg=lightgrey
+	highlight TabLineFill cterm=none ctermfg=lightgrey ctermbg=lightgrey
+	highlight TabLineSel cterm=bold ctermfg=white ctermbg=black
+
+	if has('gui_running')
+		colorscheme solarized
+	endif
+" }
+
+" key bindings {
+	mapclear
+	mapclear!
+	
+	" text movement {
+		" remove all uses of arrow keys
+		noremap   <up>       <nop>
+		noremap   <down>     <nop>
+		noremap   <left>     <nop>
+		noremap   <right>    <nop>
+		noremap   <C-up>     <nop>
+		noremap   <C-down>   <nop>
+		noremap   <C-left>   <nop>
+		noremap   <C-right>  <nop>
+		noremap   <S-up>     <nop>
+		noremap   <S-down>   <nop>
+		noremap   <S-left>   <nop>
+		noremap   <S-right>  <nop>
+		inoremap  <up>       <nop>
+		inoremap  <down>     <nop>
+		inoremap  <left>     <nop>
+		inoremap  <right>    <nop>
+		inoremap  <C-up>     <nop>
+		inoremap  <C-down>   <nop>
+		inoremap  <C-left>   <nop>
+		inoremap  <C-right>  <nop>
+		inoremap  <S-up>     <nop>
+		inoremap  <S-down>   <nop>
+		inoremap  <S-left>   <nop>
+		inoremap  <S-right>  <nop>
+
+		" bash/emacs home/end commands
+		nnoremap  <C-a>  ^
+		nnoremap  <C-e>  $
+		cnoremap  <C-a>  <Home>
+		cnoremap  <C-e>  <End>
+		inoremap  <C-a>  <Home>
+		inoremap  <C-e>  <End>
+		vnoremap  <C-a>  <Home>
+		vnoremap  <C-e>  <End>
+
+		" jump to previous/next line with less/same/more indentation
+		nnoremap  [<  :call search('^' . matchstr(getline('.'), '^\s*\s\@=') . '\%<' . line('.') . 'l\S', 'be')<CR>
+		nnoremap  [.  :call search('^' . matchstr(getline('.'), '^\s*') . '\%<' . line('.') . 'l\S', 'be')<CR>
+		nnoremap  [>  :call search('^' . matchstr(getline('.'), '^\s*') . '\s\%<' . line('.') . 'l\S', 'be')<CR>
+		nnoremap  ]<  :call search('^' . matchstr(getline('.'), '^\s*\s\@=') . '\S\%>' . line('.') . 'l\S', 'e')<CR>
+		nnoremap  ].  :call search('^' . matchstr(getline('.'), '^\s*') . '\%>' . line('.') . 'l\S', 'e')<CR>
+		nnoremap  ]>  :call search('^' . matchstr(getline('.'), '^\s*') . '\s\%>' . line('.') . 'l\S', 'e')<CR>
+	" }
+
+	" buffer/window/tab movement {
+		" Ctrl+HJKL for moving between buffers
+		noremap  <C-j>  <C-w>j
+		noremap  <C-k>  <C-w>k
+		noremap  <C-h>  <C-w>h
+		noremap  <C-l>  <C-w>l
+
+		" Shift+HL for moving between tabs
+		noremap  <S-l>  :tabnext<cr>
+		noremap  <S-h>  :tabprev<cr>
+	" }
+
+	" disable annoying features {
+		" disable Shift+JK in visual mode
+		vnoremap  <S-j>  <nop>
+		vnoremap  <S-k>  <nop>
+
+		" disable the manpage lookup
+		vnoremap  K  <Nop>
+
+		" disable Ex mode
+		nnoremap  Q  <Nop>
+	" }
+
+	" search, command line, and quick fix {
+		" default to very magic search
+		nnoremap  /  /\v
+		nnoremap  ?  ?\v
+
+		" easily search for selected text
+		vnoremap  /  y<Esc>/<C-r>"<cr>
+		vnoremap  ?  y<Esc>?<C-r>"<cr>
+
+		" rebind n/N to always go forwards/backwards (and turns on highlighting)
+		nnoremap  n       :set hlsearch<cr>/<cr>zz
+		nnoremap  <S-n>   :set hlsearch<cr>?<cr>zz
+		vnoremap  n       :set hlsearch<cr>/<cr>zz
+		vnoremap  <S-n>   :set hlsearch<cr>?<cr>zz
+
+		" force the use of the command line window
+		nnoremap  :  :<C-f>i
+		nnoremap  q: :
+		vnoremap  :  :<C-f>i
+		vnoremap  q: :
+
+		" Shift+JK for moving between quickfixes
+		nnoremap  <S-j>  :lnext<cr>
+		nnoremap  <S-k>  :lprevious<cr>
+	" }
+
+	" editing {
+		" stay in visual mode after tabbing
+		vnoremap  <tab>    >gv
+		vnoremap  <S-tab>  <gv
+		vnoremap  >        >gv
+		vnoremap  <        <gv
+
+		" jump to the end of pasted text
+		nnoremap <silent> p p`]
+	" }
+
+	" keyboard shortcuts {
+		" <C-s> to write file
+		nnoremap <C-s> :update<cr>
+		inoremap <C-s> <C-o>:update<cr>
+
+		" get output of shell command
+		nnoremap  !  :vne<cr>:exe "normal \<lt>c-w>\<lt>s-l>"<cr>:setlocal buftype=nowrite<cr>:set foldlevel=9999<cr>:r!
+
+		" rebind undo/redo traverse the undo tree instead of the undo stack
+		nnoremap  u      g-
+		nnoremap  <C-r>  g+
+	" }
+
+	" leader bindings
+	let mapleader = '\'
+	nnoremap  <leader>d     :let search=@/<cr>a!<esc>i<cr><esc>Pj^"_d?,<cr>I<c-w><esc>11l"_x:let @/=search<cr>
+	" insert today's date
+	nnoremap  <leader>D     :r!date '+\%F'<cr>I<c-w><esc>
+	nnoremap  <leader>gc    :Gcommit -m "
+	nnoremap  <leader>gd    :Gdiff<cr>
+	nnoremap  <leader>gs    :Gstatus<cr>
+	nnoremap  <leader>G     :Git
+	nnoremap  <leader>J     :tabnew ~/journal/notes.journal<cr>
+	nnoremap  <leader>L     :tabnew ~/research/journal/library.bib<cr>
+	nnoremap  <leader>n     :set number!<cr>:set number?<cr>
+	" open pdf of paper
+	nnoremap  <leader>o     eb"zye:!open $(find ~/Dropbox/library/ -name <C-r>=expand("<cword>")<cr>.pdf)<cr><cr>
+	nnoremap  <leader>p     :set paste!<cr>:set paste?<cr>
+	nnoremap  <leader>R     :tabnew ~/research/journal/2014.journal<cr>
+	nnoremap  <leader>s     :set spell!<cr>:set spell?<cr>
+	nnoremap  <leader>T     :tabnew ~/Dropbox/documents/tweets.csv<cr>
+	nnoremap  <leader>u     :GundoToggle<cr>
+	nnoremap  <leader>w     :set wrap!<cr>:set wrap?<cr>
+	" replace with first spelling suggestion
+	nnoremap  <leader>z     1z=
+	nnoremap  <leader>@     :<C-f>ilet @=<C-r><C-r>
+	nnoremap  <leader>/     :nohlsearch<cr>
+	nnoremap  <leader>;     :lcd %:p:h<cr>
+	nnoremap  <leader>'     :tabnew ~/.nvim/nvimrc<cr>
+	nnoremap  <leader><cr>  :!make<cr>
+	" FIXME use SetMkfile function
+	"command! -nargs=* Make tabnew | let $mkpath = SetMkfile() | make <args> -C $mkpath | cwindow 10
+	" fold to indent
+	nnoremap  <leader>.     :call FoldToIndent()<cr>
+	" open tag in new tab
+	nnoremap  <leader>]     <C-w><C-]><C-w>T
+" }
+
+" autocommands {
+	" filetypes
+	autocmd     BufRead,BufNewFile  *.lisp  setlocal expandtab
+	autocmd     BufRead,BufNewFile  *.py    setlocal foldmethod=indent tabstop=4 expandtab
+	autocmd     BufRead,BufNewFile  *.tex   setlocal foldmethod=indent spell
+	" automatically reload .vimrc
+	autocmd!    BufWritePost        *vimrc  source $MYVIMRC
+	" keep windows equal in size
+	autocmd     VimResized          *       normal <c-w>=
+	" restore cursor position
+	autocmd     BufReadPost         *       if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
+	" automatically leave insert mode after 'updatetime' milliseconds, which is 7.5 seconds in insert mode
+	autocmd     CursorHoldI         *       stopinsert
+	augroup leaveinsert
+		autocmd InsertEnter         *       let updaterestore=&updatetime | set updatetime=7500
+		autocmd InsertLeave         *       let &updatetime=updaterestore
+	augroup END
+	" easily cancel the command line window
+	autocmd     CmdwinEnter         *       nnoremap <buffer> <C-c> :quit<cr>
+	autocmd     CmdwinEnter         *       inoremap <buffer> <C-c> <Esc>:quit<cr>
+	" automatically open and close the quickfix window
+	augroup quick_fix
+		autocmd     QuickFixCmdPost     l*grep* lwindow
+		autocmd     WinEnter            *       if winnr('$') == 1 && getbufvar(winbufnr(winnr()), "&buftype") == "quickfix" | q | endif
+	augroup END
+	" bound scope of search to the original window
+	augroup last_search
+		autocmd!
+		autocmd WinLeave            *       let w:last_search = @/
+		autocmd WinEnter            *       if exists("w:last_search") | let @/ = w:last_search | endif
+	augroup END
+	" disable audio bell in MacVim
+	autocmd!    GUIEnter            *              set visualbell t_vb=
+" }
+
+" protect large files from sourcing and other overhead.
+" files become read only
+if !exists("my_auto_commands_loaded")
+	let my_auto_commands_loaded = 1
+	" Large files are > 10M
+	" Set options:
+	" eventignore+=FileType (no syntax highlighting etc.; assumes FileType always on)
+	" noswapfile (save copy of file)
+	" bufhidden=unload (save memory when other file is viewed)
+	" undolevels=-1 (no undo possible)
+	let g:LargeFile = 1024 * 1024 * 10
+	augroup LargeFile
+		autocmd BufReadPre * let f=expand("<afile>") | if getfsize(f) > g:LargeFile | set eventignore+=FileType | setlocal noswapfile bufhidden=unload undolevels=-1 | else | set eventignore-=FileType | endif
+	augroup END
+endif

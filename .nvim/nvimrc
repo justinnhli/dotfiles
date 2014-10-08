@@ -390,37 +390,36 @@ endif
 
 	" leader bindings
 	let mapleader = '\'
-	nnoremap  <leader>d     :let search=@/<cr>a!<esc>i<cr><esc>Pj^"_d?,<cr>I<c-w><esc>11l"_x:let @/=search<cr>
-	" insert today's date
-	nnoremap  <leader>D     :r!date '+\%F'<cr>I<c-w><esc>
+	" open special files
+	nnoremap  <leader>J     :tabnew ~/journal/notes.journal<cr>
+	nnoremap  <leader>L     :tabnew ~/research/journal/library.bib<cr>
+	nnoremap  <leader>R     :tabnew ~/research/journal/2014.journal<cr>
+	nnoremap  <leader>T     :tabnew ~/Dropbox/documents/tweets.csv<cr>
+	nnoremap  <leader>'     :tabnew ~/.nvim/nvimrc<cr>
+	nnoremap  <leader>o     eb"zye:!open $(find ~/Dropbox/library/ -name <C-r>=expand("<cword>")<cr>.pdf)<cr><cr>
+	" toggle settings
+	nnoremap  <leader>n     :set number!<cr>:set number?<cr>
+	nnoremap  <leader>p     :set paste!<cr>:set paste?<cr>
+	nnoremap  <leader>s     :set spell!<cr>:set spell?<cr>
+	nnoremap  <leader>w     :set wrap!<cr>:set wrap?<cr>
+	nnoremap  <leader>/     :nohlsearch<cr>
+	" editor function shortcuts
+	nnoremap  <leader>z     1z=
+	nnoremap  <leader>@     :<C-f>ilet @=<C-r><C-r>
+	nnoremap  <leader>;     :lcd %:p:h<cr>
+	nnoremap  <leader><cr>  :!make<cr>
+	nnoremap  <leader>]     <C-w><C-]><C-w>T
+	" custom functions
+	nnoremap  <leader>.     :call FoldToIndent()<cr>
+	" vim-fugitive bindings
+	nnoremap  <leader>G     :Git
 	nnoremap  <leader>gc    :Gcommit -m "
 	nnoremap  <leader>gd    :Gdiff<cr>
 	nnoremap  <leader>gs    :Gstatus<cr>
-	nnoremap  <leader>G     :Git
-	nnoremap  <leader>J     :tabnew ~/journal/notes.journal<cr>
-	nnoremap  <leader>L     :tabnew ~/research/journal/library.bib<cr>
-	nnoremap  <leader>n     :set number!<cr>:set number?<cr>
-	" open pdf of paper
-	nnoremap  <leader>o     eb"zye:!open $(find ~/Dropbox/library/ -name <C-r>=expand("<cword>")<cr>.pdf)<cr><cr>
-	nnoremap  <leader>p     :set paste!<cr>:set paste?<cr>
-	nnoremap  <leader>R     :tabnew ~/research/journal/2014.journal<cr>
-	nnoremap  <leader>s     :set spell!<cr>:set spell?<cr>
-	nnoremap  <leader>T     :tabnew ~/Dropbox/documents/tweets.csv<cr>
+	" Gundo bindings
 	nnoremap  <leader>u     :GundoToggle<cr>
-	nnoremap  <leader>w     :set wrap!<cr>:set wrap?<cr>
-	" replace with first spelling suggestion
-	nnoremap  <leader>z     1z=
-	nnoremap  <leader>@     :<C-f>ilet @=<C-r><C-r>
-	nnoremap  <leader>/     :nohlsearch<cr>
-	nnoremap  <leader>;     :lcd %:p:h<cr>
-	nnoremap  <leader>'     :tabnew ~/.nvim/nvimrc<cr>
-	nnoremap  <leader><cr>  :!make<cr>
 	" FIXME use SetMkfile function
 	"command! -nargs=* Make tabnew | let $mkpath = SetMkfile() | make <args> -C $mkpath | cwindow 10
-	" fold to indent
-	nnoremap  <leader>.     :call FoldToIndent()<cr>
-	" open tag in new tab
-	nnoremap  <leader>]     <C-w><C-]><C-w>T
 " }
 
 " autocommands {

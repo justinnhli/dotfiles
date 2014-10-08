@@ -179,12 +179,11 @@ endif
 	else
 		set novisualbell
 	endif
-	set nowrap
 	if has("wildmenu")
-		set   wildmenu
-		set   wildmode=longest:full
+		set   wildmode=longest,list
 		set   wildignore+=*.pyc
 	endif
+	set nowrap
 	let g:netrw_winsize=50
 " }
 
@@ -198,7 +197,7 @@ endif
 	endif
 	set   backspace=indent,eol,start
 	if has("insert_expand")
-		set   completeopt=menu,menuone
+		set   completeopt=longest,menu
 	endif
 	if has("multi_byte")
 		set   encoding=utf-8

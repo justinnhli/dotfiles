@@ -115,20 +115,6 @@ endif
 		let s .= '%T%#TabLineFill#%='
 		return s
 	endfunction
-
-	function! SetMkfile()
-		let filemk = "Makefile"
-		let pathmk = "./"
-		let depth = 1
-		while depth < 4
-			if filereadable(pathmk . filemk)
-				return pathmk
-			endif
-			let depth += 1
-			let pathmk = "../" . pathmk
-		endwhile
-		return "."
-	endf
 " }
 
 " sessions {
@@ -407,7 +393,6 @@ endif
 	nnoremap  <leader>z     1z=
 	nnoremap  <leader>@     :<C-f>ilet @=<C-r><C-r>
 	nnoremap  <leader>;     :lcd %:p:h<cr>
-	nnoremap  <leader><cr>  :!make<cr>
 	nnoremap  <leader>]     <C-w><C-]><C-w>T
 	" custom functions
 	nnoremap  <leader>.     :call FoldToIndent()<cr>
@@ -418,8 +403,8 @@ endif
 	nnoremap  <leader>gs    :Gstatus<cr>
 	" Gundo bindings
 	nnoremap  <leader>u     :GundoToggle<cr>
-	" FIXME use SetMkfile function
-	"command! -nargs=* Make tabnew | let $mkpath = SetMkfile() | make <args> -C $mkpath | cwindow 10
+	"vim-makeshift bindings
+	nnoremap  <leader><cr>  :MakeshiftBuild \| redraw!<cr>
 " }
 
 " autocommands {

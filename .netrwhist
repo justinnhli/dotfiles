@@ -1,9 +1,0 @@
-let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =7
-let g:netrw_dirhist_1='/Users/justinnhli/Dropbox/etc/reports'
-let g:netrw_dirhist_2='/home/justinnhli/Dropbox/projects/website/src'
-let g:netrw_dirhist_3='/home/justinnhli/.mozilla/firefox/n5cn3wt4.default/bookmarkbackups'
-let g:netrw_dirhist_4='/home/justinnhli/.mozilla/firefox/n5cn3wt4.default'
-let g:netrw_dirhist_5='/Users/justinnhli/git/journal'
-let g:netrw_dirhist_6='/home/justinnhli/Soar'
-let g:netrw_dirhist_7='/Users/justinnhli/git/journal'

@@ -29,11 +29,6 @@ endif
 		%s/ / /eg " U+200A (hair space)
 	endfunction
 
-	function! FoldToIndent()
-		set foldenable
-		exe "set foldlevel=".foldlevel('.')
-	endfunction
-
 	function! CloseRightTabs()
 		let cur=tabpagenr()
 		while cur < tabpagenr('$')
@@ -395,7 +390,7 @@ endif
 	nnoremap  <leader>;     :lcd %:p:h<cr>
 	nnoremap  <leader>]     <C-w><C-]><C-w>T
 	" custom functions
-	nnoremap  <leader>.     :call FoldToIndent()<cr>
+	nnoremap  <leader>.     :exe "set foldenable foldlevel=".foldlevel('.')<cr>
 	" vim-fugitive bindings
 	nnoremap  <leader>G     :Git
 	nnoremap  <leader>gc    :Gcommit -m "

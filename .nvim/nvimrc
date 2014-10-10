@@ -362,7 +362,7 @@ endif
 		inoremap <C-s> <C-o>:update<cr>
 
 		" get output of shell command
-		nnoremap  !  :vne<cr>:exe "normal \<lt>c-w>\<lt>s-l>"<cr>:setlocal buftype=nowrite<cr>:set foldlevel=9999<cr>:r!
+		nnoremap  !  :vne<cr>:exe "normal \<lt>c-w>\<lt>s-l>"<cr>:setlocal buftype=nowrite nofoldenable<cr>:r!
 
 		" rebind undo/redo traverse the undo tree instead of the undo stack
 		nnoremap  u      g-

@@ -403,6 +403,8 @@ endif
 " }
 
 " autocommands {
+	" specific files
+	autocmd BufRead,BufNewFile notes.journal syntax match flag '^.\{2000,\}$' | setlocal foldenable foldlevel=0
 	" filetypes
 	autocmd     BufRead,BufNewFile  *.lisp  setlocal expandtab
 	autocmd     BufRead,BufNewFile  *.py    setlocal foldmethod=indent tabstop=4 expandtab

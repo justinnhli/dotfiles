@@ -404,6 +404,7 @@ endif
 
 " autocommands {
 	" specific files
+	autocmd BufRead,BufNewFile      *.journal setlocal nofoldenable
 	autocmd BufRead,BufNewFile notes.journal syntax match flag '^.\{2000,\}$' | setlocal foldenable foldlevel=0
 	" filetypes
 	autocmd     BufRead,BufNewFile  *.lisp  setlocal expandtab

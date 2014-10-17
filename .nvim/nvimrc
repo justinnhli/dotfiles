@@ -177,6 +177,9 @@ endif
 		set nobomb
 	endif
 	set   backspace=indent,eol,start
+	if has("linebreak")
+		set   breakindent
+	endif
 	if has("insert_expand")
 		set   completeopt=longest,menu
 	endif
@@ -205,6 +208,9 @@ endif
 	endif
 	set   scrolloff=1
 	set   shiftwidth=4
+	if has("linebreak")
+		set   showbreak=\ \ 
+	endif
 	set   sidescroll=1
 	set   sidescrolloff=10
 	set   smartcase
@@ -391,21 +397,13 @@ endif
 	nnoremap  <leader>]     <C-w><C-]><C-w>T
 	" custom functions
 	nnoremap  <leader>.     :exe "set foldenable foldlevel=".foldlevel('.')<cr>
-	" vim-fugitive bindings
-	nnoremap  <leader>G     :Git
-	nnoremap  <leader>gc    :Gcommit -m "
-	nnoremap  <leader>gd    :Gdiff<cr>
-	nnoremap  <leader>gs    :Gstatus<cr>
-	" Gundo bindings
-	nnoremap  <leader>u     :GundoToggle<cr>
-	"vim-makeshift bindings
-	nnoremap  <leader><cr>  :MakeshiftBuild \| redraw!<cr>
 " }
 
 " autocommands {
 	" specific files
 	autocmd BufRead,BufNewFile      *.journal setlocal nofoldenable
-	autocmd BufRead,BufNewFile notes.journal syntax match flag '^.\{2000,\}$' | setlocal foldenable foldlevel=0
+	autocmd BufRead,BufNewFile notes.journal syntax match flag '^.\{2000,\}$' | setlocal foldenable foldlevel=0 | lcd %:p:h
+
 	" filetypes
 	autocmd     BufRead,BufNewFile  *.lisp  setlocal expandtab
 	autocmd     BufRead,BufNewFile  *.py    setlocal foldmethod=indent tabstop=4 expandtab
@@ -438,6 +436,27 @@ endif
 	augroup END
 	" disable audio bell in MacVim
 	autocmd!    GUIEnter            *              set visualbell t_vb=
+" }
+
+" commands {
+	function! s:TagnewCommand(args)
+		tabnew
+		execute ":tag " . a:args
+	endfunction
+	command! -nargs=1 Tagnew :call s:TagnewCommand(<q-args>)
+" }
+
+" plug-in settings {
+	" vim-fugitive bindings
+	nnoremap  <leader>G     :Git 
+	nnoremap  <leader>gc    :Gcommit -m "
+	nnoremap  <leader>gd    :Gdiff<cr>
+	nnoremap  <leader>gs    :Gstatus<cr>
+	" Gundo bindings
+	nnoremap  <leader>u     :GundoToggle<cr>
+	"vim-makeshift bindings
+	nnoremap  <leader><cr>  :MakeshiftBuild \| redraw!<cr>
+	let g:makeshift_use_pwd_first = 1
 " }
 
 " protect large files from sourcing and other overhead.

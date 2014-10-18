@@ -423,18 +423,17 @@ endif
 	augroup END
 	" bound scope of search to the original window
 	augroup last_search
-		autocmd!
 		autocmd WinLeave            *       let w:last_search = @/
 		autocmd WinEnter            *       if exists("w:last_search") | let @/ = w:last_search | endif
 	augroup END
 	" disable audio bell in MacVim
-	autocmd!    GUIEnter            *              set visualbell t_vb=
+	autocmd     GUIEnter            *              set visualbell t_vb=
 
 	" override above settings for specific files
 	" automatically fold notes.journal and change directories
 	autocmd     BufRead        notes.journal syntax match flag '^.\{2000,\}$' | setlocal breakindent foldenable foldlevel=0 | lcd %:p:h
 	" automatically reload .nvimrc
-	autocmd!    BufWritePost   *vimrc        source $MYVIMRC
+	autocmd     BufWritePost   *vimrc        source $MYVIMRC
 
 " }
 

@@ -179,6 +179,7 @@ endif
 	set   backspace=indent,eol,start
 	if has("linebreak")
 		set   breakindent
+		set   breakindentopt=shift:2
 	endif
 	if has("insert_expand")
 		set   completeopt=longest,menu
@@ -208,9 +209,6 @@ endif
 	endif
 	set   scrolloff=1
 	set   shiftwidth=4
-	if has("linebreak")
-		set   showbreak=\ \ 
-	endif
 	set   sidescroll=1
 	set   sidescrolloff=10
 	set   smartcase
@@ -401,7 +399,7 @@ endif
 
 " autocommands {
 	" filetypes
-	autocmd     BufRead,BufNewFile  *.journal setlocal nobreakindent nofoldenable showbreak=
+	autocmd     BufRead,BufNewFile  *.journal setlocal nobreakindent nofoldenable
 	autocmd     BufRead,BufNewFile  *.lisp    setlocal expandtab
 	autocmd     BufRead,BufNewFile  *.py      setlocal foldmethod=indent tabstop=4 expandtab
 	autocmd     BufRead,BufNewFile  *.tex     setlocal foldmethod=indent spell
@@ -434,7 +432,7 @@ endif
 
 	" override above settings for specific files
 	" automatically fold notes.journal and change directories
-	autocmd     BufRead        notes.journal syntax match flag '^.\{2000,\}$' | setlocal foldenable foldlevel=0 | lcd %:p:h
+	autocmd     BufRead        notes.journal syntax match flag '^.\{2000,\}$' | setlocal breakindent foldenable foldlevel=0 | lcd %:p:h
 	" automatically reload .nvimrc
 	autocmd!    BufWritePost   *vimrc        source $MYVIMRC
 

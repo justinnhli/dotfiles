@@ -399,10 +399,10 @@ endif
 
 " autocommands {
 	" filetypes
-	autocmd     BufRead,BufNewFile  *.journal setlocal nobreakindent nofoldenable
-	autocmd     BufRead,BufNewFile  *.lisp    setlocal expandtab
-	autocmd     BufRead,BufNewFile  *.py      setlocal foldmethod=indent tabstop=4 expandtab
-	autocmd     BufRead,BufNewFile  *.tex     setlocal foldmethod=indent spell
+	autocmd     BufRead,BufNewFile  2*.journal setlocal nobreakindent nofoldenable
+	autocmd     BufRead,BufNewFile  *.lisp     setlocal expandtab
+	autocmd     BufRead,BufNewFile  *.py       setlocal foldmethod=indent tabstop=4 expandtab
+	autocmd     BufRead,BufNewFile  *.tex      setlocal foldmethod=indent spell
 	" keep windows equal in size
 	autocmd     VimResized          *       normal <c-w>=
 	" restore cursor position

@@ -179,7 +179,7 @@ endif
 	set   backspace=indent,eol,start
 	if has("linebreak")
 		set   breakindent
-		set   breakindentopt=shift:2
+		set   breakindentopt=shift:1
 	endif
 	if has("insert_expand")
 		set   completeopt=longest,menu

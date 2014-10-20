@@ -374,6 +374,7 @@ endif
 	" }
 
 	" leader bindings
+	nnoremap \ <nop>
 	let mapleader = ' '
 	" open special files
 	nnoremap  <leader>J     :tabnew ~/journal/notes.journal<cr>

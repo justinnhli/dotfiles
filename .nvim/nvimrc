@@ -389,6 +389,7 @@ endif
 	nnoremap  <leader>w     :set wrap!<cr>:set wrap?<cr>
 	nnoremap  <leader>/     :nohlsearch<cr>
 	" editor function shortcuts
+	nnoremap  <leader>t     :tabnew<cr>
 	nnoremap  <leader>z     1z=
 	nnoremap  <leader>@     :<C-f>ilet @=<C-r><C-r>
 	nnoremap  <leader>;     :lcd %:p:h<cr>

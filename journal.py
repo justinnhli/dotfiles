@@ -126,7 +126,7 @@ if args.op == "show" and args.log and file_exists(log_file):
     options = "-S" + "".join(sorted(options, key=(lambda x: (len(x) != 1, x.upper())))).replace(" -", "", 1)
     terms = " ".join('"{}"'.format(term.replace('"', '\\"')) for term in sorted(args.terms))
     with open(log_file, "a") as fd:
-        fd.write("{}\t{} {}".format(datetime.today().isoformat(" "), options, terms).strip() + "\n")
+        fd.write("{}\t{} -- {}".format(datetime.today().isoformat(" "), options, terms).strip() + "\n")
 
 metadata = {}
 index = defaultdict(set)

@@ -221,16 +221,6 @@ endif
 	set   whichwrap=b,s,<,>,h,l,[,]
 " }
 
-" plugins {
-	" clever-f
-	let   g:clever_f_fix_key_direction=1
-	let   g:clever_f_timeout_ms=5000
-	" gundo
-	let   g:gundo_prefer_python3 = 1
-	"python syntax
-	let   python_highlight_all = 1
-" }
-
 " highlighting and color {
 	set t_Co=256
 	if has("syntax")
@@ -436,7 +426,6 @@ endif
 	autocmd     BufRead        notes.journal syntax match flag '^.\{2000,\}$' | setlocal breakindent foldenable foldlevel=0 | lcd %:p:h
 	" automatically reload .nvimrc
 	autocmd     BufWritePost   *vimrc        source $MYVIMRC
-
 " }
 
 " commands {
@@ -448,14 +437,18 @@ endif
 " }
 
 " plug-in settings {
-	" vim-fugitive bindings
+	" clever-f
+	let   g:clever_f_fix_key_direction=1
+	let   g:clever_f_timeout_ms=5000
+	" vim-fugitive
 	nnoremap  <leader>G     :Git 
 	nnoremap  <leader>gc    :Gcommit -m "
 	nnoremap  <leader>gd    :Gdiff<cr>
 	nnoremap  <leader>gs    :Gstatus<cr>
-	" Gundo bindings
+	" Gundo
 	nnoremap  <leader>u     :GundoToggle<cr>
-	"vim-makeshift bindings
+	let   g:gundo_prefer_python3 = 1
+	"vim-makeshift
 	nnoremap  <leader><cr>  :MakeshiftBuild \| redraw!<cr>
 	let g:makeshift_use_pwd_first = 1
 " }

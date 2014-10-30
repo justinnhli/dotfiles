@@ -424,7 +424,7 @@ endif
 
 	" override above settings for specific files
 	" automatically fold notes.journal and change directories
-	autocmd     BufRead        notes.journal syntax match flag '^.\{2000,\}$' | setlocal breakindent foldenable foldlevel=0 | lcd %:p:h
+	autocmd     BufRead        notes.journal syntax match flag '^.\{2000,\}$' | setlocal breakindent breakindentopt=shift:1 foldenable foldlevel=0 | lcd %:p:h
 	" automatically reload .nvimrc
 	autocmd     BufWritePost   *vimrc        source $MYVIMRC
 " }

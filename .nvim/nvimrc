@@ -233,6 +233,7 @@ endif
 	highlight TabLine cterm=none ctermfg=black ctermbg=lightgrey
 	highlight TabLineFill cterm=none ctermfg=lightgrey ctermbg=lightgrey
 	highlight TabLineSel cterm=bold ctermfg=white ctermbg=black
+	highlight Folded ctermbg=none ctermfg=gray
 
 	if has('gui_running')
 		colorscheme solarized

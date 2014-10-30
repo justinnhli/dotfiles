@@ -282,12 +282,12 @@ endif
 		vnoremap  <C-e>  <End>
 
 		" jump to previous/next line with less/same/more indentation
-		nnoremap  [<  :call search('^' . matchstr(getline('.'), '^\s*\s\@=') . '\%<' . line('.') . 'l\S', 'be')<CR>
-		nnoremap  [.  :call search('^' . matchstr(getline('.'), '^\s*') . '\%<' . line('.') . 'l\S', 'be')<CR>
-		nnoremap  [>  :call search('^' . matchstr(getline('.'), '^\s*') . '\s\%<' . line('.') . 'l\S', 'be')<CR>
-		nnoremap  ]<  :call search('^' . matchstr(getline('.'), '^\s*\s\@=') . '\S\%>' . line('.') . 'l\S', 'e')<CR>
-		nnoremap  ].  :call search('^' . matchstr(getline('.'), '^\s*') . '\%>' . line('.') . 'l\S', 'e')<CR>
-		nnoremap  ]>  :call search('^' . matchstr(getline('.'), '^\s*') . '\s\%>' . line('.') . 'l\S', 'e')<CR>
+		nnoremap <silent>  [<  :call search('^' . matchstr(getline('.'), '^\s*\s\@=') . '\%<' . line('.') . 'l\S', 'be')<CR>
+		nnoremap <silent>  [.  :call search('^' . matchstr(getline('.'), '^\s*') . '\%<' . line('.') . 'l\S', 'be')<CR>
+		nnoremap <silent>  [>  :call search('^' . matchstr(getline('.'), '^\s*') . '\s\%<' . line('.') . 'l\S', 'be')<CR>
+		nnoremap <silent>  ]<  :call search('^' . matchstr(getline('.'), '^\s*\s\@=') . '\S\%>' . line('.') . 'l\S', 'e')<CR>
+		nnoremap <silent>  ].  :call search('^' . matchstr(getline('.'), '^\s*') . '\%>' . line('.') . 'l\S', 'e')<CR>
+		nnoremap <silent>  ]>  :call search('^' . matchstr(getline('.'), '^\s*') . '\s\%>' . line('.') . 'l\S', 'e')<CR>
 	" }
 
 	" buffer/window/tab movement {

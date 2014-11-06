@@ -449,9 +449,11 @@ endif
 	" Gundo
 	nnoremap  <leader>u     :GundoToggle<cr>
 	let   g:gundo_prefer_python3 = 1
-	"vim-makeshift
+	" vim-makeshift
 	nnoremap  <leader><cr>  :MakeshiftBuild \| redraw!<cr>
 	let g:makeshift_use_pwd_first = 1
+	" python-syntax
+	let python_highlight_all = 1
 " }
 
 " protect large files from sourcing and other overhead.

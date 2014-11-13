@@ -44,7 +44,6 @@ if [ -d "$HOME/git/" ]; then
 	done
 fi
 
-
 # environment
 if which nvim &>/dev/null; then
 	export EDITOR=nvim
@@ -59,8 +58,10 @@ export PYTHONIOENCODING="utf-8"
 case "$uname" in
 "Linux")
 	if uname -v | grep Ubuntu &>/dev/null; then
-		export JAVA_HOME="/usr/lib/jvm/default-java"
-	else
+		if [ -d "/usr/lib/jvm/default-java" ]; then
+			export JAVA_HOME="/usr/lib/jvm/default-java"
+		fi
+	elif [ -d "/usr/lib/jvm/java-7-openjdk" ]; then
 		export JAVA_HOME="/usr/lib/jvm/java-7-openjdk"
 	fi
 	export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$HOME/Soar/out";;

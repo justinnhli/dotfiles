@@ -84,7 +84,7 @@ alias mv='mv -i'
 alias grep='grep --color=auto'
 alias jrnl='journal.py --ignore ~/journal/notes.journal --ignore ~/journal/ponderings.journal'
 alias pep8='pep8 --ignore=E501'
-alias pylint='pylint --indent-string="    " --disable=invalid-name,missing-docstring,old-style-class,star-args,line-too-long,bad-builtin --reports=n'
+alias pylint='pylint --indent-string="    " --disable=invalid-name,missing-docstring,old-style-class,star-args,line-too-long,bad-builtin,bad-continuation --reports=n'
 alias valgrind='valgrind --dsymutil=yes --leak-check=yes --track-origins=yes'
 if which python3 &>/dev/null; then
 	alias scons="scons --python=$(which python3)"

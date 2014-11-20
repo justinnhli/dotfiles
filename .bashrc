@@ -73,11 +73,6 @@ export PYTHONPATH="$HOME/Soar/out:$PYTHONPATH"
 export PATH="$(echo "$PATH" | sed 's#//#/#g')"
 export PYTHONPATH="$(echo "$PYTHONPATH" | sed 's#//#/#g')"
 
-# vim variables
-if [ "$uname" == "Darwin" -a -d "/Applications/MacVim.app" ]; then
-	export VIMRUNTIME="/Applications/MacVim.app/Contents/Resources/vim/runtime"
-fi
-
 # aliases
 alias rm='rm -i'
 alias cp='cp -i'

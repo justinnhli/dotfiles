@@ -5,9 +5,12 @@ if filereadable(expand("~/.nvim/bundle/vim-pathogen/autoload/pathogen.vim"))
 	execute pathogen#infect()
 endif
 
-if isdirectory('/usr/share/vim/vim74')
-	let &runtimepath = &runtimepath.',/usr/share/vim/vim74'
-endif
+let vim_runtimes = ['/usr/share/vim/vim74', '/Applications/MacVim.app/Contents/Resources/vim/runtime', '/usr/local/share/nvim/runtime']
+for runtime in vim_runtimes
+	if isdirectory(runtime)
+		let &runtimepath = &runtimepath.','.runtime
+	endif
+endfor
 
 " commands {
 	command! -nargs=0 CloseRightTabs :call CloseRightTabs()

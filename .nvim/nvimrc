@@ -1,5 +1,7 @@
 set nocompatible
 
+let python_host_prog = "python3"
+
 if filereadable(expand("~/.nvim/bundle/vim-pathogen/autoload/pathogen.vim"))
 	source ~/.nvim/bundle/vim-pathogen/autoload/pathogen.vim
 	execute pathogen#infect()

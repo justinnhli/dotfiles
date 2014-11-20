@@ -464,6 +464,7 @@ endfor
 	nnoremap  <leader>gc    :Gcommit -m "
 	nnoremap  <leader>gd    :Gdiff<cr>
 	nnoremap  <leader>gs    :Gstatus<cr>
+	nnoremap  <leader>gp    :Gpush<cr>
 	" Gundo
 	nnoremap  <leader>u     :GundoToggle<cr>
 	" netrw

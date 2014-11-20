@@ -1,9 +1,5 @@
 set nocompatible
 
-if has("nvim")
-	runtime! plugin/python_setup.vim
-endif
-
 if filereadable(expand("~/.nvim/bundle/vim-pathogen/autoload/pathogen.vim"))
 	source ~/.nvim/bundle/vim-pathogen/autoload/pathogen.vim
 	execute pathogen#infect()

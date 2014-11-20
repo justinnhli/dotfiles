@@ -367,6 +367,8 @@ endfor
 	nnoremap \ <nop>
 	let mapleader = ' '
 	" open special files
+	nnoremap           <leader>B     :tabnew ~/.bashrc<cr>
+	nnoremap           <leader>C     :tabnew ~/Dropbox/contacts/contacts-*<cr>
 	nnoremap           <leader>J     :tabnew ~/journal/notes.journal<cr>
 	nnoremap           <leader>L     :tabnew ~/research/journal/library.bib<cr>
 	nnoremap           <leader>R     :tabnew ~/research/journal/2014.journal<cr>

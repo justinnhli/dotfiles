@@ -1,6 +1,7 @@
 set nocompatible
 
-let python_host_prog = "python3"
+" FIXME temporarily disabled until neovim issue #1508 is fixed
+"let python_host_prog = "python3"
 
 if filereadable(expand("~/.nvim/bundle/vim-pathogen/autoload/pathogen.vim"))
 	source ~/.nvim/bundle/vim-pathogen/autoload/pathogen.vim
@@ -346,11 +347,10 @@ endfor
 		vnoremap  <S-n>   :set hlsearch<cr>?<cr>zz
 
 		" force the use of the command line window
-		" FIXME temporarily disabled until neovim issue #1508 is fixed
-"		nnoremap  :  :<C-f>i
-"		nnoremap  q: :
-"		vnoremap  :  :<C-f>i
-"		vnoremap  q: :
+		nnoremap  :  :<C-f>i
+		nnoremap  q: :
+		vnoremap  :  :<C-f>i
+		vnoremap  q: :
 
 		" Shift+JK for moving between quickfixes
 		nnoremap  <S-j>  :lnext<cr>

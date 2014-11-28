@@ -308,15 +308,15 @@ endfor
 		nnoremap  <leader>wnl  :rightbelow vnew<cr>
 		nnoremap  <leader>wo   :only<cr>
 
-		" Ctrl+HJKL for moving between buffers
+		" Shift+HL for moving between tabs
+		noremap  <S-l>  :tabnext<cr>
+		noremap  <S-h>  :tabprev<cr>
+
+		" Ctrl+HJKL for moving between windows
 		noremap  <C-j>  <C-w>j
 		noremap  <C-k>  <C-w>k
 		noremap  <C-h>  <C-w>h
 		noremap  <C-l>  <C-w>l
-
-		" Shift+HL for moving between tabs
-		noremap  <S-l>  :tabnext<cr>
-		noremap  <S-h>  :tabprev<cr>
 	" }
 
 	" disable annoying features {

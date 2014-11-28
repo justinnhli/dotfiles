@@ -298,15 +298,16 @@ endfor
 		nnoremap  <leader>tc  :tabclose<cr>
 
 		" <leader>w mappings for opening and closing windows
-		nnoremap  <leader>wh  :leftabove vsplit<cr>
-		nnoremap  <leader>wj  :rightbelow split<cr>
-		nnoremap  <leader>wk  :leftabove split<cr>
-		nnoremap  <leader>wl  :rightbelow vsplit<cr>
+		nnoremap  <leader>wh   :leftabove vsplit 
+		nnoremap  <leader>wj   :rightbelow split 
+		nnoremap  <leader>wk   :leftabove split 
+		nnoremap  <leader>wl   :rightbelow vsplit 
 		nnoremap  <leader>wnh  :leftabove vnew<cr>
 		nnoremap  <leader>wnj  :rightbelow new<cr>
 		nnoremap  <leader>wnk  :leftabove new<cr>
 		nnoremap  <leader>wnl  :rightbelow vnew<cr>
 		nnoremap  <leader>wo   :only<cr>
+		nnoremap  <leader>wc   :close<cr>
 
 		" Shift+HL for moving between tabs
 		noremap  <S-l>  :tabnext<cr>

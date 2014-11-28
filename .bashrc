@@ -17,7 +17,7 @@ uname="$(uname)"
 prompt_command_fn() {
 	# right before prompting for the next command, save the previous command in a file.
 	if [ -e ~/Dropbox/documents/shell_history ]; then
-		echo "$(date -u +%Y-%m-%dT%H:%M:%SZ)	$(hostname)	$PWD	$(history 1 | sed 's/^ *[0-9 :-]* //')" >> ~/Dropbox/documents/shell_history
+		echo "$(date -u +%Y-%m-%dT%H:%M:%SZ)	$(hostname)	$PWD	$(history 1 | sed 's/^ *[0-9 :-]* //; s/ *$//;')" >> ~/Dropbox/documents/shell_history
 	fi
 	echo -ne "\033]0;${PWD/$HOME/~}\007"
 }

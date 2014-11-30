@@ -293,8 +293,10 @@ endfor
 	" window/tab management {
 		" <leader>t mappings for opening and closing tabs
 		nnoremap  <leader>tn  :tabnew 
+		nnoremap  <leader>th  :tabmove -1<cr>
+		nnoremap  <leader>tl  :tabmove +1<cr>
 		nnoremap  <leader>to  :tabonly<cr>
-		nnoremap  <leader>tl  :call CloseRightTabs()<cr>
+		nnoremap  <leader>tp  :call CloseRightTabs()<cr>
 		nnoremap  <leader>tc  :tabclose<cr>
 
 		" <leader>w mappings for opening and closing windows

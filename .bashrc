@@ -25,7 +25,7 @@ PS1='[\u@\h \W]\$ '
 PROMPT_COMMAND=prompt_command_fn
 
 # paths
-export PATH="$HOME/bin:$HOME/.cabal/bin:/usr/texbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
+export PATH="$HOME/bin:/opt/pdflabs/pdftk/bin:$HOME/.cabal/bin:/usr/texbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
 export PYTHONPATH="$HOME/bin"
 if [ -d "$HOME/projects/" ]; then
 	for dir in $(find "$HOME/projects/" -maxdepth 2 -type f -perm -100 -exec dirname {} ';' | sort | uniq); do

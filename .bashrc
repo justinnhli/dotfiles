@@ -86,11 +86,9 @@ alias valgrind='valgrind --dsymutil=yes --leak-check=yes --track-origins=yes'
 if which python3 &>/dev/null; then
 	alias scons="scons --python=$(which python3)"
 fi
-if which nvim &>/dev/null; then
-	alias vino="nvim ~/journal/notes.journal"
-	alias vi='nvim'
-	alias vim='nvim'
-fi
+alias vi="$VISUAL"
+alias vim="$VISUAL"
+alias vino="$VISUAL ~/journal/notes.journal"
 case "$uname" in
 	"Linux")
 		alias ls='ls --color=auto'

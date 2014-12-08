@@ -8,7 +8,8 @@ if filereadable(expand("~/.nvim/bundle/vim-pathogen/autoload/pathogen.vim"))
 	execute pathogen#infect()
 endif
 
-let vim_runtimes = ['/usr/share/vim/vim74', '/Applications/MacVim.app/Contents/Resources/vim/runtime', '/usr/local/share/nvim/runtime']
+" use additional runtime directories when available: local neovim clone, Arch neovim install, Mac neovim install, Arch vim install, MacVim install
+let vim_runtimes = [expand('~/neovim/runtime'), '/usr/share/nvim/runtime', '/usr/local/share/nvim/runtime', '/usr/share/vim/vim74', '/Applications/MacVim.app/Contents/Resources/vim/runtime']
 for runtime in vim_runtimes
 	if isdirectory(runtime)
 		let &runtimepath = &runtimepath.','.runtime

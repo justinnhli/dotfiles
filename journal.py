@@ -259,7 +259,7 @@ elif args.op == "graph":
         for src in sorted(srcs, reverse=args.reverse):
             print('\t"{}" [fontsize="{}"];'.format(src, len(entries[src].split()) / 100))
             if edges[src]:
-                print("\n".join('\t"{}" -> "{}"'.format(src, dest) for dest in sorted(edges[src], reverse=args.reverse)))
+                print("\n".join('\t"{}" -> "{}";'.format(src, dest) for dest in sorted(edges[src], reverse=args.reverse)))
         print("")
     print('}')
 

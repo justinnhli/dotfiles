@@ -1,6 +1,6 @@
 #!/bin/bash
 
-update_dot_files() {
+update-dot-files() {
 	if [ ! -d "$HOME/bin" ]; then
 		mkdir "$HOME/bin"
 	fi
@@ -14,7 +14,7 @@ update_dot_files() {
 uname="$(uname)"
 
 # prompt
-prompt_command_fn() {
+prompt-command-fn() {
 	# right before prompting for the next command, save the previous command in a file.
 	if [ -e ~/Dropbox/documents/shell_history ]; then
 		echo "$(date -u +%Y-%m-%dT%H:%M:%SZ)	$(hostname)	$PWD	$(history 1 | sed 's/^ *[0-9 :-]* //; s/ *$//;')" >> ~/Dropbox/documents/shell_history
@@ -22,7 +22,7 @@ prompt_command_fn() {
 	echo -ne "\033]0;${PWD/$HOME/~}\007"
 }
 PS1='[\u@\h \W]\$ '
-PROMPT_COMMAND=prompt_command_fn
+PROMPT_COMMAND=prompt-command-fn
 
 # paths
 export PATH="$HOME/bin:/opt/pdflabs/pdftk/bin:$HOME/.cabal/bin:/usr/texbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"

@@ -288,7 +288,6 @@ endfor
 		nnoremap <silent>  [/  :call search('^' . matchstr(getline('.'), '^\s*') . '\s\%<' . line('.') . 'l\S', 'be')<CR>
 		nnoremap <silent>  ],  :call search('^' . matchstr(getline('.'), '^\s*\s\@=') . '\S\%>' . line('.') . 'l\S', 'e')<CR>
 		nnoremap <silent>  ].  :call search('^' . matchstr(getline('.'), '^\s*') . '\%>' . line('.') . 'l\S', 'e')<CR>
-		nnoremap <silent>  ]/  :call search('^' . matchstr(getline('.'), '^\s*') . '\s\%>' . line('.') . 'l\S', 'e')<CR>
 	" }
 
 	" window/tab management {
@@ -370,6 +369,9 @@ endfor
 
 		" jump to the end of pasted text
 		nnoremap <silent> p p`]
+
+		" Make Y behave like other capitals
+		nnoremap Y y$
 	" }
 
 	" keyboard shortcuts {
@@ -400,7 +402,6 @@ endfor
 	nnoremap           <leader>O     eb"zye:!open $(find ~/Dropbox/library/ -name <C-r>=expand("<cword>")<cr>.pdf)<cr><cr>
 	" toggle settings
 	nnoremap           <leader><leader>n     :set number!<cr>:set number?<cr>
-	nnoremap           <leader><leader>p     :set paste!<cr>:set paste?<cr>
 	nnoremap           <leader><leader>s     :set spell!<cr>:set spell?<cr>
 	nnoremap           <leader><leader>w     :set wrap!<cr>:set wrap?<cr>
 	nnoremap           <leader><leader>/     :nohlsearch<cr>

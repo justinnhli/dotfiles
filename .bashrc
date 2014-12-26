@@ -1,7 +1,7 @@
 #!/bin/bash
 
 update-dot-files() {
-	if [ ! -d "$HOME/bin" ]; then
+	if [[ ! -d "$HOME/bin" ]]; then
 		mkdir "$HOME/bin"
 	fi
 	curl -L 'https://raw.githubusercontent.com/justinnhli/dotfiles/master/.bashrc' > "$HOME/.bashrc"
@@ -16,7 +16,7 @@ uname="$(uname)"
 # prompt
 prompt-command-fn() {
 	# right before prompting for the next command, save the previous command in a file.
-	if [ -e ~/Dropbox/documents/shell_history ]; then
+	if [[ -e ~/Dropbox/documents/shell_history ]]; then
 		echo "$(date -u +%Y-%m-%dT%H:%M:%SZ)	$(hostname)	$PWD	$(history 1 | sed 's/^ *[0-9 :-]* //; s/ *$//;')" >> ~/Dropbox/documents/shell_history
 	fi
 	echo -ne "\033]0;${PWD/$HOME/~}\007"
@@ -55,10 +55,10 @@ export PYTHONIOENCODING="utf-8"
 case "$uname" in
 "Linux")
 	if uname -v | grep Ubuntu &>/dev/null; then
-		if [ -d "/usr/lib/jvm/default-java" ]; then
+		if [[ -d "/usr/lib/jvm/default-java" ]]; then
 			export JAVA_HOME="/usr/lib/jvm/default-java"
 		fi
-	elif [ -d "/usr/lib/jvm/java-7-openjdk" ]; then
+	elif [[ -d "/usr/lib/jvm/java-7-openjdk" ]]; then
 		export JAVA_HOME="/usr/lib/jvm/java-7-openjdk"
 	fi
 	export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$HOME/Soar/out";;

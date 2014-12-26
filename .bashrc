@@ -27,22 +27,19 @@ PROMPT_COMMAND=prompt-command-fn
 # paths
 export PATH="$HOME/bin:/opt/pdflabs/pdftk/bin:$HOME/.cabal/bin:/usr/texbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
 export PYTHONPATH="$HOME/bin"
-if [ -d "$HOME/projects/" ]; then
-	for dir in $(find "$HOME/projects/" -maxdepth 2 -type f -perm -100 -exec dirname {} ';' | sort | uniq); do
-		export PATH="$dir:$PATH"
-	done
-	for dir in $(find "$HOME/projects/" -maxdepth 2 -type f -name '*.py' -exec dirname {} ';' | sort | uniq); do
-		export PYTHONPATH="$dir:$PYTHONPATH"
-	done
-fi
-if [ -d "$HOME/git/" ]; then
-	for dir in $(find "$HOME/git/" -maxdepth 2 -type f -perm -100 -exec dirname {} ';' | sort | uniq); do
-		export PATH="$dir:$PATH"
-	done
-	for dir in $(find "$HOME/git/" -maxdepth 2 -type f -name '*.py' -exec dirname {} ';' | sort | uniq); do
-		export PYTHONPATH="$dir:$PYTHONPATH"
-	done
-fi
+for master_dir in "$HOME/projects/" "$HOME/git/"; do
+	if [[ -d "$master_dir" ]]; then
+		for dir in $(find "$master_dir" -maxdepth 2 -type f -perm -100 -exec dirname {} ';' | sort -r | uniq); do
+			export PATH="$dir:$PATH"
+		done
+		for dir in $(find "$master_dir" -maxdepth 2 -type f -name '*.py' -exec dirname {} ';' | sort -r | uniq); do
+			if [[ ! -e "$dir/__init__.py" ]]; then
+				export PYTHONPATH="$dir:$PYTHONPATH"
+			fi
+		done
+	fi
+done
+export PYTHONPATH="$HOME/git:$PYTHONPATH"
 
 # environment
 if which nvim &>/dev/null; then

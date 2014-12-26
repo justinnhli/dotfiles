@@ -226,18 +226,8 @@ endfor
 	if has("syntax")
 		syntax enable
 	endif
-	set background=light
-	highlight Search ctermfg=black ctermbg=yellow
-	highlight SpellBad cterm=bold,underline ctermbg=none ctermfg=red gui=bold,underline guifg=red
-	highlight SpellLocal cterm=bold,underline ctermbg=none ctermfg=darkred gui=bold,underline guifg=darkred
-	highlight TabLine cterm=none ctermfg=black ctermbg=lightgrey
-	highlight TabLineFill cterm=none ctermfg=lightgrey ctermbg=lightgrey
-	highlight TabLineSel cterm=bold ctermfg=white ctermbg=black
-	highlight Folded ctermbg=none ctermfg=gray
-
-	if has('gui_running')
-		colorscheme solarized
-	endif
+	set background=dark
+	colorscheme molokai
 " }
 
 " key mappings {

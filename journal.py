@@ -346,5 +346,5 @@ elif args.op == "verify":
         if prev_indent == 0:
             errors.append((journal, len(lines), "file ends on blank line"))
     if errors:
-        print("\n".join("{}:{}: {}".format(*error) for error in errors))
+        print("\n".join("{}:{}: {}".format(*error) for error in sorted(errors)))
         exit(1)

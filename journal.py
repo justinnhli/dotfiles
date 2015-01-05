@@ -331,13 +331,16 @@ elif args.op == "verify":
                     elif long_dates != (len(line) > DATE_LENGTH):
                         errors.append((journal, line_number, "inconsistent date format"))
                     if long_dates and line != cur_date.strftime("%Y-%m-%d, %A"):
-                        errors.append((journal, line_number, "date correctness"))
+                        errors.append((journal, line_number, "date-weekday correctness"))
                     if cur_date in dates:
                         errors.append((journal, line_number, "duplicate dates"))
                     dates.add(cur_date)
                 else:
                     if line:
-                        errors.append((journal, line_number, "unindented text"))
+                        if line[0] == "\ufeff":
+                            errors.append((journal, line_number, "byte order mark"))
+                        else:
+                            errors.append((journal, line_number, "unindented text"))
                     if prev_indent == 0:
                         errors.append((journal, line_number, "consecutive unindented lines"))
             elif indent - prev_indent > 1:

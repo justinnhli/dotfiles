@@ -234,6 +234,9 @@ endfor
 	mapclear
 	mapclear!
 	let mapleader = ' '
+
+	" disable the default leader
+	nnoremap \ <nop>
 	
 	" text movement {
 		" remove all uses of arrow keys
@@ -379,8 +382,6 @@ endfor
 		nnoremap  !      :Scratchpad 
 	" }
 
-	" leader bindings
-	nnoremap \ <nop>
 	" open special files
 	nnoremap           <leader>B     :tabnew ~/.bashrc<cr>
 	nnoremap           <leader>C     :tabnew ~/Dropbox/contacts/contacts-*<cr>
@@ -390,7 +391,7 @@ endfor
 	nnoremap           <leader>T     :tabnew ~/Dropbox/documents/tweets.csv<cr>
 	nnoremap           <leader>V     :tabnew ~/.nvim/nvimrc<cr>
 	nnoremap           <leader>O     eb"zye:!open $(find ~/Dropbox/library/ -name <C-r>=expand("<cword>")<cr>.pdf)<cr><cr>
-	" toggle settings
+	" toggle settings with double leader
 	nnoremap           <leader><leader>n     :set number!<cr>:set number?<cr>
 	nnoremap           <leader><leader>s     :set spell!<cr>:set spell?<cr>
 	nnoremap           <leader><leader>w     :set wrap!<cr>:set wrap?<cr>

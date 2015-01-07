@@ -389,7 +389,7 @@ endfor
 	nnoremap           <leader>C     :tabnew ~/Dropbox/contacts/contacts-*<cr>
 	nnoremap           <leader>J     :tabnew ~/journal/notes.journal<cr>
 	nnoremap           <leader>L     :tabnew ~/research/journal/library.bib<cr>
-	nnoremap           <leader>R     :tabnew ~/research/journal/2014.journal<cr>
+	nnoremap           <leader>R     :tabnew ~/research/journal/2015.journal<cr>
 	nnoremap           <leader>T     :tabnew ~/Dropbox/documents/tweets.csv<cr>
 	nnoremap           <leader>V     :tabnew ~/.nvim/nvimrc<cr>
 	nnoremap           <leader>O     eb"zye:!open $(find ~/Dropbox/library/ -name <C-r>=expand("<cword>")<cr>.pdf)<cr><cr>

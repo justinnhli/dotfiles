@@ -228,6 +228,8 @@ endfor
 	endif
 	set background=dark
 	colorscheme molokai
+	highlight clear Visual
+	highlight link Visual StatusLine
 " }
 
 " key mappings {

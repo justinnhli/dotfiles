@@ -76,6 +76,32 @@ endfor
 		endif
 		" FIXME fails when new_tab is the highest tab
 	endfunction
+
+	function! s:IndentTextObject(updown, inout, visual)
+		if a:visual
+			normal!gv
+		endif
+		let line_num = line(".")
+		let step = (a:updown > 0 ? 1 : -1)
+		let src_indent = indent(line_num)
+		let dest_indent = src_indent + (a:inout * &shiftwidth)
+		if dest_indent < 0
+			let dest_indent = 0
+		endif
+		let cur_indent = indent(line_num)
+		let line_num += step
+		while 1 < line_num && line_num <= line("$")
+			let cur_indent = indent(line_num)
+			if cur_indent < src_indent || cur_indent == dest_indent
+				if a:visual && step == 1
+					let line_num -= 1
+				end
+				call cursor(line_num, 0)
+				return
+			endif
+			let line_num += step
+		endwhile
+	endfunction
 " }
 
 " setting functions {
@@ -280,11 +306,24 @@ endfor
 		vnoremap  <C-e>  <End>
 
 		" jump to previous/next line with less/same/more indentation
-		nnoremap <silent>  [,  :call search('^' . matchstr(getline('.'), '^\s*\s\@=') . '\%<' . line('.') . 'l\S', 'be')<CR>
-		nnoremap <silent>  [.  :call search('^' . matchstr(getline('.'), '^\s*') . '\%<' . line('.') . 'l\S', 'be')<CR>
-		nnoremap <silent>  [/  :call search('^' . matchstr(getline('.'), '^\s*') . '\s\%<' . line('.') . 'l\S', 'be')<CR>
-		nnoremap <silent>  ],  :call search('^' . matchstr(getline('.'), '^\s*\s\@=') . '\S\%>' . line('.') . 'l\S', 'e')<CR>
-		nnoremap <silent>  ].  :call search('^' . matchstr(getline('.'), '^\s*') . '\%>' . line('.') . 'l\S', 'e')<CR>
+		nnoremap <silent> [, :<C-u>call <SID>IndentTextObject(-1, -1, 0)<cr>
+		nnoremap <silent> [. :<C-u>call <SID>IndentTextObject(-1, 0, 0)<cr>
+		nnoremap <silent> [/ :<C-u>call <SID>IndentTextObject(-1, 1, 0)<cr>
+		nnoremap <silent> ], :<C-u>call <SID>IndentTextObject(1, -1, 0)<cr>
+		nnoremap <silent> ]. :<C-u>call <SID>IndentTextObject(1, 0, 0)<cr>
+		nnoremap <silent> ]/ :<C-u>call <SID>IndentTextObject(1, 1, 0)<cr>
+		onoremap <silent> [, :<C-u>call <SID>IndentTextObject(-1, -1, 0)<cr>
+		onoremap <silent> [. :<C-u>call <SID>IndentTextObject(-1, 0, 0)<cr>
+		onoremap <silent> [/ :<C-u>call <SID>IndentTextObject(-1, 1, 0)<cr>
+		onoremap <silent> ], :<C-u>call <SID>IndentTextObject(1, -1, 0)<cr>
+		onoremap <silent> ]. :<C-u>call <SID>IndentTextObject(1, 0, 0)<cr>
+		onoremap <silent> ]/ :<C-u>call <SID>IndentTextObject(1, 1, 0)<cr>
+		vnoremap <silent> [, <esc>:call <SID>IndentTextObject(-1, -1, 1)<cr><esc>gv
+		vnoremap <silent> [. <esc>:call <SID>IndentTextObject(-1, 0, 1)<cr><esc>gv
+		vnoremap <silent> [/ <esc>:call <SID>IndentTextObject(-1, 1, 1)<cr><esc>gv
+		vnoremap <silent> ], <esc>:call <SID>IndentTextObject(1, -1, 1)<cr><esc>gv
+		vnoremap <silent> ]. <esc>:call <SID>IndentTextObject(1, 0, 1)<cr><esc>gv
+		vnoremap <silent> ]/ <esc>:call <SID>IndentTextObject(1, 0, 1)<cr><esc>gv
 	" }
 
 	" window/tab management {

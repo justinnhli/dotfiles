@@ -27,14 +27,14 @@ endfor
 		%s/ / /eg " U+200A (hair space)
 	endfunction
 
-	function! CloseRightTabs()
+	function! s:CloseRightTabs()
 		let cur=tabpagenr()
 		while cur < tabpagenr('$')
 			exe 'tabclose' . ' ' . (cur + 1)
 		endwhile
 	endfunction
 
-	function! MoveToRelTab(n)
+	function! s:MoveToRelTab(n)
 		let l:num_tabs = tabpagenr("$")
 		let l:cur_tab = tabpagenr()
 		let l:cur_win = winnr('#')
@@ -332,7 +332,7 @@ endfor
 		nnoremap  <leader>th  :tabmove -1<cr>
 		nnoremap  <leader>tl  :tabmove +1<cr>
 		nnoremap  <leader>to  :tabonly<cr>
-		nnoremap  <leader>tp  :call CloseRightTabs()<cr>
+		nnoremap  <leader>tp  :call <SID>CloseRightTabs()<cr>
 		nnoremap  <leader>tc  :tabclose<cr>
 
 		" <leader>w mappings for opening and closing windows
@@ -501,8 +501,8 @@ endfor
 	endfunction
 	command! -nargs=* -complete=file Scratchpad :call s:ScratchpadCommand(<q-args>)
 
-	command! -nargs=0 CloseRightTabs :call CloseRightTabs()
-	command! -nargs=1 MoveToRelTab :call MoveToRelTab(<q-args>)
+	command! -nargs=0 CloseRightTabs :call <SID>CloseRightTabs()
+	command! -nargs=1 MoveToRelTab :call <SID>MoveToRelTab(<q-args>)
 " }
 
 " plugin settings {

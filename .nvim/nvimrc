@@ -84,7 +84,7 @@ endfor
 		let line_num = line(".")
 		let step = (a:updown > 0 ? 1 : -1)
 		let src_indent = indent(line_num)
-		let dest_indent = src_indent + (a:inout * &shiftwidth)
+		let dest_indent = src_indent + (a:inout * &tabstop)
 		if dest_indent < 0
 			let dest_indent = 0
 		endif

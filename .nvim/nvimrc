@@ -90,7 +90,7 @@ endfor
 		endif
 		let cur_indent = indent(line_num)
 		let line_num += step
-		while 1 < line_num && line_num <= line("$")
+		while 1 <= line_num && line_num <= line("$")
 			let cur_indent = indent(line_num)
 			if cur_indent < src_indent || cur_indent == dest_indent
 				if a:visual && step == 1

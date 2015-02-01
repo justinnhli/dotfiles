@@ -84,15 +84,18 @@ tags_file = join_path(args.directory, TAGS_FILE)
 cache_file = join_path(args.directory, CACHE_FILE)
 index_file = join_path(args.directory, INDEX_FILE)
 
-if args.op != "update" and not all(file_exists(file) for file in (metadata_file, tags_file, cache_file, index_file)):
-    arg_parser.error("argument -[CGLSV]: cache files corrupted or not found; please run -U first")
-
-use_index = (args.use_cache == "yes" and args.op != "update")
-use_cache = (not is_maintenance_op and use_index)
+use_index = True
+if args.use_cache == "yes":
+    if all(file_exists(file) for file in (metadata_file, tags_file, cache_file, index_file)):
+        use_index = True
+    elif args.op == "update":
+        use_index = False
+    else:
+        arg_parser.error("argument -[CGLSV]: cache files corrupted or not found; please run -U first")
 
 journal_files = set()
 entries = ""
-if use_cache:
+if not is_maintenance_op and use_index:
     with open(cache_file) as fd:
         entries = fd.read()
 else:

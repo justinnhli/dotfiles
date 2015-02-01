@@ -88,7 +88,7 @@ alias vim="$VISUAL"
 alias vino="$VISUAL ~/journal/notes.journal"
 case "$uname" in
 	"Linux")
-		alias ls='ls --color=auto'
+		alias ls='ls --color=auto --time-style=long-iso'
 		alias open='xdg-open'
 		alias vncserver='vncserver -depth 8'
 		alias x11vnc='x11vnc -display :0 -xkb -usepw -noxdamage';;

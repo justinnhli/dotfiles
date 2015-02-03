@@ -3,10 +3,17 @@ set nocompatible
 " FIXME temporarily disabled until neovim issue #1508 is fixed
 "let python_host_prog = "python3"
 
-if filereadable(expand("~/.nvim/bundle/vim-pathogen/autoload/pathogen.vim"))
-	source ~/.nvim/bundle/vim-pathogen/autoload/pathogen.vim
-	execute pathogen#infect()
-endif
+" vim-plug plug-in manager
+call plug#begin('~/.nvim/bundle')
+Plug 'tomasr/molokai'
+Plug 'rhysd/clever-f.vim'
+Plug 'justinnhli/journal.vim', {'for': 'journal'}
+Plug 'tomasr/molokai'
+Plug 'hdima/python-syntax', {'for': 'python'}
+Plug 'tpope/vim-fugitive'
+Plug 'johnsyweb/vim-makeshift'
+Plug 'tpope/vim-sleuth'
+call plug#end()
 
 " use additional runtime directories when available: local neovim clone, Arch neovim install, Mac neovim install, Arch vim install, MacVim install
 let vim_runtimes = [expand('~/neovim/runtime'), '/usr/share/nvim/runtime', '/usr/local/share/nvim/runtime', '/usr/share/vim/vim74', '/Applications/MacVim.app/Contents/Resources/vim/runtime']

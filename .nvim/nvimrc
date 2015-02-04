@@ -16,7 +16,7 @@ Plug 'tpope/vim-sleuth'
 call plug#end()
 
 " use additional runtime directories when available: local neovim clone, Arch neovim install, Mac neovim install, Arch vim install, MacVim install
-let vim_runtimes = reverse([expand('~/neovim/runtime'), '/usr/share/nvim/runtime', '/usr/local/share/nvim/runtime', '/usr/share/vim/vim74', '/Applications/MacVim.app/Contents/Resources/vim/runtime'])
+let vim_runtimes = [expand('~/neovim/runtime'), '/usr/share/nvim/runtime', '/usr/local/share/nvim/runtime', '/usr/share/vim/vim74', '/Applications/MacVim.app/Contents/Resources/vim/runtime']
 for runtime in vim_runtimes
 	if isdirectory(runtime)
 		let &runtimepath = &runtimepath.','.runtime

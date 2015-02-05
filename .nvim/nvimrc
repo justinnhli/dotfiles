@@ -5,13 +5,14 @@ set nocompatible
 
 " vim-plug plug-in manager
 call plug#begin('~/.nvim/bundle')
-Plug 'tomasr/molokai'
-Plug 'rhysd/clever-f.vim'
-Plug 'justinnhli/journal.vim', {'for': 'journal'}
-Plug 'tomasr/molokai'
+Plug 'kien/ctrlp.vim'
 Plug 'hdima/python-syntax', {'for': 'python'}
-Plug 'tpope/vim-fugitive'
 Plug 'johnsyweb/vim-makeshift'
+Plug 'justinnhli/journal.vim', {'for': 'journal'}
+Plug 'rhysd/clever-f.vim'
+Plug 'tomasr/molokai'
+Plug 'tomasr/molokai'
+Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-sleuth'
 call plug#end()
 
@@ -513,24 +514,28 @@ endfor
 " }
 
 " plugin settings {
+	" ctrlp
+	let g:ctrlp_map = '<leader>p'
+	let g:ctrlp_prompt_mappings = {
+	    \ 'AcceptSelection("e")': ['<c-t>'],
+	    \ 'AcceptSelection("t")': ['<cr>', '<2-LeftMouse>'],
+	    \ }
 	" clever-f
 	let g:clever_f_fix_key_direction=1
 	let g:clever_f_timeout_ms=5000
+	" netrw
+	let g:netrw_browse_split = 3
+	" python-syntax
+	let python_highlight_all = 1
 	" vim-fugitive
 	nnoremap  <leader>G     :Git 
 	nnoremap  <leader>gc    :Gcommit -m "
 	nnoremap  <leader>gd    :Gdiff<cr>
 	nnoremap  <leader>gs    :Gstatus<cr>
 	nnoremap  <leader>gp    :Gpush<cr>
-	" Gundo
-	nnoremap  <leader>u     :GundoToggle<cr>
-	" netrw
-	let g:netrw_browse_split = 3
 	" vim-makeshift
 	nnoremap  <leader><cr>  :MakeshiftBuild \| redraw!<cr>
 	let g:makeshift_use_pwd_first = 1
-	" python-syntax
-	let python_highlight_all = 1
 " }
 
 " protect large files from sourcing and other overhead.

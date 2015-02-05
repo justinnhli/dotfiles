@@ -44,8 +44,12 @@ export PYTHONPATH="$HOME/git:$PYTHONPATH"
 # environment
 if which nvim &>/dev/null; then
 	export EDITOR=nvim
-	export VISUAL=nvim
-	export MANPAGER="/bin/sh -c \"col -b | nvim -c 'set ft=man ts=8 nomod nolist nonu noma' -\""
+	export VISUAL=$EDITOR
+	export MANPAGER="/bin/sh -c \"col -b | $EDITOR -c 'set ft=man ts=8 nomod nolist nonu noma' -\""
+else
+	export EDITOR=vi
+	export VISUAL=vi
+	export MANPAGER="/bin/sh -c \"col -b | $EDITOR -c 'set ft=man ts=8 nomod nolist nonu noma' -\""
 fi
 export HISTSIZE=10000
 export HISTCONTROL=ignoredups

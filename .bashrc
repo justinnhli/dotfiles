@@ -48,7 +48,7 @@ if which nvim &>/dev/null; then
 	export MANPAGER="/bin/sh -c \"col -b | $EDITOR -c 'set ft=man ts=8 nomod nolist nonu noma' -\""
 else
 	export EDITOR=vi
-	export VISUAL=vi
+	export VISUAL=$EDITOR
 	export MANPAGER="/bin/sh -c \"col -b | $EDITOR -c 'set ft=man ts=8 nomod nolist nonu noma' -\""
 fi
 export HISTSIZE=10000

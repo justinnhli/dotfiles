@@ -454,6 +454,7 @@ endfor
 	nnoremap           <leader><leader>w     :set wrap!<cr>:set wrap?<cr>
 	nnoremap           <leader><leader>/     :nohlsearch<cr>
 	" editor function shortcuts
+	nnoremap           <leader>p     "+p
 	nnoremap           <leader>z     1z=
 	nnoremap           <leader>@     :<C-f>ilet @=<C-r><C-r>
 	nnoremap  <silent> <leader>;     :lcd %:p:h<cr>
@@ -521,7 +522,7 @@ endfor
 
 " plugin settings {
 	" ctrlp
-	let g:ctrlp_map = '<leader>p'
+	let g:ctrlp_map = '<leader>P'
 	let g:ctrlp_prompt_mappings = {
 	    \ 'AcceptSelection("e")': ['<c-t>'],
 	    \ 'AcceptSelection("t")': ['<cr>', '<2-LeftMouse>'],

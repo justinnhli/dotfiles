@@ -4,17 +4,19 @@ set nocompatible
 "let python_host_prog = "python3"
 
 " vim-plug plug-in manager
-call plug#begin('~/.nvim/bundle')
-Plug 'kien/ctrlp.vim'
-Plug 'hdima/python-syntax', {'for': 'python'}
-Plug 'johnsyweb/vim-makeshift'
-Plug 'justinnhli/journal.vim', {'for': 'journal'}
-Plug 'rhysd/clever-f.vim'
-Plug 'tomasr/molokai'
-Plug 'tomasr/molokai'
-Plug 'tpope/vim-fugitive'
-Plug 'tpope/vim-sleuth'
-call plug#end()
+let s:found_plugins = isdirectory(expand('~/.nvim/bundle'))
+if s:found_plugins
+	call plug#begin('~/.nvim/bundle')
+	Plug 'kien/ctrlp.vim'
+	Plug 'hdima/python-syntax', {'for': 'python'}
+	Plug 'johnsyweb/vim-makeshift'
+	Plug 'justinnhli/journal.vim', {'for': 'journal'}
+	Plug 'rhysd/clever-f.vim'
+	Plug 'tomasr/molokai'
+	Plug 'tpope/vim-fugitive'
+	Plug 'tpope/vim-sleuth'
+	call plug#end()
+endif
 
 " use additional runtime directories when available: local neovim clone, Arch neovim install, Mac neovim install, Arch vim install, MacVim install
 let vim_runtimes = [expand('~/neovim/runtime'), '/usr/share/nvim/runtime', '/usr/local/share/nvim/runtime', '/usr/share/vim/vim74', '/Applications/MacVim.app/Contents/Resources/vim/runtime']
@@ -211,7 +213,7 @@ endfor
 		set nobomb
 	endif
 	set   backspace=indent,eol,start
-	if has("linebreak")
+	if has("linebreak") && v:version > 703
 		set   breakindent
 		set   breakindentopt=shift:1
 	endif
@@ -261,7 +263,11 @@ endfor
 		syntax enable
 	endif
 	set background=dark
-	colorscheme molokai
+	if s:found_plugins
+		colorscheme molokai
+	else
+		colorscheme default
+	endif
 	highlight clear MatchParen
 	highlight link MatchParen DiffAdd
 	highlight clear Visual

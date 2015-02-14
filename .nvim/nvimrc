@@ -198,7 +198,7 @@ endfor
 	endif
 	if has("wildmenu")
 		set   wildmode=longest,list
-		set   wildignore+=*.pyc
+		set   wildignore+=*.aux,*.eps,*.nav,*.pyc,*.snm,*.svg,*.toc
 	endif
 	set nowrap
 	let g:netrw_winsize=50

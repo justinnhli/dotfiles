@@ -68,7 +68,7 @@ if args.date_range and not all(dr and RANGE_REGEX.match(dr) for dr in args.date_
 if args.num_results is not None and args.num_results < 1:
     arg_parser.error("argument -n: '{}' should be a positive integer".format(args.num_results))
 args.directory = realpath(expanduser(args.directory))
-args.ignores = set(realpath(expanduser(path)) for arg in args.ignores for path in arg.split(","))
+args.ignores = set(realpath(expanduser(path.strip())) for arg in args.ignores for path in arg.split(","))
 args.terms = set(args.terms)
 
 if args.op == "archive":

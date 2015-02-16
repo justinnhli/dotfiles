@@ -79,7 +79,7 @@ alias rm='rm -i'
 alias cp='cp -i'
 alias mv='mv -i'
 alias grep='grep --color=auto'
-alias jrnl="journal.py --ignore '$(ls -m ~/journal/*.journal | sed 's/ //g')'"
+alias jrnl="journal.py --ignore '$(ls -m ~/journal/*.journal 2>/dev/null | sed 's/ //g')'"
 alias flake8='flake8 --ignore=E501'
 alias pylint='pylint --indent-string="    " --disable=invalid-name,missing-docstring,old-style-class,star-args,line-too-long,bad-builtin,bad-continuation --reports=n'
 alias soar='~/Soar/out/testcli'

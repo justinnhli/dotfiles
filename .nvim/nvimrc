@@ -151,7 +151,7 @@ endfor
 
 " sessions {
 	set   history=250
-	if filereadable(expand("~/.nvim/viminfo"))
+	if isdirectory(expand("~/.nvim"))
 		set   viminfo='50,<100,h,n~/.nvim/viminfo
 	else
 		set   viminfo='50,<100,h,n~/.viminfo

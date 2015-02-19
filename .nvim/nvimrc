@@ -172,7 +172,6 @@ endfor
 	if has("linebreak")
 		set   linebreak
 	endif
-	let   netrw_liststyle=3
 	set   number
 	if has("cmdline_info")
 		set   showcmd
@@ -201,7 +200,6 @@ endfor
 		set   wildignore+=*.aux,*.bbl,*.blg,*.eps,*.nav,*.pyc,*.snm,*.svg,*.toc
 	endif
 	set nowrap
-	let g:netrw_winsize=50
 " }
 
 " settings {
@@ -532,8 +530,10 @@ endfor
 	let g:clever_f_timeout_ms=5000
 	" netrw
 	let g:netrw_browse_split = 3
+	let g:netrw_liststyle=3
+	let g:netrw_winsize=50
 	" python-syntax
-	let python_highlight_all = 1
+	let g:python_highlight_all = 1
 	" vim-fugitive
 	nnoremap  <leader>G     :Git 
 	nnoremap  <leader>gc    :Gcommit -m "

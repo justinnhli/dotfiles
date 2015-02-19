@@ -20,8 +20,8 @@ if s:found_plugins
 endif
 
 " use additional runtime directories when available: local neovim clone, Arch neovim install, Mac neovim install, Arch vim install, MacVim install
-let vim_runtimes = [expand('~/neovim/runtime'), '/usr/share/nvim/runtime', '/usr/local/share/nvim/runtime', '/usr/share/vim/vim74', '/Applications/MacVim.app/Contents/Resources/vim/runtime']
-for runtime in vim_runtimes
+let s:vim_runtimes = [expand('~/neovim/runtime'), '/usr/share/nvim/runtime', '/usr/local/share/nvim/runtime', '/usr/share/vim/vim74', '/Applications/MacVim.app/Contents/Resources/vim/runtime']
+for runtime in s:vim_runtimes
 	if isdirectory(runtime)
 		let &runtimepath = &runtimepath.','.runtime
 	endif
@@ -276,7 +276,7 @@ endfor
 " key mappings {
 	mapclear
 	mapclear!
-	let mapleader = ' '
+	let g:mapleader = ' '
 
 	" disable the default leader
 	nnoremap \ <nop>
@@ -548,8 +548,8 @@ endfor
 
 " protect large files from sourcing and other overhead.
 " files become read only
-if !exists("my_auto_commands_loaded")
-	let my_auto_commands_loaded = 1
+if !exists("g:my_auto_commands_loaded")
+	let g:my_auto_commands_loaded = 1
 	" Large files are > 10M
 	" Set options:
 	" eventignore+=FileType (no syntax highlighting etc.; assumes FileType always on)

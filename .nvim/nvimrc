@@ -39,7 +39,7 @@ endfor
 	endfunction
 
 	function! s:CloseRightTabs()
-		let l:cur=tabpagenr()
+		let l:cur = tabpagenr()
 		while l:cur < tabpagenr('$')
 			exe 'tabclose' . ' ' . (l:cur + 1)
 		endwhile
@@ -527,13 +527,13 @@ endfor
 	    \ 'AcceptSelection("t")': ['<cr>', '<2-LeftMouse>'],
 	    \ }
 	" clever-f
-	let g:clever_f_fix_key_direction=1
-	let g:clever_f_timeout_ms=5000
+	let g:clever_f_fix_key_direction = 1
+	let g:clever_f_timeout_ms = 5000
 	" netrw
 	let g:netrw_browse_split = 3
-	let g:netrw_liststyle=3
+	let g:netrw_liststyle = 3
 	let g:netrw_list_hide = '\.swp$,\.un\~$'
-	let g:netrw_winsize=50
+	let g:netrw_winsize = 50
 	" python-syntax
 	let g:python_highlight_all = 1
 	" vim-fugitive

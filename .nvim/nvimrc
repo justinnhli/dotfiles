@@ -488,7 +488,7 @@ endfor
 	augroup END
 	" bound scope of search to the original window
 	augroup last_search
-		autocmd WinLeave            *       let w:search_on = v:hlsearch | let w:last_search = @/
+		autocmd WinLeave            *       let w:search_on = &hlsearch | let w:last_search = @/
 		autocmd WinEnter            *       if exists("w:search_on") && w:search_on | let @/ = w:last_search | else | set nohlsearch | endif
 	augroup END
 	" disable audio bell in MacVim

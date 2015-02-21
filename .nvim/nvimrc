@@ -419,7 +419,7 @@ endfor
 		" jump to the end of pasted text
 		nnoremap <silent> p p`]
 
-		" Make Y behave like other capitals
+		" make Y behave like other capitals
 		nnoremap Y y$
 	" }
 

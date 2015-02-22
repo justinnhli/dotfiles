@@ -267,10 +267,6 @@ endfor
 	else
 		colorscheme default
 	endif
-	highlight clear MatchParen
-	highlight link MatchParen DiffAdd
-	highlight clear Visual
-	highlight link Visual StatusLine
 " }
 
 " key mappings {

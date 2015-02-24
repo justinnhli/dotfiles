@@ -208,10 +208,20 @@ endfor
 	filetype indent on
 	set   autoindent
 	set   autoread
+	set   backspace=indent,eol,start
+	set noesckeys
+	set   ignorecase
+	set   scrolloff=1
+	set   shiftwidth=4
+	set   sidescroll=1
+	set   sidescrolloff=10
+	set   smartcase
+	set nostartofline
+	set   tabstop=4
+	set   whichwrap=b,s,<,>,h,l,[,]
 	if has("multi_byte")
 		set nobomb
 	endif
-	set   backspace=indent,eol,start
 	if has("linebreak") && v:version > 703
 		set   breakindent
 		set   breakindentopt=shift:1
@@ -222,7 +232,6 @@ endfor
 	if has("multi_byte")
 		set   encoding=utf-8
 	endif
-	set noesckeys
 	if has("multi_byte")
 		set   fileencoding=utf-8
 	endif
@@ -235,25 +244,16 @@ endfor
 	if has("extra_search")
 		set   hlsearch
 	endif
-	set   ignorecase
 	if has("insert_expand")
 		set noinfercase
 	endif
 	if has("extra_search")
 		set   incsearch
 	endif
-	set   scrolloff=1
-	set   shiftwidth=4
-	set   sidescroll=1
-	set   sidescrolloff=10
-	set   smartcase
 	if has("syntax")
 		set   spell
 		set   spellcapcheck=
 	endif
-	set nostartofline
-	set   tabstop=4
-	set   whichwrap=b,s,<,>,h,l,[,]
 " }
 
 " highlighting and color {

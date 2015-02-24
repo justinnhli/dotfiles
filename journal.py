@@ -25,7 +25,7 @@ DATE_LENGTH = 10
 
 LOG_FILE = ".log"
 METADATA_FILE = ".metadata"
-TAGS_FILE = "tags"
+TAGS_FILE = ".tags"
 CACHE_FILE = ".cache"
 INDEX_FILE = ".index"
 

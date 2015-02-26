@@ -222,7 +222,7 @@ endfor
 	if has("multi_byte")
 		set nobomb
 	endif
-	if has("linebreak") && v:version > 703
+	if exists('&breakindent')
 		set   breakindent
 		set   breakindentopt=shift:1
 	endif

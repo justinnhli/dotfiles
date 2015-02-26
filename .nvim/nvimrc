@@ -6,6 +6,7 @@ set nocompatible
 " vim-plug plug-in manager
 try
 	call plug#begin(expand('~/.nvim/bundle'))
+	Plug 'christoomey/vim-tmux-navigator'
 	Plug 'kien/ctrlp.vim'
 	Plug 'hdima/python-syntax', {'for': 'python'}
 	Plug 'johnsyweb/vim-makeshift'
@@ -360,10 +361,12 @@ endfor
 		noremap  <S-h>  :tabprev<cr>
 
 		" Ctrl+HJKL for moving between windows
-		noremap  <C-j>  <C-w>j
-		noremap  <C-k>  <C-w>k
-		noremap  <C-h>  <C-w>h
-		noremap  <C-l>  <C-w>l
+		if !exists('g:loaded_tmux_navigator')
+			noremap  <C-j>  <C-w>j
+			noremap  <C-k>  <C-w>k
+			noremap  <C-h>  <C-w>h
+			noremap  <C-l>  <C-w>l
+		endif
 	" }
 
 	" disable annoying features {

@@ -218,6 +218,7 @@ endfor
 	set   smartcase
 	set nostartofline
 	set   tabstop=4
+	set   tags+=./.tags,.tags
 	set   whichwrap=b,s,<,>,h,l,[,]
 	if has("multi_byte")
 		set nobomb

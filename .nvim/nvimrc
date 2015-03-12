@@ -1,6 +1,8 @@
 set nocompatible
 
-" FIXME temporarily disabled until neovim issue #1508 is fixed
+" FIXME disable python3 as python host
+" this prevents meesages on opening the command window
+" see https://github.com/neovim/neovim/issues/1508
 "let python_host_prog = "python3"
 
 " vim-plug plug-in manager
@@ -19,8 +21,10 @@ try
 catch
 endtry
 
-" use additional runtime directories when available: local neovim clone, Arch neovim install, Mac neovim install, Arch vim install, MacVim install
-let s:vim_runtimes = [expand('~/neovim/runtime'), '/usr/share/nvim/runtime', '/usr/local/share/nvim/runtime', '/usr/share/vim/vim74', '/Applications/MacVim.app/Contents/Resources/vim/runtime']
+" FIXME use additional runtime directories when available: Arch vim install, MacVim install
+" we need these for UTF-8 and ASCII spell files
+" see https://github.com/neovim/neovim/issues/1551
+let s:vim_runtimes = ['/usr/share/vim/vim74', '/Applications/MacVim.app/Contents/Resources/vim/runtime']
 for runtime in s:vim_runtimes
 	if isdirectory(runtime)
 		let &runtimepath = &runtimepath.','.runtime

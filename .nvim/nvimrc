@@ -470,15 +470,19 @@ endfor
 	autocmd     VimResized          *       normal <c-w>=
 	" restore cursor position
 	autocmd     BufReadPost         *       if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
+	" disable audio bell in MacVim
+	autocmd     GUIEnter            *              set visualbell t_vb=
 	" automatically leave insert mode after 'updatetime' milliseconds, which is 7.5 seconds in insert mode
 	autocmd     CursorHoldI         *       stopinsert
-	augroup leaveinsert
+	augroup leave_insert
 		autocmd InsertEnter         *       let updaterestore=&updatetime | set updatetime=7500
 		autocmd InsertLeave         *       let &updatetime=updaterestore
 	augroup END
 	" easily cancel the command line window
-	autocmd     CmdwinEnter         *       nnoremap <buffer> <C-c> :quit<cr>
-	autocmd     CmdwinEnter         *       inoremap <buffer> <C-c> <Esc>:quit<cr>
+	augroup leave_command
+		autocmd     CmdwinEnter         *       nnoremap <buffer> <C-c> :quit<cr>
+		autocmd     CmdwinEnter         *       inoremap <buffer> <C-c> <Esc>:quit<cr>
+	augroup END
 	" automatically open and close the quickfix window
 	augroup quick_fix
 		autocmd     QuickFixCmdPost     l*grep* lwindow
@@ -489,8 +493,6 @@ endfor
 		autocmd WinLeave            *       let w:search_on = &hlsearch | let w:last_search = @/
 		autocmd WinEnter            *       if exists("w:search_on") && w:search_on | let @/ = w:last_search | else | set nohlsearch | endif
 	augroup END
-	" disable audio bell in MacVim
-	autocmd     GUIEnter            *              set visualbell t_vb=
 
 	" override above settings for specific files
 	" automatically fold notes.journal and change directories

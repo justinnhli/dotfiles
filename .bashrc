@@ -25,7 +25,7 @@ PS1='[\u@\h \W]\$ '
 PROMPT_COMMAND=prompt_command_fn
 
 # paths
-export PATH="$HOME/bin:/opt/pdflabs/pdftk/bin:$HOME/.cabal/bin:/usr/texbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
+export PATH="$HOME/bin:$HOME/neovim/build/bin:/usr/local/heroku/bin:/opt/pdflabs/pdftk/bin:$HOME/.cabal/bin:$PATH"
 export PYTHONPATH="$HOME/bin"
 for master_dir in "$HOME/projects/" "$HOME/git/"; do
 	if [ -d "$master_dir" ]; then
@@ -43,7 +43,7 @@ export PYTHONPATH="$HOME/git:$PYTHONPATH"
 
 # environment
 if which nvim >/dev/null 2>&1; then
-	export EDITOR=nvim
+	export EDITOR='COLORTERM=qterminal VIM=~/neovim/runtime nvim'
 	export VISUAL=$EDITOR
 	export MANPAGER="/bin/sh -c \"col -b | $EDITOR -c 'set ft=man ts=8 nomod nolist nonu noma' -\""
 else

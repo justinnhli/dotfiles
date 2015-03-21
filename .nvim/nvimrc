@@ -38,7 +38,9 @@ endfor
 		%s/‘‘/"/eg
 		%s/[“”]/"/eg
 		%s/…/.../eg
-		%s/[–—―]/ - /eg
+		%s/[–—―‐]/ - /eg
+		%s/﴾/(/eg
+		%s/﴿/)/eg
 		%s/ / /eg " U+200A (hair space)
 	endfunction
 

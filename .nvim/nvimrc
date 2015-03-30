@@ -26,7 +26,7 @@ endtry
 " see https://github.com/neovim/neovim/issues/1551
 let s:vim_runtimes = [expand('~/neovim/runtime'), '/usr/share/vim/vim74', '/Applications/MacVim.app/Contents/Resources/vim/runtime']
 for runtime in s:vim_runtimes
-	if isdirectory(runtime)
+	if isdirectory(runtime) && &runtimepath !~ runtime
 		let &runtimepath = &runtimepath.','.runtime
 	endif
 endfor

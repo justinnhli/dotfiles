@@ -121,7 +121,7 @@ endfor
 	endfunction
 
 	function! StartTerminal()
-		:set nospell
+		:setlocal nospell
 		:terminal
 	endfunction
 " }

@@ -119,6 +119,11 @@ endfor
 			let l:line_num += l:step
 		endwhile
 	endfunction
+
+	function! StartTerminal()
+		:set nospell
+		:terminal
+	endfunction
 " }
 
 " setting functions {
@@ -413,6 +418,12 @@ endfor
 		nnoremap  <S-k>  :lprevious<cr>
 	" }
 
+	" terminal {
+		if has('nvim')
+			tnoremap <Esc> <C-\><C-n>
+		endif
+	" }
+
 	" editing {
 		" stay in visual mode after tabbing
 		vnoremap  <tab>    >gv
@@ -437,11 +448,6 @@ endfor
 		nnoremap  <C-r>  g+
 	" }
 
-	" utilities {
-		" get output of shell command
-		nnoremap  !      :Scratchpad 
-	" }
-
 	" open special files
 	nnoremap           <leader>B     :tabnew ~/.bashrc<cr>
 	nnoremap           <leader>C     :tabnew ~/Dropbox/contacts/contacts-*<cr>
@@ -451,6 +457,7 @@ endfor
 	nnoremap           <leader>T     :tabnew ~/Dropbox/documents/tweets.csv<cr>
 	nnoremap           <leader>V     :tabnew ~/.nvim/nvimrc<cr>
 	nnoremap           <leader>O     eb"zye:!open $(find ~/Dropbox/library/ -name <C-r>=expand("<cword>")<cr>.pdf)<cr><cr>
+	nnoremap           <leader>!     :call StartTerminal()<cr>
 	" toggle settings with double leader
 	nnoremap           <leader><leader>n     :set number!<cr>:set number?<cr>
 	nnoremap           <leader><leader>s     :set spell!<cr>:set spell?<cr>
@@ -510,15 +517,6 @@ endfor
 		execute ":tag " . a:args
 	endfunction
 	command! -nargs=1 Tagnew :call s:TagnewCommand(<q-args>)
-
-	function! s:ScratchpadCommand(args)
-		vnew
-		setlocal buftype=nofile nofoldenable noswapfile
-		exe "r!" . a:args
-		0d
-		0
-	endfunction
-	command! -nargs=* -complete=file Scratchpad :call s:ScratchpadCommand(<q-args>)
 
 	command! -nargs=0 CloseRightTabs :call <SID>CloseRightTabs()
 	command! -nargs=1 MoveToRelTab :call <SID>MoveToRelTab(<q-args>)

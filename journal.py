@@ -1,5 +1,7 @@
 #!/usr/bin/env python3.4
 
+print("goodbye")
+
 import re
 import tarfile
 from ast import literal_eval

@@ -5,7 +5,7 @@ set nocompatible
 " see https://github.com/neovim/neovim/issues/1508
 "let python_host_prog = "python3"
 
-" vim-plug plug-in manager
+" vim-plug plugin manager
 try
 	call plug#begin(expand('~/.nvim/bundle'))
 	Plug 'christoomey/vim-tmux-navigator'
@@ -13,6 +13,7 @@ try
 	Plug 'hdima/python-syntax', {'for': 'python'}
 	Plug 'johnsyweb/vim-makeshift'
 	Plug 'justinnhli/journal.vim', {'for': 'journal'}
+	Plug 'mbbill/undotree'
 	Plug 'rhysd/clever-f.vim'
 	Plug 'tomasr/molokai'
 	Plug 'tpope/vim-fugitive'
@@ -541,6 +542,8 @@ endfor
 	let g:netrw_winsize = 50
 	" python-syntax
 	let g:python_highlight_all = 1
+	" undotree
+	nnoremap  <leader>u     :UndotreeToggle<cr>
 	" vim-fugitive
 	nnoremap  <leader>G     :Git 
 	nnoremap  <leader>gc    :Gcommit -m "

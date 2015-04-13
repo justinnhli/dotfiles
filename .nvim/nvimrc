@@ -506,6 +506,10 @@ endfor
 		autocmd WinLeave            *       let w:search_on = &hlsearch | let w:last_search = @/
 		autocmd WinEnter            *       if exists("w:search_on") && w:search_on | let @/ = w:last_search | else | set nohlsearch | endif
 	augroup END
+	" disable spellcheck in virtual terminal
+	augroup terminal
+		autocmd TermOpen            *       setlocal nospell
+	augroup END
 
 	" override above settings for specific files
 	" automatically fold notes.journal and change directories

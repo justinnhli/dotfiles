@@ -369,14 +369,14 @@ endfor
 		nnoremap  <leader>wc   :close<cr>
 
 		" Shift+HL for moving between tabs
-		noremap  <S-l>  :tabnext<cr>
 		noremap  <S-h>  :tabprev<cr>
+		noremap  <S-l>  :tabnext<cr>
 
 		" Ctrl+HJKL for moving between windows
 		if !exists('g:loaded_tmux_navigator')
+			noremap  <C-h>  <C-w>h
 			noremap  <C-j>  <C-w>j
 			noremap  <C-k>  <C-w>k
-			noremap  <C-h>  <C-w>h
 			noremap  <C-l>  <C-w>l
 		endif
 	" }

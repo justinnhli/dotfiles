@@ -2,4 +2,5 @@
 .nvim/autoload/plug.vim.old
 .nvim/bundle/
 .nvim/nviminfo
+.nvim/viminfo
 .nvim/spell/en.utf-8.add.spl

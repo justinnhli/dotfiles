@@ -509,6 +509,9 @@ endfor
 	" disable spellcheck in virtual terminal
 	augroup terminal
 		autocmd TermOpen            *       setlocal nospell
+		autocmd TermOpen            term://*       let g:nonterm_colorscheme = g:colors_name | colorscheme default
+		autocmd BufEnter            term://*       let g:nonterm_colorscheme = g:colors_name | colorscheme default
+		autocmd BufLeave            term://*       if exists("g:nonterm_colorscheme") | execute "colorscheme " . g:nonterm_colorscheme | endif
 	augroup END
 
 	" override above settings for specific files

@@ -1,0 +1,5 @@
+#!/bin/sh
+
+for d in $(find . -type d -maxdepth 1 -name '[a-z]*' | sed 's#^./##'); do
+	stow -t "$HOME" "$d"
+done

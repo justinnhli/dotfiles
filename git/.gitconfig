@@ -3,7 +3,7 @@
 	email = justinnhli@gmail.com
 [core]
 	editor = nvim
-	excludesfile = ~/.gitignore
+	excludesfile = ~/.gitignore_global
 [diff]
 	tool = nvim -d
 [merge]

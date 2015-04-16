@@ -1,1 +1,1 @@
-My dot files
+My dot files, arranged for GNU Stow

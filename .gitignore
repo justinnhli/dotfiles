@@ -1,6 +1,6 @@
-.nvim/.netrwhist
-.nvim/autoload/plug.vim.old
-.nvim/bundle/
-.nvim/nviminfo
-.nvim/viminfo
-.nvim/spell/en.utf-8.add.spl
+neovim/.nvim/.netrwhist
+neovim/.nvim/autoload/plug.vim.old
+neovim/.nvim/bundle/
+neovim/.nvim/nviminfo
+neovim/.nvim/viminfo
+neovim/.nvim/spell/en.utf-8.add.spl

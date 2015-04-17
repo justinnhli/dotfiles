@@ -507,12 +507,14 @@ endfor
 		autocmd WinEnter            *       if exists("w:search_on") && w:search_on | let @/ = w:last_search | else | set nohlsearch | endif
 	augroup END
 	" disable spellcheck in virtual terminal
-	augroup terminal
-		autocmd TermOpen            *       setlocal nospell
-		autocmd TermOpen            term://*       if g:colors_name != 'default' | let g:nonterm_colorscheme = g:colors_name | colorscheme default | endif
-		autocmd BufEnter            term://*       if g:colors_name != 'default' | let g:nonterm_colorscheme = g:colors_name | colorscheme default | endif
-		autocmd BufLeave            term://*       if exists("g:nonterm_colorscheme") && g:nonterm_colorscheme != 'default' | execute "colorscheme " . g:nonterm_colorscheme | endif
-	augroup END
+	if has('nvim')
+		augroup terminal
+			autocmd TermOpen            *       setlocal nospell
+			autocmd TermOpen            term://*       if g:colors_name != 'default' | let g:nonterm_colorscheme = g:colors_name | colorscheme default | endif
+			autocmd BufEnter            term://*       if g:colors_name != 'default' | let g:nonterm_colorscheme = g:colors_name | colorscheme default | endif
+			autocmd BufLeave            term://*       if exists("g:nonterm_colorscheme") && g:nonterm_colorscheme != 'default' | execute "colorscheme " . g:nonterm_colorscheme | endif
+		augroup END
+	endif
 
 	" override above settings for specific files
 	" automatically fold notes.journal and change directories

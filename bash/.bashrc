@@ -4,9 +4,9 @@ update_dot_files() {
 	if [ ! -d "$HOME/bin" ]; then
 		mkdir "$HOME/bin"
 	fi
-	curl -L 'https://raw.githubusercontent.com/justinnhli/dotfiles/master/.bashrc' > "$HOME/.bashrc"
+	curl -L 'https://raw.githubusercontent.com/justinnhli/dotfiles/master/bash/.bashrc' > "$HOME/.bashrc"
 	curl -L 'https://www.dropbox.com/s/9ulktr6czt5tsfh/sshh' > "$HOME/bin/sshh"
-	curl -L 'https://raw.githubusercontent.com/justinnhli/dotfiles/master/.nvim/nvimrc' > "$HOME/.vimrc"
+	curl -L 'https://raw.githubusercontent.com/justinnhli/dotfiles/master/neovim/.nvim/nvimrc' > "$HOME/.vimrc"
 	chmod 744 "$HOME/bin/sshh"
 }
 

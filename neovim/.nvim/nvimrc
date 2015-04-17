@@ -451,13 +451,13 @@ endfor
 
 	" open special files
 	nnoremap           <leader>B     :tabnew ~/.bashrc<cr>
-	nnoremap           <leader>C     :tabnew ~/Dropbox/contacts/contacts-*<cr>
+	nnoremap           <leader>C     :tabnew ~/Dropbox/personal/contacts/contacts-*<cr>
 	nnoremap           <leader>J     :tabnew ~/journal/notes.journal<cr>
 	nnoremap           <leader>L     :tabnew ~/research/journal/library.bib<cr>
 	nnoremap           <leader>R     :tabnew ~/research/journal/2015.journal<cr>
-	nnoremap           <leader>T     :tabnew ~/Dropbox/documents/tweets.csv<cr>
+	nnoremap           <leader>T     :tabnew ~/Dropbox/personal/documents/tweets.csv<cr>
 	nnoremap           <leader>V     :tabnew ~/.nvim/nvimrc<cr>
-	nnoremap           <leader>O     eb"zye:!open $(find ~/Dropbox/library/ -name <C-r>=expand("<cword>")<cr>.pdf)<cr><cr>
+	nnoremap           <leader>O     eb"zye:!open $(find ~/Dropbox/research/library/ -name <C-r>=expand("<cword>")<cr>.pdf)<cr><cr>
 	nnoremap           <leader>!     :call StartTerminal()<cr>
 	" toggle settings with double leader
 	nnoremap           <leader><leader>n     :set number!<cr>:set number?<cr>

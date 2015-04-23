@@ -43,7 +43,9 @@ export PYTHONPATH="$HOME/git:$PYTHONPATH"
 
 # environment
 if which nvim >/dev/null 2>&1; then
-	export EDITOR='COLORTERM=qterminal VIM=~/neovim/runtime nvim'
+	export COLORTERM='qterminal'
+	export VIM='~/neovim/runtime'
+	export EDITOR='nvim'
 	export VISUAL=$EDITOR
 	export MANPAGER="/bin/sh -c \"col -b | $EDITOR -c 'set ft=man ts=8 nomod nolist nonu noma' -\""
 else

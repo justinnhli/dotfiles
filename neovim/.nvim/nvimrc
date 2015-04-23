@@ -1,9 +1,6 @@
 set nocompatible
 
-" FIXME disable python3 as python host
-" this prevents meesages on opening the command window
-" see https://github.com/neovim/neovim/issues/1508
-"let python_host_prog = "python3"
+let python_host_prog = "python3"
 
 " vim-plug plugin manager
 try

@@ -158,7 +158,8 @@ if args.op == "update":
     unindexed_terms = set(index.keys())
 elif use_index:
     selected.intersection_update(*(index[term.lower()] for term in args.terms if term.lower() in index))
-    unindexed_terms = set(term for term in args.terms if term not in index)
+    if args.icase:
+        unindexed_terms = set(term for term in args.terms if term not in index)
 
 candidates = copy(selected)
 if args.date_range:

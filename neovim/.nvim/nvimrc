@@ -422,7 +422,7 @@ endfor
 
 	" terminal {
 		if has('nvim')
-			tnoremap <Esc> <C-\><C-n>
+			tnoremap <Esc><Esc> <C-\><C-n>
 		endif
 	" }
 

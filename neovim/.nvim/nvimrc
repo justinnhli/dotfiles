@@ -344,6 +344,10 @@ endfor
 		vnoremap <silent> ]/ <esc>:call <SID>IndentTextObject(1, 0, 1)<cr><esc>gv
 	" }
 
+	" weird spelling error difference {
+		nnoremap <silent> [s [sh
+	" }
+
 	" window/tab management {
 		" <leader>t mappings for opening and closing tabs
 		nnoremap  <leader>tn  :tabnew 

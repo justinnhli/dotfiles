@@ -369,6 +369,9 @@ endfor
 		nnoremap  <leader>wo   :only<cr>
 		nnoremap  <leader>wc   :close<cr>
 
+		" mappings for the current buffer
+		nnoremap  <leader>e    :e 
+
 		" Shift+HL for moving between tabs
 		noremap  <S-h>  :tabprev<cr>
 		noremap  <S-l>  :tabnext<cr>

@@ -10,9 +10,6 @@ update_dot_files() {
 	chmod 744 "$HOME/bin/sshh"
 }
 
-# convenience variable
-uname="$(uname)"
-
 # prompt
 prompt_command_fn() {
 	# right before prompting for the next command, save the previous command in a file.
@@ -58,7 +55,7 @@ export HISTCONTROL=ignoredups
 export PYTHONIOENCODING="utf-8"
 
 # soar variables
-case "$uname" in
+case "$(uname)" in
 "Linux")
 	if uname -v | grep Ubuntu 2>&1 >/dev/null; then
 		if [ -d "/usr/lib/jvm/default-java" ]; then
@@ -92,7 +89,7 @@ fi
 alias vi="$VISUAL"
 alias vim="$VISUAL"
 alias vino="$VISUAL ~/journal/notes.journal"
-case "$uname" in
+case "$(uname)" in
 	"Linux")
 		alias ls='ls --color=auto --time-style=long-iso'
 		alias open='xdg-open'

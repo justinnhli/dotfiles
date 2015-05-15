@@ -102,8 +102,12 @@ case "$uname" in
 		alias ls='ls -G';;
 esac
 
+# automatically correct minor spelling errors with `cd`
+shopt -s cdspell
 # redraw on window size change
 shopt -s checkwinsize
+# save multi-line commands in the same history entry
+shopt -s cmdhist
 
 # disable output stop keyboard shortcut (so <C-s> can be mapped in vim)
 stty stop '' -ixoff

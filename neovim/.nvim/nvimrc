@@ -199,6 +199,7 @@ endfor
 		set showtabline=2
 		set tabline=%!MyTabLine()
 	endif
+	set   tabpagemax=50
 	set   title
 	if has('gui_running')
 		set   visualbell

@@ -70,6 +70,7 @@ case "$(uname)" in
 esac
 export PYTHONPATH="$HOME/Soar/out:$PYTHONPATH"
 
+# clean up the paths
 export PATH="$(echo "$PATH" | sed 's#//#/#g')"
 export PYTHONPATH="$(echo "$PYTHONPATH" | sed 's#//#/#g')"
 
@@ -98,6 +99,9 @@ case "$(uname)" in
 	"Darwin")
 		alias ls='ls -G';;
 esac
+if [ "$NVIM_LISTEN_ADDRESS" != "" ]; then
+	alias :="$(which nvimcmd)"
+fi
 
 # automatically correct minor spelling errors with `cd`
 shopt -s cdspell

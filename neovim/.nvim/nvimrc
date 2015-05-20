@@ -124,6 +124,19 @@ endfor
 		setlocal nospell
 		terminal
 	endfunction
+
+	function! StartTerminalInWindow(direction)
+		if a:direction == 'h'
+			leftabove vnew<cr>
+		elseif a:direction == 'j'
+			rightbelow new<cr>
+		elseif a:direction == 'k'
+			leftabove new<cr>
+		elseif a:direction == 'l'
+			rightbelow vnew<cr>
+		endif
+		call StartTerminal()
+	endfunction
 " }
 
 " setting functions {
@@ -465,7 +478,13 @@ endfor
 	nnoremap           <leader>T     :tabnew ~/Dropbox/personal/documents/tweets.csv<cr>
 	nnoremap           <leader>V     :tabnew ~/.nvim/nvimrc<cr>
 	nnoremap           <leader>O     eb"zye:!open $(find ~/Dropbox/research/library/ -name <C-r>=expand('<cword>')<cr>.pdf)<cr><cr>
-	nnoremap           <leader>!     :call StartTerminal()<cr>
+	if has('nvim')
+		nnoremap       <leader>!     :call StartTerminal()<cr>
+		nnoremap       <leader>wth   :call StartTerminalInWindow('j')<cr>
+		nnoremap       <leader>wtj   :call StartTerminalInWindow('j')<cr>
+		nnoremap       <leader>wtk   :call StartTerminalInWindow('k')<cr>
+		nnoremap       <leader>wtl   :call StartTerminalInWindow('l')<cr>
+	endif
 	" toggle settings with double leader
 	nnoremap           <leader><leader>n     :set number!<cr>:set number?<cr>
 	nnoremap           <leader><leader>s     :set spell!<cr>:set spell?<cr>

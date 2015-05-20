@@ -29,6 +29,41 @@ for runtime in s:vim_runtimes
 	endif
 endfor
 
+" script-only functions {
+	function! s:CloseRightTabs()
+		let l:cur = tabpagenr()
+		while l:cur < tabpagenr('$')
+			exe 'tabclose '.(l:cur + 1)
+		endwhile
+	endfunction
+
+	function! s:IndentTextObject(updown, inout, visual)
+		if a:visual
+			normal!gv
+		endif
+		let l:line_num = line('.')
+		let l:step = (a:updown > 0 ? 1 : -1)
+		let l:src_indent = indent(l:line_num)
+		let l:dest_indent = l:src_indent + (a:inout * &tabstop)
+		if dest_indent < 0
+			let l:dest_indent = 0
+		endif
+		let l:cur_indent = indent(l:line_num)
+		let l:line_num += l:step
+		while 1 <= l:line_num && l:line_num <= line('$')
+			let l:cur_indent = indent(l:line_num)
+			if l:cur_indent < l:src_indent || l:cur_indent == l:dest_indent
+				if a:visual && l:step == 1
+					let l:line_num -= 1
+				end
+				call cursor(l:line_num, 0)
+				return
+			endif
+			let l:line_num += l:step
+		endwhile
+	endfunction
+" }
+
 " functional functions {
 	function! UnicodeToAscii()
 		%s/[′‘’]/'/eg
@@ -42,14 +77,7 @@ endfor
 		%s/ / /eg " U+200A (hair space)
 	endfunction
 
-	function! s:CloseRightTabs()
-		let l:cur = tabpagenr()
-		while l:cur < tabpagenr('$')
-			exe 'tabclose '.(l:cur + 1)
-		endwhile
-	endfunction
-
-	function! s:MoveToRelTab(n)
+	function! MoveToRelTab(n)
 		let l:num_tabs = tabpagenr('$')
 		let l:cur_tab = tabpagenr()
 		let l:cur_win = winnr('#')
@@ -92,35 +120,9 @@ endfor
 		" FIXME fails when new_tab is the highest tab
 	endfunction
 
-	function! s:IndentTextObject(updown, inout, visual)
-		if a:visual
-			normal!gv
-		endif
-		let l:line_num = line('.')
-		let l:step = (a:updown > 0 ? 1 : -1)
-		let l:src_indent = indent(l:line_num)
-		let l:dest_indent = l:src_indent + (a:inout * &tabstop)
-		if dest_indent < 0
-			let l:dest_indent = 0
-		endif
-		let l:cur_indent = indent(l:line_num)
-		let l:line_num += l:step
-		while 1 <= l:line_num && l:line_num <= line('$')
-			let l:cur_indent = indent(l:line_num)
-			if l:cur_indent < l:src_indent || l:cur_indent == l:dest_indent
-				if a:visual && l:step == 1
-					let l:line_num -= 1
-				end
-				call cursor(l:line_num, 0)
-				return
-			endif
-			let l:line_num += l:step
-		endwhile
-	endfunction
-
 	function! StartTerminal()
-		:setlocal nospell
-		:terminal
+		setlocal nospell
+		terminal
 	endfunction
 " }
 

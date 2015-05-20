@@ -1,15 +1,15 @@
 set nocompatible
 
-let python_host_prog = "python3"
+let python_host_prog = 'python3'
 
 " vim-plug plugin manager
 try
 	call plug#begin(expand('~/.nvim/bundle'))
 	Plug 'christoomey/vim-tmux-navigator'
-	Plug 'kien/ctrlp.vim'
 	Plug 'hdima/python-syntax', {'for': 'python'}
 	Plug 'johnsyweb/vim-makeshift'
 	Plug 'justinnhli/journal.vim', {'for': 'journal'}
+	Plug 'kien/ctrlp.vim'
 	Plug 'mbbill/undotree'
 	Plug 'rhysd/clever-f.vim'
 	Plug 'tomasr/molokai'
@@ -45,49 +45,49 @@ endfor
 	function! s:CloseRightTabs()
 		let l:cur = tabpagenr()
 		while l:cur < tabpagenr('$')
-			exe 'tabclose' . ' ' . (l:cur + 1)
+			exe 'tabclose '.(l:cur + 1)
 		endwhile
 	endfunction
 
 	function! s:MoveToRelTab(n)
-		let l:num_tabs = tabpagenr("$")
+		let l:num_tabs = tabpagenr('$')
 		let l:cur_tab = tabpagenr()
 		let l:cur_win = winnr('#')
 		let l:cur_buf = bufnr('%')
 		let l:new_tab = a:n + l:cur_tab
-		if a:n == 0 || (l:num_tabs == 1 && winnr("$") == 1)
+		if a:n == 0 || (l:num_tabs == 1 && winnr('$') == 1)
 			return
 		endif
 		if l:new_tab < 1
-			exec "0tabnew"
+			exec '0tabnew'
 			let l:cur_tab += 1
 		elseif l:new_tab > l:num_tabs
-			exec "tablast"
-			exec "tabnew"
+			exec 'tablast'
+			exec 'tabnew'
 		else
 			if a:n < 0
 				if l:num_tabs == tabpagenr('$')
-					exec "tabprev ".abs(a:n)
+					exec 'tabprev '.abs(a:n)
 				elseif a:n != -1
-					exec "tabprev ".(abs(a:n)-1)
+					exec 'tabprev '.(abs(a:n)-1)
 				endif
 			else
 				if l:num_tabs == tabpagenr('$')
-					exec "tabnext ".l:new_tab
+					exec 'tabnext '.l:new_tab
 				elseif a:n != 1
-					exec "tabnext ".(l:new_tab-1)
+					exec 'tabnext '.(l:new_tab-1)
 				endif
 			endif
 			vert botright split
 		endif
-		exec "b".l:cur_buf
+		exec 'b'.l:cur_buf
 		let l:new_tab = tabpagenr()
-		exec "tabnext".l:cur_tab
-		exec l:cur_win."wincmd c"
+		exec 'tabnext'.l:cur_tab
+		exec l:cur_win.'wincmd c'
 		if l:new_tab > l:num_tabs
-			exec "tabnext".(l:new_tab-1)
+			exec 'tabnext'.(l:new_tab-1)
 		else
-			exec "tabnext".l:new_tab
+			exec 'tabnext'.l:new_tab
 		endif
 		" FIXME fails when new_tab is the highest tab
 	endfunction
@@ -96,7 +96,7 @@ endfor
 		if a:visual
 			normal!gv
 		endif
-		let l:line_num = line(".")
+		let l:line_num = line('.')
 		let l:step = (a:updown > 0 ? 1 : -1)
 		let l:src_indent = indent(l:line_num)
 		let l:dest_indent = l:src_indent + (a:inout * &tabstop)
@@ -105,7 +105,7 @@ endfor
 		endif
 		let l:cur_indent = indent(l:line_num)
 		let l:line_num += l:step
-		while 1 <= l:line_num && l:line_num <= line("$")
+		while 1 <= l:line_num && l:line_num <= line('$')
 			let l:cur_indent = indent(l:line_num)
 			if l:cur_indent < l:src_indent || l:cur_indent == l:dest_indent
 				if a:visual && l:step == 1
@@ -146,7 +146,7 @@ endfor
 			let l:tabline .= '['.tabpagewinnr(i+1,'$').']'
 			" tab page is modified if any buffer is modified
 			for b in l:buffers
-				if getbufvar(b, "&modified" )
+				if getbufvar(b, '&modified' )
 					let l:tabline .= '+'
 					break
 				endif
@@ -160,12 +160,12 @@ endfor
 
 " sessions {
 	set   history=250
-	if isdirectory(expand("~/.nvim"))
+	if isdirectory(expand('~/.nvim'))
 		set   viminfo='50,<100,h,n~/.nvim/nviminfo
 	else
 		set   viminfo='50,<100,h,n~/.viminfo
 	endif
-	if has("persistent_undo")
+	if has('persistent_undo')
 		set   undofile
 	endif
 " }
@@ -179,23 +179,23 @@ endfor
 	set guioptions-=r
 	set   laststatus=2
 	set   lazyredraw
-	if has("linebreak")
+	if has('linebreak')
 		set   linebreak
 	endif
 	set   number
-	if has("cmdline_info")
+	if has('cmdline_info')
 		set   showcmd
 	endif
-	if has("windows")
+	if has('windows')
 		set   splitbelow
 	endif
-	if has("vertsplit")
+	if has('vertsplit')
 		set   splitright
 	endif
-	if has("statusline")
+	if has('statusline')
 		set   statusline=%n\ %f%(\ %M%)\ [%{&ff}]%r%y%#warningmsg#%{&paste?'[paste]':''}%*%=%<%1.30{getcwd()}\ (%l/%L,%c)%4P
 	endif
-	if has("windows")
+	if has('windows')
 		set showtabline=2
 		set tabline=%!MyTabLine()
 	endif
@@ -206,7 +206,7 @@ endfor
 	else
 		set novisualbell
 	endif
-	if has("wildmenu")
+	if has('wildmenu')
 		set   wildmode=longest,list
 		set   wildignore+=*.aux,*.bbl,*.blg,*.eps,*.nav,*.pyc,*.snm,*.svg,*.toc
 	endif
@@ -230,45 +230,45 @@ endfor
 	set   tabstop=4
 	set   tags+=./.tags,.tags
 	set   whichwrap=b,s,<,>,h,l,[,]
-	if has("multi_byte")
+	if has('multi_byte')
 		set nobomb
 	endif
 	if exists('&breakindent')
 		set   breakindent
 		set   breakindentopt=shift:1
 	endif
-	if has("insert_expand")
+	if has('insert_expand')
 		set   completeopt=longest,menu
 	endif
-	if has("multi_byte")
+	if has('multi_byte')
 		set   encoding=utf-8
 	endif
-	if has("multi_byte")
+	if has('multi_byte')
 		set   fileencoding=utf-8
 	endif
-	if has("folding")
+	if has('folding')
 		set   foldclose=all
 		set nofoldenable
 		set   foldmethod=syntax
 		set   foldminlines=0
 	endif
-	if has("extra_search")
+	if has('extra_search')
 		set   hlsearch
 	endif
-	if has("insert_expand")
+	if has('insert_expand')
 		set noinfercase
 	endif
-	if has("extra_search")
+	if has('extra_search')
 		set   incsearch
 	endif
-	if has("syntax")
+	if has('syntax')
 		set   spell
 		set   spellcapcheck=
 	endif
 " }
 
 " highlighting and color {
-	if has("syntax")
+	if has('syntax')
 		syntax enable
 	endif
 	set background=dark
@@ -462,7 +462,7 @@ endfor
 	nnoremap           <leader>R     :tabnew ~/research/journal/2015.journal<cr>
 	nnoremap           <leader>T     :tabnew ~/Dropbox/personal/documents/tweets.csv<cr>
 	nnoremap           <leader>V     :tabnew ~/.nvim/nvimrc<cr>
-	nnoremap           <leader>O     eb"zye:!open $(find ~/Dropbox/research/library/ -name <C-r>=expand("<cword>")<cr>.pdf)<cr><cr>
+	nnoremap           <leader>O     eb"zye:!open $(find ~/Dropbox/research/library/ -name <C-r>=expand('<cword>')<cr>.pdf)<cr><cr>
 	nnoremap           <leader>!     :call StartTerminal()<cr>
 	" toggle settings with double leader
 	nnoremap           <leader><leader>n     :set number!<cr>:set number?<cr>
@@ -476,7 +476,7 @@ endfor
 	nnoremap  <silent> <leader>;     :lcd %:p:h<cr>
 	nnoremap           <leader>]     <C-w><C-]><C-w>T
 	" custom functions
-	nnoremap  <silent> <leader>.     :exe "set foldenable foldlevel=".foldlevel('.')<cr>
+	nnoremap  <silent> <leader>.     :exe 'set foldenable foldlevel='.foldlevel('.')<cr>
 " }
 
 " autocommands {
@@ -487,7 +487,7 @@ endfor
 	" keep windows equal in size
 	autocmd     VimResized          *       normal <c-w>=
 	" restore cursor position
-	autocmd     BufReadPost         *       if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
+	autocmd     BufReadPost         *       if line("'\"") > 1 && line("'\"") <= line('$') | exe 'normal! g`"' | endif
 	" disable audio bell in MacVim
 	autocmd     GUIEnter            *              set visualbell t_vb=
 	" automatically leave insert mode after 'updatetime' milliseconds, which is 7.5 seconds in insert mode
@@ -504,12 +504,12 @@ endfor
 	" automatically open and close the quickfix window
 	augroup quick_fix
 		autocmd     QuickFixCmdPost     l*grep* lwindow
-		autocmd     WinEnter            *       if winnr('$') == 1 && getbufvar(winbufnr(winnr()), "&buftype") == "quickfix" | q | endif
+		autocmd     WinEnter            *       if winnr('$') == 1 && getbufvar(winbufnr(winnr()), '&buftype') == 'quickfix' | q | endif
 	augroup END
 	" bound scope of search to the original window
 	augroup last_search
 		autocmd WinLeave            *       let w:search_on = &hlsearch | let w:last_search = @/
-		autocmd WinEnter            *       if exists("w:search_on") && w:search_on | let @/ = w:last_search | else | set nohlsearch | endif
+		autocmd WinEnter            *       if exists('w:search_on') && w:search_on | let @/ = w:last_search | else | set nohlsearch | endif
 	augroup END
 	" disable spellcheck in virtual terminal
 	if has('nvim')
@@ -517,7 +517,7 @@ endfor
 			autocmd TermOpen            *       setlocal nospell
 			autocmd TermOpen            term://*       if g:colors_name != 'default' | let g:nonterm_colorscheme = g:colors_name | colorscheme default | endif
 			autocmd BufEnter            term://*       if g:colors_name != 'default' | let g:nonterm_colorscheme = g:colors_name | colorscheme default | endif
-			autocmd BufLeave            term://*       if exists("g:nonterm_colorscheme") && g:nonterm_colorscheme != 'default' | execute "colorscheme " . g:nonterm_colorscheme | endif
+			autocmd BufLeave            term://*       if exists('g:nonterm_colorscheme') && g:nonterm_colorscheme != 'default' | execute 'colorscheme '.g:nonterm_colorscheme | endif
 		augroup END
 	endif
 
@@ -529,7 +529,7 @@ endfor
 " commands {
 	function! s:TagnewCommand(args)
 		tabnew
-		execute ":tag " . a:args
+		execute ':tag '.a:args
 	endfunction
 	command! -nargs=1 Tagnew :call s:TagnewCommand(<q-args>)
 
@@ -572,7 +572,7 @@ endfor
 
 " protect large files from sourcing and other overhead.
 " files become read only
-if !exists("g:my_auto_commands_loaded")
+if !exists('g:my_auto_commands_loaded')
 	let g:my_auto_commands_loaded = 1
 	" Large files are > 10M
 	" Set options:
@@ -582,6 +582,6 @@ if !exists("g:my_auto_commands_loaded")
 	" undolevels=-1 (no undo possible)
 	let g:LargeFile = 1024 * 1024 * 10
 	augroup LargeFile
-		autocmd BufReadPre * let f=expand("<afile>") | if getfsize(f) > g:LargeFile | set eventignore+=FileType | setlocal noswapfile bufhidden=unload undolevels=-1 | else | set eventignore-=FileType | endif
+		autocmd BufReadPre * let f=expand('<afile>') | if getfsize(f) > g:LargeFile | set eventignore+=FileType | setlocal noswapfile bufhidden=unload undolevels=-1 | else | set eventignore-=FileType | endif
 	augroup END
 endif

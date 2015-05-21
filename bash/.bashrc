@@ -116,3 +116,9 @@ stty stop '' -ixoff
 # make C-w stop at slashes
 stty werase undef
 bind '"\C-w": unix-filename-rubout'
+
+# fix terminfo
+terminfo="$(mktemp /tmp/$TERM-terminfo.XXXXXX)"
+infocmp $TERM | sed 's/kbs=^[hH]/kbs=\\177/' > "$terminfo"
+tic "$terminfo"
+rm -f "$terminfo"

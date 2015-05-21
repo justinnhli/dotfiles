@@ -16,7 +16,6 @@ prompt_command_fn() {
 	if [ -e ~/Dropbox/personal/documents/shell_history ]; then
 		echo "$(date -u +%Y-%m-%dT%H:%M:%SZ)	$(hostname)	$PWD	$(history 1 | sed 's/^ *[0-9 :-]* //; s/ *$//;')" >> ~/Dropbox/personal/documents/shell_history
 	fi
-	echo -ne "\033]0;${PWD/$HOME/~}\007"
 }
 PS1='[\u@\h \W]\$ '
 PROMPT_COMMAND=prompt_command_fn

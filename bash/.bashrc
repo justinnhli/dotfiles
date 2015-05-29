@@ -39,16 +39,15 @@ export PYTHONPATH="$HOME/git:$PYTHONPATH"
 
 # environment
 if which nvim >/dev/null 2>&1; then
-	export COLORTERM='qterminal'
-	export VIM="$HOME/neovim/runtime"
+	if [ -d "$HOME/neovim/runtime" ]; then
+		export VIM="$HOME/neovim/runtime"
+	fi
 	export EDITOR='nvim'
-	export VISUAL=$EDITOR
-	export MANPAGER="/bin/sh -c \"col -b | $EDITOR -c 'set ft=man ts=8 nomod nolist nonu noma' -\""
 else
 	export EDITOR=vim
-	export VISUAL=$EDITOR
-	export MANPAGER="/bin/sh -c \"col -b | $EDITOR -c 'set ft=man ts=8 nomod nolist nonu noma' -\""
 fi
+export VISUAL=$EDITOR
+export MANPAGER="/bin/sh -c \"col -b | $EDITOR -c 'set ft=man ts=8 nomod nolist nonu noma' -\""
 export HISTSIZE=10000
 export HISTCONTROL=ignoredups
 export PYTHONIOENCODING="utf-8"

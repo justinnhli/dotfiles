@@ -38,7 +38,7 @@ done
 export PYTHONPATH="$HOME/git:$PYTHONPATH"
 
 # environment
-if [ -x "$(which nvim)" ]; then
+if which nvim >/dev/null 2>&1; then
 	export COLORTERM='qterminal'
 	export VIM="$HOME/neovim/runtime"
 	export EDITOR='nvim'
@@ -83,7 +83,7 @@ alias flake8='flake8 --ignore=E501'
 alias pylint='pylint --indent-string="    " --disable=invalid-name,missing-docstring,old-style-class,star-args,line-too-long,bad-builtin,bad-continuation --reports=n'
 alias soar='~/Soar/out/testcli'
 alias valgrind='valgrind --dsymutil=yes --leak-check=yes --track-origins=yes'
-if [ -x "$(which python3)" ]; then
+if which python3 >/dev/null 2>&1; then
 	alias scons="scons --python=$(which python3)"
 fi
 alias vi="$VISUAL"

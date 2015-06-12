@@ -108,6 +108,10 @@ shopt -s cdspell
 shopt -s checkwinsize
 # save multi-line commands in the same history entry
 shopt -s cmdhist
+# allow '**' to match subdirectories
+if [ "$(( echo $BASH_VERSION && echo 4 ) | sort -n | tail -n 1 )" != "4" ]; then
+	shopt -s globstar
+fi
 
 # disable output stop keyboard shortcut (so <C-s> can be mapped in vim)
 stty stop '' -ixoff

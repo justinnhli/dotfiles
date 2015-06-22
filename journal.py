@@ -21,7 +21,7 @@ RANGE_REGEX = re.compile("^([0-9]{4}(-[0-9]{2}(-[0-9]{2})?)?)?:?([0-9]{4}(-[0-9]
 REF_REGEX = re.compile("([0-9]{4}-[0-9]{2}-[0-9]{2})")
 YEAR_LENGTH = 4
 MONTH_LENGTH = 7
-DATE_LENGTH = 10
+DAY_LENGTH = 10
 
 LOG_FILE = ".log"
 METADATA_FILE = ".metadata"
@@ -53,7 +53,7 @@ group.add_argument("-r",           dest="reverse",     action="store_true",     
 group = arg_parser.add_argument_group("OPERATION-SPECIFIC OPTIONS")
 group.add_argument("--no-log",     dest="log",         action="store_false",                                    help="[S] do not log search")
 group.add_argument("--no-headers", dest="headers",     action="store_false",                                    help="[C] do not print headers")
-group.add_argument("--unit",       dest="unit",        action="store",       choices=("year", "month", "date"), help="[C] set tabulation unit")
+group.add_argument("--unit",       dest="unit",        action="store",       choices=("year", "month", "day"), help="[C] set tabulation unit")
 args = arg_parser.parse_args()
 
 is_maintenance_op = args.op in ("archive", "update", "verify")

@@ -19,9 +19,12 @@ FILE_EXTENSION = ".journal"
 DATE_REGEX = re.compile("([0-9]{4}-[0-9]{2}-[0-9]{2})(, (Mon|Tues|Wednes|Thurs|Fri|Satur|Sun)day)?")
 RANGE_REGEX = re.compile("^([0-9]{4}(-[0-9]{2}(-[0-9]{2})?)?)?:?([0-9]{4}(-[0-9]{2}(-[0-9]{2})?)?)?$")
 REF_REGEX = re.compile("([0-9]{4}-[0-9]{2}-[0-9]{2})")
-YEAR_LENGTH = 4
-MONTH_LENGTH = 7
-DAY_LENGTH = 10
+STRING_LENGTHS = {
+    "year":4,
+    "month":7,
+    "day":10,
+}
+DATE_LENGTH = 10
 
 LOG_FILE = ".log"
 METADATA_FILE = ".metadata"
@@ -214,7 +217,7 @@ if args.op == "count":
         ("MEAN",  (lambda u, p, ds, ls: round(mean(ls)))),
         ("STDEV", (lambda u, p, ds, ls: round(stdev(ls)) if len(ls) > 1 else 0)),
     ))
-    unit_length = locals()[args.unit.upper() + "_LENGTH"]
+    unit_length = STRING_LENGTHS[args.unit]
     length_map = dict((date, len(entries[date].split())) for date in selected)
     table = []
     for unit, dates in chain(groupby(selected, (lambda k: k[:unit_length])), (("all", selected),)):

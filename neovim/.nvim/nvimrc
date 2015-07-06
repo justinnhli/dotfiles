@@ -361,6 +361,16 @@ endif
 		nnoremap  <leader>to  :tabonly<cr>
 		nnoremap  <leader>tp  :call <SID>CloseRightTabs()<cr>
 		nnoremap  <leader>tc  :tabclose<cr>
+		nnoremap  <leader>t0  :tabmove 0<cr>
+		nnoremap  <leader>t1  :tabmove 1<cr>
+		nnoremap  <leader>t2  :tabmove 2<cr>
+		nnoremap  <leader>t3  :tabmove 3<cr>
+		nnoremap  <leader>t4  :tabmove 4<cr>
+		nnoremap  <leader>t5  :tabmove 5<cr>
+		nnoremap  <leader>t6  :tabmove 6<cr>
+		nnoremap  <leader>t7  :tabmove 7<cr>
+		nnoremap  <leader>t8  :tabmove 8<cr>
+		nnoremap  <leader>t9  :tabmove 9<cr>
 
 		" <leader>w mappings for opening and closing windows
 		nnoremap  <leader>wh   :leftabove vsplit 
@@ -529,7 +539,7 @@ endif
 	" disable spellcheck in virtual terminal
 	if has('nvim')
 		augroup terminal
-			autocmd TermOpen            *       setlocal nospell
+			autocmd TermOpen            *              setlocal nospell
 			autocmd TermOpen            term://*       if g:colors_name != 'default' | let g:nonterm_colorscheme = g:colors_name | colorscheme default | endif
 			autocmd BufEnter            term://*       if g:colors_name != 'default' | let g:nonterm_colorscheme = g:colors_name | colorscheme default | endif
 			autocmd BufLeave            term://*       if exists('g:nonterm_colorscheme') && g:nonterm_colorscheme != 'default' | execute 'colorscheme '.g:nonterm_colorscheme | endif

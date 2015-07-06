@@ -121,6 +121,7 @@ stty werase undef
 bind '"\C-w": unix-filename-rubout'
 
 # fix terminfo
+export TERM=xterm-color
 terminfo="$(mktemp /tmp/$TERM-terminfo.XXXXXX)"
 infocmp $TERM | sed 's/kbs=^[hH]/kbs=\\177/' > "$terminfo"
 tic "$terminfo"

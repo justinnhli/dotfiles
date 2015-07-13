@@ -21,7 +21,7 @@ PS1='[\u@\h \W]\$ '
 PROMPT_COMMAND=prompt_command_fn
 
 # paths
-export PATH="$HOME/bin:$HOME/neovim/build/bin:$(find /usr/local/Cellar/python3 -maxdepth 2 -name bin):/usr/local/heroku/bin:/opt/pdflabs/pdftk/bin:$HOME/.cabal/bin:$PATH"
+export PATH="$HOME/bin:$HOME/neovim/build/bin:/usr/local/heroku/bin:/opt/pdflabs/pdftk/bin:$HOME/.cabal/bin:$PATH"
 export PYTHONPATH="$HOME/bin"
 for master_dir in "$HOME/projects/" "$HOME/git/"; do
 	if [ -d "$master_dir" ]; then

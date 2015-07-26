@@ -56,6 +56,11 @@
                 <command>JDownloader</command>
             </action>
         </item>
+        <item label="Skype">
+            <action name="Execute">
+                <command>skype</command>
+            </action>
+        </item>
         <item label="Thunderbird">
             <action name="Execute">
                 <command>thunderbird</command>
@@ -66,7 +71,7 @@
     <menu id="apps-multimedia-menu" label="Multimedia">
         <item label="AlsaMixer">
             <action name="Execute">
-                <command>xfce4-terminal -e alsamixer</command>
+                <command>qterminal -e alsamixer</command>
             </action>
         </item>
         <item label="OpenShot">

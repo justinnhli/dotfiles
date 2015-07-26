@@ -13,12 +13,12 @@ update_dot_files() {
 # prompt
 prompt_command_fn() {
 	# right before prompting for the next command, save the previous command in a file.
-	if [ -e ~/Dropbox/personal/documents/shell_history ]; then
-		echo "$(date -u +%Y-%m-%dT%H:%M:%SZ)	$(hostname)	$PWD	$(history 1 | sed 's/^ *[0-9 :-]* //; s/ *$//;')" >> ~/Dropbox/personal/documents/shell_history
-	fi
+	echo "$(date -u +%Y-%m-%dT%H:%M:%SZ)	$(hostname)	$PWD	$(history 1 | sed 's/^ *[0-9 -]* //; s/ *$//;')" >> ~/Dropbox/personal/documents/shell_history
 }
 PS1='[\u@\h \W]\$ '
-PROMPT_COMMAND=prompt_command_fn
+if [ -e ~/Dropbox/personal/documents/shell_history ]; then
+	PROMPT_COMMAND=prompt_command_fn
+fi
 
 # paths
 export PATH="$HOME/bin:$HOME/neovim/build/bin:/usr/local/heroku/bin:/opt/pdflabs/pdftk/bin:$HOME/.cabal/bin:$PATH"

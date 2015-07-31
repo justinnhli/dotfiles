@@ -294,7 +294,7 @@ endif
 
 	" disable the default leader
 	nnoremap \ <nop>
-	
+
 	" text movement {
 		" remove all uses of arrow keys
 		noremap   <up>       <nop>
@@ -353,14 +353,14 @@ endif
 		vnoremap <silent> ]/ <esc>:call <SID>IndentTextObject(1, 0, 1)<cr><esc>gv
 	" }
 
-	" window/tab management {
-		" <leader>t mappings for opening and closing tabs
+	" tab management {
 		nnoremap  <leader>tn  :tabnew 
-		nnoremap  <leader>th  :tabmove -1<cr>
-		nnoremap  <leader>tl  :tabmove +1<cr>
+		nnoremap  <leader>te  :Texplore<cr>
 		nnoremap  <leader>to  :tabonly<cr>
 		nnoremap  <leader>tp  :call <SID>CloseRightTabs()<cr>
 		nnoremap  <leader>tc  :tabclose<cr>
+		nnoremap  <leader>th  :tabmove -1<cr>
+		nnoremap  <leader>tl  :tabmove +1<cr>
 		nnoremap  <leader>t0  :tabmove 0<cr>
 		nnoremap  <leader>t1  :tabmove 1<cr>
 		nnoremap  <leader>t2  :tabmove 2<cr>
@@ -372,24 +372,26 @@ endif
 		nnoremap  <leader>t8  :tabmove 8<cr>
 		nnoremap  <leader>t9  :tabmove 9<cr>
 
-		" <leader>w mappings for opening and closing windows
-		nnoremap  <leader>wh   :leftabove vsplit 
-		nnoremap  <leader>wj   :rightbelow split 
-		nnoremap  <leader>wk   :leftabove split 
-		nnoremap  <leader>wl   :rightbelow vsplit 
+		" Shift+HL for moving between tabs
+		noremap  <S-h>  :tabprev<cr>
+		noremap  <S-l>  :tabnext<cr>
+	" }
+
+	" window management {
 		nnoremap  <leader>wnh  :leftabove vnew<cr>
 		nnoremap  <leader>wnj  :rightbelow new<cr>
 		nnoremap  <leader>wnk  :leftabove new<cr>
 		nnoremap  <leader>wnl  :rightbelow vnew<cr>
+		nnoremap  <leader>wh   :leftabove vsplit 
+		nnoremap  <leader>wj   :rightbelow split 
+		nnoremap  <leader>wk   :leftabove split 
+		nnoremap  <leader>wl   :rightbelow vsplit 
+		nnoremap  <leader>weh  :Vexplore<cr>
+		nnoremap  <leader>wej  :Hexplore<cr>
+		nnoremap  <leader>wek  :Hexplore!<cr>
+		nnoremap  <leader>wel  :Vexplore!<cr>
 		nnoremap  <leader>wo   :only<cr>
 		nnoremap  <leader>wc   :close<cr>
-
-		" mappings for the current buffer
-		nnoremap  <leader>e    :e 
-
-		" Shift+HL for moving between tabs
-		noremap  <S-h>  :tabprev<cr>
-		noremap  <S-l>  :tabnext<cr>
 
 		" Ctrl+HJKL for moving between windows
 		if !exists('g:loaded_tmux_navigator')
@@ -408,6 +410,10 @@ endif
 			nnoremap       <leader>wtl   :call StartTerminalAfter('rightbelow vnew')<cr>
 			nnoremap       <leader>tt    :call StartTerminalAfter('tabnew')<cr>
 		endif
+	" }
+
+	" buffer management {
+		nnoremap  <leader>e    :e 
 	" }
 
 	" disable annoying features {

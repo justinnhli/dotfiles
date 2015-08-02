@@ -103,6 +103,28 @@ if [ "$NVIM_LISTEN_ADDRESS" != "" ]; then
 	alias :="$(which nvimcmd)"
 fi
 
+# completion
+_generic_completion()
+{
+	# FIXME only do this if we're looking for options
+	if [ "${COMP_WORDS[COMP_CWORD]:0:1}" == "-" ]; then
+		# build up the context
+		local context="${COMP_WORDS[0]}"
+		if [ $COMP_CWORD -gt 0 ]; then
+			for i in $(seq $COMP_CWORD); do
+			context="$context ${COMP_WORDS[i]}"
+			done
+		fi
+		# call script
+		COMPREPLY=( $(~/.bash_completion.d/shellscrape.py "$context") )
+	fi
+}
+for program in $(~/.bash_completion.d/shellscrape.py); do
+	if type "$program" >/dev/null 2>&1; then
+		complete -o default -F _generic_completion "$program"
+	fi
+done
+
 # automatically correct minor spelling errors with `cd`
 shopt -s cdspell
 # redraw on window size change

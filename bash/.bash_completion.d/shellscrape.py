@@ -1,5 +1,25 @@
 #!/usr/bin/env python3
 
+"""
+anything that begins with - can be assumed to be an option (except --)
+for each option, either:
+* it takes no arguments
+* it takes arguments from a fixed set of options
+* it takes arguments from filenames
+for now, assume program is only context
+can then build a per program dictionary of options, then try to classify them
+* first, figure out whether arguments are needed
+* short options that are followed by other short options don't have arguments
+* ditto long options that are followed by other long options
+* long options with = need arguments
+* short options with arguments, followed by other short options, also need arguments
+* for options with arguments, use 80/20 analysis (do 20% of the options account for 80% of the usage?)
+
+other difficulties:
+* non-dash options (eg. git)
+* single-dash long-options (eg. java)
+"""
+
 import re
 from argparse import ArgumentParser
 from collections import Counter, defaultdict
@@ -12,6 +32,8 @@ SHELL_HISTORY = realpath(expanduser("~/Dropbox/personal/documents/shell_history"
 KEYWORDS = ("if", "while", "for", "then", "do")
 
 LONG_SHORT_OPTIONS = ("find", "java")
+
+USAGE_THRESHOLD = 10
 
 def is_weird(command):
     weird = False
@@ -69,13 +91,14 @@ def simplify_command(command):
     command = re.sub("( -[^=]+)=([^ ]*)", "\\g<1> \\g<2>", command)
     return command
 
-def operation_analyze():
+def operation_analyze(program):
     history = read_history()
     # program -> (option -> values)
     option_values = defaultdict((lambda: defaultdict(Counter)))
     for command in history:
-        program = command.split()[0]
-        if program in LONG_SHORT_OPTIONS:
+        if command.split()[0] in LONG_SHORT_OPTIONS:
+            continue
+        if command.split()[0] != program:
             continue
         command = simplify_command(command)
         previous_option = None
@@ -103,30 +126,26 @@ def operation_analyze():
     option_types = defaultdict(dict)
     for program, options in sorted(option_values.items()):
         for option, counter in sorted(options.items()):
+            if sum(counter.values()) < USAGE_THRESHOLD:
+                continue
             if None in counter:
                 option_types[program][option] = "none"
             else:
                 option_types[program][option] = "argument"
-    for program, options in sorted(option_types.items()):
-        print(program)
-        for option, argument_type in sorted(options.items()):
-            print("    {}: {}".format(option, argument_type))
-
+    return option_types
 
 def operation_list():
     history = read_history()
     print("\n".join(sorted(set(command.split()[0] for command in history))))
 
 def operation_complete(context):
-    history = read_history()
-    # find a line that begins with context
-    results = set(command for command in history if command.startswith(context))
-    # remove context from results, leaving the last word
-    context_length = max(context.rfind(" "), context.rfind("\t"))
-    results = set(command[context_length+1:] for command in results)
-    # remove all subsequent words from results
-    results = set(re.sub("[ \t].*", "", command) for command in results)
-    print("\n".join(sorted(results)))
+    program = context.split()[0]
+    last_word = context.split()[-1]
+    suggestions = set()
+    for option, argument_type in operation_analyze(program)[program].items():
+        if option.startswith(last_word):
+            suggestions.add(option)
+    print("\n".join(sorted(suggestions)))
 
 def main():
     arg_parser = ArgumentParser()
@@ -139,4 +158,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    #operation_analyze()

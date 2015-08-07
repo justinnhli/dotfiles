@@ -22,18 +22,18 @@ other difficulties:
 
 import re
 from argparse import ArgumentParser
+from ast import literal_eval
 from collections import Counter, defaultdict
-from os import getcwd as pwd
-from os.path import expanduser, realpath
-from sys import argv
+from os.path import exists as file_exists, expanduser, realpath
 
 SHELL_HISTORY = realpath(expanduser("~/Dropbox/personal/logs/shell_history"))
+COMPLETION_FILE = realpath(expanduser("~/.bash_completion.d/completions"))
 
 KEYWORDS = ("if", "while", "for", "then", "do")
 
 LONG_SHORT_OPTIONS = ("find", "java")
 
-USAGE_THRESHOLD = 10
+USAGE_THRESHOLD = 5
 
 def is_weird(command):
     weird = False
@@ -54,19 +54,20 @@ def is_weird(command):
 
 def read_history():
     history = set()
-    with open(SHELL_HISTORY) as fd:
-        for entry in fd.readlines():
-            # only take COMMAND from 'DATE HOST PWD COMMAND'
-            entry = entry.strip().split("\t", maxsplit=3)[-1].strip()
-            for line in entry.split(";"):
-                for conjunction in line.split("|"):
-                    for command in conjunction.split("&&"):
-                        if not is_weird(command) and len(command.split()) > 0:
-                            history.add(command.strip())
-    # filter out commands that begin with shell keywords
-    history = set(command for command in history if command.split()[0] not in KEYWORDS)
-    # filter out commands that begin with non-alphabet characters
-    history = set(command for command in history if re.match("[a-z]", command))
+    if file_exists(SHELL_HISTORY):
+        with open(SHELL_HISTORY) as fd:
+            for entry in fd.readlines():
+                # only take COMMAND from 'DATE HOST PWD COMMAND'
+                entry = entry.strip().split("\t", maxsplit=3)[-1].strip()
+                for line in entry.split(";"):
+                    for conjunction in line.split("|"):
+                        for command in conjunction.split("&&"):
+                            if not is_weird(command) and len(command.split()) > 0:
+                                history.add(command.strip())
+        # filter out commands that begin with shell keywords
+        history = set(command for command in history if command.split()[0] not in KEYWORDS)
+        # filter out commands that begin with non-alphabet characters
+        history = set(command for command in history if re.match("[a-z]", command))
     return history
 
 def simplify_command(command):
@@ -91,8 +92,7 @@ def simplify_command(command):
     command = re.sub("( -[^=]+)=([^ ]*)", "\\g<1> \\g<2>", command)
     return command
 
-def operation_analyze(program):
-    history = read_history()
+def operation_analyze(program, history):
     # program -> (option -> values)
     option_values = defaultdict((lambda: defaultdict(Counter)))
     for command in history:
@@ -134,24 +134,42 @@ def operation_analyze(program):
                 option_types[program][option] = "argument"
     return option_types
 
-def operation_list():
+def read_completions():
+    completions = {}
+    if file_exists(COMPLETION_FILE):
+        with open(COMPLETION_FILE) as fd:
+            completions = literal_eval("{" + fd.read() + "}")
+    return completions
+
+def operation_update():
     history = read_history()
-    print("\n".join(sorted(set(command.split()[0] for command in history))))
+    completions = {}
+    for program in sorted(set(command.split()[0] for command in history)):
+        suggestions = set()
+        for option in operation_analyze(program, history)[program].keys():
+            if option.startswith("-"):
+                suggestions.add(option)
+        if suggestions:
+            completions[program] = sorted(suggestions)
+    with open(COMPLETION_FILE, "w") as fd:
+        fd.write("\n".join("\"{}\": {},".format(program, options) for program, options in sorted(completions.items())))
+
+def operation_list():
+    print("\n".join(sorted(read_completions().keys())))
 
 def operation_complete(context):
     program = context.split()[0]
     last_word = context.split()[-1]
-    suggestions = set()
-    for option, argument_type in operation_analyze(program)[program].items():
-        if option.startswith(last_word):
-            suggestions.add(option)
-    print("\n".join(sorted(suggestions)))
+    print("\n".join(completion for completion in read_completions()[program] if completion.startswith(last_word)))
 
 def main():
     arg_parser = ArgumentParser()
     arg_parser.add_argument("context", nargs="?")
+    arg_parser.add_argument("--update", action="store_true", default=False)
     args = arg_parser.parse_args()
-    if args.context is None:
+    if args.update:
+        operation_update()
+    elif args.context is None:
         operation_list()
     elif args.context[-1] != " ":
         operation_complete(args.context)

@@ -12,6 +12,7 @@ update_dot_files() {
 
 # bashrc convenience variables
 SHELL_HISTORY_FILE="~/Dropbox/personal/logs/shell_history"
+SHELLSCRAPE="~/.bash_completion.d/shellscrape.py"
 
 # prompt
 prompt_command_fn() {
@@ -122,11 +123,14 @@ _generic_completion()
 		COMPREPLY=( $(~/.bash_completion.d/shellscrape.py "$context") )
 	fi
 }
-for program in $(~/.bash_completion.d/shellscrape.py); do
-	if type "$program" >/dev/null 2>&1; then
-		complete -o default -F _generic_completion "$program"
-	fi
-done
+
+if [ -f ~/.bash_completion.d/shellscrape.py ]; then
+	for program in $(~/.bash_completion.d/shellscrape.py); do
+		if type "$program" >/dev/null 2>&1; then
+			complete -o default -F _generic_completion "$program"
+		fi
+	done
+fi
 
 # automatically correct minor spelling errors with `cd`
 shopt -s cdspell

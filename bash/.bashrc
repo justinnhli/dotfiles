@@ -10,13 +10,16 @@ update_dot_files() {
 	chmod 744 "$HOME/bin/sshh"
 }
 
+# bashrc convenience variables
+SHELL_HISTORY_FILE="~/Dropbox/personal/logs/shell_history"
+
 # prompt
 prompt_command_fn() {
 	# right before prompting for the next command, save the previous command in a file.
-	echo "$(date -u +%Y-%m-%dT%H:%M:%SZ)	$(hostname)	$PWD	$(history 1 | sed 's/^ *[0-9 -]* //; s/ *$//;')" >> ~/Dropbox/personal/documents/shell_history
+	echo "$(date -u +%Y-%m-%dT%H:%M:%SZ)	$(hostname)	$PWD	$(history 1 | sed 's/^ *[0-9 -]* //; s/ *$//;')" >> "$SHELL_HISTORY_FILE"
 }
 PS1='[\u@\h \W]\$ '
-if [ -e ~/Dropbox/personal/documents/shell_history ]; then
+if [ -e "$SHELL_HISTORY_FILE" ]; then
 	PROMPT_COMMAND=prompt_command_fn
 fi
 

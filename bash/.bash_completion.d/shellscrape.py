@@ -27,7 +27,7 @@ from os import getcwd as pwd
 from os.path import expanduser, realpath
 from sys import argv
 
-SHELL_HISTORY = realpath(expanduser("~/Dropbox/personal/documents/shell_history"))
+SHELL_HISTORY = realpath(expanduser("~/Dropbox/personal/logs/shell_history"))
 
 KEYWORDS = ("if", "while", "for", "then", "do")
 

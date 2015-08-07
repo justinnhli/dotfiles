@@ -12,15 +12,14 @@ update_dot_files() {
 
 # bashrc convenience variables
 SHELL_HISTORY_FILE="~/Dropbox/personal/logs/shell_history"
-SHELLSCRAPE="~/.bash_completion.d/shellscrape.py"
 
 # prompt
 prompt_command_fn() {
 	# right before prompting for the next command, save the previous command in a file.
-	echo "$(date -u +%Y-%m-%dT%H:%M:%SZ)	$(hostname)	$PWD	$(history 1 | sed 's/^ *[0-9 -]* //; s/ *$//;')" >> "$SHELL_HISTORY_FILE"
+	echo "$(date -u +%Y-%m-%dT%H:%M:%SZ)	$(hostname)	$PWD	$(history 1 | sed 's/^ *[0-9 -]* //; s/ *$//;')" >> ~/Dropbox/personal/logs/shell_history
 }
 PS1='[\u@\h \W]\$ '
-if [ -e "$SHELL_HISTORY_FILE" ]; then
+if [ -e ~/Dropbox/personal/logs/shell_history ]; then
 	PROMPT_COMMAND=prompt_command_fn
 fi
 

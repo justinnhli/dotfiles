@@ -488,9 +488,10 @@ endif
 	nnoremap           <leader>B     :tabnew ~/.bashrc<cr>
 	nnoremap           <leader>C     :tabnew ~/Dropbox/personal/contacts/contacts-*<cr>
 	nnoremap           <leader>J     :tabnew ~/journal/notes.journal<cr>
+	nnoremap           <leader>H     :tabnew ~/Dropbox/personal/logs/shell_history<cr>
 	nnoremap           <leader>L     :tabnew ~/research/journal/library.bib<cr>
 	nnoremap           <leader>R     :tabnew ~/research/journal/2015.journal<cr>
-	nnoremap           <leader>T     :tabnew ~/Dropbox/personal/documents/tweets.csv<cr>
+	nnoremap           <leader>T     :tabnew ~/Dropbox/personal/logs/ifttt/tweets.txt<cr>
 	nnoremap           <leader>V     :tabnew ~/.nvim/nvimrc<cr>
 	nnoremap           <leader>O     eb"zye:!open $(find ~/Dropbox/research/library/ -name <C-r>=expand('<cword>')<cr>.pdf)<cr><cr>
 	" toggle settings with double leader

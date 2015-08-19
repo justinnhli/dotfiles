@@ -1,0 +1,15 @@
+#!/bin/sh
+
+echo "digraph {"
+brew list | while read src; do
+	echo "	\"$src\""
+done
+brew leaves | while read src; do
+	echo "	\"$src\" [style=filled, shape=box, fillcolor=\"#73D216\"]"
+done
+brew list | while read src; do
+	brew uses --installed "$src" | while read dest; do
+		echo "	\"$src\" -> \"$dest\""
+	done
+done
+echo "}"

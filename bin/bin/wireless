@@ -1,0 +1,7 @@
+#!/bin/bash
+
+ip link set wlp2s0b1 down
+iwconfig wlp2s0b1 channel auto
+ip link set wlp2s0b1 up
+wpa_supplicant -Bi wlp2s0b1 -c /etc/wpa_supplicant/wpa_supplicant.conf
+dhcpcd wlp2s0b1 --debug --debug

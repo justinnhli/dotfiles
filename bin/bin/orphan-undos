@@ -1,0 +1,30 @@
+#!/bin/bash
+
+orphan_with_suffix() {
+	suffix="$2"
+	find "$1" -name ".*$suffix" | grep -v '.dropbox.cache' | while read f; do
+		basename="${f##*/}"
+		dirname="${f%/*}"
+		original="$dirname/$(echo "$basename" | sed "s/^\.\(.*\)$suffix\$/\1/")"
+		# TODO also delete if original file is newer than .un~
+		if [ ! -f "$original" ] || [ "$(find "$f" -mtime +10)" != "" ]; then
+			if rm -f "$f"; then
+				echo deleted "$f"
+			else
+				echo '!!!' Could not delete "$f"
+			fi
+		fi
+	done
+}
+
+if [ $# -eq 0 ]; then
+	for suffix in '.un~' '.swp'; do
+		orphan_with_suffix "." "$suffix"
+	done
+else
+	for dir in "$@"; do
+		for suffix in '.un~' '.swp'; do
+			orphan_with_suffix "." "$suffix"
+		done
+	done
+fi

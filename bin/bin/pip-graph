@@ -1,0 +1,19 @@
+#!/bin/sh
+
+if [ "$#" -eq 0 ]; then
+	python=python3
+	echo "No python specified, defaulting to python3" 1>&2
+else
+	python="$1"
+fi
+
+echo "digraph {"
+$python -m pip list | sed 's/ (.*//' | while read package; do
+	package="$(echo "$package" | tr '[A-Z]' '[a-z]')"
+	echo "	\"$package\""
+	for dep in $($python -m pip show "$package" | grep Requires: | sed 's/^Requires: //'); do
+		dep="$(echo "$dep" | sed 's/,//g' | tr '[A-Z]' '[a-z]')"
+		echo "	\"$dep\" -> \"$package\""
+	done;
+done
+echo "}"

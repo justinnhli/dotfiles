@@ -1,0 +1,46 @@
+#!/usr/bin/env python
+
+from os import environ as env
+import re
+import sys
+
+sys.path.append(env["HOME"] + "/projects/pycmdtools")
+from pycmdtools import read_all_inputs
+
+def hangout(text):
+    time = ""
+    speaker = ""
+    for line in text.split("\n"):
+        line = line.strip()
+        if line:
+            if re.search("[0-9]+:[0-9]+ [AP]M$", line):
+                speaker, time = line.split(" - ")
+            else:
+                print("({}) {}: {}".format(time, speaker, line))
+
+gchat = hangout
+
+def twitter(text):
+    keywords = set(["Reply", "Retweet", "Favorite"])
+    lines = [line.strip() for line in text.splitlines() if line]
+    while lines[0] in keywords:
+        lines = lines[1:]
+    for prev_line, line in zip(lines[:-1], lines[1:]):
+        if line in keywords and prev_line not in keywords:
+            print(prev_line)
+
+def sms(text):
+    for line in text.split("\n"):
+        print(re.sub("(.*) ([0-9]{1,2}:[0-9]{2} [AP]M)$", r"(\2) \1", line.strip()))
+
+def main():
+    exceptions = ("main", "read_all_inputs")
+    formats = dict((k, v) for k, v in globals().items() if callable(v) and k not in exceptions)
+    if len(sys.argv) < 2 or sys.argv[1] not in formats:
+        print("Usage: chat-formatter {} FILE ...".format("|".join(sorted(formats.keys()))))
+        exit(1)
+    text = read_all_inputs(sys.argv[2:]).strip()
+    formats[sys.argv[1]](text)
+
+if __name__ == "__main__":
+    main()

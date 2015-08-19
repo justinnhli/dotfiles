@@ -1,0 +1,99 @@
+#!/bin/sh
+
+update_pip() {
+	PYTHON="$1"
+	if which "$PYTHON" >/dev/null 2>&1 && ($PYTHON -m pip list >/dev/null 2>&1); then
+		if [ "$(whoami)" = "root" ]; then
+			$PYTHON -m pip list --outdated | awk '{print $1}' | xargs "$PYTHON" -m pip install -U
+		else
+			echo "must be root to update pip for $PYTHON; run as root: "
+			echo "$PYTHON -m pip list --outdated | awk '{print \$1}' | xargs \"$PYTHON\" -m pip install -U"
+			outdated="$($PYTHON -m pip list --outdated | sed 's/^/	/')"
+			if [ outdated != "" ]; then
+				echo "$outdated"
+			fi
+		fi
+		echo
+	fi
+}
+
+if_exists_do() {
+	if [ -d "$2" ]; then
+		echo "$1"
+		pushd "$2" >/dev/null 2>&1
+		bash -c "$3"
+		popd >/dev/null 2>&1
+		echo
+	fi
+}
+
+if which brew >/dev/null 2>&1; then
+	brew update && brew upgrade --all && brew cleanup && brew linkapps
+	echo
+fi
+
+if which cabal >/dev/null 2>&1; then
+	cabal update
+	echo
+fi
+
+if which pacaur >/dev/null 2>&1; then
+	pacaur --domain aur4.archlinux.org -Syu
+	echo
+fi
+
+which python python2 python3 | while read python; do
+	if [ -L "$python" ]; then
+		if [ "$(uname)" = "Linux" ]; then
+			realpath "$python"
+		else
+			echo "$(dirname "$python")/$(readlink "$python")"
+		fi
+	else
+		echo "$python"
+	fi
+done | sort | uniq | while read python; do
+	update_pip "$python"
+done
+
+if [ -d ~/Dropbox ]; then
+	cd ~/Dropbox
+
+	# remove old vim undo files
+	echo "removing old vim undo files..."
+	orphan-undos | sed 's/^/	/'
+
+	# remove OS files
+	echo "removing OS files..."
+	find . -name 'Icon' | while read f; do
+		rm -f "$f" && echo "	deleted $f"
+	done
+	find . -name .DS_Store | while read f; do
+		rm -f "$f" && echo "	deleted $f"
+	done
+
+	# merge command line history
+	echo "merging command line history..."
+	filename="$(mktemp /tmp/histfix.XXXXXX)"
+	sort ~/Dropbox/personal/logs/shell_history* | uniq | sed 's/ \+$//' > "$filename"
+	mv -f "$filename" ~/Dropbox/personal/logs/shell_history
+	find ~/Dropbox/personal/logs/ -name 'shell_history *' | while read line; do
+		rm -f "$line"
+	done
+
+	# set directories to correct permissions
+	echo "correcting directory permissions..."
+	find . -type d -perm 777 | while read f; do
+		chmod 755 "$f" && echo "	fixed permissions of $f"
+	done
+
+	# find any conflicting files
+	echo "finding conflicted files..."
+	find . -name '*conflicted*' | grep -v '\.dropbox\.cache' | sed 's/^/found /; s/^/	/;'
+
+fi
+echo
+
+if_exists_do "updating Soar" ~/Soar "git pull"
+if_exists_do "updating ACT-R" ~/act-r "svn update"
+if_exists_do "updating git repos" ~/git "git-all pull"

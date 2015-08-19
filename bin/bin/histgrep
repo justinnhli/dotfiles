@@ -1,0 +1,3 @@
+#!/bin/bash
+
+grep "$@" ~/Dropbox/personal/documents/shell_history

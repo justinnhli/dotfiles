@@ -1,0 +1,35 @@
+#!/usr/bin/env python
+
+from __future__ import print_function
+
+import sys
+from os import environ
+from os.path import expanduser, realpath
+
+from neovim import attach
+from neovim.api.nvim import NvimError
+
+EDIT_COMMANDS = set(["tabnew", "e", "edit", "sp", "vsp", "split", "vsplit"])
+
+def print_and_exit(message):
+    print(message)
+    exit(1)
+
+def main():
+    if len(sys.argv) == 1:
+        print_and_exit("Usage: {} <command> [arguments]".format(sys.argv[0]))
+    addr = environ.get("NVIM_LISTEN_ADDRESS", None)
+    if not addr:
+        print_and_exit("$NVIM_LISTEN_ADDRESS not set; quitting")
+    nvim = attach("socket", path=addr)
+    command = sys.argv[1]
+    args = sys.argv[2:]
+    if command in EDIT_COMMANDS:
+        args = [realpath(expanduser(arg)) for arg in args]
+    try:
+        nvim.command(" ".join([command,] + args))
+    except NvimError as e:
+        print_and_exit(e)
+
+if __name__ == "__main__":
+    main()

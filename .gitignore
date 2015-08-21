@@ -2,5 +2,10 @@ neovim/.nvim/.netrwhist
 neovim/.nvim/autoload/plug.vim.old
 neovim/.nvim/bundle/
 neovim/.nvim/nviminfo
-neovim/.nvim/viminfo
 neovim/.nvim/spell/en.utf-8.add.spl
+neovim/.nvim/spell/en.utf-8.spl
+neovim/.nvim/spell/en.utf-8.sug
+ssh/.ssh/authorized_keys
+ssh/.ssh/id_rsa
+ssh/.ssh/id_rsa.pub
+ssh/.ssh/known_hosts

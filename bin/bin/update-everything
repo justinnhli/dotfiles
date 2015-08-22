@@ -1,22 +1,5 @@
 #!/bin/sh
 
-update_pip() {
-	PYTHON="$1"
-	if which "$PYTHON" >/dev/null 2>&1 && ($PYTHON -m pip list >/dev/null 2>&1); then
-		if [ "$(whoami)" = "root" ]; then
-			$PYTHON -m pip list --outdated | awk '{print $1}' | xargs "$PYTHON" -m pip install -U
-		else
-			echo "must be root to update pip for $PYTHON; run as root: "
-			echo "$PYTHON -m pip list --outdated | awk '{print \$1}' | xargs \"$PYTHON\" -m pip install -U"
-			outdated="$($PYTHON -m pip list --outdated | sed 's/^/	/')"
-			if [ outdated != "" ]; then
-				echo "$outdated"
-			fi
-		fi
-		echo
-	fi
-}
-
 if_exists_do() {
 	if [ -d "$2" ]; then
 		echo "$1"
@@ -43,17 +26,19 @@ if which pacaur >/dev/null 2>&1; then
 fi
 
 which python python2 python3 | while read python; do
-	if [ -L "$python" ]; then
-		if [ "$(uname)" = "Linux" ]; then
-			realpath "$python"
+	if ($python -m pip list >/dev/null 2>&1); then
+		if [ "$(whoami)" = "root" ]; then
+			$python -m pip list --outdated | awk '{print $1}' | xargs "$python" -m pip install -U
 		else
-			echo "$(dirname "$python")/$(readlink "$python")"
+			echo "must be root to update pip for $python; run as root: "
+			echo "$python -m pip list --outdated | awk '{print \$1}' | xargs \"$python\" -m pip install -U"
+			outdated="$($python -m pip list --outdated | sed 's/^/	/')"
+			if [ outdated != "" ]; then
+				echo "$outdated"
+			fi
 		fi
-	else
-		echo "$python"
 	fi
-done | sort | uniq | while read python; do
-	update_pip "$python"
+	echo
 done
 
 if [ -d ~/Dropbox ]; then

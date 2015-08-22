@@ -187,6 +187,7 @@ endif
 	set guioptions-=r
 	set   laststatus=2
 	set   lazyredraw
+	set   mouse=
 	if has('linebreak')
 		set   linebreak
 	endif

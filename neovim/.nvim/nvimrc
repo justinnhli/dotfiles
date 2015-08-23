@@ -1,4 +1,4 @@
-set nocompatible
+set nocompatible " neovim default
 
 let python_host_prog = 'python3'
 
@@ -167,7 +167,7 @@ endif
 " }
 
 " sessions {
-	set   history=250
+	set   history=10000 " neovim default
 	if isdirectory(expand('~/.nvim'))
 		set   viminfo='50,<100,h,n~/.nvim/nviminfo
 	else
@@ -216,6 +216,7 @@ endif
 		set novisualbell
 	endif
 	if has('wildmenu')
+		set   wildmenu " neovim default
 		set   wildmode=longest,list
 		set   wildignore+=*.aux,*.bbl,*.blg,*.eps,*.nav,*.pyc,*.snm,*.svg,*.toc
 	endif
@@ -225,9 +226,9 @@ endif
 " settings {
 	filetype plugin on
 	filetype indent on
-	set   autoindent
-	set   autoread
-	set   backspace=indent,eol,start
+	set   autoindent " neovim default
+	set   autoread " neovim default
+	set   backspace=indent,eol,start " neovim default
 	set noesckeys
 	set   ignorecase
 	set   scrolloff=1
@@ -235,6 +236,7 @@ endif
 	set   sidescroll=1
 	set   sidescrolloff=10
 	set   smartcase
+	set   smarttab " neovim default
 	set nostartofline
 	set   tabstop=4
 	set   tags+=./.tags,.tags
@@ -250,7 +252,7 @@ endif
 		set   completeopt=longest,menu
 	endif
 	if has('multi_byte')
-		set   encoding=utf-8
+		set   encoding=utf-8 " neovim default
 	endif
 	if has('multi_byte')
 		set   fileencoding=utf-8
@@ -262,13 +264,13 @@ endif
 		set   foldminlines=0
 	endif
 	if has('extra_search')
-		set   hlsearch
+		set   hlsearch " neovim default
 	endif
 	if has('insert_expand')
 		set noinfercase
 	endif
 	if has('extra_search')
-		set   incsearch
+		set   incsearch " neovim default
 	endif
 	if has('syntax')
 		set   spell

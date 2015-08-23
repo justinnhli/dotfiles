@@ -63,11 +63,11 @@ case "$(uname)" in
 	elif [ -d "/usr/lib/jvm/java-7-openjdk" ]; then
 		export JAVA_HOME="/usr/lib/jvm/java-7-openjdk"
 	fi
-	export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$HOME/Soar/out";;
+	export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$HOME/git/Soar/out";;
 "Darwin")
-	export DYLD_LIBRARY_PATH="$DYLD_LIBRARY_PATH:$HOME/Soar/out"
+	export DYLD_LIBRARY_PATH="$DYLD_LIBRARY_PATH:$HOME/git/Soar/out"
 esac
-export PYTHONPATH="$HOME/Soar/out:$PYTHONPATH"
+export PYTHONPATH="$HOME/git/Soar/out:$PYTHONPATH"
 
 # clean up the paths
 export PATH="$(echo "$PATH" | sed 's#//#/#g')"
@@ -83,7 +83,7 @@ alias grep='grep --color=auto'
 alias jrnl="journal.py --ignore '$(ls -m ~/journal/*.journal 2>/dev/null | sed 's/ //g')'"
 alias pacaur='pacaur --domain aur4.archlinux.org'
 alias pylint='pylint --indent-string="    " --disable=invalid-name,missing-docstring,old-style-class,star-args,line-too-long,bad-builtin,bad-continuation --reports=n'
-alias soar='~/Soar/out/testcli'
+alias soar='~/git/Soar/out/testcli'
 alias valgrind='valgrind --dsymutil=yes --leak-check=yes --track-origins=yes'
 if which python3 >/dev/null 2>&1; then
 	alias scons="scons --python=$(which python3)"

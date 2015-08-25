@@ -15,6 +15,11 @@ if which brew >/dev/null 2>&1; then
 	echo
 fi
 
+if which brew >/dev/null 2>&1; then
+	brew cask update && brew cask cleanup
+	echo
+fi
+
 if which cabal >/dev/null 2>&1; then
 	cabal update
 	echo

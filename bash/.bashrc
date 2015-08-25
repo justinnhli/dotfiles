@@ -1,9 +1,7 @@
 #!/bin/sh
 
 update_dot_files() {
-	if [ ! -d "$HOME/bin" ]; then
-		mkdir "$HOME/bin"
-	fi
+	curl -L 'https://raw.githubusercontent.com/justinnhli/dotfiles/master/bash/.bash_profile' > "$HOME/.bash_profile"
 	curl -L 'https://raw.githubusercontent.com/justinnhli/dotfiles/master/bash/.bashrc' > "$HOME/.bashrc"
 	curl -L 'https://raw.githubusercontent.com/justinnhli/dotfiles/master/neovim/.nvim/nvimrc' > "$HOME/.vimrc"
 }
@@ -25,7 +23,7 @@ alias mv='mv -i'
 alias bc='bc -l'
 alias flake8='flake8 --ignore=E501'
 alias grep='grep --color=auto'
-alias jrnl="journal.py --ignore '$(ls -m ~/journal/*.journal 2>/dev/null | sed 's/ //g')'"
+alias jrnl="journal.py --ignore '$(ls ~/journal/*.journal 2>/dev/null | tr '\n' ',')'"
 alias pacaur='pacaur --domain aur4.archlinux.org'
 alias pylint='pylint --indent-string="    " --disable=invalid-name,missing-docstring,old-style-class,star-args,line-too-long,bad-builtin,bad-continuation --reports=n'
 alias soar='~/git/Soar/out/testcli'

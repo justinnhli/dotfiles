@@ -36,3 +36,11 @@ export PYTHONPATH="$HOME/Soar/out:$PYTHONPATH"
 # clean up the paths
 export PATH="$(echo "$PATH" | sed 's#//#/#g')"
 export PYTHONPATH="$(echo "$PYTHONPATH" | sed 's#//#/#g')"
+
+# source .bashrc if interactive
+case "$-" in
+	*i*)
+		if [ -r ~/.bashrc ]; then
+			source ~/.bashrc
+		fi;;
+esac

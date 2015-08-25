@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 ip link set wlp2s0b1 down
 iwconfig wlp2s0b1 channel auto

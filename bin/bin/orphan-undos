@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 orphan_with_suffix() {
 	suffix="$2"

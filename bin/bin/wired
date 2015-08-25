@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 modprobe tg3
 ip link set enp3s0 up

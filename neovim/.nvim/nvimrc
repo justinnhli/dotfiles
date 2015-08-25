@@ -185,7 +185,7 @@ endif
 	set guioptions-=T
 	set guioptions-=L
 	set guioptions-=r
-	set   laststatus=2
+	set   laststatus=2 " neovim default
 	set   lazyredraw
 	set   mouse=
 	if has('linebreak')

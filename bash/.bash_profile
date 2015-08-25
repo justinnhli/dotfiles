@@ -27,11 +27,11 @@ case "$(uname)" in
 	elif [ -d "/usr/lib/jvm/java-7-openjdk" ]; then
 		export JAVA_HOME="/usr/lib/jvm/java-7-openjdk"
 	fi
-	export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$HOME/Soar/out";;
+	export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$HOME/git/Soar/out";;
 "Darwin")
-	export DYLD_LIBRARY_PATH="$DYLD_LIBRARY_PATH:$HOME/Soar/out"
+	export DYLD_LIBRARY_PATH="$DYLD_LIBRARY_PATH:$HOME/git/Soar/out"
 esac
-export PYTHONPATH="$HOME/Soar/out:$PYTHONPATH"
+export PYTHONPATH="$HOME/git/Soar/out:$PYTHONPATH"
 
 # clean up the paths
 export PATH="$(echo "$PATH" | sed 's#//#/#g')"
@@ -41,6 +41,6 @@ export PYTHONPATH="$(echo "$PYTHONPATH" | sed 's#//#/#g')"
 case "$-" in
 	*i*)
 		if [ -r ~/.bashrc ]; then
-			source ~/.bashrc
+			. ~/.bashrc
 		fi;;
 esac

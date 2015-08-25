@@ -18,20 +18,22 @@ export HISTCONTROL=ignoredups
 export PYTHONIOENCODING="utf-8"
 
 # soar variables
-case "$(uname)" in
-"Linux")
-	if uname -v | grep Ubuntu 2>&1 >/dev/null; then
-		if [ -d "/usr/lib/jvm/default-java" ]; then
-			export JAVA_HOME="/usr/lib/jvm/default-java"
+if [ -d "$HOME/git/Soar" ]; then
+	case "$(uname)" in
+	"Linux")
+		if uname -v | grep Ubuntu 2>&1 >/dev/null; then
+			if [ -d "/usr/lib/jvm/default-java" ]; then
+				export JAVA_HOME="/usr/lib/jvm/default-java"
+			fi
+		elif [ -d "/usr/lib/jvm/java-7-openjdk" ]; then
+			export JAVA_HOME="/usr/lib/jvm/java-7-openjdk"
 		fi
-	elif [ -d "/usr/lib/jvm/java-7-openjdk" ]; then
-		export JAVA_HOME="/usr/lib/jvm/java-7-openjdk"
-	fi
-	export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$HOME/git/Soar/out";;
-"Darwin")
-	export DYLD_LIBRARY_PATH="$DYLD_LIBRARY_PATH:$HOME/git/Soar/out"
-esac
-export PYTHONPATH="$HOME/git/Soar/out:$PYTHONPATH"
+		export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$HOME/git/Soar/out";;
+	"Darwin")
+		export DYLD_LIBRARY_PATH="$DYLD_LIBRARY_PATH:$HOME/git/Soar/out"
+	esac
+	export PYTHONPATH="$HOME/git/Soar/out:$PYTHONPATH"
+fi
 
 # clean up the paths
 export PATH="$(echo "$PATH" | sed 's#//#/#g')"

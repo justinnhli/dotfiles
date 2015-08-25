@@ -8,9 +8,6 @@ update_dot_files() {
 	curl -L 'https://raw.githubusercontent.com/justinnhli/dotfiles/master/neovim/.nvim/nvimrc' > "$HOME/.vimrc"
 }
 
-# bashrc convenience variables
-SHELL_HISTORY_FILE="~/Dropbox/personal/logs/shell_history"
-
 # prompt
 prompt_command_fn() {
 	# right before prompting for the next command, save the previous command in a file.
@@ -20,58 +17,6 @@ PS1='[\u@\h \W]\$ '
 if [ -e ~/Dropbox/personal/logs/shell_history ]; then
 	PROMPT_COMMAND=prompt_command_fn
 fi
-
-# paths
-export PATH="$HOME/bin:$HOME/neovim/build/bin:/usr/local/heroku/bin:/opt/pdflabs/pdftk/bin:$HOME/.cabal/bin:$PATH"
-export PYTHONPATH="$HOME/bin"
-for master_dir in "$HOME/projects/" "$HOME/git/"; do
-	if [ -d "$master_dir" ]; then
-		for dir in $(find "$master_dir" -maxdepth 2 -type f -perm -100 -exec dirname {} ';' | sort -r | uniq); do
-			export PATH="$dir:$PATH"
-		done
-		for dir in $(find "$master_dir" -maxdepth 2 -type f -name '*.py' -exec dirname {} ';' | sort -r | uniq); do
-			if [ ! -e "$dir/__init__.py" ]; then
-				export PYTHONPATH="$dir:$PYTHONPATH"
-			fi
-		done
-	fi
-done
-export PYTHONPATH="$HOME/git:$PYTHONPATH"
-
-# environment
-if which nvim >/dev/null 2>&1; then
-	if [ -d "$HOME/neovim/runtime" ]; then
-		export VIM="$HOME/neovim/runtime"
-	fi
-	export EDITOR='nvim'
-else
-	export EDITOR=vim
-fi
-export VISUAL=$EDITOR
-export MANPAGER="/bin/sh -c \"col -b | $EDITOR -c 'set ft=man ts=8 nomod nolist nonu noma' -\""
-export HISTSIZE=10000
-export HISTCONTROL=ignoredups
-export PYTHONIOENCODING="utf-8"
-
-# soar variables
-case "$(uname)" in
-"Linux")
-	if uname -v | grep Ubuntu 2>&1 >/dev/null; then
-		if [ -d "/usr/lib/jvm/default-java" ]; then
-			export JAVA_HOME="/usr/lib/jvm/default-java"
-		fi
-	elif [ -d "/usr/lib/jvm/java-7-openjdk" ]; then
-		export JAVA_HOME="/usr/lib/jvm/java-7-openjdk"
-	fi
-	export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$HOME/git/Soar/out";;
-"Darwin")
-	export DYLD_LIBRARY_PATH="$DYLD_LIBRARY_PATH:$HOME/git/Soar/out"
-esac
-export PYTHONPATH="$HOME/git/Soar/out:$PYTHONPATH"
-
-# clean up the paths
-export PATH="$(echo "$PATH" | sed 's#//#/#g')"
-export PYTHONPATH="$(echo "$PYTHONPATH" | sed 's#//#/#g')"
 
 # aliases
 alias rm='rm -i'

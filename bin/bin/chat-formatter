@@ -2,10 +2,19 @@
 
 from os import environ as env
 import re
-import sys
+from sys import argv, stdin
 
-sys.path.append(env["HOME"] + "/projects/pycmdtools")
-from pycmdtools import read_all_inputs
+def read_all_inputs(files):
+        if files:
+                result = []
+                for file in files:
+                        with open(file, "r") as fd:
+                                result.append(fd.read())
+                return "".join(result)
+        elif not stdin.isatty():
+                return stdin.read()
+        else:
+                return ""
 
 def hangout(text):
     time = ""
@@ -36,11 +45,11 @@ def sms(text):
 def main():
     exceptions = ("main", "read_all_inputs")
     formats = dict((k, v) for k, v in globals().items() if callable(v) and k not in exceptions)
-    if len(sys.argv) < 2 or sys.argv[1] not in formats:
+    if len(argv) < 2 or argv[1] not in formats:
         print("Usage: chat-formatter {} FILE ...".format("|".join(sorted(formats.keys()))))
         exit(1)
-    text = read_all_inputs(sys.argv[2:]).strip()
-    formats[sys.argv[1]](text)
+    text = read_all_inputs(argv[2:]).strip()
+    formats[argv[1]](text)
 
 if __name__ == "__main__":
     main()

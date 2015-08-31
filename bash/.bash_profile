@@ -4,12 +4,11 @@ export PYTHONPATH="$HOME/git:$(find "$HOME/git" -maxdepth 2 -type f -name '*.py'
 
 # environment
 if which nvim >/dev/null 2>&1; then
-	if [ -d "$HOME/neovim/runtime" ]; then
-		export VIM="$HOME/neovim/runtime"
-	fi
 	export EDITOR='nvim'
-else
+elif which vim >/dev/null 2>&1; then
 	export EDITOR=vim
+else
+	export EDITOR=vi
 fi
 export VISUAL=$EDITOR
 export MANPAGER="/bin/sh -c \"col -b | $EDITOR -c 'set ft=man ts=8 nomod nolist nonu noma' -\""

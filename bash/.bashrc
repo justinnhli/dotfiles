@@ -20,20 +20,35 @@ fi
 alias rm='rm -i'
 alias cp='cp -i'
 alias mv='mv -i'
-alias bc='bc -l'
-alias flake8='flake8 --ignore=E501'
 alias grep='grep --color=auto'
-alias jrnl="journal.py --ignore '$(ls ~/journal/*.journal 2>/dev/null | tr '\n' ',')'"
-alias pacaur='pacaur --domain aur4.archlinux.org'
-alias pylint='pylint --indent-string="    " --disable=invalid-name,missing-docstring,old-style-class,star-args,line-too-long,bad-builtin,bad-continuation --reports=n'
-alias soar='~/git/Soar/out/testcli'
-alias valgrind='valgrind --dsymutil=yes --leak-check=yes --track-origins=yes'
+
+if which bc >/dev/null 2>&1; then
+	alias bc='bc -l'
+fi
+if which flake8 >/dev/null 2>&1; then
+	alias flake8='flake8 --ignore=E501'
+fi
+if which journal.py >/dev/null 2>&1; then
+	alias jrnl="journal.py --ignore '$(ls ~/journal/*.journal 2>/dev/null | tr '\n' ',')'"
+fi
+if which pacaur >/dev/null 2>&1; then
+	alias pacaur='pacaur --domain aur4.archlinux.org'
+fi
+if which pylint >/dev/null 2>&1; then
+	alias pylint='pylint --indent-string="    " --disable=invalid-name,missing-docstring,old-style-class,star-args,line-too-long,bad-builtin,bad-continuation --reports=n'
+fi
 if which python3 >/dev/null 2>&1; then
 	alias scons="scons --python=$(which python3)"
 fi
+alias soar='~/git/Soar/out/testcli'
+if which valgrind >/dev/null 2>&1; then
+	alias valgrind='valgrind --dsymutil=yes --leak-check=yes --track-origins=yes'
+fi
+
 alias vi="$VISUAL"
 alias vim="$VISUAL"
 alias vino="$VISUAL ~/journal/notes.journal"
+
 case "$(uname)" in
 	"Linux")
 		alias ls='ls --color=auto --time-style=long-iso'

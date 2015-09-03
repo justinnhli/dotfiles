@@ -93,6 +93,8 @@ shopt -s cdspell
 shopt -s checkwinsize
 # save multi-line commands in the same history entry
 shopt -s cmdhist
+# append to history instead of overwriting it
+shopt -s histappend
 # allow '**' to match subdirectories
 if [ "$(( echo $BASH_VERSION && echo 4 ) | sort -n | tail -n 1 )" != "4" ]; then
 	shopt -s globstar

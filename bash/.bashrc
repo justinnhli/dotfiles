@@ -37,24 +37,34 @@ fi
 if which pylint >/dev/null 2>&1; then
 	alias pylint='pylint --indent-string="    " --disable=invalid-name,missing-docstring,old-style-class,star-args,line-too-long,bad-builtin,bad-continuation --reports=n'
 fi
-if which python3 >/dev/null 2>&1; then
+if which scons >/dev/null 2>&1 && which python3 >/dev/null 2>&1; then
 	alias scons="scons --python=$(which python3)"
 fi
-alias soar='~/git/Soar/out/testcli'
+if [ -d "$HOME/git/Soar" ]; then
+	alias soar="$HOME/git/Soar/out/testcli"
+fi
 if which valgrind >/dev/null 2>&1; then
 	alias valgrind='valgrind --dsymutil=yes --leak-check=yes --track-origins=yes'
 fi
 
 alias vi="$VISUAL"
 alias vim="$VISUAL"
-alias vino="$VISUAL ~/journal/notes.journal"
+if [ -d "$HOME/journal" ]; then
+	alias vino="$VISUAL $HOME/journal/notes.journal"
+fi
 
 case "$(uname)" in
 	"Linux")
 		alias ls='ls --color=auto --time-style=long-iso'
-		alias open='xdg-open'
-		alias vncserver='vncserver -depth 8'
-		alias x11vnc='x11vnc -display :0 -xkb -usepw -noxdamage';;
+		if which xdg-open >/dev/null 2>&1; then
+			alias open='xdg-open'
+		fi
+		if which vncserver >/dev/null 2>&1; then
+			alias vncserver='vncserver -depth 8'
+		fi
+		if which x11vnc >/dev/null 2>&1; then
+			alias x11vnc='x11vnc -display :0 -xkb -usepw -noxdamage'
+		fi;;
 	"Darwin")
 		alias ls='ls -G';;
 esac

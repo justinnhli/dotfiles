@@ -84,7 +84,8 @@ if [ -d ~/Dropbox ]; then
 fi
 echo
 
-nvim -c ':PlugUpgrade | PlugUpdate | qa!'
+nvim -c ':PlugUpgrade | qa!'
+if_exists_do "updating nvim plugins" ~/.nvim/bundle "git-all pull"
 
 if_exists_do "updating Soar" ~/Soar "git pull"
 if_exists_do "updating ACT-R" ~/act-r "svn update"

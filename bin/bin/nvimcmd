@@ -7,7 +7,15 @@ from os.path import expanduser, realpath
 from neovim import attach
 from neovim.api.nvim import NvimError
 
-EDIT_COMMANDS = set(["tabnew", "e", "edit", "sp", "vsp", "split", "vsplit"])
+EDIT_COMMANDS = {
+    "tabnew": True,
+    "e": False,
+    "edit": False,
+    "sp": True,
+    "vsp": True,
+    "split": True,
+    "vsplit": True,
+}
 
 def print_and_exit(message):
     print(message)
@@ -20,12 +28,19 @@ def main():
     if not addr:
         print_and_exit("$NVIM_LISTEN_ADDRESS not set; quitting")
     nvim = attach("socket", path=addr)
+    commands = []
     command = sys.argv[1]
     args = sys.argv[2:]
     if command in EDIT_COMMANDS:
-        args = [realpath(expanduser(arg)) for arg in args]
+        args = [realpath(expanduser(arg)).replace(" ", r"\ ") for arg in args]
+        if EDIT_COMMANDS[command]:
+            for arg in args:
+                commands.append(" ".join([command, arg]))
+    if not commands:
+        commands.append(" ".join([command,] + args))
     try:
-        nvim.command(" ".join([command,] + args))
+        for command in commands:
+            nvim.command(command)
     except NvimError as e:
         print_and_exit(e)
 

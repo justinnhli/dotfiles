@@ -12,10 +12,6 @@ if_exists_do() {
 
 if which brew >/dev/null 2>&1; then
 	brew update && brew upgrade --all && brew cleanup && brew linkapps
-	echo
-fi
-
-if which brew >/dev/null 2>&1; then
 	brew cask update && brew cask cleanup
 	echo
 fi
@@ -59,6 +55,9 @@ if [ -d ~/Dropbox ]; then
 		rm -f "$f" && echo "	deleted $f"
 	done
 	find . -name .DS_Store | while read f; do
+		rm -f "$f" && echo "	deleted $f"
+	done
+	find . -name __MACOSX | while read f; do
 		rm -f "$f" && echo "	deleted $f"
 	done
 

@@ -150,6 +150,9 @@ if is_maintenance_op and use_index:
     update_timestamp = datetime.strptime(metadata["updated"], "%Y-%m-%d").timestamp()
     for entry, file_line in tags.items():
         file = file_line[0]
+        if not file_exists(file):
+            print("Missing {} referenced from tags file; quitting...".format(file))
+            exit(1)
         if getmtime(file) < update_timestamp:
             journal_files.discard(join_path(args.directory, file))
             selected.remove(entry)

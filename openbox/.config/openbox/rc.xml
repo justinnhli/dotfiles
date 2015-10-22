@@ -233,7 +233,7 @@
 				<follow>no</follow>
 			</action>
 		</keybind>
-		<!-- Keybindings for running applications -->
+		<!-- Keybindings for volume control -->
 		<keybind key="C-A-equal">
 			<action name="Execute">
 				<command>amixer -q set Master 5%+,5%+</command>
@@ -249,11 +249,7 @@
 				<command>amixer -q set Master 5%-,5%-</command>
 			</action>
 		</keybind>
-		<keybind key="C-A-Q">
-			<action name="Execute">
-				<command>xscreensaver-command -activate</command>
-			</action>
-		</keybind>
+		<!-- Keybindings for running applications -->
 		<keybind key="C-A-E">
 			<action name="Execute">
 				<command>thunar</command>

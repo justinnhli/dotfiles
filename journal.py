@@ -33,7 +33,7 @@ CACHE_FILE = ".cache"
 INDEX_FILE = ".index"
 
 arg_parser = ArgumentParser(usage="%(prog)s <operation> [options] [TERM ...]", description="A command line tool for viewing and maintaining a journal.")
-arg_parser.set_defaults(directory="./", headers=True, ignores=[], icase=re.IGNORECASE, reverse=False, log=True, unit="year", use_cache="yes")
+arg_parser.set_defaults(directory="./", headers=True, ignores=[], icase=re.IGNORECASE, reverse=False, log=True, terms=[], unit="year", use_cache="yes")
 arg_parser.add_argument("terms", metavar="TERM", nargs="*", help="pattern which must exist in entries")
 group = arg_parser.add_argument_group("OPERATIONS").add_mutually_exclusive_group(required=True)
 group.add_argument("-A",           dest="op",          action="store_const", const="archive",                   help="archive to datetimed tarball")
@@ -62,9 +62,7 @@ args = arg_parser.parse_args()
 is_maintenance_op = args.op in ("archive", "update", "verify")
 if is_maintenance_op:
     for option_dest in ("date_range", "icase", "terms"):
-        for option_string, option in arg_parser._option_string_actions.items():
-            if option_dest == option.dest:
-                setattr(args, option_dest, option.default)
+        setattr(args, option_dest, arg_parser.get_default(option_dest))
 
 if args.date_range and not all(dr and RANGE_REGEX.match(dr) for dr in args.date_range.split(",")):
     arg_parser.error("argument -d: '{}' should be in format [YYYY[-MM[-DD]]][:][YYYY[-MM[-DD]]][,...]".format(args.date_range))

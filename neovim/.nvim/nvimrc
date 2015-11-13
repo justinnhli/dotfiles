@@ -531,6 +531,8 @@ endif
 	nnoremap           <leader><leader>/     :nohlsearch<cr>
 	" editor function shortcuts
 	nnoremap           <leader>p     "+p
+	nnoremap           <leader>y     "+y
+	vnoremap           <leader>y     "+y
 	nnoremap           <leader>z     1z=
 	nnoremap           <leader>@     :<C-f>ilet @=<C-r><C-r>
 	nnoremap  <silent> <leader>;     :lcd %:p:h<cr>

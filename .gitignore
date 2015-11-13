@@ -1,10 +1,10 @@
-neovim/.nvim/.netrwhist
-neovim/.nvim/autoload/plug.vim.old
-neovim/.nvim/bundle/
-neovim/.nvim/nviminfo
-neovim/.nvim/spell/en.utf-8.add.spl
-neovim/.nvim/spell/en.utf-8.spl
-neovim/.nvim/spell/en.utf-8.sug
+neovim/.config/nvim/.netrwhist
+neovim/.config/nvim/autoload/plug.vim.old
+neovim/.config/nvim/bundle/
+neovim/.config/nvim/nviminfo
+neovim/.config/nvim/spell/en.utf-8.add.spl
+neovim/.config/nvim/spell/en.utf-8.spl
+neovim/.config/nvim/spell/en.utf-8.sug
 ssh/.ssh/authorized_keys
 ssh/.ssh/id_rsa
 ssh/.ssh/id_rsa.pub

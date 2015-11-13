@@ -4,7 +4,7 @@ let python_host_prog = 'python3'
 
 " vim-plug plugin manager
 try
-	call plug#begin(expand('~/.nvim/bundle'))
+	call plug#begin(expand('<sfile>:p:h').'/bundle')
 	Plug 'christoomey/vim-tmux-navigator'
 	Plug 'hdima/python-syntax', {'for': 'python'}
 	Plug 'johnsyweb/vim-makeshift'
@@ -193,8 +193,8 @@ endif
 
 " sessions {
 	set   history=10000 " neovim default
-	if isdirectory(expand('~/.nvim'))
-		set   viminfo='50,<100,h,n~/.nvim/nviminfo
+	if has('nvim')
+		set   shada='50,<100,h
 	else
 		set   viminfo='50,<100,h,n~/.viminfo
 	endif
@@ -520,7 +520,7 @@ endif
 	nnoremap           <leader>L     :tabnew ~/research/journal/library.bib<cr>
 	nnoremap           <leader>R     :tabnew ~/research/journal/2015.journal<cr>
 	nnoremap           <leader>T     :tabnew ~/Dropbox/personal/logs/ifttt/tweets.txt<cr>
-	nnoremap           <leader>V     :tabnew ~/.nvim/nvimrc<cr>
+	nnoremap           <leader>V     :tabnew ~/.config/nvim/init.vim<cr>
 	nnoremap           <leader>O     eb"zye:!open $(find ~/Dropbox/research/library/ -name <C-r>=expand('<cword>')<cr>.pdf)<cr><cr>
 	" toggle settings with double leader
 	nnoremap           <leader><leader>f     :call ToggleFoldMethod()<cr>:set foldmethod?<cr>

@@ -84,7 +84,7 @@ fi
 echo
 
 nvim -c ':PlugUpgrade | qa!'
-if_exists_do "updating nvim plugins" ~/.nvim/bundle "git-all pull"
+if_exists_do "updating nvim plugins" ~/.config/nvim/bundle "git-all pull"
 
 if_exists_do "updating Soar" ~/Soar "git pull"
 if_exists_do "updating ACT-R" ~/act-r "svn update"

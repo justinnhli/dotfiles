@@ -34,9 +34,6 @@ fi
 if which pacaur >/dev/null 2>&1; then
 	alias pacaur='pacaur --domain aur4.archlinux.org'
 fi
-if which pylint >/dev/null 2>&1; then
-	alias pylint='pylint --indent-string="    " --disable=invalid-name,missing-docstring,old-style-class,star-args,line-too-long,bad-builtin,bad-continuation --reports=n'
-fi
 if which scons >/dev/null 2>&1 && which python3 >/dev/null 2>&1; then
 	alias scons="scons --python=$(which python3)"
 fi

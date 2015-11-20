@@ -11,7 +11,7 @@ if empty(glob('~/.config/nvim/autoload/plug.vim'))
 endif
 
 try
-	call plug#begin(expand('<sfile>:p:h').'/bundle')
+	call plug#begin(expand('<sfile>:p:h').'/plugged')
 	Plug 'christoomey/vim-tmux-navigator'
 	Plug 'hdima/python-syntax', {'for': 'python'}
 	Plug 'johnsyweb/vim-makeshift'

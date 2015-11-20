@@ -1,6 +1,6 @@
 neovim/.config/nvim/.netrwhist
 neovim/.config/nvim/autoload/plug.vim.old
-neovim/.config/nvim/bundle/
+neovim/.config/nvim/plugged/
 neovim/.config/nvim/nviminfo
 neovim/.config/nvim/spell/en.utf-8.add.spl
 neovim/.config/nvim/spell/en.utf-8.spl

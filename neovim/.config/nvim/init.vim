@@ -192,7 +192,7 @@ endif
 
 " sessions {
 	set   history=10000 " neovim default
-	if has('nvim')
+	if exists('&shada')
 		set   shada='50,<100,h
 	else
 		set   viminfo='50,<100,h,n~/.viminfo
@@ -429,7 +429,7 @@ endif
 		endif
 
 		" terminal shortcuts
-		if has('nvim')
+		if exists(':terminal')
 			nnoremap       <leader>!     :call StartTerminal()<cr>
 			nnoremap       <leader>wth   :call StartTerminalAfter('leftabove vnew')<cr>
 			nnoremap       <leader>wtj   :call StartTerminalAfter('rightbelow new')<cr>
@@ -482,7 +482,7 @@ endif
 	" }
 
 	" terminal {
-		if has('nvim')
+		if exists(':tnoremap')
 			tnoremap <Esc><Esc> <C-\><C-n>
 		endif
 	" }
@@ -574,7 +574,7 @@ endif
 		autocmd WinEnter            *       if exists('w:search_on') && w:search_on | let @/ = w:last_search | else | set nohlsearch | endif
 	augroup END
 	" disable spellcheck in virtual terminal
-	if has('nvim')
+	if exists('#TermOpen')
 		augroup terminal
 			autocmd TermOpen            *              setlocal nospell
 			autocmd TermOpen            term://*       if g:colors_name != 'default' | let g:nonterm_colorscheme = g:colors_name | colorscheme default | endif

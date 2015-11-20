@@ -3,6 +3,13 @@ set nocompatible " neovim default
 let python_host_prog = 'python3'
 
 " vim-plug plugin manager
+
+"auto-install vim-plug
+if empty(glob('~/.config/nvim/autoload/plug.vim'))
+	silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+	autocmd VimEnter * PlugInstall
+endif
+
 try
 	call plug#begin(expand('<sfile>:p:h').'/bundle')
 	Plug 'christoomey/vim-tmux-navigator'

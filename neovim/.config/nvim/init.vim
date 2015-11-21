@@ -581,7 +581,7 @@ endif
 		autocmd WinEnter            *       if exists('w:search_on') && w:search_on | let @/ = w:last_search | else | set nohlsearch | endif
 	augroup END
 	" disable spellcheck in virtual terminal
-	if exists('#TermOpen')
+	if exists('##TermOpen')
 		augroup terminal
 			autocmd TermOpen            *              setlocal nospell
 			autocmd TermOpen            term://*       if g:colors_name != 'default' | let g:nonterm_colorscheme = g:colors_name | colorscheme default | endif

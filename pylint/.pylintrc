@@ -7,8 +7,6 @@
 # pygtk.require().
 #init-hook=
 
-profile=no
-
 # Add files or directories to the blacklist. They should be base names, not
 # paths.
 ignore=CVS
@@ -19,16 +17,6 @@ persistent=yes
 # List of plugins (as comma separated values of python modules names) to load,
 # usually to register additional checkers.
 load-plugins=
-
-comment=no
-
-# Deprecated. It was used to include message's id in output. Use --msg-template
-# instead.
-include-ids=no
-
-# Deprecated. It was used to include symbolic ids of messages in output. Use
-# --msg-template instead.
-symbols=no
 
 # Use multiple processes to speed up Pylint.
 jobs=1
@@ -141,9 +129,6 @@ ignored-modules=
 # (useful for classes with attributes dynamically set). This supports can work
 # with qualified names.
 ignored-classes=
-
-# This option is deprecated. Use generated-members instead.
-zope=no
 
 # List of members which are set dynamically and missed by pylint inference
 # system, and so shouldn't trigger E0201 when accessed. Python regular
@@ -330,9 +315,6 @@ int-import-graph=
 
 
 [CLASSES]
-
-# This is deprecated, because it is not used anymore.
-#ignore-iface-methods=
 
 # List of method names used to declare (i.e. assign) instance attributes.
 defining-attr-methods=__init__,__new__,setUp

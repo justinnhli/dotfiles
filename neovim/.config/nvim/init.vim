@@ -205,6 +205,7 @@ endif
 		set   viminfo='50,<100,h,n~/.viminfo
 	endif
 	if has('persistent_undo')
+		set   undodir='.'
 		set   undofile
 	endif
 " }

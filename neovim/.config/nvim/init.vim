@@ -196,10 +196,10 @@ endif
 " }
 
 " sessions {
-	set   directory=.
+	set   directory=.,$XDG_DATA_HOME/nvim/sessions//
 	set   history=10000 " neovim default
 	if exists('&shada')
-		set   shada='50,<100,h
+		set   shada='50,h
 	else
 		set   viminfo='50,<100,h,n~/.viminfo
 	endif

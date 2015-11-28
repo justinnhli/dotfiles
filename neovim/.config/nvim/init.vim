@@ -144,14 +144,12 @@ endif
 		" FIXME fails when new_tab is the highest tab
 	endfunction
 
-	function! StartTerminal()
+	function! StartTerminal(...)
+		for l:cmd in a:000
+			exe l:cmd
+		endfor
 		setlocal nospell
 		terminal
-	endfunction
-
-	function! StartTerminalAfter(command)
-		exe a:command
-		call StartTerminal()
 	endfunction
 
 	function! ToggleFoldMethod()
@@ -439,12 +437,12 @@ endif
 
 		" terminal shortcuts
 		if exists(':terminal')
-			nnoremap       <leader>!     :call StartTerminal()<cr>
-			nnoremap       <leader>wth   :call StartTerminalAfter('leftabove vnew')<cr>
-			nnoremap       <leader>wtj   :call StartTerminalAfter('rightbelow new')<cr>
-			nnoremap       <leader>wtk   :call StartTerminalAfter('leftabove new')<cr>
-			nnoremap       <leader>wtl   :call StartTerminalAfter('rightbelow vnew')<cr>
-			nnoremap       <leader>tt    :call StartTerminalAfter('tabnew')<cr>
+			nnoremap       <leader>!     :call StartTerminal('lcd '.expand('%:p:h'))<cr>
+			nnoremap       <leader>wth   :call StartTerminal('leftabove vnew', 'lcd '.expand('%:p:h'))<cr>
+			nnoremap       <leader>wtj   :call StartTerminal('rightbelow new', 'lcd '.expand('%:p:h'))<cr>
+			nnoremap       <leader>wtk   :call StartTerminal('leftabove new', 'lcd '.expand('%:p:h'))<cr>
+			nnoremap       <leader>wtl   :call StartTerminal('rightbelow vnew', 'lcd '.expand('%:p:h'))<cr>
+			nnoremap       <leader>tt    :call StartTerminal('tabnew')<cr>
 		endif
 	" }
 

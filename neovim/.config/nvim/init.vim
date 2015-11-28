@@ -198,6 +198,7 @@ endif
 " }
 
 " sessions {
+	set   directory=.
 	set   history=10000 " neovim default
 	if exists('&shada')
 		set   shada='50,<100,h

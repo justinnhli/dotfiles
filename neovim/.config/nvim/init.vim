@@ -442,7 +442,7 @@ endif
 			nnoremap       <leader>wtj   :call StartTerminal('rightbelow new', 'lcd '.expand('%:p:h'))<cr>
 			nnoremap       <leader>wtk   :call StartTerminal('leftabove new', 'lcd '.expand('%:p:h'))<cr>
 			nnoremap       <leader>wtl   :call StartTerminal('rightbelow vnew', 'lcd '.expand('%:p:h'))<cr>
-			nnoremap       <leader>tt    :call StartTerminal('tabnew')<cr>
+			nnoremap       <leader>tt    :call StartTerminal('tabnew', 'lcd ~')<cr>
 		endif
 	" }
 

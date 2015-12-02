@@ -540,10 +540,11 @@ endif
 	nnoremap           <leader>y     "+y
 	vnoremap           <leader>y     "+y
 	nnoremap           <leader>z     1z=
+	nnoremap           <leader>/     :2match IncSearch 
 	nnoremap           <leader>@     :<C-f>ilet @=<C-r><C-r>
-	nnoremap  <silent> <leader>;     :lcd %:p:h<cr>
 	nnoremap           <leader>]     <C-w><C-]><C-w>T
 	vnoremap           <leader>]     <C-w><C-]><C-w>T
+	nnoremap  <silent> <leader>;     :lcd %:p:h<cr>
 	" custom functions
 	nnoremap  <silent> <leader>.     :exe 'set foldenable foldlevel='.foldlevel('.')<cr>
 " }

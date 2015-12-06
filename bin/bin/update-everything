@@ -12,8 +12,12 @@ if_exists_do() {
 
 if which brew >/dev/null 2>&1; then
 	if [ $(hostname) == 'OXY4776M' ]; then
-		echo 'found brew permissions issue; sudo-ing to chown'
-		sudo chown -R `whoami` /usr/local
+		root="$(find /usr/local -user root 2>&1)"
+		if [ "$(echo "$root")" != "" ]; then
+			echo 'found brew permissions issue; sudo-ing to chown'
+			echo "$root" | sed 's/^/    /'
+			sudo chown `whoami` $root
+		fi
 	fi
 	brew update && brew upgrade --all && brew cleanup && brew linkapps
 	brew cask update && brew cask cleanup

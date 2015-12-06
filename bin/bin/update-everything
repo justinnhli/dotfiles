@@ -59,7 +59,7 @@ if [ -d ~/Dropbox ]; then
 
 	# remove OS files
 	echo "removing OS files..."
-	find . -name 'Icon' | while read f; do
+	find . -name "Icon\r" | while read f; do
 		rm -f "$f" && echo "	deleted $f"
 	done
 	find . -name .DS_Store | while read f; do

@@ -12,6 +12,7 @@ endif
 
 try
 	call plug#begin(expand('<sfile>:p:h').'/plugged')
+	" standard plugins
 	Plug 'christoomey/vim-tmux-navigator'
 	Plug 'hdima/python-syntax', {'for': 'python'}
 	Plug 'johnsyweb/vim-makeshift'
@@ -19,9 +20,10 @@ try
 	Plug 'kien/ctrlp.vim'
 	Plug 'mbbill/undotree'
 	Plug 'rhysd/clever-f.vim'
-	Plug 'tomasr/molokai'
 	Plug 'tpope/vim-fugitive'
 	Plug 'tpope/vim-sleuth'
+	" colorschemes
+	Plug 'tomasr/molokai'
 	call plug#end()
 catch
 endtry
@@ -541,7 +543,7 @@ endif
 	nnoremap           <leader>y     "+y
 	vnoremap           <leader>y     "+y
 	nnoremap           <leader>z     1z=
-	nnoremap           <leader>/     :2match IncSearch 
+	nnoremap           <leader>/     :2match IncSearch '
 	nnoremap           <leader>@     :<C-f>ilet @=<C-r><C-r>
 	nnoremap           <leader>]     <C-w><C-]><C-w>T
 	vnoremap           <leader>]     <C-w><C-]><C-w>T
@@ -584,12 +586,7 @@ endif
 	augroup END
 	" disable spellcheck in virtual terminal
 	if exists('##TermOpen')
-		augroup terminal
-			autocmd TermOpen            *              setlocal nospell
-			autocmd TermOpen            term://*       if g:colors_name != 'default' | let g:nonterm_colorscheme = g:colors_name | colorscheme default | endif
-			autocmd BufEnter            term://*       if g:colors_name != 'default' | let g:nonterm_colorscheme = g:colors_name | colorscheme default | endif
-			autocmd BufLeave            term://*       if exists('g:nonterm_colorscheme') && g:nonterm_colorscheme != 'default' | execute 'colorscheme '.g:nonterm_colorscheme | endif
-		augroup END
+		autocmd TermOpen            *              setlocal nospell
 	endif
 
 	" override above settings for specific files

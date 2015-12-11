@@ -16,7 +16,11 @@ if which brew >/dev/null 2>&1; then
 		if [ "$(echo "$root")" != "" ]; then
 			echo 'found brew permissions issue; sudo-ing to chown'
 			echo "$root" | sed 's/^/    /'
-			sudo chown `whoami` $root
+			if [ $(echo "$root" | wc -l) -le 20 ]; then
+				sudo chown `whoami` $root
+			else
+				sudo chown -R `whoami` /usr/local
+			fi
 		fi
 	fi
 	brew update && brew upgrade --all && brew cleanup && brew linkapps

@@ -616,7 +616,7 @@ endif
 	let g:clever_f_fix_key_direction = 1
 	let g:clever_f_timeout_ms = 5000
 	" journal.vim
-	let g:jrnl_ignore_files = ['~/journal/notes.journal', '~/journal/research.journal', '~/journal/ponderings.journal']
+	let g:jrnl_ignore_files = split(globpath('~/journal', '*.journal'), '\n')
 	" netrw
 	let g:netrw_browse_split = 3
 	let g:netrw_liststyle = 3

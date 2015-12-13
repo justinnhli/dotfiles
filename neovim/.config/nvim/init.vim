@@ -2,8 +2,6 @@ set nocompatible " neovim default
 
 let python_host_prog = 'python3'
 
-" vim-plug plugin manager
-
 "auto-install vim-plug
 if empty(glob('~/.config/nvim/autoload/plug.vim'))
 	silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
@@ -12,18 +10,20 @@ endif
 
 try
 	call plug#begin(expand('<sfile>:p:h').'/plugged')
-	" standard plugins
-	Plug 'christoomey/vim-tmux-navigator'
-	Plug 'hdima/python-syntax', {'for': 'python'}
+	" extensions
 	Plug 'johnsyweb/vim-makeshift'
-	Plug 'justinnhli/journal.vim', {'for': 'journal'}
 	Plug 'kien/ctrlp.vim'
 	Plug 'mbbill/undotree'
 	Plug 'rhysd/clever-f.vim'
 	Plug 'tpope/vim-fugitive'
-	Plug 'tpope/vim-sleuth'
-	" colorschemes
+	" color schemes
 	Plug 'tomasr/molokai'
+	" settings
+	Plug 'tpope/vim-sleuth'
+	Plug 'christoomey/vim-tmux-navigator'
+	" syntax
+	Plug 'hdima/python-syntax', {'for': 'python'}
+	Plug 'justinnhli/journal.vim', {'for': 'journal'}
 	call plug#end()
 catch
 endtry
@@ -543,7 +543,7 @@ endif
 	nnoremap           <leader>y     "+y
 	vnoremap           <leader>y     "+y
 	nnoremap           <leader>z     1z=
-	nnoremap           <leader>/     :2match IncSearch '
+	nnoremap           <leader>/     :2match IncSearch ''<left>
 	nnoremap           <leader>@     :<C-f>ilet @=<C-r><C-r>
 	nnoremap           <leader>]     <C-w><C-]><C-w>T
 	vnoremap           <leader>]     <C-w><C-]><C-w>T
@@ -590,7 +590,7 @@ endif
 	endif
 
 	" override above settings for specific files
-	" automatically fold notes.journal and change directories
+	" automatically fold notes.journal
 	autocmd     BufRead        notes.journal syntax match flag '^.\{2000,\}$' | setlocal breakindent breakindentopt=shift:1 foldenable foldlevel=0
 " }
 

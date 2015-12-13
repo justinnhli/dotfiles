@@ -1,3 +1,3 @@
 #!/bin/sh
 
-grep "$@" ~/Dropbox/personal/logs/shell_history
+grep "$@" ~/Dropbox/personal/logs/shell_history* | sort

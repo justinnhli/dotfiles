@@ -11,15 +11,15 @@ if_exists_do() {
 }
 
 if which brew >/dev/null 2>&1; then
-	if [ $(hostname) == 'OXY4776M' ]; then
+	if [ "$(hostname)" = 'OXY4776M' ]; then
 		root="$(find /usr/local -user root 2>&1)"
-		if [ "$(echo "$root")" != "" ]; then
+		if [ "$root" != "" ]; then
 			echo 'found brew permissions issue; sudo-ing to chown'
 			echo "$root" | sed 's/^/    /'
-			if [ $(echo "$root" | wc -l) -le 20 ]; then
-				sudo chown `whoami` $root
+			if [ "$(echo "$root" | wc -l)" -le 20 ]; then
+				sudo chown "$(whoami)" $root
 			else
-				sudo chown -R `whoami` /usr/local
+				sudo chown -R "$(whoami)" /usr/local
 			fi
 		fi
 	fi
@@ -46,7 +46,7 @@ which python python2 python3 | while read python; do
 			echo "must be root to update pip for $python; run as root: "
 			echo "$python -m pip list --outdated | awk '{print \$1}' | xargs \"$python\" -m pip install -U"
 			outdated="$($python -m pip list --outdated | sed 's/^/	/')"
-			if [ outdated != "" ]; then
+			if [ "$outdated" != "" ]; then
 				echo "$outdated"
 			fi
 		fi
@@ -55,7 +55,7 @@ which python python2 python3 | while read python; do
 done
 
 if [ -d ~/Dropbox ]; then
-	cd ~/Dropbox
+	cd ~/Dropbox || exit
 
 	# remove old vim undo files
 	echo "removing old vim undo files..."

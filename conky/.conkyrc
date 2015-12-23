@@ -29,18 +29,13 @@ ${color lightgrey}home: ${fs_used /home}/${fs_size /home}
 
 === NET ===
 
-enp3s0: ${addr enp3s0}
-speed: ${upspeed enp3s0} U  ${downspeed enp3s0} D
-total: ${totalup enp3s0} U  ${totaldown enp3s0} D
-
 wlp2s0b1: ${addr wlp2s0b1}
 speed: ${upspeed wlp2s0b1} U  ${downspeed wlp2s0b1} D
 total: ${totalup wlp2s0b1} U  ${totaldown wlp2s0b1} D
 
 === PROC ===
 
-CPU 1: ${cpu cpu1}%
-CPU 2: ${cpu cpu2}%
+CPU(s): ${cpu cpu1}% ${cpu cpu2}%
 ${top name 1} ${top pid 1} ${top cpu 1} ${top mem 1}
 ${top name 2} ${top pid 2} ${top cpu 2} ${top mem 2}
 ${top name 3} ${top pid 3} ${top cpu 3} ${top mem 3}

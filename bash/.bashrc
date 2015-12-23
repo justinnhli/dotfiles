@@ -29,7 +29,7 @@ if which flake8 >/dev/null 2>&1; then
 	alias flake8='flake8 --ignore=E501'
 fi
 if which journal.py >/dev/null 2>&1; then
-	alias jrnl="journal.py --ignore '$(ls ~/journal/*.journal 2>/dev/null | tr '\n' ',')'"
+	alias jrnl="journal.py --ignore '$(ls ~/journal/[a-z-]*.journal 2>/dev/null | grep -v '[ ()]' | tr '\n' ',')'"
 fi
 if which pacaur >/dev/null 2>&1; then
 	alias pacaur='pacaur --domain aur4.archlinux.org'

@@ -1,4 +1,7 @@
-#!/bin/sh
+#!/bin/bash
+
+# this script needs to be a bash script for the Icon\r removal to work
+# I honestly don't understand why
 
 if_exists_do() {
 	if [ -d "$2" ]; then

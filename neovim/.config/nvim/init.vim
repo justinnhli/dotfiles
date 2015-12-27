@@ -565,8 +565,6 @@ endif
 	autocmd      GUIEnter            *       set visualbell t_vb=
 	" automatically leave insert mode after 'updatetime' milliseconds, which is 7.5 seconds in insert mode
 	autocmd      CursorHoldI         *       stopinsert
-	" intelligently set makeprg
-	autocmd      Syntax              *       call SetMakePrg()
 	augroup leave_insert
 		autocmd  InsertEnter         *       let updaterestore=&updatetime | set updatetime=7500
 		autocmd  InsertLeave         *       let &updatetime=updaterestore

@@ -554,44 +554,46 @@ endif
 
 " autocommands {
 	" filetypes
-	autocmd     BufRead,BufNewFile  *.lisp     setlocal expandtab
-	autocmd     BufRead,BufNewFile  *.py       setlocal foldmethod=indent tabstop=4 expandtab
-	autocmd     BufRead,BufNewFile  *.tex      setlocal foldmethod=indent spell
+	autocmd      BufRead,BufNewFile  *.lisp  setlocal expandtab
+	autocmd      BufRead,BufNewFile  *.py    setlocal foldmethod=indent tabstop=4 expandtab
+	autocmd      BufRead,BufNewFile  *.tex   setlocal foldmethod=indent spell
 	" keep windows equal in size
-	autocmd     VimResized          *       normal <c-w>=
+	autocmd      VimResized          *       normal <c-w>=
 	" restore cursor position
-	autocmd     BufReadPost         *       if line("'\"") > 1 && line("'\"") <= line('$') | exe 'normal! g`"' | endif
+	autocmd      BufReadPost         *       if line("'\"") > 1 && line("'\"") <= line('$') | exe 'normal! g`"' | endif
 	" disable audio bell in MacVim
-	autocmd     GUIEnter            *              set visualbell t_vb=
+	autocmd      GUIEnter            *       set visualbell t_vb=
 	" automatically leave insert mode after 'updatetime' milliseconds, which is 7.5 seconds in insert mode
-	autocmd     CursorHoldI         *       stopinsert
+	autocmd      CursorHoldI         *       stopinsert
+	" intelligently set makeprg
+	autocmd      Syntax              *       call SetMakePrg()
 	augroup leave_insert
-		autocmd InsertEnter         *       let updaterestore=&updatetime | set updatetime=7500
-		autocmd InsertLeave         *       let &updatetime=updaterestore
+		autocmd  InsertEnter         *       let updaterestore=&updatetime | set updatetime=7500
+		autocmd  InsertLeave         *       let &updatetime=updaterestore
 	augroup END
 	" easily cancel the command line window
 	augroup leave_command
-		autocmd     CmdwinEnter         *       nnoremap <buffer> <C-c> :quit<cr>
-		autocmd     CmdwinEnter         *       inoremap <buffer> <C-c> <Esc>:quit<cr>
+		autocmd  CmdwinEnter         *       nnoremap <buffer> <C-c> :quit<cr>
+		autocmd  CmdwinEnter         *       inoremap <buffer> <C-c> <Esc>:quit<cr>
 	augroup END
 	" automatically open and close the quickfix window
 	augroup quick_fix
-		autocmd     QuickFixCmdPost     l*grep* lwindow
-		autocmd     WinEnter            *       if winnr('$') == 1 && getbufvar(winbufnr(winnr()), '&buftype') == 'quickfix' | q | endif
+		autocmd  QuickFixCmdPost     l*grep* lwindow
+		autocmd  WinEnter            *       if winnr('$') == 1 && getbufvar(winbufnr(winnr()), '&buftype') == 'quickfix' | q | endif
 	augroup END
 	" bound scope of search to the original window
 	augroup last_search
-		autocmd WinLeave            *       let w:search_on = &hlsearch | let w:last_search = @/
-		autocmd WinEnter            *       if exists('w:search_on') && w:search_on | let @/ = w:last_search | else | set nohlsearch | endif
+		autocmd  WinLeave            *       let w:search_on = &hlsearch | let w:last_search = @/
+		autocmd  WinEnter            *       if exists('w:search_on') && w:search_on | let @/ = w:last_search | else | set nohlsearch | endif
 	augroup END
 	" disable spellcheck in virtual terminal
 	if exists('##TermOpen')
-		autocmd TermOpen            *              setlocal nospell
+		autocmd  TermOpen            *       setlocal nospell
 	endif
 
 	" override above settings for specific files
 	" automatically fold notes.journal
-	autocmd     BufRead        notes.journal syntax match flag '^.\{2000,\}$' | setlocal breakindent breakindentopt=shift:1 foldenable foldlevel=0
+	autocmd       BufRead            notes.journal syntax match flag '^.\{2000,\}$' | setlocal breakindent breakindentopt=shift:1 foldenable foldlevel=0
 " }
 
 " commands {

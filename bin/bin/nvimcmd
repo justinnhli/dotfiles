@@ -18,7 +18,7 @@ EDIT_COMMANDS = {
 }
 
 def print_and_exit(message):
-    print(message)
+    print(sys.argv[0] + ': ' + message)
     exit(1)
 
 def main():
@@ -42,7 +42,7 @@ def main():
         for command in commands:
             nvim.command(command)
     except NvimError as e:
-        print_and_exit(e)
+        print_and_exit(e.args[0].decode('utf-8'))
 
 if __name__ == '__main__':
     main()

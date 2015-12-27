@@ -93,3 +93,4 @@ bar {
 
 exec --no-startup-id feh --bg-scale $HOME/pictures/background.png
 exec dropbox
+exec conky

@@ -66,6 +66,7 @@ case "$(uname)" in
 		alias ls='ls -G';;
 esac
 if [ "$NVIM_LISTEN_ADDRESS" != "" ]; then
+	unset MANPAGER
 	alias :="$(which nvimcmd)"
 	alias vi="$(which nvimcmd) tabnew"
 	alias vim="$(which nvimcmd) tabnew"

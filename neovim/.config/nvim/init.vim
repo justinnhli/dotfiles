@@ -11,7 +11,6 @@ endif
 try
 	call plug#begin(expand('<sfile>:p:h').'/plugged')
 	" extensions
-	Plug 'johnsyweb/vim-makeshift'
 	Plug 'kien/ctrlp.vim'
 	Plug 'mbbill/undotree'
 	Plug 'rhysd/clever-f.vim'
@@ -547,6 +546,7 @@ endif
 	nnoremap           <leader>@     :<C-f>ilet @=<C-r><C-r>
 	nnoremap           <leader>]     <C-w><C-]><C-w>T
 	vnoremap           <leader>]     <C-w><C-]><C-w>T
+	nnoremap           <leader><cr>  :make<cr>
 	nnoremap  <silent> <leader>;     :lcd %:p:h<cr>
 	" custom functions
 	nnoremap  <silent> <leader>.     :exe 'set foldenable foldlevel='.foldlevel('.')<cr>

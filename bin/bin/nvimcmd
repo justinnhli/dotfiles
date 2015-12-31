@@ -7,6 +7,9 @@ from os.path import expanduser, realpath
 from neovim import attach
 from neovim.api.nvim import NvimError
 
+# FIXME
+# if sys.argv[0] in ('vi', 'vim'), don't treat argument as commands
+
 EDIT_COMMANDS = {
     'tabnew': True,
     'e': False,

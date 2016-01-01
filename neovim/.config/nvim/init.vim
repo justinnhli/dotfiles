@@ -632,10 +632,6 @@ endif
 	nnoremap  <leader>gd    :Gdiff<cr>
 	nnoremap  <leader>gs    :Gstatus<cr>
 	nnoremap  <leader>gp    :Gpush<cr>
-	" vim-makeshift
-	nnoremap  <leader><cr>  :MakeshiftBuild \| redraw!<cr>
-	let g:makeshift_on_bufenter = 1
-	let g:makeshift_use_pwd_first = 1
 " }
 
 " protect large files from sourcing and other overhead.

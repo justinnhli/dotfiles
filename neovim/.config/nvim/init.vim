@@ -605,6 +605,10 @@ endif
 	command! -nargs=1 MoveToRelTab :call <SID>MoveToRelTab(<q-args>)
 " }
 
+" neovim settings {
+	let g:terminal_scrollback_buffer_size = 1000000
+" }
+
 " plugin settings {
 	" ctrlp
 	let g:ctrlp_map = '<leader>P'

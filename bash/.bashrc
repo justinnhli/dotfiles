@@ -70,6 +70,7 @@ if [ "$NVIM_LISTEN_ADDRESS" != "" ]; then
 	alias :="$(which nvimcmd)"
 	alias vi="$(which nvimcmd) tabnew"
 	alias vim="$(which nvimcmd) tabnew"
+	alias nvim="$(which nvimcmd) tabnew"
 	if [ -d "$HOME/journal" ]; then
 		alias vino="$(which nvimcmd) tabnew $HOME/journal/notes.journal"
 	fi

@@ -93,7 +93,7 @@ _generic_completion()
 	fi
 }
 
-if [ -f ~/.bash_completion.d/shellscrape.py ]; then
+if which python3 >/dev/null 2>&1 && [ -f ~/.bash_completion.d/shellscrape.py ]; then
 	for program in $(~/.bash_completion.d/shellscrape.py); do
 		if type "$program" >/dev/null 2>&1; then
 			complete -o default -F _generic_completion "$program"

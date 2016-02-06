@@ -102,6 +102,6 @@ echo
 nvim -c ':PlugUpgrade | qa!'
 if_exists_do "updating nvim plugins" $HOME/.config/nvim/plugged "git-all pull"
 
-if_exists_do "updating Soar" $HOME/Soar "git pull"
 if_exists_do "updating ACT-R" $HOME/act-r "svn update"
 if_exists_do "updating git repos" $HOME/git "git-all pull"
+if_exists_do "cleaning git repos" $HOME/git "orphan-undos"

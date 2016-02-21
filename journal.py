@@ -190,7 +190,7 @@ if args.op == "update" or len(entries) == len(candidates):
 if not is_maintenance_op:
     if index_updates:
         with open(index_file, "a") as fd:
-            fd.write("".join("\"{}\": {},\n".format(k.lower().replace('"', '\\"'), sorted(v)) for k, v in index_updates.items()))
+            fd.write("".join("{}: {},\n".format(repr(k.lower()), repr(sorted(v))) for k, v in index_updates.items()))
 
     for term in unindexed_terms:
         selected = set(k for k in selected if re.search(term, entries[k], flags=(args.icase | re.MULTILINE)))

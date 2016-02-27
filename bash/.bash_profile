@@ -1,6 +1,6 @@
 # paths
 export PATH="$HOME/bin:$HOME/Dropbox/bin:$(find "$HOME/git" -maxdepth 2 -type f -perm -100 -exec dirname {} ';' | sort | uniq | tr '\n' ':' | sed 's/:$//'):$PATH"
-export PYTHONPATH="$HOME/git:$(find "$HOME/git" -maxdepth 2 -type f -name '*.py' -exec dirname {} ';' | sort | uniq | tr '\n' ':' | sed 's/:$//')"
+export PYTHONPATH="$HOME/git"
 
 # environment
 if which nvim >/dev/null 2>&1; then

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 find . -maxdepth 2 -name .git | sort | while read dir; do
 	dir="$(dirname "$dir")"

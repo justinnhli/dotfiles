@@ -526,7 +526,7 @@ endif
 	nnoremap           <leader>J     :tabnew ~/journal/notes.journal<cr>
 	nnoremap           <leader>H     :tabnew ~/Dropbox/personal/logs/shell_history<cr>
 	nnoremap           <leader>L     :tabnew ~/research/journal/library.bib<cr>
-	nnoremap           <leader>R     :tabnew ~/research/journal/2015.journal<cr>
+	nnoremap           <leader>R     :tabnew ~/research/journal/<C-R>=strftime("%Y")<cr>.journal<cr>
 	nnoremap           <leader>T     :tabnew ~/Dropbox/personal/logs/ifttt/tweets.txt<cr>
 	nnoremap           <leader>V     :tabnew ~/.config/nvim/init.vim<cr>
 	nnoremap           <leader>O     eb"zye:!open $(find ~/Dropbox/research/library/ -name <C-r>=expand('<cword>')<cr>.pdf)<cr><cr>

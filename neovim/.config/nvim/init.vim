@@ -281,6 +281,7 @@ endif
 		set   breakindentopt=shift:1
 	endif
 	if has('insert_expand')
+		set   complete=.
 		set   completeopt=longest,menu
 	endif
 	if has('multi_byte')

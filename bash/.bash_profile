@@ -34,15 +34,16 @@ if [ -d "$HOME/git/Soar" ]; then
 	export PYTHONPATH="$HOME/git/Soar/out:$PYTHONPATH"
 fi
 
-# virtualenvwrapper
-if [ -e /usr/bin/virtualenvwrapper.sh ]; then
-	export WORKON_HOME=~/.virtualenvs
-	source /usr/bin/virtualenvwrapper.sh
-fi
-
 # clean up the paths
 export PATH="$(echo "$PATH" | sed 's#//#/#g')"
 export PYTHONPATH="$(echo "$PYTHONPATH" | sed 's#//#/#g')"
+
+# virtualenvwrapper
+if which python3 >/dev/null 2>&1 && which virtualenvwrapper.sh >/dev/null 2>&1; then
+	export VIRTUALENVWRAPPER_PYTHON="$(which python3)"
+	export WORKON_HOME=~/.virtualenvs
+	source "$(which virtualenvwrapper.sh)"
+fi
 
 # source .bashrc if interactive
 case "$-" in

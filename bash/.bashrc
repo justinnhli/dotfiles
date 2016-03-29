@@ -31,9 +31,6 @@ fi
 if which journal.py >/dev/null 2>&1; then
 	alias jrnl="journal.py --ignore '$(ls ~/journal/[a-z-]*.journal 2>/dev/null | grep -v '[ ()]' | tr '\n' ',')'"
 fi
-if which pacaur >/dev/null 2>&1; then
-	alias pacaur='pacaur --domain aur4.archlinux.org'
-fi
 if which scons >/dev/null 2>&1 && which python3 >/dev/null 2>&1; then
 	alias scons="scons --python=$(which python3)"
 fi

@@ -6,6 +6,53 @@ update_dot_files() {
 	curl -L 'https://raw.githubusercontent.com/justinnhli/dotfiles/master/neovim/.config/nvim/init.vim' > "$HOME/.vimrc"
 }
 
+# paths
+export PATH="$HOME/bin:$HOME/Dropbox/bin:$(find "$HOME/git" -maxdepth 2 -type f -perm -100 -exec dirname {} ';' | sort | uniq | tr '\n' ':' | sed 's/:$//'):$PATH"
+export PYTHONPATH="$HOME/git"
+
+# environment
+if which nvim >/dev/null 2>&1; then
+	export EDITOR='nvim'
+elif which vim >/dev/null 2>&1; then
+	export EDITOR=vim
+else
+	export EDITOR=vi
+fi
+export VISUAL=$EDITOR
+export MANPAGER="/bin/sh -c \"col -b | $EDITOR -c 'set ft=man ts=8 nomod nolist nonu noma' -\""
+export HISTSIZE=10000
+export HISTCONTROL=ignoredups
+export PYTHONIOENCODING="utf-8"
+
+# soar variables
+if [ -d "$HOME/git/Soar" ]; then
+	case "$(uname)" in
+	"Linux")
+		if uname -v | grep Ubuntu 2>&1 >/dev/null; then
+			if [ -d "/usr/lib/jvm/default-java" ]; then
+				export JAVA_HOME="/usr/lib/jvm/default-java"
+			fi
+		elif [ -d "/usr/lib/jvm/java-7-openjdk" ]; then
+			export JAVA_HOME="/usr/lib/jvm/java-7-openjdk"
+		fi
+		export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$HOME/git/Soar/out";;
+	"Darwin")
+		export DYLD_LIBRARY_PATH="$DYLD_LIBRARY_PATH:$HOME/git/Soar/out"
+	esac
+	export PYTHONPATH="$HOME/git/Soar/out:$PYTHONPATH"
+fi
+
+# clean up the paths
+export PATH="$(echo "$PATH" | sed 's#//#/#g')"
+export PYTHONPATH="$(echo "$PYTHONPATH" | sed 's#//#/#g')"
+
+# virtualenvwrapper
+if which python3 >/dev/null 2>&1 && which virtualenvwrapper.sh >/dev/null 2>&1; then
+	export VIRTUALENVWRAPPER_PYTHON="$(which python3)"
+	export WORKON_HOME=~/.virtualenvs
+	source "$(which virtualenvwrapper.sh)"
+fi
+
 # prompt
 prompt_command_fn() {
 	# right before prompting for the next command, save the previous command in a file.

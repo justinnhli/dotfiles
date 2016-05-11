@@ -504,6 +504,9 @@ endif
 		vnoremap  >        >gv
 		vnoremap  <        <gv
 
+		" select previously pasted text
+		nnoremap gp `[v`]
+
 		" jump to the end of pasted text
 		nnoremap <silent> p p`]
 

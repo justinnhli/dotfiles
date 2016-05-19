@@ -527,13 +527,19 @@ endif
 	" open special files
 	nnoremap           <leader>B     :tabnew ~/.bashrc<cr>
 	nnoremap           <leader>C     :tabnew ~/Dropbox/personal/contacts/contacts-*<cr>
-	nnoremap           <leader>J     :tabnew ~/journal/notes.journal<cr>
 	nnoremap           <leader>H     :tabnew ~/Dropbox/personal/logs/shell_history<cr>
 	nnoremap           <leader>L     :tabnew ~/research/journal/library.bib<cr>
 	nnoremap           <leader>R     :tabnew ~/research/journal/<C-R>=strftime("%Y")<cr>.journal<cr>
 	nnoremap           <leader>T     :tabnew ~/Dropbox/personal/logs/ifttt/tweets.txt<cr>
 	nnoremap           <leader>V     :tabnew ~/.config/nvim/init.vim<cr>
 	nnoremap           <leader>O     eb"zye:!open $(find ~/Dropbox/research/library/ -name <C-r>=expand('<cword>')<cr>.pdf)<cr><cr>
+	" open journal files with leader-j
+	nnoremap           <leader>J     :tabnew ~/journal/notes.journal<cr>
+	nnoremap           <leader>jh    :tabnew ~/journal/htsacsd.journal<cr>
+	nnoremap           <leader>jl    :tabnew ~/journal/list.journal<cr>
+	nnoremap           <leader>jp    :tabnew ~/journal/ponderings.journal<cr>
+	nnoremap           <leader>jr    :tabnew ~/journal/research.journal<cr>
+	nnoremap           <leader>js    :tabnew ~/journal/scratch.journal<cr>
 	" toggle settings with double leader
 	nnoremap           <leader><leader>f     :call ToggleFoldMethod()<cr>:set foldmethod?<cr>
 	nnoremap           <leader><leader>n     :set number!<cr>:set number?<cr>

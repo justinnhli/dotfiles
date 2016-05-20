@@ -7,7 +7,10 @@ update_dot_files() {
 }
 
 # paths
-export PATH="$HOME/bin:$HOME/Dropbox/bin:$(find "$HOME/git" -maxdepth 2 -type f -perm -100 -exec dirname {} ';' | sort | uniq | tr '\n' ':' | sed 's/:$//'):$PATH"
+if [ -d "$HOME/git" ]; then
+	export PATH="$(find "$HOME/git" -maxdepth 2 -type f -perm -100 -exec dirname {} ';' | sort | uniq | tr '\n' ':' | sed 's/:$//'):$PATH"
+fi
+export PATH="$HOME/bin:$HOME/Dropbox/bin:$PATH"
 export PYTHONPATH="$HOME/git"
 
 # environment

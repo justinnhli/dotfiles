@@ -534,12 +534,12 @@ endif
 	nnoremap           <leader>V     :tabnew ~/.config/nvim/init.vim<cr>
 	nnoremap           <leader>O     eb"zye:!open $(find ~/Dropbox/research/library/ -name <C-r>=expand('<cword>')<cr>.pdf)<cr><cr>
 	" open journal files with leader-j
-	nnoremap           <leader>J     :tabnew ~/journal/notes.journal<cr>
-	nnoremap           <leader>jh    :tabnew ~/journal/htsacsd.journal<cr>
-	nnoremap           <leader>jl    :tabnew ~/journal/list.journal<cr>
-	nnoremap           <leader>jp    :tabnew ~/journal/ponderings.journal<cr>
-	nnoremap           <leader>jr    :tabnew ~/journal/research.journal<cr>
-	nnoremap           <leader>js    :tabnew ~/journal/scratch.journal<cr>
+	nnoremap           <leader>JJ    :tabnew ~/journal/notes.journal<cr>
+	nnoremap           <leader>JH    :tabnew ~/journal/htsacsd.journal<cr>
+	nnoremap           <leader>JL    :tabnew ~/journal/list.journal<cr>
+	nnoremap           <leader>JP    :tabnew ~/journal/ponderings.journal<cr>
+	nnoremap           <leader>JR    :tabnew ~/journal/research.journal<cr>
+	nnoremap           <leader>JS    :tabnew ~/journal/scratch.journal<cr>
 	" toggle settings with double leader
 	nnoremap           <leader><leader>f     :call ToggleFoldMethod()<cr>:set foldmethod?<cr>
 	nnoremap           <leader><leader>n     :set number!<cr>:set number?<cr>

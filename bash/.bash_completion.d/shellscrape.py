@@ -160,7 +160,9 @@ def operation_list():
 def operation_complete(context):
     program = context.split()[0]
     last_word = context.split()[-1]
-    print("\n".join(completion for completion in read_completions()[program] if completion.startswith(last_word)))
+    completions = read_completions()
+    if program in completions:
+        print("\n".join(completion for completion in completions[program] if completion.startswith(last_word)))
 
 def main():
     arg_parser = ArgumentParser()

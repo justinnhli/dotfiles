@@ -439,13 +439,13 @@ endif
 
 		" terminal shortcuts
 		if exists(':terminal')
-			nnoremap       <leader>!     :call StartTerminal('lcd '.expand('%:p:h'))<cr>
-			nnoremap       <leader>wth   :call StartTerminal('leftabove vnew', 'lcd '.expand('%:p:h'))<cr>
-			nnoremap       <leader>wtj   :call StartTerminal('rightbelow new', 'lcd '.expand('%:p:h'))<cr>
-			nnoremap       <leader>wtk   :call StartTerminal('leftabove new', 'lcd '.expand('%:p:h'))<cr>
-			nnoremap       <leader>wtl   :call StartTerminal('rightbelow vnew', 'lcd '.expand('%:p:h'))<cr>
-			nnoremap       <leader>tt    :call StartTerminal('tabnew', 'lcd ~')<cr>
-			nnoremap       <leader>tT    :call StartTerminal('tabnew', 'lcd '.expand('%:p:h'))<cr>
+			nnoremap       <leader>!     :call <SID>StartTerminal('lcd '.expand('%:p:h'))<cr>
+			nnoremap       <leader>wth   :call <SID>StartTerminal('leftabove vnew', 'lcd '.expand('%:p:h'))<cr>
+			nnoremap       <leader>wtj   :call <SID>StartTerminal('rightbelow new', 'lcd '.expand('%:p:h'))<cr>
+			nnoremap       <leader>wtk   :call <SID>StartTerminal('leftabove new', 'lcd '.expand('%:p:h'))<cr>
+			nnoremap       <leader>wtl   :call <SID>StartTerminal('rightbelow vnew', 'lcd '.expand('%:p:h'))<cr>
+			nnoremap       <leader>tt    :call <SID>StartTerminal('tabnew', 'lcd ~')<cr>
+			nnoremap       <leader>tT    :call <SID>StartTerminal('tabnew', 'lcd '.expand('%:p:h'))<cr>
 		endif
 	" }
 
@@ -541,7 +541,7 @@ endif
 	nnoremap           <leader>JR    :tabnew ~/journal/research.journal<cr>
 	nnoremap           <leader>JS    :tabnew ~/journal/scratch.journal<cr>
 	" toggle settings with double leader
-	nnoremap           <leader><leader>f     :call ToggleFoldMethod()<cr>:set foldmethod?<cr>
+	nnoremap           <leader><leader>f     :call <SID>ToggleFoldMethod()<cr>:set foldmethod?<cr>
 	nnoremap           <leader><leader>n     :set number!<cr>:set number?<cr>
 	nnoremap           <leader><leader>p     :set paste!<cr>:set paste?<cr>
 	nnoremap           <leader><leader>s     :set spell!<cr>:set spell?<cr>

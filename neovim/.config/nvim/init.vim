@@ -71,6 +71,22 @@ endif
 			let l:line_num += l:step
 		endwhile
 	endfunction
+
+	function! s:StartTerminal(...)
+		for l:cmd in a:000
+			exe l:cmd
+		endfor
+		setlocal nospell
+		terminal
+	endfunction
+
+	function! s:ToggleFoldMethod()
+		if &foldmethod == "indent"
+			set foldmethod=syntax
+		elseif &foldmethod == "syntax"
+			set foldmethod=indent
+		endif
+	endfunction
 " }
 
 " functional functions {
@@ -143,22 +159,6 @@ endif
 			exec 'tabnext'.l:new_tab
 		endif
 		" FIXME fails when new_tab is the highest tab
-	endfunction
-
-	function! StartTerminal(...)
-		for l:cmd in a:000
-			exe l:cmd
-		endfor
-		setlocal nospell
-		terminal
-	endfunction
-
-	function! ToggleFoldMethod()
-		if &foldmethod == "indent"
-			set foldmethod=syntax
-		elseif &foldmethod == "syntax"
-			set foldmethod=indent
-		endif
 	endfunction
 " }
 

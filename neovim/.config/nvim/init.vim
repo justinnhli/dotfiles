@@ -331,7 +331,7 @@ endif
 	" disable the default leader
 	nnoremap \ <nop>
 
-	" text movement {
+	" no-ops {
 		" remove all uses of arrow keys
 		noremap   <up>       <nop>
 		noremap   <down>     <nop>
@@ -357,7 +357,33 @@ endif
 		inoremap  <S-down>   <nop>
 		inoremap  <S-left>   <nop>
 		inoremap  <S-right>  <nop>
+		nnoremap  <F1>       <nop>
+		nnoremap  <F2>       <nop>
+		nnoremap  <F3>       <nop>
+		nnoremap  <F4>       <nop>
+		nnoremap  <F5>       <nop>
+		nnoremap  <F6>       <nop>
+		nnoremap  <F7>       <nop>
+		nnoremap  <F8>       <nop>
+		nnoremap  <F9>       <nop>
+		nnoremap  <F10>      <nop>
+		nnoremap  <F11>      <nop>
+		nnoremap  <F12>      <nop>
+		inoremap  <F1>       <nop>
+		inoremap  <F2>       <nop>
+		inoremap  <F3>       <nop>
+		inoremap  <F4>       <nop>
+		inoremap  <F5>       <nop>
+		inoremap  <F6>       <nop>
+		inoremap  <F7>       <nop>
+		inoremap  <F8>       <nop>
+		inoremap  <F9>       <nop>
+		inoremap  <F10>      <nop>
+		inoremap  <F11>      <nop>
+		inoremap  <F12>      <nop>
+	" }
 
+	" text movement {
 		" bash/emacs home/end commands
 		nnoremap  <C-a>  ^
 		nnoremap  <C-e>  $

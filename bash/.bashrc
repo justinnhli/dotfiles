@@ -7,10 +7,13 @@ update_dot_files() {
 }
 
 # paths
-if [ -d "$HOME/git" ]; then
-	export PATH="$(find "$HOME/git" -maxdepth 2 -type f -perm -100 -exec dirname {} ';' | sort | uniq | tr '\n' ':' | sed 's/:$//'):$PATH"
+if [ -d "/usr/local/Cellar" ]; then
+	export PATH="$(find /usr/local/Cellar -name bin | sort -f | tr '\n' ':')$PATH"
 fi
-export PATH="$HOME/bin:$HOME/Dropbox/bin:$PATH"
+if [ -d "$HOME/git" ]; then
+	export PATH="$(find "$HOME/git" -maxdepth 2 -type f -perm -100 -exec dirname {} ';' | sort -f | uniq | tr '\n' ':' | sed 's/:$//'):$PATH"
+fi
+export PATH="$HOME/Dropbox/bin:$HOME/bin:$PATH"
 export PYTHONPATH="$HOME/git"
 
 # environment

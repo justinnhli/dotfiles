@@ -43,7 +43,7 @@ if [ -d "$HOME/git/Soar" ]; then
 		fi
 		export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$HOME/git/Soar/out";;
 	"Darwin")
-		export DYLD_LIBRARY_PATH="$DYLD_LIBRARY_PATH:$HOME/git/Soar/out"
+		export DYLD_LIBRARY_PATH="$DYLD_LIBRARY_PATH:$HOME/git/Soar/out";;
 	esac
 	export PYTHONPATH="$HOME/git/Soar/out:$PYTHONPATH"
 fi

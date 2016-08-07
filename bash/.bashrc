@@ -96,6 +96,16 @@ alias vim="$VISUAL"
 if [ -d "$HOME/journal" ]; then
 	alias vino="$VISUAL $HOME/journal/notes.journal"
 fi
+if [ "$NVIM_LISTEN_ADDRESS" != "" ]; then
+	unset MANPAGER
+	alias :="$(which nvimcmd)"
+	alias vi="$(which nvimcmd) tabnew"
+	alias vim="$(which nvimcmd) tabnew"
+	alias nvim="$(which nvimcmd) tabnew"
+	if [ -d "$HOME/journal" ]; then
+		alias vino="$(which nvimcmd) tabnew $HOME/journal/notes.journal"
+	fi
+fi
 
 case "$(uname)" in
 	"Linux")
@@ -112,16 +122,6 @@ case "$(uname)" in
 	"Darwin")
 		alias ls='ls -G';;
 esac
-if [ "$NVIM_LISTEN_ADDRESS" != "" ]; then
-	unset MANPAGER
-	alias :="$(which nvimcmd)"
-	alias vi="$(which nvimcmd) tabnew"
-	alias vim="$(which nvimcmd) tabnew"
-	alias nvim="$(which nvimcmd) tabnew"
-	if [ -d "$HOME/journal" ]; then
-		alias vino="$(which nvimcmd) tabnew $HOME/journal/notes.journal"
-	fi
-fi
 
 # completion
 _generic_completion()

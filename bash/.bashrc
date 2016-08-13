@@ -121,6 +121,7 @@ esac
 
 # python venv
 if which python3 >/dev/null 2>&1; then
+	alias pip='python3 -m pip'
 	export PYTHON_VENV_HOME=~/.venv
 	if [ ! -d $PYTHON_VENV_HOME ]; then
 		mkdir $PYTHON_VENV_HOME

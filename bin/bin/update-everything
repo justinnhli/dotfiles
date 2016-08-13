@@ -41,21 +41,9 @@ if which pacaur >/dev/null 2>&1; then
 	echo
 fi
 
-which python python2 python3 | while read python; do
-	if ($python -m pip list >/dev/null 2>&1); then
-		if [ "$(whoami)" = "root" ]; then
-			$python -m pip list --outdated | awk '{print $1}' | xargs "$python" -m pip install -U
-		else
-			echo "must be root to update pip for $python; run as root: "
-			echo "$python -m pip list --outdated | awk '{print \$1}' | xargs \"$python\" -m pip install -U"
-			outdated="$($python -m pip list --outdated | sed 's/^/	/')"
-			if [ "$outdated" != "" ]; then
-				echo "$outdated"
-			fi
-		fi
-	fi
-	echo
-done
+if which python3 >/dev/null 2>&1; then
+	python3 -m pip list --outdated | cut -d ' ' -f 1 | xargs python3 -m pip install --upgrade
+fi
 
 if [ -d $HOME/Dropbox ]; then
 	cd $HOME/Dropbox || exit

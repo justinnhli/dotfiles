@@ -52,13 +52,6 @@ fi
 export PATH="$(echo "$PATH" | sed 's#//#/#g')"
 export PYTHONPATH="$(echo "$PYTHONPATH" | sed 's#//#/#g')"
 
-# virtualenvwrapper
-if which python3 >/dev/null 2>&1 && which virtualenvwrapper.sh >/dev/null 2>&1; then
-	export VIRTUALENVWRAPPER_PYTHON="$(which python3)"
-	export WORKON_HOME=~/.virtualenvs
-	source "$(which virtualenvwrapper.sh)"
-fi
-
 # prompt
 prompt_command_fn() {
 	# right before prompting for the next command, save the previous command in a file.
@@ -125,6 +118,31 @@ case "$(uname)" in
 	"Darwin")
 		alias ls='ls -G';;
 esac
+
+# python venv
+if which python3 >/dev/null 2>&1; then
+	export PYTHON_VENV_HOME=~/.venv
+	if [ ! -d $PYTHON_VENV_HOME ]; then
+		mkdir $PYTHON_VENV_HOME
+	fi
+	function mkvenv() {
+		if [ ! -d $PYTHON_VENV_HOME ]; then
+			echo "venv $1 already exists"
+		else
+			python3 -m venv $PYTHON_VENV_HOME/$1
+			workon $1
+		fi
+	}
+	function workon() {
+		source $PYTHON_VENV_HOME/$1/bin/activate
+	}
+	function rmvenv() {
+		rm -rf $PYTHON_VENV_HOME/$1
+	}
+	function lsvenv() {
+		ls $PYTHON_VENV_HOME
+	}
+fi
 
 # completion
 _generic_completion()

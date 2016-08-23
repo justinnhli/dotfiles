@@ -135,7 +135,13 @@ if which python3 >/dev/null 2>&1; then
 		fi
 	}
 	function workon() {
-		source $PYTHON_VENV_HOME/$1/bin/activate
+		if [ $# -eq 0 ]; then
+			lsvenv
+		elif [ $# -eq 1 ]; then
+			source $PYTHON_VENV_HOME/$1/bin/activate
+		else
+			echo 'usage: workon [environment]'
+		fi
 	}
 	function rmvenv() {
 		rm -rf $PYTHON_VENV_HOME/$1

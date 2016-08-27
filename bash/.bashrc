@@ -25,7 +25,7 @@ else
 	export EDITOR=vi
 fi
 export VISUAL=$EDITOR
-export MANPAGER="/bin/sh -c \"col -b | $EDITOR -c 'set ft=man ts=8 nomod nolist nonu noma' -\""
+export MANPAGER="nvim -c 'set ft=man' -"
 export HISTSIZE=10000
 export HISTCONTROL=ignoredups
 export PYTHONIOENCODING="utf-8"

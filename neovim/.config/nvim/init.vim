@@ -1,6 +1,7 @@
 set nocompatible " neovim default
 
-let python_host_prog = 'python3'
+let python_host_prog = 'python2'
+let python3_host_prog = 'python3'
 
 "auto-install vim-plug
 if empty(glob('~/.config/nvim/autoload/plug.vim'))

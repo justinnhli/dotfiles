@@ -138,7 +138,11 @@ if which python3 >/dev/null 2>&1; then
 		if [ $# -eq 0 ]; then
 			lsvenv
 		elif [ $# -eq 1 ]; then
-			source $PYTHON_VENV_HOME/$1/bin/activate
+			if [ -f $PYTHON_VENV_HOME/$1/bin/activate ]; then
+				source $PYTHON_VENV_HOME/$1/bin/activate
+			else
+				echo "venv '$1' not found; create it first with 'mkvenv $1'"
+			fi
 		else
 			echo 'usage: workon [environment]'
 		fi

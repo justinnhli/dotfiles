@@ -55,10 +55,10 @@ export PYTHONPATH="$(echo "$PYTHONPATH" | sed 's#//#/#g')"
 # prompt
 prompt_command_fn() {
 	# right before prompting for the next command, save the previous command in a file.
-	echo "$(date -u +%Y-%m-%dT%H:%M:%SZ)	$(hostname)	$PWD	$(history 1 | sed 's/^ *[0-9 -]* //; s/ *$//;')" >> ~/Dropbox/personal/logs/shell_history
+	echo "$(date -u +%Y-%m-%dT%H:%M:%SZ)	$(hostname)	$PWD	$(history 1 | sed 's/^ *[0-9 -]* //; s/ *$//;')" >> $HOME/Dropbox/personal/logs/shell_history
 }
 PS1='[\u@\h \W]\$ '
-if [ -e ~/Dropbox/personal/logs/shell_history ]; then
+if [ -e $HOME/Dropbox/personal/logs/shell_history ]; then
 	PROMPT_COMMAND=prompt_command_fn
 fi
 
@@ -75,7 +75,7 @@ if which flake8 >/dev/null 2>&1; then
 	alias flake8='flake8 --ignore=E501'
 fi
 if which journal.py >/dev/null 2>&1; then
-	alias jrnl="journal.py --ignore '$(ls ~/journal/[a-z-]*.journal 2>/dev/null | grep -v '[ ()]' | tr '\n' ',')'"
+	alias jrnl="journal.py --ignore '$(ls $HOME/journal/[a-z-]*.journal 2>/dev/null | grep -v '[ ()]' | tr '\n' ',')'"
 fi
 if which scons >/dev/null 2>&1 && which python3 >/dev/null 2>&1; then
 	alias scons="scons --python=$(which python3)"
@@ -122,7 +122,7 @@ esac
 # python venv
 if which python3 >/dev/null 2>&1; then
 	alias pip='python3 -m pip'
-	export PYTHON_VENV_HOME=~/.venv
+	export PYTHON_VENV_HOME=$HOME/.venv
 	if [ ! -d $PYTHON_VENV_HOME ]; then
 		mkdir $PYTHON_VENV_HOME
 	fi
@@ -164,12 +164,12 @@ _generic_completion()
 			done
 		fi
 		# call script
-		COMPREPLY=( $(~/.bash_completion.d/shellscrape.py "$context") )
+		COMPREPLY=( $($HOME/.bash_completion.d/shellscrape.py "$context") )
 	fi
 }
 
-if which python3 >/dev/null 2>&1 && [ -f ~/.bash_completion.d/shellscrape.py ]; then
-	for program in $(~/.bash_completion.d/shellscrape.py); do
+if which python3 >/dev/null 2>&1 && [ -f $HOME/.bash_completion.d/shellscrape.py ]; then
+	for program in $($HOME/.bash_completion.d/shellscrape.py); do
 		if type "$program" >/dev/null 2>&1; then
 			complete -o default -F _generic_completion "$program"
 		fi

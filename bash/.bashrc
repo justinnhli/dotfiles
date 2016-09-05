@@ -29,6 +29,9 @@ export MANPAGER="nvim -c 'set ft=man' -"
 export HISTSIZE=10000
 export HISTCONTROL=ignoredups
 export PYTHONIOENCODING="utf-8"
+if [ -f $HOME/.dot_secrets/bashrc ]; then
+	source $HOME/.dot_secrets/bashrc
+fi
 
 # soar variables
 if [ -d "$HOME/git/Soar" ]; then

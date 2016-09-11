@@ -25,7 +25,9 @@ else
 	export EDITOR=vi
 fi
 export VISUAL=$EDITOR
-export MANPAGER="nvim -c 'set ft=man' -"
+if which nvim >/dev/null 2>&1; then
+	export MANPAGER="nvim -c 'set ft=man' -"
+fi
 export HISTSIZE=10000
 export HISTCONTROL=ignoredups
 export PYTHONIOENCODING="utf-8"

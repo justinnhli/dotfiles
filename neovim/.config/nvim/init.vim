@@ -575,6 +575,7 @@ endif
 	nnoremap           <leader><leader>w     :set wrap!<cr>:set wrap?<cr>
 	nnoremap           <leader><leader>/     :nohlsearch<cr>
 	" editor function shortcuts
+	nnoremap           <leader>o     :!open 
 	nnoremap           <leader>p     "+p
 	nnoremap           <leader>y     "+y
 	vnoremap           <leader>y     "+y

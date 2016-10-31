@@ -33,11 +33,17 @@ if which python3 >/dev/null 2>&1; then
 	python3 -m pip list --outdated | cut -d ' ' -f 1 | xargs python3 -m pip install --upgrade
 fi
 
+if [ -d $HOME/Desktop ]; then
+	cd $HOME/Desktop || exit
+	echo "removing old vim undo files ~/Desktop..."
+	orphan-undos | sed 's/^/	/'
+fi
+
 if [ -d $HOME/Dropbox ]; then
 	cd $HOME/Dropbox || exit
 
 	# remove old vim undo files
-	echo "removing old vim undo files..."
+	echo "removing old vim undo files from ~/Dropbox..."
 	orphan-undos | sed 's/^/	/'
 
 	# remove OS files

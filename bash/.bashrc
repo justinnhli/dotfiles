@@ -132,7 +132,7 @@ if which python3 >/dev/null 2>&1; then
 		mkdir $PYTHON_VENV_HOME
 	fi
 	function mkvenv() {
-		if [ ! -d $PYTHON_VENV_HOME ]; then
+		if [ -d $PYTHON_VENV_HOME/$1 ]; then
 			echo "venv $1 already exists"
 		else
 			python3 -m venv $PYTHON_VENV_HOME/$1

@@ -159,6 +159,12 @@ if which python3 >/dev/null 2>&1; then
 	function lsvenv() {
 		ls $PYTHON_VENV_HOME
 	}
+	function venv-all() {
+		find $PYTHON_VENV_HOME -depth 1 -type d | sort | while read venv; do
+			venv="$(basename "$venv")"
+			echo "$venv" && workon "$venv" && $@ && deactivate
+		done
+	}
 fi
 
 # completion

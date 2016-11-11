@@ -137,6 +137,7 @@ if which python3 >/dev/null 2>&1; then
 		else
 			python3 -m venv $PYTHON_VENV_HOME/$1
 			workon $1
+			pip install --upgrade pip
 		fi
 	}
 	function workon() {

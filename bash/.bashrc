@@ -160,9 +160,15 @@ if which python3 >/dev/null 2>&1; then
 		ls $PYTHON_VENV_HOME
 	}
 	function venv-all() {
-		find $PYTHON_VENV_HOME -depth 1 -type d | sort | while read venv; do
+		find "$PYTHON_VENV_HOME" -mindepth 1 -maxdepth 1 -type d | sort | while read venv; do
 			venv="$(basename "$venv")"
 			echo "$venv" && workon "$venv" && $@ && deactivate
+		done
+	}
+	function venv-freeze() {
+		find "$PYTHON_VENV_HOME" -mindepth 1 -maxdepth 1 -type d | sort | while read venv; do
+			venv="$(basename "$venv")"
+			echo "$venv" && workon "$venv" && pip list --not-required --format freeze | sed 's/=.*//; s/^/    /;' && deactivate
 		done
 	}
 fi

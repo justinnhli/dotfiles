@@ -157,18 +157,27 @@ if which python3 >/dev/null 2>&1; then
 		rm -rf $PYTHON_VENV_HOME/$1
 	}
 	function lsvenv() {
-		ls $PYTHON_VENV_HOME
+		find "$PYTHON_VENV_HOME/" -mindepth 1 -maxdepth 1 -type d -exec basename {} ';' | sort
 	}
 	function venv-all() {
-		find "$PYTHON_VENV_HOME" -mindepth 1 -maxdepth 1 -type d | sort | while read venv; do
+		find "$PYTHON_VENV_HOME/" -mindepth 1 -maxdepth 1 -type d | sort | while read venv; do
 			venv="$(basename "$venv")"
 			echo "$venv" && workon "$venv" && $@ && deactivate
 		done
 	}
 	function venv-freeze() {
-		find "$PYTHON_VENV_HOME" -mindepth 1 -maxdepth 1 -type d | sort | while read venv; do
+		find "$PYTHON_VENV_HOME/" -mindepth 1 -maxdepth 1 -type d | sort | while read venv; do
 			venv="$(basename "$venv")"
-			echo "$venv" && workon "$venv" && pip list --not-required --format freeze | sed 's/=.*//; s/^/    /;' && deactivate
+			workon "$venv" && echo "$venv $(pip list --not-required --format freeze | sed 's/=.*//;' | tr '\n' ' ')" && deactivate
+		done
+	}
+	function venv-setup() {
+		cat "$PYTHON_VENV_HOME/list" | while read line; do
+			venv="$(echo "$line" | sed 's/ .*//')"
+			packages="$(echo "$line" | sed 's/^[^ ]* //')"
+			if [ ! -d "$PYTHON_VENV_HOME/$venv" ]; then
+				mkvenv "$venv" && pip install $packages && deactivate
+			fi
 		done
 	}
 fi

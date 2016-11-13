@@ -183,15 +183,14 @@ if which python3 >/dev/null 2>&1; then
 fi
 
 # completion
-_generic_completion()
-{
+function _generic_completion() {
 	# FIXME only do this if we're looking for options
 	if [ "${COMP_WORDS[COMP_CWORD]:0:1}" == "-" ]; then
 		# build up the context
 		local context="${COMP_WORDS[0]}"
 		if [ $COMP_CWORD -gt 0 ]; then
 			for i in $(seq "$COMP_CWORD"); do
-			context="$context ${COMP_WORDS[i]}"
+				context="$context ${COMP_WORDS[i]}"
 			done
 		fi
 		# call script

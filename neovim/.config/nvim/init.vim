@@ -306,6 +306,9 @@ endif
 	if has('extra_search')
 		set   incsearch " neovim default
 	endif
+	if exists('&inccommand')
+		set inccommand=split
+	endif
 	if has('syntax')
 		set   spell
 		set   spellcapcheck=

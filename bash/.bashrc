@@ -18,21 +18,21 @@ export PYTHONPATH="$HOME/git"
 
 # environment
 if which nvim >/dev/null 2>&1; then
-	export EDITOR='nvim'
+	export EDITOR=nvim
 elif which vim >/dev/null 2>&1; then
 	export EDITOR=vim
 else
 	export EDITOR=vi
 fi
-export VISUAL=$EDITOR
+export VISUAL="$EDITOR"
 if which nvim >/dev/null 2>&1; then
 	export MANPAGER="nvim -c 'set ft=man' -"
 fi
 export HISTSIZE=10000
 export HISTCONTROL=ignoredups
 export PYTHONIOENCODING="utf-8"
-if [ -f $HOME/.dot_secrets/bashrc ]; then
-	source $HOME/.dot_secrets/bashrc
+if [ -f "$HOME/.dot_secrets/bashrc" ]; then
+	source "$HOME/.dot_secrets/bashrc"
 fi
 
 # soar variables
@@ -63,7 +63,7 @@ prompt_command_fn() {
 	echo "$(date -u +%Y-%m-%dT%H:%M:%SZ)	$(hostname)	$PWD	$(history 1 | sed 's/^ *[0-9 -]* //; s/ *$//;')" >> $HOME/Dropbox/personal/logs/shell_history
 }
 PS1='[\u@\h \W]\$ '
-if [ -e $HOME/Dropbox/personal/logs/shell_history ]; then
+if [ -e "$HOME/Dropbox/personal/logs/shell_history" ]; then
 	PROMPT_COMMAND=prompt_command_fn
 fi
 
@@ -127,16 +127,16 @@ esac
 # python venv
 if which python3 >/dev/null 2>&1; then
 	alias pip='python3 -m pip'
-	export PYTHON_VENV_HOME=$HOME/.venv
-	if [ ! -d $PYTHON_VENV_HOME ]; then
-		mkdir $PYTHON_VENV_HOME
+	export PYTHON_VENV_HOME="$HOME/.venv"
+	if [ ! -d "$PYTHON_VENV_HOME" ]; then
+		mkdir "$PYTHON_VENV_HOME"
 	fi
 	function mkvenv() {
-		if [ -d $PYTHON_VENV_HOME/$1 ]; then
+		if [ -d "$PYTHON_VENV_HOME/$1" ]; then
 			echo "venv $1 already exists"
 		else
-			python3 -m venv $PYTHON_VENV_HOME/$1
-			workon $1
+			python3 -m venv "$PYTHON_VENV_HOME/$1"
+			workon "$1"
 			pip install --upgrade pip
 		fi
 	}
@@ -144,8 +144,8 @@ if which python3 >/dev/null 2>&1; then
 		if [ $# -eq 0 ]; then
 			lsvenv
 		elif [ $# -eq 1 ]; then
-			if [ -f $PYTHON_VENV_HOME/$1/bin/activate ]; then
-				source $PYTHON_VENV_HOME/$1/bin/activate
+			if [ -f "$PYTHON_VENV_HOME/$1/bin/activate" ]; then
+				source "$PYTHON_VENV_HOME/$1/bin/activate"
 			else
 				echo "venv '$1' not found; create it first with 'mkvenv $1'"
 			fi
@@ -154,7 +154,7 @@ if which python3 >/dev/null 2>&1; then
 		fi
 	}
 	function rmvenv() {
-		rm -rf $PYTHON_VENV_HOME/$1
+		rm -rf "$PYTHON_VENV_HOME/$1"
 	}
 	function lsvenv() {
 		find "$PYTHON_VENV_HOME/" -mindepth 1 -maxdepth 1 -type d -exec basename {} ';' | sort
@@ -190,7 +190,7 @@ _generic_completion()
 		# build up the context
 		local context="${COMP_WORDS[0]}"
 		if [ $COMP_CWORD -gt 0 ]; then
-			for i in $(seq $COMP_CWORD); do
+			for i in $(seq "$COMP_CWORD"); do
 			context="$context ${COMP_WORDS[i]}"
 			done
 		fi
@@ -199,7 +199,7 @@ _generic_completion()
 	fi
 }
 
-if which python3 >/dev/null 2>&1 && [ -f $HOME/.bash_completion.d/shellscrape.py ]; then
+if which python3 >/dev/null 2>&1 && [ -f "$HOME/.bash_completion.d/shellscrape.py" ]; then
 	for program in $($HOME/.bash_completion.d/shellscrape.py); do
 		if type "$program" >/dev/null 2>&1; then
 			complete -o default -F _generic_completion "$program"
@@ -215,8 +215,8 @@ shopt -s checkwinsize
 shopt -s cmdhist
 # append to history instead of overwriting it
 shopt -s histappend
-# allow '**' to match subdirectories
-if [ "$(( echo $BASH_VERSION && echo 4 ) | sort -n | tail -n 1 )" != "4" ]; then
+# allow '**' to match subdirectories (if bash version >= 4)
+if [ "$(( echo "$BASH_VERSION" && echo 4 ) | sort -n | tail -n 1 )" != "4" ]; then
 	shopt -s globstar
 fi
 
@@ -229,7 +229,7 @@ bind '"\C-w": unix-filename-rubout'
 
 # fix terminfo
 export TERM=xterm-256color
-terminfo="$(mktemp /tmp/$TERM-terminfo.XXXXXX)"
-infocmp $TERM | sed 's/kbs=^[hH]/kbs=\\177/' > "$terminfo"
+terminfo="$(mktemp "/tmp/$TERM-terminfo.XXXXXX")"
+infocmp "$TERM" | sed 's/kbs=^[hH]/kbs=\\177/' > "$terminfo"
 tic "$terminfo"
 rm -f "$terminfo"

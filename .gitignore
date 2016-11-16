@@ -11,4 +11,6 @@ ssh/.ssh/id_rsa
 ssh/.ssh/id_rsa.pub
 ssh/.ssh/known_hosts
 venv/.venv/*/**
+xfce-terminal/.config/xfce4/help.rc
+xfce-terminal/.config/xfce4/terminal/accels.scm
 xfce-terminal/.config/xfce4/xfconf

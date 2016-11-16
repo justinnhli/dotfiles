@@ -63,7 +63,7 @@ if [ -d "$HOME/Dropbox" ]; then
 	echo "merging command line history..."
 	filename="$(mktemp /tmp/histfix.XXXXXX)"
 	sort $HOME/Dropbox/personal/logs/shell_history* | uniq | sed 's/ \+$//' > "$filename"
-	mv -f "$filename" $HOME/Dropbox/personal/logs/shell_history
+	mv -f "$filename" "$HOME/Dropbox/personal/logs/shell_history"
 	find "$HOME/Dropbox/personal/logs/" -name 'shell_history *' | while read line; do
 		rm -f "$line"
 	done
@@ -82,8 +82,8 @@ fi
 echo
 
 nvim -c ':PlugUpgrade | qa!'
-if_exists_do "updating nvim plugins" $HOME/.config/nvim/plugged "git-all pull"
+if_exists_do "updating nvim plugins" "$HOME/.config/nvim/plugged" "git-all pull"
 
-if_exists_do "updating ACT-R" $HOME/act-r "svn update"
-if_exists_do "updating git repos" $HOME/git "git-all pull"
-if_exists_do "cleaning git repos" $HOME/git "orphan-undos"
+if_exists_do "updating ACT-R" "$HOME/act-r" "svn update"
+if_exists_do "updating git repos" "$HOME/git" "git-all pull"
+if_exists_do "cleaning git repos" "$HOME/git" "orphan-undos"

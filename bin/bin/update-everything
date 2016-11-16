@@ -29,7 +29,7 @@ if which pacaur >/dev/null 2>&1; then
 	echo
 fi
 
-if which python3 >/dev/null 2>&1; then
+if which python3 >/dev/null 2>&1 && python3 -m pip > /dev/null 2>&1; then
 	python3 -m pip list --outdated | cut -d ' ' -f 1 | xargs python3 -m pip install --upgrade
 fi
 

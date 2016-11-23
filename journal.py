@@ -8,7 +8,7 @@ from collections import defaultdict, OrderedDict
 from copy import copy
 from datetime import datetime, timedelta
 from itertools import chain, groupby
-from os import chdir as cd, chmod, execvp, fork, remove as rm, wait, walk
+from os import chdir as cd, chmod, environ, execvp, fork, remove as rm, wait, walk
 from os.path import basename, exists as file_exists, expanduser, getmtime, join as join_path, realpath, relpath
 from stat import S_IRUSR
 from statistics import mean, median, stdev
@@ -280,7 +280,8 @@ elif args.op == 'show':
             rm(temp_file)
         else:
             cd(args.directory)
-            vim_args = ['nvim', temp_file, '-c', 'set hlsearch nospell']
+            editor = environ.get('VISUAL', environ.get('EDITOR', 'nvim'))
+            vim_args = [editor, temp_file, '-c', 'set hlsearch nospell']
             if args.terms:
                 vim_args[-1] += ' ' + ('nosmartcase' if args.icase else 'noignorecase')
                 vim_args.extend(("-c", r'let @/="\\v' + "|".join("({})".format(term) for term in args.terms).replace('"', r'\"').replace("@", r"\\@") + "\""))

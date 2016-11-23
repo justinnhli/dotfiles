@@ -95,10 +95,10 @@ if args.use_cache == 'yes':
         arg_parser.error('argument -[CGLSV]: cache files corrupted or not found; please run -U first')
 
 journal_files = set()
-entries = ''
+raw_entries = ''
 if not is_maintenance_op and use_index:
     with open(cache_file) as fd:
-        entries = fd.read()
+        raw_entries = fd.read()
 else:
     for path, dirs, files in walk(args.directory):
         journal_files.update(join_path(path, f) for f in files if f.endswith(FILE_EXTENSION))
@@ -107,10 +107,10 @@ else:
     for journal in journal_files:
         with open(journal) as fd:
             file_entries.append(fd.read().strip())
-    entries = '\n\n'.join(file_entries)
-if not entries:
+    raw_entries = '\n\n'.join(file_entries)
+if not raw_entries:
     arg_parser.error('no journal entries found or specified')
-entries = dict((entry[:DATE_LENGTH], entry.strip()) for entry in entries.strip().split('\n\n') if entry and DATE_REGEX.match(entry))
+entries = dict((entry[:DATE_LENGTH], entry.strip()) for entry in raw_entries.strip().split('\n\n') if entry and DATE_REGEX.match(entry))
 
 if args.op == 'show' and args.log and file_exists(log_file):
     options = []
@@ -122,10 +122,10 @@ if args.op == 'show' and args.log and file_exists(log_file):
                     options.append(option_string[1])
                 else:
                     options.append(' {} {}'.format(option_string, option_value))
-    options = '-S' + ''.join(sorted(options, key=(lambda x: (len(x) != 1, x.upper())))).replace(' -', '', 1)
+    log_args = '-S' + ''.join(sorted(options, key=(lambda x: (len(x) != 1, x.upper())))).replace(' -', '', 1)
     terms = " ".join('"{}"'.format(term.replace('"', '\\"')) for term in sorted(args.terms))
     with open(log_file, 'a') as fd:
-        fd.write('{}\t{} -- {}'.format(datetime.today().isoformat(' '), options, terms).strip() + '\n')
+        fd.write('{}\t{} -- {}'.format(datetime.today().isoformat(' '), log_args, terms).strip() + '\n')
 
 metadata = {}
 index = defaultdict(set)
@@ -220,11 +220,10 @@ if args.op == 'count':
     unit_length = STRING_LENGTHS[args.unit]
     length_map = dict((date, len(entries[date].split())) for date in selected)
     table = []
-    for unit, dates in chain(groupby(selected, (lambda k: k[:unit_length])), (('all', selected),)):
-        dates = tuple(dates)
-        posts = len(dates)
-        lengths = tuple(length_map[date] for date in dates)
-        table.append(tuple(str(fn(unit, posts, dates, lengths)) for fn in columns.values()))
+    for unit, selected_dates in chain(groupby(selected, (lambda k: k[:unit_length])), (('all', selected),)):
+        selected_dates = tuple(selected_dates)
+        lengths = tuple(length_map[date] for date in selected_dates)
+        table.append(tuple(str(fn(unit, len(selected_dates), selected_dates, lengths)) for fn in columns.values()))
     headers = tuple(columns.keys())
     widths = tuple(max(len(row[col]) for row in chain((headers,), table)) for col in range(len(columns)))
     if args.headers:

@@ -1,3 +1,4 @@
 datavis bokeh jupyter pandas
 ir beautifulsoup4 requests
 flask-heroku flask gunicorn
+rdf rdflib

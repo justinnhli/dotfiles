@@ -21,6 +21,7 @@ bindsym $mod+q kill
 
 # start dmenu (a program launcher)
 bindsym $mod+d exec dmenu_run
+bindsym $mod+space exec dmenu_run
 
 # change focus
 bindsym $mod+h focus left
@@ -35,16 +36,16 @@ bindsym $mod+Shift+k move up
 bindsym $mod+Shift+l move right
 
 # toggle split orientation
-bindsym $mod+Shift+Tab layout toggle split
+bindsym $mod+Tab layout toggle split
+
+# change focus between tiling / floating windows
+bindsym $mod+Shift+Tab focus mode_toggle
 
 # enter fullscreen mode for the focused container
 bindsym $mod+Return fullscreen toggle
 
 # toggle tiling / floating
 bindsym $mod+Shift+space floating toggle
-
-# change focus between tiling / floating windows
-bindsym $mod+space focus mode_toggle
 
 # Use mod-Control-Up and Down to rotate through the workspace list.
 bindsym $mod+Left workspace prev

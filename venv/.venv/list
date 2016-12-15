@@ -1,4 +1,5 @@
-datavis bokeh jupyter pandas
-ir beautifulsoup4 requests
+datasci pandas scipy scikit-learn jupyter bokeh
+datavis pandas jupyter bokeh
 flask-heroku flask gunicorn
+ir beautifulsoup4 requests
 rdf rdflib

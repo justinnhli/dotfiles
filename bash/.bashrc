@@ -175,8 +175,13 @@ if which python3 >/dev/null 2>&1; then
 		cat "$PYTHON_VENV_HOME/list" | while read line; do
 			venv="$(echo "$line" | sed 's/ .*//')"
 			packages="$(echo "$line" | sed 's/^[^ ]* //')"
+			echo
+			echo "VENV $venv" | tr '[a-z]' '[A-Z]'
+			echo
 			if [ ! -d "$PYTHON_VENV_HOME/$venv" ]; then
 				mkvenv "$venv" && pip install $packages && deactivate
+			else
+				workon "$venv" && python3 -m pip list --outdated --format=freeze | sed 's/=.*//;' | xargs python3 -m pip install --upgrade && deactivate
 			fi
 		done
 	}

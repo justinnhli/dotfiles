@@ -27,7 +27,7 @@ from collections import Counter, defaultdict
 from os.path import exists as file_exists, expanduser, realpath
 
 SHELL_HISTORY = realpath(expanduser("~/Dropbox/personal/logs/shell_history"))
-COMPLETION_FILE = realpath(expanduser("~/.bash_completion.d/completions"))
+COMPLETION_FILE = realpath(expanduser("~/.bash_completion.d/completions.dict"))
 
 KEYWORDS = ("if", "while", "for", "then", "do")
 

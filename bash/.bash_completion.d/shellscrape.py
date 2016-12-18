@@ -157,15 +157,18 @@ def operation_update():
 def operation_list():
     print("\n".join(sorted(read_completions().keys())))
 
-def operation_complete(context):
-    program = context.split()[0]
-    last_word = context.split()[-1]
-    completions = read_completions()
-    if program in completions:
-        print("\n".join(completion for completion in completions[program] if completion.startswith(last_word)))
+def operation_complete(pwd, context):
+    words = context.strip().split()
+    if len(words) > 1:
+        program = words[0]
+        last_word = words[-1]
+        completions = read_completions()
+        if program in completions:
+            print("\n".join(completion for completion in completions[program] if completion.startswith(last_word)))
 
 def main():
     arg_parser = ArgumentParser()
+    arg_parser.add_argument("pwd", nargs="?")
     arg_parser.add_argument("context", nargs="?")
     arg_parser.add_argument("--update", action="store_true", default=False)
     args = arg_parser.parse_args()
@@ -173,8 +176,8 @@ def main():
         operation_update()
     elif args.context is None:
         operation_list()
-    elif args.context[-1] != " ":
-        operation_complete(args.context)
+    else:
+        operation_complete(args.pwd, args.context)
 
 if __name__ == "__main__":
     main()

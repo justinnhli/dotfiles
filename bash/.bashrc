@@ -127,6 +127,7 @@ esac
 # python venv
 if which python3 >/dev/null 2>&1; then
 	alias pip='python3 -m pip'
+	VENV_LIST="$HOME/.config/packages-meta/venv"
 	export PYTHON_VENV_HOME="$HOME/.venv"
 	if [ ! -d "$PYTHON_VENV_HOME" ]; then
 		mkdir "$PYTHON_VENV_HOME"
@@ -172,7 +173,7 @@ if which python3 >/dev/null 2>&1; then
 		done
 	}
 	function venv-setup() {
-		cat "$PYTHON_VENV_HOME/list" | while read line; do
+		cat "$VENV_LIST" | while read line; do
 			venv="$(echo "$line" | sed 's/ .*//')"
 			packages="$(echo "$line" | sed 's/^[^ ]* //')"
 			echo
@@ -181,7 +182,7 @@ if which python3 >/dev/null 2>&1; then
 			if [ ! -d "$PYTHON_VENV_HOME/$venv" ]; then
 				mkvenv "$venv" && pip install $packages && deactivate
 			else
-				workon "$venv" && python3 -m pip list --outdated --format=freeze | sed 's/=.*//;' | xargs python3 -m pip install --upgrade && deactivate
+				workon "$venv" && python3 -m pip list --outdated --format freeze | sed 's/=.*//;' | xargs python3 -m pip install --upgrade && deactivate
 			fi
 		done
 	}

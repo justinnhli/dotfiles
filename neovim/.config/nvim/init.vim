@@ -3,32 +3,32 @@ set nocompatible " neovim default
 let python_host_prog = 'python2'
 let python3_host_prog = 'python3'
 
-"auto-install vim-plug
-if empty(glob('~/.config/nvim/autoload/plug.vim'))
-	silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-	autocmd VimEnter * PlugInstall
-endif
-
-try
-	call plug#begin(expand('<sfile>:p:h').'/plugged')
-	" extensions
-	Plug 'kien/ctrlp.vim'
-	Plug 'mbbill/undotree'
-	Plug 'rhysd/clever-f.vim'
-	Plug 'tpope/vim-fugitive'
-	" color schemes
-	Plug 'tomasr/molokai'
-	" settings
-	Plug 'tpope/vim-sleuth'
-	Plug 'christoomey/vim-tmux-navigator'
-	" syntax
-	Plug 'hdima/python-syntax', {'for': 'python'}
-	Plug 'justinnhli/journal.vim', {'for': 'journal'}
-	call plug#end()
-catch
-endtry
-
 if has('nvim')
+	"auto-install vim-plug
+	if empty(glob('~/.config/nvim/autoload/plug.vim'))
+		silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+		autocmd VimEnter * PlugInstall
+	endif
+
+	try
+		call plug#begin(expand('<sfile>:p:h').'/plugged')
+		" extensions
+		Plug 'kien/ctrlp.vim'
+		Plug 'mbbill/undotree'
+		Plug 'rhysd/clever-f.vim'
+		Plug 'tpope/vim-fugitive'
+		" color schemes
+		Plug 'tomasr/molokai'
+		" settings
+		Plug 'tpope/vim-sleuth'
+		Plug 'christoomey/vim-tmux-navigator'
+		" syntax
+		Plug 'hdima/python-syntax', {'for': 'python'}
+		Plug 'justinnhli/journal.vim', {'for': 'journal'}
+		call plug#end()
+	catch
+	endtry
+
 	" FIXME use additional runtime directories when available: local neovim clone, Arch vim install, MacVim install
 	" we need these for UTF-8 and ASCII spell files (see https://github.com/neovim/neovim/issues/1551)
 	let s:vim_runtimes = [expand('~/neovim/runtime'), '/usr/share/vim/vim74', '/Applications/MacVim.app/Contents/Resources/vim/runtime']

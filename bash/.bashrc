@@ -17,17 +17,15 @@ export PATH="$HOME/Dropbox/bin:$HOME/bin:$PATH"
 export PYTHONPATH="$HOME/git"
 
 # environment
-if which nvim >/dev/null 2>&1; then
+if which --skip-alias nvim >/dev/null 2>&1; then
 	export EDITOR=nvim
-elif which vim >/dev/null 2>&1; then
+	export MANPAGER="nvim -c 'set ft=man' -"
+elif which --skip-alias vim >/dev/null 2>&1; then
 	export EDITOR=vim
 else
 	export EDITOR=vi
 fi
 export VISUAL="$EDITOR"
-if which nvim >/dev/null 2>&1; then
-	export MANPAGER="nvim -c 'set ft=man' -"
-fi
 export HISTSIZE=10000
 export HISTCONTROL=ignoredups
 export PYTHONIOENCODING="utf-8"

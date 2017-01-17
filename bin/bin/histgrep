@@ -21,6 +21,8 @@ with open(realpath(expanduser('~/Dropbox/personal/logs/shell_history'))) as fd:
         except ValueError:
             continue
         event = Event(date, machine, pwd, command)
+        if args.date is not None and not re.search(args.date, event.date):
+            continue
         if args.machine is not None and not re.search(args.machine, event.machine):
             continue
         if args.pwd is not None and not re.search(args.pwd, event.machine):

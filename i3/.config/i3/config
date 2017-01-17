@@ -20,7 +20,6 @@ bindsym $mod+e exec "thunar"
 bindsym $mod+q kill
 
 # start dmenu (a program launcher)
-bindsym $mod+d exec dmenu_run
 bindsym $mod+space exec dmenu_run
 
 # change focus

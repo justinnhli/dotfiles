@@ -20,10 +20,16 @@ export PATH="$HOME/Dropbox/bin:$HOME/bin:$PATH"
 export PYTHONPATH="$HOME/git"
 
 # environment
-if which --skip-alias nvim >/dev/null 2>&1; then
+case "$(uname)" in
+"Linux")
+	WHICH='which --skip-alias';;
+"Darwin")
+	WHICH='which';;
+esac
+if $WHICH nvim >/dev/null 2>&1; then
 	export EDITOR=nvim
 	export MANPAGER="nvim -c 'set ft=man' -"
-elif which --skip-alias vim >/dev/null 2>&1; then
+elif $WHICH vim >/dev/null 2>&1; then
 	export EDITOR=vim
 else
 	export EDITOR=vi

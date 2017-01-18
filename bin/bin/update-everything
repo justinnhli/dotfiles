@@ -81,6 +81,10 @@ if [ -d "$HOME/Dropbox" ]; then
 fi
 echo
 
+if [ -d "$HOME/papers" ]; then
+	libsync
+fi
+
 nvim -c ':PlugUpgrade | qa!'
 if_exists_do "updating nvim plugins" "$HOME/.config/nvim/plugged" "git-all pull"
 

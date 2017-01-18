@@ -555,21 +555,24 @@ endif
 	" }
 
 	" open special files
+	let g:justinnhli_journal_path=expand('~/Dropbox/journal')
+	let g:justinnhli_scholarship_path=expand('~/Dropbox/scholarship')
+	let g:justinnhli_library_path=expand('~/papers')
 	nnoremap           <leader>B     :tabnew ~/.bashrc<cr>
+	nnoremap           <leader>V     :tabnew ~/.config/nvim/init.vim<cr>
 	nnoremap           <leader>C     :tabnew ~/Dropbox/personal/contacts/contacts-*<cr>
 	nnoremap           <leader>H     :tabnew ~/Dropbox/personal/logs/shell_history<cr>
-	nnoremap           <leader>L     :tabnew ~/research/journal/library.bib<cr>
-	nnoremap           <leader>R     :tabnew ~/research/journal/<C-R>=strftime("%Y")<cr>.journal<cr>
 	nnoremap           <leader>T     :tabnew ~/Dropbox/personal/logs/ifttt/tweets.txt<cr>
-	nnoremap           <leader>V     :tabnew ~/.config/nvim/init.vim<cr>
-	nnoremap           <leader>O     eb"zye:!open $(find ~/Dropbox/research/library/ -name <C-r>=expand('<cword>')<cr>.pdf)<cr><cr>
+	nnoremap           <leader>L     :tabnew <C-r>=g:justinnhli_scholarship_path<cr>/journal/library.bib<cr>
+	nnoremap           <leader>R     :tabnew <C-r>=g:justinnhli_scholarship_path<cr>/journal/<C-R>=strftime("%Y")<cr>.journal<cr>
+	nnoremap           <leader>O     eb"zye:!open $(find <C-r>=g:justinnhli_library_path<cr> -name <C-r>=expand('<cword>')<cr>.pdf)<cr><cr>
 	" open journal files with leader-j
-	nnoremap           <leader>JJ    :tabnew ~/journal/notes.journal<cr>
-	nnoremap           <leader>JH    :tabnew ~/journal/htsacsd.journal<cr>
-	nnoremap           <leader>JL    :tabnew ~/journal/list.journal<cr>
-	nnoremap           <leader>JP    :tabnew ~/journal/ponderings.journal<cr>
-	nnoremap           <leader>JR    :tabnew ~/journal/research.journal<cr>
-	nnoremap           <leader>JS    :tabnew ~/journal/scratch.journal<cr>
+	nnoremap           <leader>JJ    :tabnew <C-r>=g:justinnhli_journal_path<cr>/notes.journal<cr>
+	nnoremap           <leader>JL    :tabnew <C-r>=g:justinnhli_journal_path<cr>/list.journal<cr>
+	nnoremap           <leader>JS    :tabnew <C-r>=g:justinnhli_journal_path<cr>/scratch.journal<cr>
+	nnoremap           <leader>JH    :tabnew <C-r>=g:justinnhli_journal_path<cr>/htsacsd.journal<cr>
+	nnoremap           <leader>JP    :tabnew <C-r>=g:justinnhli_journal_path<cr>/ponderings.journal<cr>
+	nnoremap           <leader>JR    :tabnew <C-r>=g:justinnhli_journal_path<cr>/research.journal<cr>
 	" toggle settings with double leader
 	nnoremap           <leader><leader>f     :call <SID>ToggleFoldMethod()<cr>:set foldmethod?<cr>
 	nnoremap           <leader><leader>n     :set number!<cr>:set number?<cr>

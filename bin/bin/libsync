@@ -13,9 +13,9 @@ if [ $# -eq 1 ]; then
 			remote_list="$(ssh dreamhost "cd $REMOTE_PATH && find . -name '*.pdf'")"
 			diff <(echo "$local_list" | sort) <(echo "$remote_list" | sort);;
 		put)
-			rsync -av --rsh=ssh --exclude "$EXCLUDES" $LOCAL_PATH/ $REMOTE_HOST:$REMOTE_PATH;;
+			rsync --archive --progress --rsh=ssh --exclude "$EXCLUDES" $LOCAL_PATH/ $REMOTE_HOST:$REMOTE_PATH;;
 		get)
-			rsync -av --rsh=ssh --exclude "$EXCLUDES" $REMOTE_HOST:$REMOTE_PATH/ $LOCAL_PATH;;
+			rsync --archive --progress --rsh=ssh --exclude "$EXCLUDES" $REMOTE_HOST:$REMOTE_PATH/ $LOCAL_PATH;;
 		*)
 			echo 'unknown command:' $1;;
 	esac

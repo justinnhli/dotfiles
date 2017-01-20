@@ -6,19 +6,22 @@ REMOTE_PATH="/home/justinnhli/justinnhli.com/library"
 
 EXCLUDES=".*"
 
-if [ $# -eq 1 ]; then
-	case "$1" in
-		diff)
-			local_list="$(cd $LOCAL_PATH && find . -name '*.pdf')"
-			remote_list="$(ssh dreamhost "cd $REMOTE_PATH && find . -name '*.pdf'")"
-			diff <(echo "$local_list" | sort) <(echo "$remote_list" | sort);;
-		put)
-			rsync --archive --progress --rsh=ssh --exclude "$EXCLUDES" $LOCAL_PATH/ $REMOTE_HOST:$REMOTE_PATH;;
-		get)
-			rsync --archive --progress --rsh=ssh --exclude "$EXCLUDES" $REMOTE_HOST:$REMOTE_PATH/ $LOCAL_PATH;;
-		*)
-			echo 'unknown command:' $1;;
-	esac
-else
-	echo "usage: $0 [diff|put|get]"
+if [ $# -eq 0 ]; then
+	echo "usage: $0 [diff|put|get] args" && exit 1
 fi
+case "$1" in
+	diff)
+		local_list="$(cd $LOCAL_PATH && find . -name '*.pdf')"
+		remote_list="$(ssh dreamhost "cd $REMOTE_PATH && find . -name '*.pdf'")"
+		diff <(echo "$local_list" | sort) <(echo "$remote_list" | sort);;
+	put)
+		rsync --archive --progress --rsh=ssh --exclude "$EXCLUDES" $LOCAL_PATH/ $REMOTE_HOST:$REMOTE_PATH;;
+	get)
+		rsync --archive --progress --rsh=ssh --exclude "$EXCLUDES" $REMOTE_HOST:$REMOTE_PATH/ $LOCAL_PATH;;
+	rm)
+		filename="$(basename "$2")"
+		path="$REMOTE_PATH/$(echo ${filename:0:1} | tr '[A-Z]' '[a-z]')/$filename"
+		ssh "$REMOTE_HOST" "rm -vf $path";;
+	*)
+		echo "usage: $0 [diff|put|get|rm] [args ...]";;
+esac

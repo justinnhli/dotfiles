@@ -1,15 +1,17 @@
 #!/bin/bash
 
 LOCAL_PATH="$HOME/papers"
-REMOTE_HOST="dreamhost"
+REMOTE_HOST="justinnhli.com"
 REMOTE_PATH="/home/justinnhli/justinnhli.com/library"
 
 EXCLUDES=".*"
 
 if [ $# -eq 0 ]; then
-	echo "usage: $0 [diff|put|get] args" && exit 1
+	action='diff'
+else
+	action="$1"
 fi
-case "$1" in
+case "$action" in
 	diff)
 		local_list="$(cd $LOCAL_PATH && find . -name '*.pdf')"
 		remote_list="$(ssh dreamhost "cd $REMOTE_PATH && find . -name '*.pdf'")"

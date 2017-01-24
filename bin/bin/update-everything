@@ -15,6 +15,17 @@ if_exists_do() {
 
 if which brew >/dev/null 2>&1; then
 	brew update && brew upgrade && brew cleanup
+	brew cask list 2>/dev/null | while read package; do
+		package="$(echo "$package" | sed 's/ .*//g')"
+		current="$(brew cask list --versions "$package" | sed 's/.* //')"
+		newest="$(brew cask info "$package" | head -n 1 | sed 's/.* //')"
+		if [ "$current" != "$newest" ]; then
+			if [[ "$current" < "$newest" ]]; then
+				echo "$package $current $newest"
+				brew cask reinstall "$package"
+			fi
+		fi
+	done
 	brew cask cleanup
 	echo
 fi

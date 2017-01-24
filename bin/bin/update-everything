@@ -14,7 +14,7 @@ if_exists_do() {
 }
 
 if which brew >/dev/null 2>&1; then
-	brew update && brew upgrade && brew cleanup && brew linkapps
+	brew update && brew upgrade && brew cleanup
 	brew cask cleanup
 	echo
 fi

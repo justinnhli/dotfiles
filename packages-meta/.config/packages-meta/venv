@@ -3,3 +3,4 @@ datavis pandas jupyter bokeh
 flask-heroku flask gunicorn
 ir beautifulsoup4 requests
 rdf rdflib
+networkx networkx pygraphviz

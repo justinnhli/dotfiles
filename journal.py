@@ -284,7 +284,7 @@ elif args.op == 'show':
             if args.terms:
                 vim_args[-1] += ' ' + ('nosmartcase' if args.icase else 'noignorecase')
                 vim_args.extend(("-c", r'let @/="\\v' + "|".join("({})".format(term) for term in args.terms).replace('"', r'\"').replace("@", r"\\@") + "\""))
-            execvp('nvim', vim_args)
+            execvp(editor, vim_args)
     else:
         print(text)
 

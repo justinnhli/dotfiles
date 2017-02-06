@@ -180,15 +180,28 @@ if which python3 >/dev/null 2>&1; then
 		done
 	}
 	function venv-setup() {
-		cat "$VENV_LIST" | while read line; do
+		(
+			cat "$VENV_LIST" && \
+			(
+				find $HOME/git -maxdepth 2 -name requirements.txt && \
+				find $HOME/Dropbox/projects -maxdepth 2 -name requirements.txt
+			) | while read line; do
+				venv="$(echo "$line" | tr '/' ' ' | awk '{print $(NF-1)}')"
+				packages="$(cat "$line" | tr '\n' ' ')"
+				echo "$venv" "$packages"
+			done
+		) | while read line; do
 			venv="$(echo "$line" | sed 's/ .*//')"
 			packages="$(echo "$line" | sed 's/^[^ ]* //')"
 			echo
 			echo "VENV $venv" | tr '[a-z]' '[A-Z]'
 			echo
+			if [ ! -f "$PYTHON_VENV_HOME/$venv/bin/activate" ]; then
+				rm -rf "$PYTHON_VENV_HOME/$venv"
+			fi
 			if [ ! -d "$PYTHON_VENV_HOME/$venv" ]; then
 				mkvenv "$venv" && pip install $packages && deactivate
-			else
+			elif ! echo "$packages" | grep '[>=]' >/dev/null 2>&1; then
 				workon "$venv" && python3 -m pip list --outdated --format freeze | sed 's/=.*//;' | xargs python3 -m pip install --upgrade && deactivate
 			fi
 		done

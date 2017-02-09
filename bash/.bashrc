@@ -46,7 +46,7 @@ fi
 if [ -d "$HOME/git/Soar" ]; then
 	case "$(uname)" in
 	"Linux")
-		if uname -v | grep Ubuntu 2>&1 >/dev/null; then
+		if uname -v | grep Ubuntu >/dev/null 2>&1; then
 			if [ -d "/usr/lib/jvm/default-java" ]; then
 				export JAVA_HOME="/usr/lib/jvm/default-java"
 			fi
@@ -194,7 +194,7 @@ if which python3 >/dev/null 2>&1; then
 			venv="$(echo "$line" | sed 's/ .*//')"
 			packages="$(echo "$line" | sed 's/^[^ ]* //')"
 			echo
-			echo "VENV $venv" | tr '[a-z]' '[A-Z]'
+			echo "VENV $venv" | tr 'a-z' 'A-Z'
 			echo
 			if [ ! -f "$PYTHON_VENV_HOME/$venv/bin/activate" ]; then
 				rm -rf "$PYTHON_VENV_HOME/$venv"
@@ -238,7 +238,7 @@ shopt -s cmdhist
 # append to history instead of overwriting it
 shopt -s histappend
 # allow '**' to match subdirectories (if bash version >= 4)
-if [ "$(( echo "$BASH_VERSION" && echo 4 ) | sort -n | tail -n 1 )" != "4" ]; then
+if [ "$( ( echo "$BASH_VERSION" && echo 4 ) | sort -n | tail -n 1 )" != "4" ]; then
 	shopt -s globstar
 fi
 

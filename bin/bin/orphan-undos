@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 orphan_with_suffix() {
 	suffix="$2"
@@ -18,13 +18,12 @@ orphan_with_suffix() {
 }
 
 if [ $# -eq 0 ]; then
-	for suffix in '.un~' '.swp'; do
-		orphan_with_suffix "." "$suffix"
-	done
+	dirs=( "." )
 else
-	for dir in "$@"; do
-		for suffix in '.un~' '.swp'; do
-			orphan_with_suffix "." "$suffix"
-		done
-	done
+	dirs=( "$@" )
 fi
+for dir in "${dirs[@]}"; do
+	for suffix in '.un~' '.swp'; do
+		orphan_with_suffix "$dir" "$suffix"
+	done
+done

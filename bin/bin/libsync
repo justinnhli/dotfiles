@@ -8,7 +8,7 @@ EXCLUDES=".*"
 
 remote_full_path() {
 	filename="$(basename "$1")"
-	echo "$REMOTE_PATH/$(echo ${filename:0:1} | tr '[A-Z]' '[a-z]')/$filename"
+	echo "$REMOTE_PATH/$(echo "${filename:0:1}" | tr 'A-Z' 'a-z')/$filename"
 }
 
 if [ $# -eq 0 ]; then
@@ -18,14 +18,14 @@ else
 fi
 case "$action" in
 	diff)
-		local_list="$(cd $LOCAL_PATH && find . -name '*.pdf')"
+		local_list="$(cd "$LOCAL_PATH" && find . -name '*.pdf')"
 		remote_list="$(ssh dreamhost "cd $REMOTE_PATH && find . -name '*.pdf'")"
 		echo 'diff local remote'
 		diff <(echo "$local_list" | sort) <(echo "$remote_list" | sort);;
 	put)
-		rsync --archive --progress --rsh=ssh --exclude "$EXCLUDES" $LOCAL_PATH/ $REMOTE_HOST:$REMOTE_PATH;;
+		rsync --archive --progress --rsh=ssh --exclude "$EXCLUDES" "$LOCAL_PATH/" "$REMOTE_HOST:$REMOTE_PATH";;
 	get)
-		rsync --archive --progress --rsh=ssh --exclude "$EXCLUDES" $REMOTE_HOST:$REMOTE_PATH/ $LOCAL_PATH;;
+		rsync --archive --progress --rsh=ssh --exclude "$EXCLUDES" "$REMOTE_HOST:$REMOTE_PATH/" "$LOCAL_PATH";;
 	rm)
 		ssh "$REMOTE_HOST" "rm -vf $(remote_full_path "$2")";;
 	url)

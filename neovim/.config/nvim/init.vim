@@ -579,7 +579,7 @@ endif
 	nnoremap           <leader><leader>p     :set paste!<cr>:set paste?<cr>
 	nnoremap           <leader><leader>s     :set spell!<cr>:set spell?<cr>
 	nnoremap           <leader><leader>w     :set wrap!<cr>:set wrap?<cr>
-	nnoremap           <leader><leader>/     :nohlsearch<cr>
+	nnoremap           <leader><leader>/     :set hlsearch!<cr>:set hlsearch?<cr>
 	" editor function shortcuts
 	nnoremap           <leader>o     :!open 
 	nnoremap           <leader>p     "+p

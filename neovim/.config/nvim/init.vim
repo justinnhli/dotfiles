@@ -17,6 +17,7 @@ if has('nvim')
 		Plug 'mbbill/undotree'
 		Plug 'rhysd/clever-f.vim'
 		Plug 'tpope/vim-fugitive'
+		Plug 'junegunn/goyo.vim'
 		" color schemes
 		Plug 'tomasr/molokai'
 		" settings
@@ -663,6 +664,8 @@ endif
 	" clever-f
 	let g:clever_f_fix_key_direction = 1
 	let g:clever_f_timeout_ms = 5000
+	" goyo.vim
+	nnoremap  <leader><leader>g     :Goyo<cr>
 	" journal.vim
 	let g:jrnl_ignore_files = split(globpath('~/journal', '*.journal'), '\n')
 	" netrw

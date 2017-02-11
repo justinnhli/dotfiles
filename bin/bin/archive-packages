@@ -1,0 +1,13 @@
+#!/bin/bash
+
+
+case "$1" in
+"pacaur")
+	comm \
+		"$HOME/git/dotfiles/packages-meta/.config/packages-meta/pacaur" \
+		<(pacman -Qemq);;
+"pacman")
+	comm \
+		"$HOME/git/dotfiles/packages-meta/.config/packages-meta/pacman" \
+		<(set-difference <(pacman -Qenq) <(pacman -Qgq base-devel) <(pacman -Qgq base));;
+esac

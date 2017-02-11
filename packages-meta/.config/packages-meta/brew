@@ -1,11 +1,13 @@
+checkbashisms
 cmark
 ffmpeg
 gcc
 graphviz
 homebrew/tex/latex-mk
-htop
+htop-osx
 neovim/neovim/neovim
 python3
+shellcheck
 stow
 tmux
 wget

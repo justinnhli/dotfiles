@@ -2,6 +2,14 @@
 
 
 case "$1" in
+"brew")
+	comm \
+		"$HOME/git/dotfiles/packages-meta/.config/packages-meta/brew" \
+		<(set-difference <(brew leaves) <(brew cask list));;
+"brew-cask")
+	comm \
+		"$HOME/git/dotfiles/packages-meta/.config/packages-meta/brew-cask" \
+		<(brew cask list);;
 "pacaur")
 	comm \
 		"$HOME/git/dotfiles/packages-meta/.config/packages-meta/pacaur" \

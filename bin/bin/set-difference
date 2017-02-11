@@ -1,5 +1,9 @@
 #!/bin/sh
 
-first="$(sort "$1")"
-second="$(sort "$2")"
-( echo "$first" && echo "$second" && echo "$second" ) | sort | uniq -u
+current="$(sort "$1")"
+shift 1
+for f in "$@"; do
+	subtract="$(sort "$f")"
+	current="$( ( echo "$current" && echo "$subtract" && echo "$subtract" ) | sort | uniq -u)"
+done
+echo "$current"

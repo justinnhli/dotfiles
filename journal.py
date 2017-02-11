@@ -123,7 +123,7 @@ if args.op == 'show' and args.log and file_exists(log_file):
                 else:
                     options.append(' {} {}'.format(option_string, option_value))
     log_args = '-S' + ''.join(sorted(options, key=(lambda x: (len(x) != 1, x.upper())))).replace(' -', '', 1)
-    terms = " ".join('"{}"'.format(term.replace('"', '\\"')) for term in sorted(args.terms))
+    terms = ' '.join('"{}"'.format(term.replace('"', '\\"')) for term in sorted(args.terms))
     with open(log_file, 'a') as fd:
         fd.write('{}\t{} -- {}'.format(datetime.today().isoformat(' '), log_args, terms).strip() + '\n')
 
@@ -260,7 +260,7 @@ elif args.op == 'graph':
         for src in sorted(srcs, reverse=args.reverse):
             print('\t"{}" [fontsize="{}"];'.format(src, len(entries[src].split()) / 100))
             if edges[src]:
-                print("\n".join('\t"{}" -> "{}";'.format(src, dest) for dest in sorted(edges[src], reverse=args.reverse)))
+                print('\n'.join('\t"{}" -> "{}";'.format(src, dest) for dest in sorted(edges[src], reverse=args.reverse)))
         print('')
     print('}')
 
@@ -283,7 +283,7 @@ elif args.op == 'show':
             vim_args = [editor, temp_file, '-c', 'set hlsearch nospell']
             if args.terms:
                 vim_args[-1] += ' ' + ('nosmartcase' if args.icase else 'noignorecase')
-                vim_args.extend(("-c", r'let @/="\\v' + "|".join("({})".format(term) for term in args.terms).replace('"', r'\"').replace("@", r"\\@") + "\""))
+                vim_args.extend(('-c', r'let @/="\\v' + '|'.join('({})'.format(term) for term in args.terms).replace('"', r'\"').replace('@', r'\\@') + '"'))
             execvp(editor, vim_args)
     else:
         print(text)
@@ -297,14 +297,14 @@ elif args.op == 'update':
             if DATE_REGEX.match(line):
                 tags[line[:DATE_LENGTH]] = (rel_path, line_number)
     with open(metadata_file, 'w') as fd:
-        fd.write('"updated":"{}",'.format(datetime.now().strftime("%Y-%m-%d")) + "\n")
+        fd.write('"updated":"{}",'.format(datetime.now().strftime('%Y-%m-%d')) + '\n')
     with open(tags_file, 'w') as fd:
         fd.write('\n'.join('{}\t{}\t{}'.format(entry, *fileline) for entry, fileline in sorted(tags.items())) + '\n')
     with open(cache_file, 'w') as fd:
         fd.write('\n\n'.join(sorted(entries.values())) + '\n')
     with open(index_file, 'w') as fd:
         for term in sorted(set(index.keys()) | set(index_updates.keys())):
-            fd.write("\"{}\": {},\n".format(term.replace('"', '\\"'), sorted(index[term] | index_updates[term])))
+            fd.write('"{}": {},\n'.format(term.replace('"', r'\"'), sorted(index[term] | index_updates[term])))
 
 elif args.op == 'verify':
     errors = []

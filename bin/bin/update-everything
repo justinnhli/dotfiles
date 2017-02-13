@@ -20,10 +20,8 @@ if which brew >/dev/null 2>&1; then
 		current="$(brew cask list --versions "$package" | sed 's/.* //')"
 		newest="$(brew cask info "$package" | head -n 1 | sed 's/.* //')"
 		if [ "$current" != "$newest" ]; then
-			if [[ "$current" < "$newest" ]]; then
-				echo "$package $current $newest"
-				brew cask reinstall "$package"
-			fi
+			echo "$package $current $newest"
+			brew cask reinstall "$package"
 		fi
 	done
 	brew cask cleanup

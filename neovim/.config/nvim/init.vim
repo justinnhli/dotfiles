@@ -582,6 +582,7 @@ endif
 	nnoremap           <leader><leader>w     :set wrap!<cr>:set wrap?<cr>
 	nnoremap           <leader><leader>/     :set hlsearch!<cr>:set hlsearch?<cr>
 	" editor function shortcuts
+	nnoremap           <leader>a     ggVG
 	nnoremap           <leader>o     :!open 
 	nnoremap           <leader>p     "+p
 	nnoremap           <leader>y     "+y

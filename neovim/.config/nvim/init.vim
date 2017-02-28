@@ -252,7 +252,7 @@ endif
 	if has('wildmenu')
 		set   wildmenu " neovim default
 		set   wildmode=longest,list
-		set   wildignore+=*.aux,*.bbl,*.blg,*.eps,*.nav,*.pyc,*.snm,*.svg,*.toc
+		set   wildignore+=*.aux,*.bbl,*.blg,*.eps,*.nav,*.pdf,*.pyc,*.snm,*.toc
 	endif
 	set nowrap
 " }

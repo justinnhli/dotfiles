@@ -110,6 +110,8 @@ endif
 		" parentheses (0x28, 0x29)
 		%s/\%uFD3E/(/eg " ornate left parenthesis
 		%s/\%uFD3F/)/eg " ornate right parenthesis
+		" asterisk  (0x2A)
+		%s/\%u2022/* /eg " bullet
 		" hyphen (0x2D)
 		%s/\%u2010/ - /eg " hyphen
 		%s/\%u2013/ - /eg " en dash

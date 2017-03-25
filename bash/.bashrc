@@ -38,8 +38,8 @@ export VISUAL="$EDITOR"
 export HISTSIZE=10000
 export HISTCONTROL=ignoredups
 export PYTHONIOENCODING="utf-8"
-if [ -f "$HOME/git/dotfiles/.dot_secrets/bashrc" ]; then
-	source "$HOME/git/dotfiles/.dot_secrets/bashrc"
+if [ -f "$HOME/.dot_secrets/bashrc" ]; then
+	source "$HOME/.dot_secrets/bashrc"
 fi
 
 # soar variables

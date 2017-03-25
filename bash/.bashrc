@@ -198,6 +198,8 @@ if which python3 >/dev/null 2>&1; then
 			echo
 			if [ ! -f "$PYTHON_VENV_HOME/$venv/bin/activate" ]; then
 				rm -rf "$PYTHON_VENV_HOME/$venv"
+			elif [ ! -e "$PYTHON_VENV_HOME/$venv/bin/python3" ]; then
+				rm -rf "$PYTHON_VENV_HOME/$venv"
 			fi
 			if [ ! -d "$PYTHON_VENV_HOME/$venv" ]; then
 				mkvenv "$venv" && pip install $packages && deactivate

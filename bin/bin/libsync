@@ -16,6 +16,7 @@ if [ $# -eq 0 ]; then
 else
 	action="$1"
 fi
+shift 1
 case "$action" in
 	diff)
 		local_list="$(cd "$LOCAL_PATH" && find . -name '*.pdf')"
@@ -27,9 +28,11 @@ case "$action" in
 	pull)
 		rsync --archive --progress --rsh=ssh --exclude "$EXCLUDES" "$REMOTE_HOST:$REMOTE_PATH/" "$LOCAL_PATH";;
 	rm)
-		ssh "$REMOTE_HOST" "rm -vf $(remote_full_path "$2")";;
+		ssh "$REMOTE_HOST" "rm -vf $(remote_full_path "$1")";;
 	url)
-		remote_full_path "$2" | sed 's#.*justinnhli.com#http://justinnhli.com#';;
+		for arg in $@; do
+			remote_full_path "$arg" | sed 's#.*justinnhli.com#http://justinnhli.com#'
+		done;;
 	*)
 		echo "usage: $0 [diff|put|get|rm] [args ...]";;
 esac

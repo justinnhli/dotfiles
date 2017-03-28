@@ -181,8 +181,7 @@ if which python3 >/dev/null 2>&1; then
 	}
 	function venv-setup() {
 		(
-			cat "$VENV_LIST" && \
-			(
+			cat "$VENV_LIST" && (
 				find $HOME/git -maxdepth 2 -name requirements.txt && \
 				find $HOME/Dropbox/projects -maxdepth 2 -name requirements.txt
 			) | while read line; do
@@ -190,7 +189,7 @@ if which python3 >/dev/null 2>&1; then
 				packages="$(cat "$line" | tr '\n' ' ')"
 				echo "$venv" "$packages"
 			done
-		) | while read line; do
+		) | sort --ignore-case | while read line; do
 			venv="$(echo "$line" | sed 's/ .*//')"
 			packages="$(echo "$line" | sed 's/^[^ ]* //')"
 			echo

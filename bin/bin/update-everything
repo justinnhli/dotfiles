@@ -91,7 +91,7 @@ fi
 echo
 
 if [ -d "$HOME/papers" ]; then
-	libsync get
+	libsync pull
 fi
 
 nvim -c ':PlugUpgrade | qa!'

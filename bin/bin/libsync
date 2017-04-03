@@ -34,5 +34,5 @@ case "$action" in
 			remote_full_path "$arg" | sed 's#.*justinnhli.com#http://justinnhli.com#'
 		done;;
 	*)
-		echo "usage: $0 [diff|put|get|rm] [args ...]";;
+		echo "usage: $0 [diff|pull|push|rm] [args ...]";;
 esac

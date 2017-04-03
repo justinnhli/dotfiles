@@ -162,7 +162,9 @@ if which python3 >/dev/null 2>&1; then
 		fi
 	}
 	function rmvenv() {
-		rm -rf "$PYTHON_VENV_HOME/$1"
+		for venv in "$@"; do
+			rm -rf "$PYTHON_VENV_HOME/$venv"
+		done
 	}
 	function lsvenv() {
 		find "$PYTHON_VENV_HOME/" -mindepth 1 -maxdepth 1 -type d -exec basename {} ';' | sort

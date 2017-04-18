@@ -2,5 +2,6 @@ datasci pandas scipy scikit-learn jupyter bokeh
 datavis pandas jupyter bokeh
 flask-heroku flask gunicorn
 ir beautifulsoup4 requests
-rdf rdflib
 networkx networkx pygraphviz
+nlp spacy
+rdf rdflib

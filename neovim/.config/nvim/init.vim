@@ -265,7 +265,9 @@ endif
 	set   autoindent " neovim default
 	set   autoread " neovim default
 	set   backspace=indent,eol,start " neovim default
-	set noesckeys
+	if exists('&esckeys')
+		set noesckeys
+	endif
 	set   ignorecase
 	set   scrolloff=1
 	set   shiftwidth=4

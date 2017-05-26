@@ -339,6 +339,8 @@ endif
 
 	" disable the default leader
 	nnoremap \ <nop>
+	noremap <esc> <nop>
+	noremap! <esc> <nop>
 
 	" no-ops {
 		" remove all uses of arrow keys
@@ -551,8 +553,8 @@ endif
 
 	" keyboard shortcuts {
 		" <C-s> to write file
-		nnoremap <C-s> :update<cr>
-		inoremap <C-s> <C-o>:update<cr>
+		nnoremap <C-s> :update<cr><esc>
+		inoremap <C-s> <C-o>:update<cr><esc>
 
 		" rebind undo/redo traverse the undo tree instead of the undo stack
 		nnoremap  u      g-

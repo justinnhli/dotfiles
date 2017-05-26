@@ -140,8 +140,12 @@ if which python3 >/dev/null 2>&1; then
 		mkdir "$PYTHON_VENV_HOME"
 	fi
 	function mkvenv() {
-		if [ -d "$PYTHON_VENV_HOME/$1" ]; then
+		if [ $# -ne 1 ]; then
+			echo 'usage: mkvenv VENV_NAME'
+			return 1
+		elif [ -d "$PYTHON_VENV_HOME/$1" ]; then
 			echo "venv $1 already exists"
+			return 1
 		else
 			python3 -m venv "$PYTHON_VENV_HOME/$1"
 			workon "$1"
@@ -159,6 +163,7 @@ if which python3 >/dev/null 2>&1; then
 			fi
 		else
 			echo 'usage: workon [environment]'
+			return 1
 		fi
 	}
 	function rmvenv() {

@@ -29,15 +29,6 @@ if has('nvim')
 		call plug#end()
 	catch
 	endtry
-
-	" FIXME use additional runtime directories when available: local neovim clone, Arch vim install, MacVim install
-	" we need these for UTF-8 and ASCII spell files (see https://github.com/neovim/neovim/issues/1551)
-	let s:vim_runtimes = [expand('~/neovim/runtime'), '/usr/share/vim/vim74', '/Applications/MacVim.app/Contents/Resources/vim/runtime']
-	for runtime in s:vim_runtimes
-		if isdirectory(runtime) && &runtimepath !~ runtime
-			let &runtimepath = &runtimepath.','.runtime
-		endif
-	endfor
 endif
 
 " script-only functions {

@@ -617,7 +617,7 @@ endif
 	" easily cancel the command line window
 	augroup leave_command
 		autocmd  CmdwinEnter         *       nnoremap <buffer> <C-c> :quit<cr>
-		autocmd  CmdwinEnter         *       inoremap <buffer> <C-c> <Esc>:quit<cr>
+		autocmd  CmdwinEnter         *       inoremap <buffer> <C-c> <Esc>
 	augroup END
 	" automatically open and close the quickfix window
 	augroup quick_fix

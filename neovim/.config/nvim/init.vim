@@ -629,7 +629,7 @@ endif
 	augroup END
 	" disable spellcheck in virtual terminal
 	if exists('##TermOpen')
-		autocmd  TermOpen            *       setlocal nospell
+		autocmd  TermOpen            *       setlocal nospell scrollback=-1
 	endif
 
 	" override above settings for specific files
@@ -646,10 +646,6 @@ endif
 
 	command! -nargs=0 CloseRightTabs :call <SID>CloseRightTabs()
 	command! -nargs=1 MoveToRelTab :call <SID>MoveToRelTab(<q-args>)
-" }
-
-" neovim settings {
-	let g:terminal_scrollback_buffer_size = 1000000
 " }
 
 " plugin settings {

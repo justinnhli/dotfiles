@@ -214,6 +214,7 @@ endif
 	set guioptions-=r
 	set   laststatus=2 " neovim default
 	set   lazyredraw
+	set   listchars=tab:>>,trail:.
 	set   mouse=
 	if has('linebreak')
 		set   linebreak
@@ -573,6 +574,7 @@ endif
 	nnoremap           <leader>JR    :tabnew <C-r>=g:justinnhli_journal_path<cr>/research.journal<cr>
 	" toggle settings with double leader
 	nnoremap           <leader><leader>f     :call <SID>ToggleFoldMethod()<cr>:set foldmethod?<cr>
+	nnoremap           <leader><leader>l     :set list!<cr>:set list?<cr>
 	nnoremap           <leader><leader>n     :set number!<cr>:set number?<cr>
 	nnoremap           <leader><leader>p     :set paste!<cr>:set paste?<cr>
 	nnoremap           <leader><leader>s     :set spell!<cr>:set spell?<cr>

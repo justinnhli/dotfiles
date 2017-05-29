@@ -611,7 +611,7 @@ endif
 	" automatically leave insert mode after 'updatetime' milliseconds, which is 7.5 seconds in insert mode
 	autocmd      CursorHoldI         *       stopinsert
 	augroup leave_insert
-		autocmd  InsertEnter         *       let updaterestore=&updatetime | set updatetime=7500
+		autocmd  InsertEnter         *       let updaterestore=&updatetime | set updatetime=5000
 		autocmd  InsertLeave         *       let &updatetime=updaterestore
 	augroup END
 	" easily cancel the command line window

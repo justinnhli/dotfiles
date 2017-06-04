@@ -545,8 +545,8 @@ endif
 
 	" keyboard shortcuts {
 		" <C-s> to write file
-		nnoremap <C-s> :update<cr><esc>
-		inoremap <C-s> <C-o>:update<cr><esc>
+		nnoremap <C-s> :update<cr>
+		inoremap <C-s> <esc>:update<cr>
 
 		" rebind undo/redo traverse the undo tree instead of the undo stack
 		nnoremap  u      g-

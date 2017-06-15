@@ -6,14 +6,17 @@ REMOTE_PATH="/home/justinnhli/justinnhli.com/library"
 
 EXCLUDES=".*"
 
-remote_full_path() {
+rel_path() {
 	filename="$(basename "$1")"
-	echo "$REMOTE_PATH/$(echo "${filename:0:1}" | tr 'A-Z' 'a-z')/$filename"
+	echo "$(echo "${filename:0:1}" | tr 'A-Z' 'a-z')/$filename"
+}
+
+remote_full_path() {
+	echo "$REMOTE_PATH/$(rel_path "$1")"
 }
 
 local_full_path() {
-	filename="$(basename "$1")"
-	echo "$LOCAL_PATH/$(echo "${filename:0:1}" | tr 'A-Z' 'a-z')/$filename"
+	echo "$LOCAL_PATH/$(rel_path "$1")"
 }
 
 if [ $# -eq 0 ]; then

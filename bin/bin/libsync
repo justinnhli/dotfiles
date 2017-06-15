@@ -2,7 +2,7 @@
 
 LOCAL_PATH="$HOME/papers"
 REMOTE_HOST="justinnhli.com"
-REMOTE_PATH="/home/justinnhli/justinnhli.com/library"
+REMOTE_PATH="/home/justinnhli/justinnhli.com/papers"
 
 EXCLUDES=".*"
 
@@ -48,7 +48,7 @@ case "$action" in
 		done;;
 	url)
 		for arg in $@; do
-			remote_full_path "$arg" | sed 's#.*justinnhli.com#http://justinnhli.com#'
+			remote_full_path "$arg" | sed "s#^/home/justinnhli#https://#"
 		done;;
 	*)
 		echo "usage: $0 [diff|sync|pull|push|rm] [args ...]";;

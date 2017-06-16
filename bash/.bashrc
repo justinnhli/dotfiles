@@ -13,6 +13,9 @@ update_dot_files() {
 if [ -d "/usr/local/Cellar" ]; then
 	export PATH="$(find /usr/local/Cellar -name bin | sort -f | tr '\n' ':')$PATH"
 fi
+if [ -d "/opt" ]; then
+	export PATH="$(find /opt -name bin | sort -f | tr '\n' ':')$PATH"
+fi
 if [ -d "$HOME/git" ]; then
 	export PATH="$(find "$HOME/git" -maxdepth 2 -type f -perm -100 -exec dirname {} ';' | sort -f | uniq | tr '\n' ':' | sed 's/:$//'):$PATH"
 fi

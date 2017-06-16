@@ -210,7 +210,10 @@ if which python3 >/dev/null 2>&1; then
 			if [ ! -d "$PYTHON_VENV_HOME/$venv" ]; then
 				mkvenv "$venv" && pip install $packages && deactivate
 			elif ! echo "$packages" | grep '[>=]' >/dev/null 2>&1; then
-				workon "$venv" && python3 -m pip list --outdated --format freeze | sed 's/=.*//;' | xargs python3 -m pip install --upgrade && deactivate
+				packages="$(python3 -m pip list --outdated --format freeze | sed 's/=.*//;')"
+				if [ "$packages" != "" ]; then
+					workon "$venv" && pip install --upgrade "$packages" && deactivate
+				fi
 			fi
 		done
 	}

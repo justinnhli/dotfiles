@@ -13,11 +13,12 @@ if has('nvim')
 	try
 		call plug#begin(expand('<sfile>:p:h').'/plugged')
 		" extensions
+		Plug 'junegunn/goyo.vim'
 		Plug 'kien/ctrlp.vim'
 		Plug 'mbbill/undotree'
 		Plug 'rhysd/clever-f.vim'
 		Plug 'tpope/vim-fugitive'
-		Plug 'junegunn/goyo.vim'
+		Plug 'ludovicchabant/vim-gutentags'
 		" color schemes
 		Plug 'tomasr/molokai'
 		" settings
@@ -660,8 +661,16 @@ endif
 	" clever-f
 	let g:clever_f_fix_key_direction = 1
 	let g:clever_f_timeout_ms = 5000
+	" fugitive
+	nnoremap  <leader>G     :Git 
+	nnoremap  <leader>gc    :Gcommit -m "
+	nnoremap  <leader>gd    :Gdiff<cr>
+	nnoremap  <leader>gs    :Gstatus<cr>
+	nnoremap  <leader>gp    :Gpush<cr>
 	" goyo.vim
 	nnoremap  <leader><leader>g     :Goyo<cr>
+	" gutentag
+	let g:gutentags_ctags_tagfile = '.tags'
 	" journal.vim
 	let g:jrnl_ignore_files = split(globpath('~/journal', '*.journal'), '\n')
 	" netrw
@@ -673,12 +682,6 @@ endif
 	let g:python_highlight_all = 1
 	" undotree
 	nnoremap  <leader>u     :UndotreeToggle<cr>
-	" vim-fugitive
-	nnoremap  <leader>G     :Git 
-	nnoremap  <leader>gc    :Gcommit -m "
-	nnoremap  <leader>gd    :Gdiff<cr>
-	nnoremap  <leader>gs    :Gstatus<cr>
-	nnoremap  <leader>gp    :Gpush<cr>
 " }
 
 " protect large files from sourcing and other overhead.

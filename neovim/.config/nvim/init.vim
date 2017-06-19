@@ -230,7 +230,31 @@ endif
 		set   splitright
 	endif
 	if has('statusline')
-		set   statusline=%n\ %f%(\ %M%)\ [%{&ff}]%r%y%#warningmsg#%{&paste?'[paste]':''}%*%=%<%1.30{getcwd()}\ (%l/%L,%c)%4P
+		set statusline=
+		" buffer number
+		set statusline+=%n
+		" git branch
+		set statusline+=%(\ %{fugitive#head()!=''?'[git:'.fugitive#head().']':''}%)
+		" file name
+		set statusline+=\ %f
+		" modified
+		set statusline+=%(\ %M%)
+		" file format
+		set statusline+=\ [%{&ff}]
+		" read only
+		set statusline+=%r
+		" file type
+		set statusline+=%y
+		" paste
+		set statusline+=%#ErrorMsg#%{&paste?'[paste]':''}%*
+		" alignment separator
+		set statusline+=%=
+		" pwd
+		set statusline+=%<%1.30{getcwd()}
+		" cursor position
+		set statusline+=\ (%l/%L,%c)
+		" buffer position
+		set statusline+=%4P
 	endif
 	if has('windows')
 		set showtabline=2

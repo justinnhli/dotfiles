@@ -14,7 +14,6 @@ if has('nvim')
 		call plug#begin(expand('<sfile>:p:h').'/plugged')
 		" extensions
 		Plug 'junegunn/goyo.vim'
-		Plug 'kien/ctrlp.vim'
 		Plug 'mbbill/undotree'
 		Plug 'rhysd/clever-f.vim'
 		Plug 'tpope/vim-fugitive'

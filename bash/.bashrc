@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
@@ -64,7 +64,7 @@ export PYTHONPATH="$(echo "$PYTHONPATH" | sed 's#//#/#g')"
 # prompt
 prompt_command_fn() {
 	# right before prompting for the next command, save the previous command in a file.
-	echo "$(date -u +%Y-%m-%dT%H:%M:%SZ)	$(hostname)	$PWD	$(history 1 | sed 's/^ *[0-9 -]* //; s/ *$//;')" >> $HOME/Dropbox/personal/logs/shell_history
+	echo "$(date -u +%Y-%m-%dT%H:%M:%SZ)	$(hostname)	$PWD	$(history 1 | sed 's/^ *[0-9 -]* //; s/ *$//;')" >> "$HOME/Dropbox/personal/logs/shell_history"
 }
 PS1='[\u@\h \W]\$ '
 if [ -e "$HOME/Dropbox/personal/logs/shell_history" ]; then
@@ -136,7 +136,7 @@ if which python3 >/dev/null 2>&1; then
 	if [ ! -d "$PYTHON_VENV_HOME" ]; then
 		mkdir "$PYTHON_VENV_HOME"
 	fi
-	function mkvenv() {
+	mkvenv() {
 		if [ $# -ne 1 ]; then
 			echo 'usage: mkvenv VENV_NAME'
 			return 1
@@ -149,7 +149,7 @@ if which python3 >/dev/null 2>&1; then
 			pip install --upgrade pip
 		fi
 	}
-	function workon() {
+	workon() {
 		if [ $# -eq 0 ]; then
 			lsvenv
 		elif [ $# -eq 1 ]; then
@@ -163,27 +163,27 @@ if which python3 >/dev/null 2>&1; then
 			return 1
 		fi
 	}
-	function rmvenv() {
+	rmvenv() {
 		for venv in "$@"; do
 			rm -rf "$PYTHON_VENV_HOME/$venv"
 		done
 	}
-	function lsvenv() {
+	lsvenv() {
 		find "$PYTHON_VENV_HOME/" -mindepth 1 -maxdepth 1 -type d -exec basename {} ';' | sort
 	}
-	function venv-all() {
+	venv-all() {
 		find "$PYTHON_VENV_HOME/" -mindepth 1 -maxdepth 1 -type d | sort | while read venv; do
 			venv="$(basename "$venv")"
 			echo "$venv" && workon "$venv" && $@ && deactivate
 		done
 	}
-	function venv-freeze() {
+	venv-freeze() {
 		find "$PYTHON_VENV_HOME/" -mindepth 1 -maxdepth 1 -type d | sort | while read venv; do
 			venv="$(basename "$venv")"
 			workon "$venv" && echo "$venv $(pip list --not-required --format freeze | sed 's/=.*//;' | tr '\n' ' ')" && deactivate
 		done
 	}
-	function venv-setup() {
+	venv-setup() {
 		(
 			cat "$VENV_LIST" && (
 				find $HOME/git -maxdepth 2 -name requirements.txt && \
@@ -197,7 +197,7 @@ if which python3 >/dev/null 2>&1; then
 			venv="$(echo "$line" | sed 's/ .*//')"
 			packages="$(echo "$line" | sed 's/^[^ ]* //')"
 			echo
-			echo "VENV $venv" | tr 'a-z' 'A-Z'
+			echo "VENV $venv" | tr '[:lower:]' '[:upper:]'
 			echo
 			if [ ! -f "$PYTHON_VENV_HOME/$venv/bin/activate" ]; then
 				rm -rf "$PYTHON_VENV_HOME/$venv"
@@ -217,7 +217,7 @@ if which python3 >/dev/null 2>&1; then
 fi
 
 # completion
-function _generic_completion() {
+_generic_completion() {
 	# build up the context
 	local context="${COMP_WORDS[0]}"
 	if [ $COMP_CWORD -gt 0 ]; then

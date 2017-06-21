@@ -546,7 +546,7 @@ endif
 
 	" terminal {
 		if exists(':tnoremap')
-			tnoremap <Esc><Esc> <C-\><C-n>{}
+			tnoremap <Esc><Esc> <C-\><C-n>
 		endif
 	" }
 

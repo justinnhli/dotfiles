@@ -17,4 +17,6 @@ case "$1" in
 	comm \
 		"$HOME/git/dotfiles/packages-meta/.config/packages-meta/pacman" \
 		<(set-difference <(pacman -Qenq) <(pacman -Qgq base-devel) <(pacman -Qgq base));;
+*)
+	echo "$(basename "$0")" "$(grep '^"' "$0" | sort | sed 's/^"\(.*\)")/\1/' | tr '\n' '|' | sed 's/|$//')";;
 esac

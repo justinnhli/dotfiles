@@ -1,5 +1,5 @@
-datasci pandas xlrd scipy scikit-learn jupyter bokeh
-datavis pandas xlrd jupyter bokeh
+datasci bokeh jupyter pandas scikit-learn scipy xlrd
+datavis bokeh jupyter pandas xlrd
 flask-heroku flask gunicorn
 ir beautifulsoup4 requests
 networkx networkx pygraphviz

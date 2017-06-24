@@ -41,3 +41,4 @@ Thumbs.db
 # Metadata #
 ###################
 .tags
+.ipynb_checkpoints

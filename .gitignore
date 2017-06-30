@@ -1,3 +1,4 @@
+dot_secrets
 jupyter/.jupyter/migrated
 neovim/.config/nvim/.netrwhist
 neovim/.config/nvim/autoload/plug.vim

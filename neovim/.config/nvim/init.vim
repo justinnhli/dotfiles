@@ -658,9 +658,12 @@ endif
 		autocmd  TermOpen            *       setlocal nospell scrollback=-1
 	endif
 
+	" override above settings for specific filetypes
+	autocmd      BufWritePost        *.md    silent execute '!if which cmark >/dev/null; then cmark '.expand('%:p').' > '.expand('%:p:r').'.html; fi'
+
 	" override above settings for specific files
 	" automatically fold notes.journal
-	autocmd       BufRead            notes.journal syntax match flag '^.\{2000,\}$' | setlocal breakindent breakindentopt=shift:1 foldenable foldlevel=0
+	autocmd      BufRead             notes.journal syntax match flag '^.\{2000,\}$' | setlocal breakindent breakindentopt=shift:1 foldenable foldlevel=0
 " }
 
 " commands {

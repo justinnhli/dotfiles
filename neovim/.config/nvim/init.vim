@@ -659,7 +659,7 @@ endif
 	endif
 
 	" override above settings for specific filetypes
-	autocmd      BufWritePost        *.md    silent execute '!if which cmark >/dev/null; then cmark '.expand('%:p').' > '.expand('%:p:r').'.html; fi'
+	autocmd      BufEnter            *.md    setlocal makeprg=cmark\ %:p\ >\ %:p:r.html
 
 	" override above settings for specific files
 	" automatically fold notes.journal

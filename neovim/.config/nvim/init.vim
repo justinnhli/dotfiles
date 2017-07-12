@@ -22,9 +22,7 @@ if has('nvim')
 		Plug 'tomasr/molokai'
 		" settings
 		Plug 'tpope/vim-sleuth'
-		Plug 'christoomey/vim-tmux-navigator'
 		" syntax
-		Plug 'hdima/python-syntax', {'for': 'python'}
 		Plug 'justinnhli/journal.vim', {'for': 'journal'}
 		call plug#end()
 	catch

@@ -207,10 +207,12 @@ if which python3 >/dev/null 2>&1; then
 			if [ ! -d "$PYTHON_VENV_HOME/$venv" ]; then
 				mkvenv "$venv" && pip install $packages && deactivate
 			elif ! echo "$packages" | grep '[>=]' >/dev/null 2>&1; then
-				packages="$(python3 -m pip list --outdated --format freeze | sed 's/=.*//;')"
+				workon "$venv"
+				packages="$(python3 -m pip list --outdated --format freeze | sed 's/=.*//;' | tr '\n' ' ')"
 				if [ "$packages" != "" ]; then
-					workon "$venv" && pip install --upgrade "$packages" && deactivate
+					pip install --upgrade $packages
 				fi
+				deactivate
 			fi
 		done
 	}

@@ -656,8 +656,10 @@ endif
 		autocmd  TermOpen            *       setlocal nospell scrollback=-1
 	endif
 
-	" override above settings for specific filetypes
-	autocmd      BufEnter            *.md    setlocal makeprg=cmark\ %:p\ >\ %:p:r.html
+	" settings for specific file types
+	if executable('cmark')
+		autocmd      BufEnter        *.md    setlocal makeprg=cmark\ %:p\ >\ %:p:r.html
+	endif
 
 	" override above settings for specific files
 	" automatically fold notes.journal

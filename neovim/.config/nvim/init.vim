@@ -67,7 +67,7 @@ endif
 		for l:cmd in a:000
 			exe l:cmd
 		endfor
-		setlocal nospell
+		setlocal nospell nonumber
 		terminal
 	endfunction
 

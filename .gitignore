@@ -1,5 +1,6 @@
 dot_secrets
 jupyter/.jupyter/migrated
+keras/.keras/datasets
 neovim/.config/nvim/.netrwhist
 neovim/.config/nvim/autoload/plug.vim
 neovim/.config/nvim/autoload/plug.vim.old

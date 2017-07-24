@@ -1,7 +1,8 @@
 {
 	"CodeCell":{
 		"cm_config":{
-			"lineNumbers":true
+			"lineNumbers": true,
+			"autoCloseBrackets": false
 		}
 	}
 }

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 case "$1" in
 "brew")
@@ -18,5 +18,5 @@ case "$1" in
 		"$HOME/git/dotfiles/packages-meta/.config/packages-meta/pacman" \
 		<(set-difference <(pacman -Qenq) <(pacman -Qgq base-devel) <(pacman -Qgq base));;
 *)
-	echo "$(basename "$0")" "$(grep '^"' "$0" | sort | sed 's/^"\(.*\)")/\1/' | tr '\n' '|' | sed 's/|$//')";;
+	echo "$(basename "$0")" "$(grep '^"[a-z-]*")$' "$0" | sort | sed 's/^"\(.*\)")/\1/' | tr '\n' '|' | sed 's/|$//')";;
 esac

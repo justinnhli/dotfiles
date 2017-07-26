@@ -232,7 +232,9 @@ endif
 		" buffer number
 		set statusline+=%n
 		" git branch
-		set statusline+=%(\ %{fugitive#head()!=''?'[git:'.fugitive#head().']':''}%)
+		if exists('fugitive#head')
+			set statusline+=%(\ %{fugitive#head()!=''?'[git:'.fugitive#head().']':''}%)
+		endif
 		" file name
 		set statusline+=\ %f
 		" modified

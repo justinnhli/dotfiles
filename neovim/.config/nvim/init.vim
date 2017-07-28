@@ -78,6 +78,13 @@ endif
 			set foldmethod=indent
 		endif
 	endfunction
+
+	function! s:DuplicateBufferInTab()
+		let l:bufnum = bufnr("%")
+		echom l:bufnum
+		tabnew
+		exec "b ".l:bufnum
+	endfunction
 " }
 
 " functional functions {
@@ -481,6 +488,7 @@ endif
 		nnoremap  <leader>wel  :Vexplore!<cr>
 		nnoremap  <leader>wo   :only<cr>
 		nnoremap  <leader>wc   :close<cr>
+		nnoremap  <leader>wd   :call <SID>DuplicateBufferInTab()<cr>
 
 		" Ctrl+HJKL for moving between windows
 		if !exists('g:loaded_tmux_navigator')

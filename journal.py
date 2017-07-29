@@ -20,9 +20,9 @@ DATE_REGEX = re.compile('([0-9]{4}-[0-9]{2}-[0-9]{2})(, (Mon|Tues|Wednes|Thurs|F
 RANGE_REGEX = re.compile('^([0-9]{4}(-[0-9]{2}(-[0-9]{2})?)?)?:?([0-9]{4}(-[0-9]{2}(-[0-9]{2})?)?)?$')
 REF_REGEX = re.compile('([0-9]{4}-[0-9]{2}-[0-9]{2})')
 STRING_LENGTHS = {
-    'year':4,
-    'month':7,
-    'day':10,
+    'year': 4,
+    'month': 7,
+    'day': 10,
 }
 DATE_LENGTH = 10
 
@@ -220,12 +220,12 @@ if args.op == 'count':
     unit_length = STRING_LENGTHS[args.unit]
     length_map = dict((date, len(entries[date].split())) for date in selected)
     table = []
-    for unit, selected_dates in chain(groupby(selected, (lambda k: k[:unit_length])), (('all', selected),)):
+    for unit, selected_dates in chain(groupby(selected, (lambda k: k[:unit_length])), [('all', selected)]):
         selected_dates = tuple(selected_dates)
         lengths = tuple(length_map[date] for date in selected_dates)
         table.append(tuple(str(fn(unit, len(selected_dates), selected_dates, lengths)) for fn in columns.values()))
     headers = tuple(columns.keys())
-    widths = tuple(max(len(row[col]) for row in chain((headers,), table)) for col in range(len(columns)))
+    widths = tuple(max(len(row[col]) for row in chain([headers], table)) for col in range(len(columns)))
     if args.headers:
         print(gap.join(col.center(widths[i]) for i, col in enumerate(headers)))
         print(gap.join(width * '-' for width in widths))
@@ -245,7 +245,7 @@ elif args.op == 'graph':
         ancestors[src] |= dests
     components = defaultdict(set)
     for rep in disjoint_sets:
-        path = set((rep,))
+        path = set([rep])
         while disjoint_sets[rep] != rep:
             path.add(rep)
             rep = disjoint_sets[rep]

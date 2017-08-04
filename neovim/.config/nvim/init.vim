@@ -668,7 +668,7 @@ endif
 
 	" settings for specific file types
 	if executable('cmark')
-		autocmd      BufEnter        *.md    setlocal makeprg=cmark\ %:p\ >\ %:p:r.html
+		autocmd      BufEnter        *.md    setlocal wrap makeprg=cmark\ %:p\ >\ %:p:r.html
 	endif
 
 	" override above settings for specific files

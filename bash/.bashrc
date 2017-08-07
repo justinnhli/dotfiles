@@ -13,6 +13,7 @@ update_dot_files() {
 export PATH="$(find /usr/local/Cellar -maxdepth 3 -type d -name bin 2>/dev/null | sort -f | tr '\n' ':')$PATH"
 export PATH="$(find /opt -maxdepth 3 -type d -name bin 2>/dev/null 2>/dev/null | sort -f | tr '\n' ':')$PATH"
 export PATH="$(find "$HOME/git" -maxdepth 2 -type f -perm -100 -exec dirname {} ';' 2>/dev/null | sort -f | uniq | tr '\n' ':' | sed 's/:$//'):$PATH"
+export PATH="$(find "$HOME/Dropbox/projects" -maxdepth 2 -type f -perm -100 -exec dirname {} ';' 2>/dev/null | sort -f | uniq | tr '\n' ':' | sed 's/:$//'):$PATH"
 export PATH="$HOME/Dropbox/bin:$HOME/bin:$PATH"
 export PYTHONPATH="$HOME/git"
 

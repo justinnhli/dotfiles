@@ -1,6 +1,7 @@
 datasci bokeh jupyter pandas scikit-learn scipy xlrd
 datavis bokeh jupyter pandas xlrd
 flask-heroku flask gunicorn
+gmail google-api-python-client jinja2 commonmark
 ir beautifulsoup4 requests
 networkx networkx pygraphviz
 nlp spacy

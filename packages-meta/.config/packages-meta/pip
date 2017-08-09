@@ -1,6 +1,7 @@
-neovim==0.1.12
-pip==9.0.1
-pip-autoremove==0.9.0
-pylint==1.6.4
-setuptools==32.3.0
-wheel==0.29.0
+neovim
+pip
+pip-autoremove
+pylint
+setuptools
+wheel
+yapf

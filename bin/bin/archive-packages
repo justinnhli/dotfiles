@@ -17,6 +17,11 @@ case "$1" in
 	comm \
 		"$HOME/git/dotfiles/packages-meta/.config/packages-meta/pacman" \
 		<(set-difference <(pacman -Qenq) <(pacman -Qgq base-devel) <(pacman -Qgq base));;
+"pip")
+	comm \
+		"$HOME/git/dotfiles/packages-meta/.config/packages-meta/pip" \
+		<(python3 -m pip list --not-required --format=freeze | sed 's/=.*//' | sort);;
+
 *)
 	echo "$(basename "$0")" "$(grep '^"[a-z-]*")$' "$0" | sort | sed 's/^"\(.*\)")/\1/' | tr '\n' '|' | sed 's/|$//')";;
 esac

@@ -15,7 +15,7 @@ export PATH="$(find /opt -maxdepth 3 -type d -name bin 2>/dev/null 2>/dev/null |
 export PATH="$(find "$HOME/git" -maxdepth 2 -type f -perm -100 -exec dirname {} ';' 2>/dev/null | sort -f | uniq | tr '\n' ':' | sed 's/:$//'):$PATH"
 export PATH="$(find "$HOME/Dropbox/projects" -maxdepth 2 -type f -perm -100 -exec dirname {} ';' 2>/dev/null | sort -f | uniq | tr '\n' ':' | sed 's/:$//'):$PATH"
 export PATH="$HOME/Dropbox/bin:$HOME/bin:$PATH"
-export PYTHONPATH="$HOME/git"
+export PYTHONPATH="$HOME/Dropbox/projects:$HOME/git"
 
 # environment
 case "$(uname)" in

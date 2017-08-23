@@ -14,6 +14,7 @@ if has('nvim')
 		call plug#begin(expand('<sfile>:p:h').'/plugged')
 		" extensions
 		Plug 'junegunn/goyo.vim'
+		Plug 'junegunn/limelight.vim'
 		Plug 'mbbill/undotree'
 		Plug 'rhysd/clever-f.vim'
 		Plug 'tpope/vim-fugitive'
@@ -193,6 +194,23 @@ endif
 		endfor
 		let l:tabline .= '%T%#TabLineFill#%='
 		return l:tabline
+	endfunction
+" }
+
+" plugin functions {
+	function! s:EnterLimelight()
+		if &filetype == 'journal'
+			let g:limelight_bop = '^\s'
+			let g:limelight_eop = '\ze\n^\s'
+		elseif &filetype == 'markdown'
+			if exists("g:limelight_bop")
+				unlet g:limelight_bop
+			endif
+			if exists("g:limelight_eop")
+				unlet g:limelight_eop
+			endif
+		endif
+		Limelight
 	endfunction
 " }
 
@@ -709,6 +727,9 @@ endif
 	let g:gutentags_ctags_tagfile = '.tags'
 	" journal.vim
 	let g:jrnl_ignore_files = split(globpath('~/journal', '*.journal'), '\n')
+	" limelight.vim
+	autocmd! User GoyoEnter :call <SID>EnterLimelight()
+	autocmd! User GoyoLeave Limelight!
 	" netrw
 	let g:netrw_browse_split = 3
 	let g:netrw_liststyle = 3

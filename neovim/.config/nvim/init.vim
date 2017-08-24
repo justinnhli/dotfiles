@@ -200,9 +200,13 @@ endif
 " plugin functions {
 	function! s:EnterLimelight()
 		if &filetype == 'journal'
-			let g:limelight_bop = '^\s'
-			let g:limelight_eop = '\ze\n^\s'
-		elseif &filetype == 'markdown'
+			let g:limelight_bop = '^.'
+			let g:limelight_eop = '\ze\n'
+		endif
+		Limelight
+	endfunction
+	function! s:LeaveLimelight()
+		if &filetype == 'journal'
 			if exists("g:limelight_bop")
 				unlet g:limelight_bop
 			endif
@@ -210,7 +214,7 @@ endif
 				unlet g:limelight_eop
 			endif
 		endif
-		Limelight
+		Limelight!
 	endfunction
 " }
 
@@ -729,7 +733,7 @@ endif
 	let g:jrnl_ignore_files = split(globpath('~/journal', '*.journal'), '\n')
 	" limelight.vim
 	autocmd! User GoyoEnter :call <SID>EnterLimelight()
-	autocmd! User GoyoLeave Limelight!
+	autocmd! User GoyoLeave :call <SID>LeaveLimelight()
 	" netrw
 	let g:netrw_browse_split = 3
 	let g:netrw_liststyle = 3

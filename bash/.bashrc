@@ -157,7 +157,10 @@ if which python3 >/dev/null 2>&1; then
 			if [ -f "$PYTHON_VENV_HOME/$1/bin/activate" ]; then
 				source "$PYTHON_VENV_HOME/$1/bin/activate"
 			else
-				echo "venv '$1' not found; create it first with 'mkvenv $1'"
+				read -p "venv '$1' not found; do you want to create it (Y/n)? " response
+				if [[ ! $response =~ ^[Nn]$ ]]; then
+					mkvenv "$1"
+				fi
 			fi
 		else
 			echo 'usage: workon [environment]'

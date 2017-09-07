@@ -627,6 +627,7 @@ endif
 	nnoremap           <leader>JP    :tabnew <C-r>=g:justinnhli_journal_path<cr>/ponderings.journal<cr>
 	nnoremap           <leader>JR    :tabnew <C-r>=g:justinnhli_journal_path<cr>/research.journal<cr>
 	" toggle settings with double leader
+	nnoremap           <leader><leader>c     :setlocal colorcolumn=<c-r>=&colorcolumn == 0 ? 80 : 0<cr><cr>
 	nnoremap           <leader><leader>f     :call <SID>ToggleFoldMethod()<cr>:set foldmethod?<cr>
 	nnoremap           <leader><leader>l     :set list!<cr>:set list?<cr>
 	nnoremap           <leader><leader>n     :set number!<cr>:set number?<cr>

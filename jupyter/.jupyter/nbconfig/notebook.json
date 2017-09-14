@@ -4,5 +4,9 @@
       "lineNumbers": true,
       "autoCloseBrackets": false
     }
+  },
+  "Notebook": {
+    "Header": false,
+    "Toolbar": true
   }
 }

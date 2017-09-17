@@ -693,6 +693,9 @@ endif
 	if executable('cmark')
 		autocmd      BufEnter        *.md    setlocal wrap makeprg=cmark\ %:p\ >\ %:p:r.html
 	endif
+	if executable('dot')
+		autocmd      BufEnter        *.dot   setlocal makeprg=dot\ -Tpng\ %:p\ >\ %:p:r.png
+	endif
 
 	" override above settings for specific files
 	" automatically fold notes.journal

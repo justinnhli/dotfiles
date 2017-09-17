@@ -175,31 +175,44 @@ if which python3 >/dev/null 2>&1; then
 	lsvenv() {
 		find "$PYTHON_VENV_HOME/" -mindepth 1 -maxdepth 1 -type d -exec basename {} ';' | sort
 	}
+	venv-source() {
+		(
+			(
+				find ~/git -maxdepth 2 -name requirements.txt
+				find ~/Dropbox/projects/ -maxdepth 2 -name requirements.txt
+			) | while read requirements; do
+				path="$(dirname "$requirements")"
+				name="$(basename "$path")"
+				modules="$(cat $requirements | tr '\n' ' ')"
+				echo "$name" "$path" "$modules"
+			done
+			cat ~/.config/packages-meta/venv | while read line; do
+				path="$HOME/.config/packages-meta/venv"
+				name="$(echo "$line" | cut -d ' ' -f 1)"
+				modules="$(echo "$line" | cut -d ' ' -f 2-)"
+				echo "$name" "$path" "$modules"
+			done
+		) | sort | uniq
+	}
+	venv-comm() {
+		comm <(workon) <(venv-source | cut -d ' ' -f 1)
+	}
 	venv-all() {
-		find "$PYTHON_VENV_HOME/" -mindepth 1 -maxdepth 1 -type d | sort | while read venv; do
+		lsvenv | sort | while read venv; do
 			venv="$(basename "$venv")"
 			echo "$venv" && workon "$venv" && $@ && deactivate
 		done
 	}
 	venv-freeze() {
-		find "$PYTHON_VENV_HOME/" -mindepth 1 -maxdepth 1 -type d | sort | while read venv; do
+		lsvenv | sort | while read venv; do
 			venv="$(basename "$venv")"
 			workon "$venv" && echo "$venv $(pip list --not-required --format freeze | sed 's/=.*//;' | tr '\n' ' ')" && deactivate
 		done
 	}
 	venv-setup() {
-		(
-			cat "$VENV_LIST" && (
-				find $HOME/git -maxdepth 2 -name requirements.txt && \
-				find $HOME/Dropbox/projects -maxdepth 2 -name requirements.txt
-			) | while read line; do
-				venv="$(echo "$line" | tr '/' ' ' | awk '{print $(NF-1)}')"
-				packages="$(cat "$line" | tr '\n' ' ')"
-				echo "$venv" "$packages"
-			done
-		) | sort --ignore-case | while read line; do
-			venv="$(echo "$line" | sed 's/ .*//')"
-			packages="$(echo "$line" | sed 's/^[^ ]* //')"
+		venv-source | sort --ignore-case | while read line; do
+			venv="$(echo "$line" | cut -d ' ' -f 1)"
+			packages="$(echo "$line" | cut -d ' ' -f 3-)"
 			echo
 			echo "VENV $venv" | tr '[:lower:]' '[:upper:]'
 			echo

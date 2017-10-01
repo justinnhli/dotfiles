@@ -10,6 +10,7 @@ arg_parser.add_argument('patterns', nargs='*')
 arg_parser.add_argument('-d', dest='date', action='store')
 arg_parser.add_argument('-m', dest='machine', action='store')
 arg_parser.add_argument('-p', dest='pwd', action='store')
+arg_parser.add_argument('-q', dest='quiet', action='store_true')
 args = arg_parser.parse_args()
 
 Event = namedtuple('Event', ('date', 'machine', 'pwd', 'command'))
@@ -29,4 +30,7 @@ with open(realpath(expanduser('~/Dropbox/personal/logs/shell_history'))) as fd:
             continue
         if not all(re.search(pat, event.command) for pat in args.patterns):
             continue
-        print('\t'.join((event.date, event.machine, event.pwd, event.command)))
+        if args.quiet:
+            print(event.command)
+        else:
+            print('\t'.join((event.date, event.machine, event.pwd, event.command)))

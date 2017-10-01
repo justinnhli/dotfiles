@@ -98,6 +98,7 @@ alias vi="$VISUAL"
 alias vim="$VISUAL"
 if [ "$NVIM_LISTEN_ADDRESS" != "" ]; then
 	unset MANPAGER
+	export PATH="$PYTHON_VENV_HOME/neovim/bin:$PATH"
 	alias :="$(which nvimcmd)"
 	alias vi="$(which nvimcmd) tabnew"
 	alias vim="$(which nvimcmd) tabnew"

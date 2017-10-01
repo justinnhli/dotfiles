@@ -375,6 +375,8 @@ endif
 	set background=dark
 	try
 		colorscheme molokai
+		" see https://github.com/tomasr/molokai/pull/44
+		hi MatchParen      ctermfg=208  ctermbg=233 cterm=bold
 	catch
 		colorscheme default
 	endtry

@@ -176,10 +176,10 @@ if which python3 >/dev/null 2>&1; then
 		find "$PYTHON_VENV_HOME/" -mindepth 1 -maxdepth 1 -type d -exec basename {} ';' | sort
 	}
 	venv-source() {
-		(
+		results="$( (
 			(
 				find ~/git -maxdepth 2 -name requirements.txt
-				find ~/Dropbox/projects/ -maxdepth 2 -name requirements.txt
+				find ~/Dropbox/projects -maxdepth 2 -name requirements.txt
 			) | while read requirements; do
 				path="$(dirname "$requirements")"
 				name="$(basename "$path")"
@@ -192,7 +192,15 @@ if which python3 >/dev/null 2>&1; then
 				modules="$(echo "$line" | cut -d ' ' -f 2-)"
 				echo "$name" "$path" "$modules"
 			done
-		) | sort | uniq
+			) | sort | uniq
+		)"
+		if [ $# -eq 0 ]; then
+			echo "$results"
+		else
+			echo $@ | sort | while read line; do
+				echo "$results" | grep "^$line "
+			done
+		fi
 	}
 	venv-comm() {
 		comm <(workon) <(venv-source | cut -d ' ' -f 1)

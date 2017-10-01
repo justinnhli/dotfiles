@@ -748,8 +748,6 @@ endif
 	let g:netrw_liststyle = 3
 	let g:netrw_list_hide = '\.swp$,\.un\~$'
 	let g:netrw_winsize = 50
-	" python-syntax
-	let g:python_highlight_all = 1
 	" undotree
 	nnoremap  <leader>u     :UndotreeToggle<cr>
 " }

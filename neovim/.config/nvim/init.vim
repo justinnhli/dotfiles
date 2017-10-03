@@ -713,10 +713,10 @@ endif
 		tabnew
 		exec 'tag '.a:args
 	endfunction
-	command! -nargs=1 Tagnew :call s:TagnewCommand(<q-args>)
+	command! -nargs=1 Tagnew call <SID>TagnewCommand(<q-args>)
 
-	command! -nargs=0 CloseRightTabs :call <SID>CloseRightTabs()
-	command! -nargs=1 MoveToRelTab :call <SID>MoveToRelTab(<q-args>)
+	command! -nargs=0 CloseRightTabs call <SID>CloseRightTabs()
+	command! -nargs=1 MoveToRelTab call <SID>MoveToRelTab(<q-args>)
 " }
 
 " plugin settings {
@@ -742,8 +742,8 @@ endif
 	" journal.vim
 	let g:jrnl_ignore_files = split(globpath('~/journal', '*.journal'), '\n')
 	" limelight.vim
-	autocmd! User GoyoEnter :call <SID>EnterLimelight()
-	autocmd! User GoyoLeave :call <SID>LeaveLimelight()
+	autocmd! User GoyoEnter call <SID>EnterLimelight()
+	autocmd! User GoyoLeave call <SID>LeaveLimelight()
 	" netrw
 	let g:netrw_browse_split = 3
 	let g:netrw_liststyle = 3

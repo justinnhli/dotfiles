@@ -35,7 +35,7 @@ endif
 	function! s:CloseRightTabs()
 		let l:cur = tabpagenr()
 		while l:cur < tabpagenr('$')
-			exe 'tabclose '.(l:cur + 1)
+			exec 'tabclose '.(l:cur + 1)
 		endwhile
 	endfunction
 
@@ -67,7 +67,7 @@ endif
 
 	function! s:StartTerminal(...)
 		for l:cmd in a:000
-			exe l:cmd
+			exec l:cmd
 		endfor
 		setlocal nospell nonumber
 		terminal
@@ -154,14 +154,14 @@ endif
 			endif
 			vert botright split
 		endif
-		exec 'b'.l:cur_buf
+		exec 'buffer '.l:cur_buf
 		let l:new_tab = tabpagenr()
-		exec 'tabnext'.l:cur_tab
+		exec 'tabnext '.l:cur_tab
 		exec l:cur_win.'wincmd c'
 		if l:new_tab > l:num_tabs
-			exec 'tabnext'.(l:new_tab-1)
+			exec 'tabnext '.(l:new_tab-1)
 		else
-			exec 'tabnext'.l:new_tab
+			exec 'tabnext '.l:new_tab
 		endif
 		" FIXME fails when new_tab is the highest tab
 	endfunction
@@ -655,7 +655,7 @@ endif
 	nnoremap           <leader><cr>  :make<cr>
 	nnoremap  <silent> <leader>;     :lcd %:p:h<cr>
 	" custom functions
-	nnoremap  <silent> <leader>.     :exe 'set foldenable foldlevel='.foldlevel('.')<cr>
+	nnoremap  <silent> <leader>.     :exec 'set foldenable foldlevel='.foldlevel('.')<cr>
 " }
 
 " autocommands {
@@ -666,7 +666,7 @@ endif
 	" keep windows equal in size
 	autocmd      VimResized          *       normal <c-w>=
 	" restore cursor position
-	autocmd      BufReadPost         *       if line("'\"") > 1 && line("'\"") <= line('$') | exe 'normal! g`"' | endif
+	autocmd      BufReadPost         *       if line("'\"") > 1 && line("'\"") <= line('$') | exec 'normal! g`"' | endif
 	" disable audio bell in MacVim
 	autocmd      GUIEnter            *       set visualbell t_vb=
 	" automatically leave insert mode after 'updatetime' milliseconds, which is 7.5 seconds in insert mode
@@ -711,7 +711,7 @@ endif
 " commands {
 	function! s:TagnewCommand(args)
 		tabnew
-		execute ':tag '.a:args
+		exec 'tag '.a:args
 	endfunction
 	command! -nargs=1 Tagnew :call s:TagnewCommand(<q-args>)
 

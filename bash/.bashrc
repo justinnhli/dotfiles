@@ -239,6 +239,10 @@ fi
 
 # journal related settings
 if [ -d "$HOME/journal" ]; then
+	note() {
+		date '+%Y-%m-%d %H:%M' >> "$HOME/journal/scratch.journal"
+		printf '\t%s\n' "$*" >> "$HOME/journal/scratch.journal"
+	}
 	alias vino="$VISUAL $HOME/journal/notes.journal"
 	if which journal.py >/dev/null 2>&1; then
 		alias jrnl="journal.py --ignore '$(ls $HOME/journal/[a-z-]*.journal 2>/dev/null | grep -v '[ ()]' | tr '\n' ',')'"

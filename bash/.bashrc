@@ -84,9 +84,6 @@ fi
 if which flake8 >/dev/null 2>&1; then
 	alias flake8='flake8 --ignore=E501'
 fi
-if which journal.py >/dev/null 2>&1; then
-	alias jrnl="journal.py --ignore '$(ls $HOME/journal/[a-z-]*.journal 2>/dev/null | grep -v '[ ()]' | tr '\n' ',')'"
-fi
 if which scons >/dev/null 2>&1 && which python3 >/dev/null 2>&1; then
 	alias scons="scons --python=$(which python3)"
 fi
@@ -99,9 +96,6 @@ fi
 
 alias vi="$VISUAL"
 alias vim="$VISUAL"
-if [ -d "$HOME/journal" ]; then
-	alias vino="$VISUAL $HOME/journal/notes.journal"
-fi
 if [ "$NVIM_LISTEN_ADDRESS" != "" ]; then
 	unset MANPAGER
 	alias :="$(which nvimcmd)"
@@ -241,6 +235,14 @@ if which python3 >/dev/null 2>&1; then
 			fi
 		done
 	}
+fi
+
+# journal related settings
+if [ -d "$HOME/journal" ]; then
+	alias vino="$VISUAL $HOME/journal/notes.journal"
+	if which journal.py >/dev/null 2>&1; then
+		alias jrnl="journal.py --ignore '$(ls $HOME/journal/[a-z-]*.journal 2>/dev/null | grep -v '[ ()]' | tr '\n' ',')'"
+	fi
 fi
 
 # completion

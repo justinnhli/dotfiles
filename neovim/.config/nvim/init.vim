@@ -750,7 +750,7 @@ endif
 	let g:netrw_list_hide = '\.swp$,\.un\~$'
 	let g:netrw_winsize = 50
 	" undotree
-	nnoremap  <leader>u     :UndotreeToggle<cr>
+	nnoremap  <leader><leader>u     :UndotreeToggle<cr>
 " }
 
 " protect large files from sourcing and other overhead.

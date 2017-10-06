@@ -69,8 +69,8 @@ endif
 		for l:cmd in a:000
 			exec l:cmd
 		endfor
-		setlocal nospell nonumber
 		terminal
+		setlocal nonumber nospell
 	endfunction
 
 	function! s:ToggleFoldMethod()
@@ -692,7 +692,7 @@ endif
 	augroup END
 	" disable spellcheck in virtual terminal
 	if exists('##TermOpen')
-		autocmd  TermOpen            *       setlocal nospell scrollback=-1
+		autocmd  TermOpen            *       setlocal nonumber nospell scrollback=-1
 	endif
 
 	" settings for specific file types

@@ -9,3 +9,16 @@
 	tool = nvim -d
 [push]
 	default = simple
+[alias]
+	# staging
+	unstage = reset HEAD --
+	precommit = diff --cached
+	# rebasing
+	abort = rebase --abort
+	continue = rebase --continue
+	# stashes
+	stashes = stash list
+	# branches
+	branches = branch -a
+	# remotes
+	remotes = remote -v

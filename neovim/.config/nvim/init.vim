@@ -669,7 +669,7 @@ endif
 	autocmd      BufReadPost         *       if line("'\"") > 1 && line("'\"") <= line('$') | exec 'normal! g`"' | endif
 	" disable audio bell in MacVim
 	autocmd      GUIEnter            *       set visualbell t_vb=
-	" automatically leave insert mode after 'updatetime' milliseconds, which is 7.5 seconds in insert mode
+	" automatically leave insert mode after 'updatetime' milliseconds
 	autocmd      CursorHoldI         *       stopinsert
 	augroup leave_insert
 		autocmd  InsertEnter         *       let updaterestore=&updatetime | set updatetime=5000

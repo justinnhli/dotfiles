@@ -377,7 +377,10 @@ endif
 	try
 		colorscheme molokai
 		" see https://github.com/tomasr/molokai/pull/44
-		hi MatchParen      ctermfg=208  ctermbg=233 cterm=bold
+		hi MatchParen guifg=#FD971F guibg=#000000 gui=bold
+		if &t_Co > 255
+			hi MatchParen ctermfg=208  ctermbg=233 cterm=bold
+		endif
 	catch
 		colorscheme default
 	endtry

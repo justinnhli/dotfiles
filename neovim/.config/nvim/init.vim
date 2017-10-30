@@ -92,6 +92,9 @@ endif
 " functional functions {
 	function! UnicodeToAscii()
 		set fileformat=unix
+		" newline (0x13)
+		%s///eg
+		%s/\%u2029//eg " paragraph separator
 		" space (0x20)
 		%s/\%u00A0/ /eg " no-break space
 		%s/\%u00AD/ /eg " soft hyphen
@@ -119,8 +122,6 @@ endif
 		%s/\%u2500/ - /eg " box drawings light horizontal
 		" ellipsis
 		%s/\%u2026/.../eg " horizontal ellipsis
-		" newlines
-		%s///eg
 	endfunction
 
 	function! MoveToRelTab(n)

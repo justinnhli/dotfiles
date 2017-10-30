@@ -200,6 +200,14 @@ endif
 		let l:tabline .= '%T%#TabLineFill#%='
 		return l:tabline
 	endfunction
+
+	function! s:FixMolokaiMatchparen()
+		" see https://github.com/tomasr/molokai/pull/44
+		hi MatchParen guifg=#FD971F guibg=#000000 gui=bold
+		if &t_Co > 255
+			hi MatchParen ctermfg=208  ctermbg=233 cterm=bold
+		endif
+	endfunction
 " }
 
 " plugin functions {
@@ -367,24 +375,8 @@ endif
 	if has('syntax')
 		set   spell
 		set   spellcapcheck=
-	endif
-" }
-
-" highlighting and color {
-	if has('syntax')
 		syntax enable
 	endif
-	set background=dark
-	try
-		colorscheme molokai
-		" see https://github.com/tomasr/molokai/pull/44
-		hi MatchParen guifg=#FD971F guibg=#000000 gui=bold
-		if &t_Co > 255
-			hi MatchParen ctermfg=208  ctermbg=233 cterm=bold
-		endif
-	catch
-		colorscheme default
-	endtry
 " }
 
 " key mappings {
@@ -698,6 +690,8 @@ endif
 	if exists('##TermOpen')
 		autocmd  TermOpen            *       setlocal nonumber nospell scrollback=-1
 	endif
+	" fix molokai matchparen issues (see https://github.com/tomasr/molokai/pull/44)
+	autocmd      ColorScheme         molokai call s:FixMolokaiMatchparen()
 
 	" settings for specific file types
 	if executable('cmark')
@@ -710,6 +704,16 @@ endif
 	" override above settings for specific files
 	" automatically fold notes.journal
 	autocmd      BufRead             notes.journal syntax match flag '^.\{2000,\}$' | setlocal breakindent breakindentopt=shift:1 foldenable foldlevel=0
+" }
+
+" colorscheme {
+    " this requires autocmds to fix some colors
+	set background=dark
+	try
+		colorscheme molokai
+	catch
+		colorscheme default
+	endtry
 " }
 
 " commands {

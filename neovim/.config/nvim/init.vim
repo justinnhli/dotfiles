@@ -707,7 +707,7 @@ endif
 " }
 
 " colorscheme {
-    " this requires autocmds to fix some colors
+	" this requires autocmds to fix some colors
 	set background=dark
 	try
 		colorscheme molokai

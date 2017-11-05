@@ -1,4 +1,6 @@
 dot_secrets
+filezilla/.config/filezilla/*
+!filezilla/.config/filezilla/sitemanager.xml
 jupyter/.jupyter/migrated
 keras/.keras/datasets
 neovim/.config/nvim/.netrwhist
@@ -6,13 +8,11 @@ neovim/.config/nvim/autoload/plug.vim
 neovim/.config/nvim/autoload/plug.vim.old
 neovim/.config/nvim/nviminfo
 neovim/.config/nvim/plugged/
-neovim/.config/nvim/spell/en.utf-8.add.spl
-neovim/.config/nvim/spell/en.utf-8.spl
-neovim/.config/nvim/spell/en.utf-8.sug
+neovim/.config/nvim/spell/*
+!neovim/.config/nvim/spell/en.utf-8.add
 ssh/.ssh/authorized_keys
 ssh/.ssh/id_rsa
 ssh/.ssh/id_rsa.pub
 ssh/.ssh/known_hosts
-xfce-terminal/.config/xfce4/help.rc
-xfce-terminal/.config/xfce4/terminal/accels.scm
-xfce-terminal/.config/xfce4/xfconf
+xfce-terminal/.config/*
+!xfce-terminal/.config/xfce4/terminal/terminalrc

@@ -21,6 +21,7 @@ if has('nvim')
 		Plug 'ludovicchabant/vim-gutentags'
 		" color schemes
 		Plug 'tomasr/molokai'
+		Plug 'cocopon/iceberg.vim'
 		" settings
 		Plug 'tpope/vim-sleuth'
 		" syntax
@@ -201,11 +202,19 @@ endif
 		return l:tabline
 	endfunction
 
-	function! s:FixMolokaiMatchparen()
+	function! s:PatchIcebergColorscheme()
+		" use Error colors for spelling, to avoid horrid background color
+		highlight SpellBad ctermbg=234 ctermfg=203 guibg=#161821 guifg=#e27878
+		highlight SpellCap ctermbg=234 ctermfg=203 guibg=#161821 guifg=#e27878
+		highlight SpellLocal ctermbg=234 ctermfg=203 guibg=#161821 guifg=#e27878
+		highlight SpellRare ctermbg=234 ctermfg=203 guibg=#161821 guifg=#e27878
+	endfunction
+
+	function! s:PatchMolokaiColorscheme()
 		" see https://github.com/tomasr/molokai/pull/44
-		hi MatchParen guifg=#FD971F guibg=#000000 gui=bold
+		highlight MatchParen guifg=#FD971F guibg=#000000 gui=bold
 		if &t_Co > 255
-			hi MatchParen ctermfg=208  ctermbg=233 cterm=bold
+			highlight MatchParen ctermfg=208 ctermbg=233 cterm=bold
 		endif
 	endfunction
 " }
@@ -691,7 +700,8 @@ endif
 		autocmd  TermOpen            *       setlocal nonumber nospell scrollback=-1
 	endif
 	" fix molokai matchparen issues (see https://github.com/tomasr/molokai/pull/44)
-	autocmd      ColorScheme         molokai call s:FixMolokaiMatchparen()
+	autocmd      ColorScheme         molokai call s:PatchMolokaiColorscheme()
+	autocmd      ColorScheme         iceberg call s:PatchIcebergColorscheme()
 
 	" settings for specific file types
 	if executable('cmark')
@@ -710,7 +720,7 @@ endif
 	" this requires autocmds to fix some colors
 	set background=dark
 	try
-		colorscheme molokai
+		colorscheme iceberg
 	catch
 		colorscheme default
 	endtry

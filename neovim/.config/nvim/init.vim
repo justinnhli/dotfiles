@@ -254,87 +254,29 @@ endif
 	endif
 " }
 
-" vim GUI {
+" settings {
+	filetype plugin on
+	filetype indent on
+	if has('syntax')
+		syntax enable
+	endif
 	set   confirm
 	set   display=lastline,uhex
 	set noerrorbells
-	set guioptions-=T
-	set guioptions-=L
-	set guioptions-=r
+	set   guioptions-=T
+	set   guioptions-=L
+	set   guioptions-=r
 	set   laststatus=2 " neovim default
 	set   lazyredraw
 	set   listchars=tab:>>,trail:.
 	set   mouse=
-	if has('linebreak')
-		set   linebreak
-	endif
 	set   number
-	if has('cmdline_info')
-		set   showcmd
-	endif
-	if has('windows')
-		set   splitbelow
-	endif
-	if has('vertsplit')
-		set   splitright
-	endif
-	if has('statusline')
-		set statusline=
-		" buffer number
-		set statusline+=%n
-		" git branch
-		if exists('fugitive#head')
-			set statusline+=%(\ %{fugitive#head()!=''?'[git:'.fugitive#head().']':''}%)
-		endif
-		" file name
-		set statusline+=\ %f
-		" modified
-		set statusline+=%(\ %M%)
-		" file format
-		set statusline+=\ [%{&ff}]
-		" read only
-		set statusline+=%r
-		" file type
-		set statusline+=%y
-		" paste
-		set statusline+=%#ErrorMsg#%{&paste?'[paste]':''}%*
-		" alignment separator
-		set statusline+=%=
-		" pwd
-		set statusline+=%<%1.30{getcwd()}
-		" cursor position
-		set statusline+=\ (%l/%L,%c)
-		" buffer position
-		set statusline+=%4P
-	endif
-	if has('windows')
-		set showtabline=2
-		set tabline=%!MyTabLine()
-	endif
 	set   tabpagemax=50 " neovim default
 	set   title
-	if has('gui_running')
-		set   visualbell
-	else
-		set novisualbell
-	endif
-	if has('wildmenu')
-		set   wildmenu " neovim default
-		set   wildmode=longest,list
-		set   wildignore+=*.aux,*.bbl,*.blg,*.eps,*.nav,*.pyc,*.snm,*.toc
-	endif
 	set nowrap
-" }
-
-" settings {
-	filetype plugin on
-	filetype indent on
 	set   autoindent " neovim default
 	set   autoread " neovim default
 	set   backspace=indent,eol,start " neovim default
-	if exists('&esckeys')
-		set noesckeys
-	endif
 	set   ignorecase
 	set   scrolloff=1
 	set   shiftwidth=4
@@ -346,22 +288,8 @@ endif
 	set   tabstop=4
 	set   tags+=./.tags,.tags
 	set   whichwrap=b,s,<,>,h,l,[,]
-	if has('multi_byte')
-		set nobomb
-	endif
-	if exists('&breakindent')
-		set   breakindent
-		set   breakindentopt=shift:1
-	endif
-	if has('insert_expand')
-		set   complete=.
-		set   completeopt=longest,menu
-	endif
-	if has('multi_byte')
-		set   encoding=utf-8 " neovim default
-	endif
-	if has('multi_byte')
-		set   fileencoding=utf-8
+	if has('cmdline_info')
+		set   showcmd
 	endif
 	if has('folding')
 		set   foldclose=all
@@ -371,20 +299,81 @@ endif
 	endif
 	if has('extra_search')
 		set   hlsearch " neovim default
-	endif
-	if has('insert_expand')
-		set noinfercase
-	endif
-	if has('extra_search')
 		set   incsearch " neovim default
 	endif
-	if exists('&inccommand')
-		set inccommand=split
+	if has('gui_running')
+		set   visualbell
+	else
+		set novisualbell
+	endif
+	if has('insert_expand')
+		set   complete=.
+		set   completeopt=longest,menu
+		set noinfercase
+	endif
+	if has('linebreak')
+		set   linebreak
+	endif
+	if has('multi_byte')
+		set nobomb
+		set   encoding=utf-8 " neovim default
+		set   fileencoding=utf-8
+	endif
+	if has('statusline')
+		set   statusline=
+		" buffer number
+		set   statusline+=%n
+		" git branch
+		if exists('fugitive#head')
+			set   statusline+=%(\ %{fugitive#head()!=''?'[git:'.fugitive#head().']':''}%)
+		endif
+		" file name
+		set   statusline+=\ %f
+		" modified
+		set   statusline+=%(\ %M%)
+		" file format
+		set   statusline+=\ [%{&ff}]
+		" read only
+		set   statusline+=%r
+		" file type
+		set   statusline+=%y
+		" paste
+		set   statusline+=%#ErrorMsg#%{&paste?'[paste]':''}%*
+		" alignment separator
+		set   statusline+=%=
+		" pwd
+		set   statusline+=%<%1.30{getcwd()}
+		" cursor position
+		set   statusline+=\ (%l/%L,%c)
+		" buffer position
+		set   statusline+=%4P
 	endif
 	if has('syntax')
 		set   spell
 		set   spellcapcheck=
-		syntax enable
+	endif
+	if has('vertsplit')
+		set   splitright
+	endif
+	if has('wildmenu')
+		set   wildmenu " neovim default
+		set   wildmode=longest,list
+		set   wildignore+=*.aux,*.bbl,*.blg,*.eps,*.nav,*.pyc,*.snm,*.toc
+	endif
+	if has('windows')
+		set   splitbelow
+		set   showtabline=2
+		set   tabline=%!MyTabLine()
+	endif
+	if exists('&breakindent')
+		set   breakindent
+		set   breakindentopt=shift:1
+	endif
+	if exists('&esckeys')
+		set noesckeys
+	endif
+	if exists('&inccommand')
+		set inccommand=split
 	endif
 " }
 
@@ -717,7 +706,7 @@ endif
 " }
 
 " colorscheme {
-	" this requires autocmds to fix some colors
+	" place after autocmds to patch colors
 	set background=dark
 	try
 		colorscheme iceberg

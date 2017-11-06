@@ -353,6 +353,9 @@ endif
 		set   spell
 		set   spellcapcheck=
 	endif
+	if (has('termguicolors'))
+		set termguicolors
+	endif
 	if has('vertsplit')
 		set   splitright
 	endif

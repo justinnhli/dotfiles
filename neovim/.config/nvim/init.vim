@@ -203,8 +203,15 @@ endif
 		return l:tabline
 	endfunction
 
-	function! s:PatchMolokaiColorscheme()
-		" see https://github.com/tomasr/molokai/pull/44
+	function! s:PatchColorschemeIceberg()
+		highlight SpellBad ctermbg=234 ctermfg=203 guibg=#161821 guifg=#e27878
+		highlight SpellCap ctermbg=234 ctermfg=203 guibg=#161821 guifg=#e27878
+		highlight SpellLocal ctermbg=234 ctermfg=203 guibg=#161821 guifg=#e27878
+		highlight SpellRare ctermbg=234 ctermfg=203 guibg=#161821 guifg=#e27878
+	endfunction
+
+	function! s:PatchColorschemeMolokai()
+		" fix matchparen (see https://github.com/tomasr/molokai/pull/44)
 		highlight MatchParen guifg=#FD971F guibg=#000000 gui=bold
 		if &t_Co > 255
 			highlight MatchParen ctermfg=208 ctermbg=233 cterm=bold
@@ -684,8 +691,9 @@ endif
 	if exists('##TermOpen')
 		autocmd  TermOpen            *       setlocal nonumber nospell scrollback=-1
 	endif
-	" fix molokai matchparen issues (see https://github.com/tomasr/molokai/pull/44)
-	autocmd      ColorScheme         molokai call s:PatchMolokaiColorscheme()
+	" patch colorschemes
+	autocmd      ColorScheme         iceberg call s:PatchColorschemeIceberg()
+	autocmd      ColorScheme         molokai call s:PatchColorschemeMolokai()
 
 	" settings for specific file types
 	if executable('cmark')

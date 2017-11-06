@@ -203,14 +203,6 @@ endif
 		return l:tabline
 	endfunction
 
-	function! s:PatchIcebergColorscheme()
-		" use Error colors for spelling, to avoid horrid background color
-		highlight SpellBad ctermbg=234 ctermfg=203 guibg=#161821 guifg=#e27878
-		highlight SpellCap ctermbg=234 ctermfg=203 guibg=#161821 guifg=#e27878
-		highlight SpellLocal ctermbg=234 ctermfg=203 guibg=#161821 guifg=#e27878
-		highlight SpellRare ctermbg=234 ctermfg=203 guibg=#161821 guifg=#e27878
-	endfunction
-
 	function! s:PatchMolokaiColorscheme()
 		" see https://github.com/tomasr/molokai/pull/44
 		highlight MatchParen guifg=#FD971F guibg=#000000 gui=bold
@@ -694,7 +686,6 @@ endif
 	endif
 	" fix molokai matchparen issues (see https://github.com/tomasr/molokai/pull/44)
 	autocmd      ColorScheme         molokai call s:PatchMolokaiColorscheme()
-	autocmd      ColorScheme         iceberg call s:PatchIcebergColorscheme()
 
 	" settings for specific file types
 	if executable('cmark')

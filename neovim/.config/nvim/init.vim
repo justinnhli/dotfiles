@@ -72,6 +72,7 @@ endif
 		endfor
 		terminal
 		setlocal nonumber nospell
+		startinsert
 	endfunction
 
 	function! s:ToggleFoldMethod()

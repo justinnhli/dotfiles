@@ -22,6 +22,7 @@ if has('nvim')
 		" color schemes
 		Plug 'tomasr/molokai'
 		Plug 'cocopon/iceberg.vim'
+		Plug 'jacoborus/tender.vim'
 		" settings
 		Plug 'tpope/vim-sleuth'
 		" syntax

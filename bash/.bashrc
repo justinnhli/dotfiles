@@ -44,12 +44,10 @@ fi
 if [ -d "$HOME/git/Soar" ]; then
 	case "$(uname)" in
 	'Linux')
-		if uname -v | grep Ubuntu >/dev/null 2>&1; then
-			if [ -d '/usr/lib/jvm/default-java' ]; then
-				export JAVA_HOME='/usr/lib/jvm/default-java'
-			fi
-		elif [ -d '/usr/lib/jvm/java-7-openjdk' ]; then
-			export JAVA_HOME='/usr/lib/jvm/java-7-openjdk'
+		if [ -d '/usr/lib/jvm/default-java' ]; then
+			export JAVA_HOME='/usr/lib/jvm/default-java'
+		elif [ -d '/usr/lib/jvm/default' ]; then
+			export JAVA_HOME='/usr/lib/jvm/default'
 		fi
 		export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$HOME/git/Soar/out";;
 	'Darwin')

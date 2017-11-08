@@ -19,9 +19,9 @@ export PYTHONPATH="$HOME/Dropbox/projects:$HOME/git"
 
 # environment
 case "$(uname)" in
-"Linux")
+'Linux')
 	WHICH='which --skip-alias';;
-"Darwin")
+'Darwin')
 	WHICH='which';;
 esac
 if $WHICH nvim >/dev/null 2>&1; then
@@ -35,7 +35,7 @@ fi
 export VISUAL="$EDITOR"
 export HISTSIZE=10000
 export HISTCONTROL=ignoredups
-export PYTHONIOENCODING="utf-8"
+export PYTHONIOENCODING='utf-8'
 if [ -f "$HOME/.dot_secrets/bashrc" ]; then
 	source "$HOME/.dot_secrets/bashrc"
 fi
@@ -43,16 +43,16 @@ fi
 # soar variables
 if [ -d "$HOME/git/Soar" ]; then
 	case "$(uname)" in
-	"Linux")
+	'Linux')
 		if uname -v | grep Ubuntu >/dev/null 2>&1; then
-			if [ -d "/usr/lib/jvm/default-java" ]; then
-				export JAVA_HOME="/usr/lib/jvm/default-java"
+			if [ -d '/usr/lib/jvm/default-java' ]; then
+				export JAVA_HOME='/usr/lib/jvm/default-java'
 			fi
-		elif [ -d "/usr/lib/jvm/java-7-openjdk" ]; then
-			export JAVA_HOME="/usr/lib/jvm/java-7-openjdk"
+		elif [ -d '/usr/lib/jvm/java-7-openjdk' ]; then
+			export JAVA_HOME='/usr/lib/jvm/java-7-openjdk'
 		fi
 		export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$HOME/git/Soar/out";;
-	"Darwin")
+	'Darwin')
 		export DYLD_LIBRARY_PATH="$DYLD_LIBRARY_PATH:$HOME/git/Soar/out";;
 	esac
 	export PYTHONPATH="$HOME/git/Soar/out:$PYTHONPATH"
@@ -96,7 +96,7 @@ fi
 
 alias vi="$VISUAL"
 alias vim="$VISUAL"
-if [ "$NVIM_LISTEN_ADDRESS" != "" ]; then
+if [ "$NVIM_LISTEN_ADDRESS" != '' ]; then
 	unset MANPAGER
 	export PATH="$PYTHON_VENV_HOME/neovim/bin:$PATH"
 	alias :="$(which nvimcmd)"
@@ -109,7 +109,7 @@ if [ "$NVIM_LISTEN_ADDRESS" != "" ]; then
 fi
 
 case "$(uname)" in
-	"Linux")
+	'Linux')
 		alias ls='ls --color=auto --time-style=long-iso'
 		if which xdg-open >/dev/null 2>&1; then
 			alias open='xdg-open'
@@ -120,7 +120,7 @@ case "$(uname)" in
 		if which x11vnc >/dev/null 2>&1; then
 			alias x11vnc='x11vnc -display :0 -xkb -usepw -noxdamage'
 		fi;;
-	"Darwin")
+	'Darwin')
 		alias ls='ls -G';;
 esac
 

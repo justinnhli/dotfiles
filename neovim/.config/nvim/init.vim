@@ -211,23 +211,21 @@ endif
 		highlight SpellLocal ctermbg=234 ctermfg=203 guibg=#161821 guifg=#e27878
 		highlight SpellRare ctermbg=234 ctermfg=203 guibg=#161821 guifg=#e27878
 		" add nvim :terminal colors (see https://github.com/cocopon/iceberg.vim/issues/13)
-		let g:terminal_color_foreground = "#c6c8d1" " Normal guifg
-		let g:terminal_color_background = "#161821" " Normal guibg
 		let g:terminal_color_0 = "#161821" " Normal guibg
-		let g:terminal_color_1 = "#e27878" " ErrorMsg guifg
+		let g:terminal_color_1 = "#e27878" " Error guifg
 		let g:terminal_color_2 = "#b4be82" " PreProc guifg
 		let g:terminal_color_3 = "#d8e599" " Todo guifg
 		let g:terminal_color_4 = "#84a0c6" " Statement guifg
 		let g:terminal_color_5 = "#a093c7" " Constant guifg
-		let g:terminal_color_6 = "#89b8c2" " Type guifg
+		let g:terminal_color_6 = "#89b8c2" " Identifier guifg
 		let g:terminal_color_7 = "#c6c8d1" " Normal guifg
 		let g:terminal_color_8 = "#161821" " Normal guibg
-		let g:terminal_color_9 = "#e27878" " ErrorMsg guifg
+		let g:terminal_color_9 = "#e27878" " Error guifg
 		let g:terminal_color_10 = "#b4be82" " PreProc guifg
 		let g:terminal_color_11 = "#d8e599" " Todo guifg
 		let g:terminal_color_12 = "#84a0c6" " Statement guifg
 		let g:terminal_color_13 = "#a093c7" " Constant guifg
-		let g:terminal_color_14 = "#89b8c2" " Type guifg
+		let g:terminal_color_14 = "#89b8c2" " Identifier guifg
 		let g:terminal_color_15 = "#c6c8d1" " Normal guifg
 	endfunction
 

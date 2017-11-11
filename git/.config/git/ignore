@@ -33,6 +33,11 @@ __pycache__
 Icon?
 Thumbs.db
 
+# IDE generated files #
+#######################
+.idea
+*.iml
+
 # Temporary files #
 ###################
 .*.swp

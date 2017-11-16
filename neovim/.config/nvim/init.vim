@@ -732,12 +732,6 @@ endif
 " }
 
 " plugin settings {
-	" ctrlp
-	let g:ctrlp_map = '<leader>P'
-	let g:ctrlp_prompt_mappings = {
-		\ 'AcceptSelection("e")': ['<c-t>'],
-		\ 'AcceptSelection("t")': ['<cr>', '<2-LeftMouse>'],
-		\ }
 	" clever-f
 	let g:clever_f_fix_key_direction = 1
 	let g:clever_f_timeout_ms = 5000

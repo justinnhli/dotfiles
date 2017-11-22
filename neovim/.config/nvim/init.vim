@@ -90,6 +90,13 @@ endif
 		tabnew
 		exec "b ".l:bufnum
 	endfunction
+
+	function! s:LoadFileTypeTemplate()
+		let l:templates_file = fnamemodify($MYVIMRC, ':p:h').'/templates/'.&filetype
+		if !empty(glob(l:templates_file))
+			exec '0r '.l:templates_file
+		endif
+	endfunction
 " }
 
 " functional functions {
@@ -662,6 +669,7 @@ endif
 	autocmd      BufRead,BufNewFile  *.lisp  setlocal expandtab
 	autocmd      BufRead,BufNewFile  *.py    setlocal foldmethod=indent tabstop=4 expandtab
 	autocmd      BufRead,BufNewFile  *.tex   setlocal foldmethod=indent spell
+	autocmd      BufNewFile          *       call s:LoadFileTypeTemplate()
 	" keep windows equal in size
 	autocmd      VimResized          *       normal <c-w>=
 	" restore cursor position

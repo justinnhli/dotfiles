@@ -94,7 +94,7 @@ endif
 
 	function! s:LoadFileTypeTemplate()
 		let l:templates_file = fnamemodify($MYVIMRC, ':p:h').'/templates/'.&filetype
-		if !empty(glob(l:templates_file))
+		if filereadable(l:templates_file)
 			exec '0r '.l:templates_file
 		endif
 	endfunction

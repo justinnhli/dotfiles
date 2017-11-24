@@ -3,7 +3,7 @@ filezilla/.config/filezilla/*
 !filezilla/.config/filezilla/sitemanager.xml
 jupyter/.jupyter/migrated
 keras/.keras/datasets
-kitty/.config/kitty/cached.json
+kitty/**/kitty/cached.json
 neovim/.config/nvim/.netrwhist
 neovim/.config/nvim/autoload/plug.vim
 neovim/.config/nvim/autoload/plug.vim.old

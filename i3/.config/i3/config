@@ -11,8 +11,8 @@ font pango:monospace 10
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
 
-# start a terminal
-bindsym $mod+t exec "i3-sensible-terminal"
+# start applications
+bindsym $mod+t exec "kitty"
 bindsym $mod+f exec "firefox"
 bindsym $mod+e exec "thunar"
 

@@ -12,13 +12,14 @@ if has('nvim')
 
 	try
 		call plug#begin(expand('<sfile>:p:h').'/plugged')
-		" extensions
+		" tools
 		Plug 'junegunn/goyo.vim'
 		Plug 'junegunn/limelight.vim'
 		Plug 'mbbill/undotree'
+		" extensions
+		Plug 'ludovicchabant/vim-gutentags'
 		Plug 'rhysd/clever-f.vim'
 		Plug 'tpope/vim-fugitive'
-		Plug 'ludovicchabant/vim-gutentags'
 		" color schemes
 		Plug 'tomasr/molokai'
 		Plug 'cocopon/iceberg.vim'

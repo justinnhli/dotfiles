@@ -45,7 +45,7 @@ fi
 
 if [ -d "$HOME/Desktop" ]; then
 	cd "$HOME/Desktop" || exit
-	echo "removing old vim undo files ~/Desktop..."
+	echo "removing old vim undo files from ~/Desktop..."
 	orphan-undos | sed 's/^/	/'
 fi
 
@@ -92,9 +92,7 @@ if [ -d "$HOME/Dropbox" ]; then
 fi
 echo
 
-if [ -d "$HOME/papers" ]; then
-	libsync pull
-fi
+if_exists_do "updating papers library" "$HOME/papers" "libsync pull"
 
 nvim -c ':PlugUpgrade | qa!'
 if_exists_do "updating nvim plugins" "$HOME/.config/nvim/plugged" "git-all pull"

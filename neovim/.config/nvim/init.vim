@@ -627,7 +627,7 @@ endif
 	nnoremap           <leader>B     :tabnew ~/.bashrc<cr>
 	nnoremap           <leader>V     :tabnew ~/.config/nvim/init.vim<cr>
 	nnoremap           <leader>C     :tabnew ~/Dropbox/personal/contacts/contacts-*<cr>
-	nnoremap           <leader>H     :tabnew ~/Dropbox/personal/logs/shell_history<cr>
+	nnoremap           <leader>H     :tabnew ~/Dropbox/personal/logs/<C-R>=strftime("%Y")<cr>.shistory<cr>
 	nnoremap           <leader>T     :tabnew ~/Dropbox/personal/logs/ifttt/tweets.txt<cr>
 	nnoremap           <leader>L     :tabnew <C-r>=g:justinnhli_scholarship_path<cr>/journal/library.bib<cr>
 	nnoremap           <leader>R     :tabnew <C-r>=g:justinnhli_scholarship_path<cr>/journal/<C-R>=strftime("%Y")<cr>.journal<cr>:$<cr>

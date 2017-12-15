@@ -3,6 +3,7 @@
 import re
 from argparse import ArgumentParser
 from os.path import basename, exists as file_exists, expanduser, getmtime, join as join_path, realpath, relpath
+from os import listdir
 from collections import namedtuple
 
 arg_parser = ArgumentParser()
@@ -15,22 +16,27 @@ args = arg_parser.parse_args()
 
 Event = namedtuple('Event', ('date', 'machine', 'pwd', 'command'))
 
-with open(realpath(expanduser('~/Dropbox/personal/logs/shell_history'))) as fd:
-    for line in fd:
-        try:
-            date, machine, pwd, command = line.strip().split('\t', maxsplit=3)
-        except ValueError:
-            continue
-        event = Event(date, machine, pwd, command)
-        if args.date is not None and not re.search(args.date, event.date):
-            continue
-        if args.machine is not None and not re.search(args.machine, event.machine):
-            continue
-        if args.pwd is not None and not re.search(args.pwd, event.machine):
-            continue
-        if not all(re.search(pat, event.command) for pat in args.patterns):
-            continue
-        if args.quiet:
-            print(event.command)
-        else:
-            print('\t'.join((event.date, event.machine, event.pwd, event.command)))
+history_path = realpath(expanduser('~/Dropbox/personal/logs/'))
+
+for history_file in sorted(listdir(history_path)):
+    if not history_file.endswith('.shistory'):
+        continue
+    with open(history_file) as fd:
+        for line in fd:
+            try:
+                date, machine, pwd, command = line.strip().split('\t', maxsplit=3)
+            except ValueError:
+                continue
+            event = Event(date, machine, pwd, command)
+            if args.date is not None and not re.search(args.date, event.date):
+                continue
+            if args.machine is not None and not re.search(args.machine, event.machine):
+                continue
+            if args.pwd is not None and not re.search(args.pwd, event.machine):
+                continue
+            if not all(re.search(pat, event.command) for pat in args.patterns):
+                continue
+            if args.quiet:
+                print(event.command)
+            else:
+                print('\t'.join((event.date, event.machine, event.pwd, event.command)))

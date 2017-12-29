@@ -72,10 +72,11 @@ if [ -d "$HOME/Dropbox" ]; then
 	# merge command line history
 	echo "merging command line history..."
 	filename="$(mktemp /tmp/histfix.XXXXXX)"
-	history_file="$(date -u +%Y).shistory"
+	year="$(date -u +%Y)"
+	history_file="$year.shistory"
 	sort $HOME/Dropbox/personal/logs/$history_file* | uniq | sed 's/ \+$//' > "$filename"
 	mv -f "$filename" "$HOME/Dropbox/personal/logs/$history_file"
-	find "$HOME/Dropbox/personal/logs/" -name '*.shistory *' | while read line; do
+	find "$HOME/Dropbox/personal/logs/" -name "$year *.shistory" | while read line; do
 		rm -f "$line"
 	done
 

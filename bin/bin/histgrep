@@ -19,6 +19,7 @@ Event = namedtuple('Event', ('date', 'machine', 'pwd', 'command'))
 history_path = realpath(expanduser('~/Dropbox/personal/logs/'))
 
 for history_file in sorted(listdir(history_path)):
+    history_file = join_path(history_path, history_file)
     if not history_file.endswith('.shistory'):
         continue
     with open(history_file) as fd:

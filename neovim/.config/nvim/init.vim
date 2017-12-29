@@ -110,6 +110,7 @@ endif
 		%s/\%u00A0/ /eg " no-break space
 		%s/\%u00AD/ /eg " soft hyphen
 		%s/\%u200A/ /eg " hair space
+		%s/\%u200B/ /eg " zero width space
 		%s/\%u2028/ /eg " line separator
 		" double quotes (0x22)
 		%s/\%u2018\%u2018/"/eg " left single quotation mark

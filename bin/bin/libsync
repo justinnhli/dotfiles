@@ -58,6 +58,9 @@ case "$action" in
 		done;;
 	url)
 		for arg in "$@"; do
+			if ! echo "$arg" | grep '\.pdf$'; then
+				arg="$arg.pdf"
+			fi
 			remote_full_path "$arg" | sed "s#^/home/justinnhli#https:/#"
 		done;;
 	*)

@@ -43,6 +43,8 @@ case "$action" in
 		rsync --archive --progress --rsh=ssh --exclude "$EXCLUDES" "$LOCAL_PATH/" "$REMOTE_HOST:$REMOTE_PATH";;
 	pull)
 		rsync --archive --progress --rsh=ssh --exclude "$EXCLUDES" "$REMOTE_HOST:$REMOTE_PATH/" "$LOCAL_PATH";;
+	index)
+		python3 "$HOME/git/biblint/biblint.py" index > "$LOCAL_PATH/index.html";;
 	search)
 		entries="$(cat library.bib | tr '\n' '\t' | tr '@' '\n' | grep '.' | sed 's/	$//')"
 		for arg in "$@"; do

@@ -74,6 +74,7 @@ endif
 		endfor
 		terminal
 		setlocal nonumber nospell
+		normal 1|
 		startinsert
 	endfunction
 

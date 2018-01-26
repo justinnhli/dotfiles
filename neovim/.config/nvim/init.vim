@@ -719,6 +719,9 @@ endif
 	if executable('dot')
 		autocmd      BufEnter        *.dot   setlocal makeprg=dot\ -Tpng\ %:p\ >\ %:p:r.png
 	endif
+	if executable('yapf')
+		autocmd      BufEnter        *.py    setlocal equalprg=yapf
+	endif
 
 	" override above settings for specific files
 	" automatically fold notes.journal

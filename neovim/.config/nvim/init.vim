@@ -712,17 +712,6 @@ endif
 	autocmd      ColorScheme         iceberg call s:PatchColorschemeIceberg()
 	autocmd      ColorScheme         molokai call s:PatchColorschemeMolokai()
 
-	" settings for specific file types
-	if executable('cmark')
-		autocmd      BufEnter        *.md    setlocal wrap makeprg=cmark\ %:p\ >\ %:p:r.html
-	endif
-	if executable('dot')
-		autocmd      BufEnter        *.dot   setlocal makeprg=dot\ -Tpng\ %:p\ >\ %:p:r.png
-	endif
-	if executable('yapf')
-		autocmd      BufEnter        *.py    setlocal equalprg=yapf
-	endif
-
 	" override above settings for specific files
 	" automatically fold notes.journal
 	autocmd      BufRead             notes.journal syntax match flag '^.\{2000,\}$' | setlocal breakindent breakindentopt=shift:1 foldenable foldlevel=0

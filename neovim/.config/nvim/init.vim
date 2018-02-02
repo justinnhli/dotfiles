@@ -135,6 +135,9 @@ endif
 		%s/\%u2500/ - /eg " box drawings light horizontal
 		" ellipsis
 		%s/\%u2026/.../eg " horizontal ellipsis
+		" ligatures
+		%s/\%uFB01/fi/eg " fi
+		%s/\%uFB02/fl/eg " fl
 	endfunction
 
 	function! MoveToRelTab(n)

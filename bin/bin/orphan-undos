@@ -2,10 +2,10 @@
 
 orphan_with_suffix() {
 	suffix="$2"
-	find "$1" -name ".*$suffix" | grep -v '.dropbox.cache' | while read f; do
+	find "$1" -name ".*$suffix" | grep -v '.dropbox.cache' | while read -r f; do
 		basename="${f##*/}"
 		dirname="${f%/*}"
-		original="$dirname/$(echo "$basename" | sed "s/^\.\(.*\)$suffix\$/\1/")"
+		original="$dirname/$(echo "$basename" | sed "s/^\\.\\(.*\\)$suffix\$/\\1/")"
 		# TODO also delete if original file is newer than .un~
 		if [ ! -f "$original" ] || [ "$(find "$f" -mtime +10)" != "" ]; then
 			if rm -f "$f"; then

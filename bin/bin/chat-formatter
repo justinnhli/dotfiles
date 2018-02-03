@@ -3,6 +3,7 @@
 import re
 from sys import argv, stdin
 
+
 def read_all_inputs(files):
     if files:
         result = []
@@ -15,6 +16,7 @@ def read_all_inputs(files):
     else:
         return ""
 
+
 def hangout(text):
     time = ""
     speaker = ""
@@ -26,7 +28,9 @@ def hangout(text):
             else:
                 print("({}) {}: {}".format(time, speaker, line))
 
+
 gchat = hangout
+
 
 def twitter(text):
     keywords = set(["Reply", "Retweet", "Favorite"])
@@ -37,9 +41,11 @@ def twitter(text):
         if line in keywords and prev_line not in keywords:
             print(prev_line)
 
+
 def sms(text):
     for line in text.split("\n"):
         print(re.sub("(.*) ([0-9]{1,2}:[0-9]{2} [AP]M)$", r"(\2) \1", line.strip()))
+
 
 def main():
     exceptions = ("main", "read_all_inputs")
@@ -49,6 +55,7 @@ def main():
         exit(1)
     text = read_all_inputs(argv[2:]).strip()
     formats[argv[1]](text)
+
 
 if __name__ == "__main__":
     main()

@@ -2,7 +2,7 @@
 
 import re
 from argparse import ArgumentParser
-from os.path import basename, exists as file_exists, expanduser, getmtime, join as join_path, realpath, relpath
+from os.path import expanduser, join as join_path, realpath
 from os import listdir
 from collections import namedtuple
 

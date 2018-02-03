@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 LOCAL_PATH="$HOME/papers"
 REMOTE_HOST="justinnhli.com"
@@ -46,7 +46,7 @@ case "$action" in
 	index)
 		python3 "$HOME/git/biblint/biblint.py" index > "$LOCAL_PATH/index.html";;
 	search)
-		entries="$(cat library.bib | tr '\n' '\t' | tr '@' '\n' | grep '.' | sed 's/	$//')"
+		entries="$(tr '\n' '\t' < library.bib | tr '@' '\n' | grep '.' | sed 's/	$//')"
 		for arg in "$@"; do
 			entries="$(echo "$entries" | grep -i "$arg")"
 		done

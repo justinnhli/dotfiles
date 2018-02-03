@@ -1,10 +1,11 @@
-#!/bin/bash
+#!/bin/sh
 
-find . -maxdepth 2 -name .git | sort | while read dir; do
+find . -maxdepth 2 -name .git | sort | while read -r dir; do
 	dir="$(dirname "$dir")"
- 	pushd "$dir" >/dev/null 2>&1
-	pwd
-	git "$@"
-	popd >/dev/null 2>&1
+	(
+		cd "$dir" >/dev/null 2>&1
+		pwd
+		git "$@"
+	)
 	echo
 done

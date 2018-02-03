@@ -8,11 +8,11 @@ else
 fi
 
 echo "digraph {"
-"$python" -m pip list | sed 's/ (.*//' | while read package; do
-	package="$(echo "$package" | tr 'A-Z' 'a-z')"
+"$python" -m pip list | sed 's/ (.*//' | while read -r package; do
+	package="$(echo "$package" | tr '[:upper:]' '[:lower:]')"
 	echo "	\"$package\""
 	for dep in $("$python" -m pip show "$package" | grep Requires: | sed 's/^Requires: //'); do
-		dep="$(echo "$dep" | sed 's/,//g' | tr 'A-Z' 'a-z')"
+		dep="$(echo "$dep" | sed 's/,//g' | tr '[:upper:]' '[:lower:]')"
 		echo "	\"$dep\" -> \"$package\""
 	done;
 done

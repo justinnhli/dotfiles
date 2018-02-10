@@ -2,21 +2,47 @@
 
 case "$1" in
 "brew")
-	comm \
-		"$HOME/git/dotfiles/packages-meta/.config/packages-meta/brew" \
-		<(set-difference <(brew leaves) <(brew cask list));;
+	if which brew >/dev/null 2>&1; then
+		comm \
+			"$HOME/git/dotfiles/packages-meta/.config/packages-meta/brew" \
+			<(set-difference <(brew leaves) <(brew cask list))
+	else
+		echo 'cannot find `brew` command'
+		exit 1
+	fi;;
 "brew-cask")
-	comm \
-		"$HOME/git/dotfiles/packages-meta/.config/packages-meta/brew-cask" \
-		<(brew cask list);;
+	if which brew >/dev/null 2>&1; then
+		comm \
+			"$HOME/git/dotfiles/packages-meta/.config/packages-meta/brew-cask" \
+			<(brew cask list)
+	else
+		echo 'cannot find `brew` command'
+		exit 1
+	fi;;
 "pacaur")
-	comm \
-		"$HOME/git/dotfiles/packages-meta/.config/packages-meta/pacaur" \
-		<(pacman -Qemq);;
+	if which pacaur >/dev/null 2>&1; then
+		comm \
+			"$HOME/git/dotfiles/packages-meta/.config/packages-meta/pacaur" \
+			<(pacman -Qemq)
+	else
+		echo 'cannot find `pacaur` command'
+		exit 1
+	fi;;
 "pacman")
-	comm \
-		"$HOME/git/dotfiles/packages-meta/.config/packages-meta/pacman" \
-		<(set-difference <(pacman -Qenq) <(pacman -Qgq base-devel) <(pacman -Qgq base));;
+	if which pacman >/dev/null 2>&1; then
+		comm \
+			"$HOME/git/dotfiles/packages-meta/.config/packages-meta/pacman" \
+			<( \
+				( \
+					set-difference <(pacman -Qenq) <(pacman -Qgq base) <(pacman -Qgq base-devel) <(pacman -Qgq texlive-most) && \
+					echo base-devel && \
+					echo texlive-most \
+				) | sort
+			)
+	else
+		echo 'cannot find `pacman` command'
+		exit 1
+	fi;;
 "pip")
 	comm \
 		"$HOME/git/dotfiles/packages-meta/.config/packages-meta/pip" \

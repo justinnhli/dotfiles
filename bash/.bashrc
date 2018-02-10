@@ -81,6 +81,9 @@ fi
 if which flake8 >/dev/null 2>&1; then
 	alias flake8='flake8 --ignore=E501'
 fi
+if which pydocstyle >/dev/null 2>&1; then
+	alias pydocstyle='pydocstyle --convention=pep257 --add-ignore=D105,D413'
+fi
 if which scons >/dev/null 2>&1 && which python3 >/dev/null 2>&1; then
 	alias scons="scons --python=$(which python3)"
 fi
@@ -120,6 +123,12 @@ case "$(uname)" in
 	'Darwin')
 		alias ls='ls -G';;
 esac
+
+# python modules
+if which python3 >/dev/null 2>&1; then
+	alias doctest='python3 -m doctest'
+	alias pydoc='python3 -m pydoc -b'
+fi
 
 # python venv
 if which python3 >/dev/null 2>&1; then

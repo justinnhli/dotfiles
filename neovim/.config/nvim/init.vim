@@ -108,6 +108,8 @@ endif
 		" space (0x20)
 		%s/\%u00A0/ /eg " no-break space
 		%s/\%u00AD/ /eg " soft hyphen
+		%s/\%u2002/ /eg " en space
+		%s/\%u2003/ /eg " em space
 		%s/\%u200A/ /eg " hair space
 		%s/\%u200B/ /eg " zero width space
 		%s/\%u2028/ /eg " line separator

@@ -6,7 +6,10 @@ if has('nvim')
 	"auto-install vim-plug
 	if empty(glob('~/.config/nvim/autoload/plug.vim'))
 		silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-		autocmd VimEnter * PlugInstall
+		augroup justinnhli_vimplug
+			autocmd!
+			autocmd VimEnter * PlugInstall
+		augroup END
 	endif
 
 	try
@@ -72,23 +75,23 @@ endif
 		endfor
 		terminal
 		setlocal nonumber nospell
-		normal 1|
+		normal! 1|
 		startinsert
 	endfunction
 
 	function! s:ToggleFoldMethod()
-		if &foldmethod == "indent"
+		if &foldmethod ==# 'indent'
 			set foldmethod=syntax
-		elseif &foldmethod == "syntax"
+		elseif &foldmethod ==# 'syntax'
 			set foldmethod=indent
 		endif
 	endfunction
 
 	function! s:DuplicateBufferInTab()
-		let l:bufnum = bufnr("%")
+		let l:bufnum = bufnr('%')
 		echom l:bufnum
 		tabnew
-		exec "b ".l:bufnum
+		exec 'b '.l:bufnum
 	endfunction
 
 	function! s:LoadFileTypeTemplate()
@@ -196,7 +199,7 @@ endif
 			let l:tabline .= (i+1 == s:cur_tab ? '%#TabLineSel#' : '%#TabLine#')
 			let l:tabline .= ' '
 			" set filename
-			if l:filename == ''
+			if l:filename ==# ''
 				let l:tabline .= '[No Name]'
 			else
 				let l:tabline .= fnamemodify(l:filename, ':p:t')
@@ -236,18 +239,18 @@ endif
 
 " plugin functions {
 	function! s:EnterLimelight()
-		if &filetype == 'journal'
+		if &filetype ==# 'journal'
 			let g:limelight_bop = '^.'
 			let g:limelight_eop = '\ze\n'
 		endif
 		Limelight
 	endfunction
 	function! s:LeaveLimelight()
-		if &filetype == 'journal'
-			if exists("g:limelight_bop")
+		if &filetype ==# 'journal'
+			if exists('g:limelight_bop')
 				unlet g:limelight_bop
 			endif
-			if exists("g:limelight_eop")
+			if exists('g:limelight_eop')
 				unlet g:limelight_eop
 			endif
 		endif
@@ -675,49 +678,52 @@ endif
 " }
 
 " autocommands {
-	" filetypes
-	autocmd      BufRead,BufNewFile  *.lisp  setlocal expandtab
-	autocmd      BufRead,BufNewFile  *.py    setlocal foldmethod=indent tabstop=4 expandtab
-	autocmd      BufRead,BufNewFile  *.tex   setlocal foldmethod=indent spell
-	autocmd      BufNewFile          *       call s:LoadFileTypeTemplate()
-	" keep windows equal in size
-	autocmd      VimResized          *       normal <c-w>=
-	" restore cursor position
-	autocmd      BufReadPost         *       if line("'\"") > 1 && line("'\"") <= line('$') | exec 'normal! g`"' | endif
-	" disable audio bell in MacVim
-	autocmd      GUIEnter            *       set visualbell t_vb=
-	" automatically leave insert mode after 'updatetime' milliseconds
-	autocmd      CursorHoldI         *       stopinsert
-	augroup leave_insert
+	augroup justinnhli
+		" filetypes
+		autocmd      BufRead,BufNewFile  *.lisp  setlocal expandtab
+		autocmd      BufRead,BufNewFile  *.py    setlocal foldmethod=indent tabstop=4 expandtab
+		autocmd      BufRead,BufNewFile  *.tex   setlocal foldmethod=indent spell
+		autocmd      BufNewFile          *       call s:LoadFileTypeTemplate()
+		" keep windows equal in size
+		autocmd      VimResized          *       normal! <c-w>=
+		" restore cursor position
+		autocmd      BufReadPost         *       if line("'\"") > 1 && line("'\"") <= line('$') | exec 'normal! g`"' | endif
+		" disable audio bell in MacVim
+		autocmd      GUIEnter            *       set visualbell t_vb=
+		" automatically leave insert mode after 'updatetime' milliseconds
+		autocmd      CursorHoldI         *       stopinsert
 		autocmd  InsertEnter         *       let updaterestore=&updatetime | set updatetime=5000
 		autocmd  InsertLeave         *       let &updatetime=updaterestore
-	augroup END
-	" easily cancel the command line window
-	augroup leave_command
+		" easily cancel the command line window
 		autocmd  CmdwinEnter         *       nnoremap <buffer> <C-c> :quit<cr>
 		autocmd  CmdwinEnter         *       inoremap <buffer> <C-c> <Esc>
-	augroup END
-	" automatically open and close the quickfix window
-	augroup quick_fix
+		" automatically open and close the quickfix window
 		autocmd  QuickFixCmdPost     l*grep* lwindow
 		autocmd  WinEnter            *       if winnr('$') == 1 && getbufvar(winbufnr(winnr()), '&buftype') == 'quickfix' | q | endif
-	augroup END
-	" bound scope of search to the original window
-	augroup last_search
+		" bound scope of search to the original window
 		autocmd  WinLeave            *       let w:search_on = &hlsearch | let w:last_search = @/
 		autocmd  WinEnter            *       if exists('w:search_on') && w:search_on | let @/ = w:last_search | else | set nohlsearch | endif
-	augroup END
-	" disable spellcheck in virtual terminal
-	if exists('##TermOpen')
-		autocmd  TermOpen            *       setlocal nonumber nospell scrollback=-1
-	endif
-	" patch colorschemes
-	autocmd      ColorScheme         iceberg call s:PatchColorschemeIceberg()
-	autocmd      ColorScheme         molokai call s:PatchColorschemeMolokai()
+		" disable spellcheck in virtual terminal
+		if exists('##TermOpen')
+			autocmd  TermOpen            *       setlocal nonumber nospell scrollback=-1
+		endif
+		" patch colorschemes
+		autocmd      ColorScheme         iceberg call s:PatchColorschemeIceberg()
+		autocmd      ColorScheme         molokai call s:PatchColorschemeMolokai()
 
-	" override above settings for specific files
-	" automatically fold notes.journal
-	autocmd      BufRead             notes.journal syntax match flag '^.\{2000,\}$' | setlocal breakindent breakindentopt=shift:1 foldenable foldlevel=0
+		" protect large files (>10M) from sourcing and other overhead.
+		" Set options:
+		" eventignore+=FileType (no syntax highlighting etc.; assumes FileType always on)
+		" noswapfile (save copy of file)
+		" bufhidden=unload (save memory when other file is viewed)
+		" undolevels=-1 (no undo possible)
+		let g:LargeFile = 1024 * 1024 * 10
+		autocmd BufReadPre * let f=expand('<afile>') | if getfsize(f) > g:LargeFile | set eventignore+=FileType | setlocal noswapfile bufhidden=unload undolevels=-1 | else | set eventignore-=FileType | endif
+
+		" override above settings for specific files
+		" automatically fold notes.journal
+		autocmd      BufRead             notes.journal syntax match flag '^.\{2000,\}$' | setlocal breakindent breakindentopt=shift:1 foldenable foldlevel=0
+	augroup END
 " }
 
 " colorscheme {
@@ -758,8 +764,10 @@ endif
 	" journal.vim
 	let g:jrnl_ignore_files = split(globpath('~/journal', '*.journal'), '\n')
 	" limelight.vim
-	autocmd! User GoyoEnter call <SID>EnterLimelight()
-	autocmd! User GoyoLeave call <SID>LeaveLimelight()
+	augroup justinnhli_limelight
+		autocmd! User GoyoEnter call <SID>EnterLimelight()
+		autocmd! User GoyoLeave call <SID>LeaveLimelight()
+	augroup END
 	" netrw
 	let g:netrw_browse_split = 3
 	let g:netrw_liststyle = 3
@@ -768,19 +776,3 @@ endif
 	" undotree
 	nnoremap  <leader><leader>u     :UndotreeToggle<cr>
 " }
-
-" protect large files from sourcing and other overhead.
-" files become read only
-if !exists('g:my_auto_commands_loaded')
-	let g:my_auto_commands_loaded = 1
-	" Large files are > 10M
-	" Set options:
-	" eventignore+=FileType (no syntax highlighting etc.; assumes FileType always on)
-	" noswapfile (save copy of file)
-	" bufhidden=unload (save memory when other file is viewed)
-	" undolevels=-1 (no undo possible)
-	let g:LargeFile = 1024 * 1024 * 10
-	augroup LargeFile
-		autocmd BufReadPre * let f=expand('<afile>') | if getfsize(f) > g:LargeFile | set eventignore+=FileType | setlocal noswapfile bufhidden=unload undolevels=-1 | else | set eventignore-=FileType | endif
-	augroup END
-endif

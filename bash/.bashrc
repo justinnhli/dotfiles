@@ -93,6 +93,9 @@ fi
 if which valgrind >/dev/null 2>&1; then
 	alias valgrind='valgrind --dsymutil=yes --leak-check=yes --track-origins=yes'
 fi
+if which yapf >/dev/null 2>&1; then
+	alias yapf="yapf --style=$HOME/.config/yapf/style"
+fi
 
 alias vi="$VISUAL"
 alias vim="$VISUAL"

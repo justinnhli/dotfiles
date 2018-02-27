@@ -3,7 +3,7 @@ datavis bokeh jupyter pandas xlrd
 flask-heroku flask gunicorn
 gmail google-api-python-client jinja2 commonmark
 ir beautifulsoup4 requests
-neovim neovim spacy
+neovim neovim
 networkx networkx pygraphviz
 nlp spacy
 rdf rdflib

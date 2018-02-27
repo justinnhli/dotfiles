@@ -8,7 +8,7 @@ else
 fi
 
 echo "digraph {"
-"$python" -m pip list | sed 's/ (.*//' | while read -r package; do
+"$python" -m pip list --format=freeze | sed 's/=.*//' | while read -r package; do
 	package="$(echo "$package" | tr '[:upper:]' '[:lower:]')"
 	echo "	\"$package\""
 	for dep in $("$python" -m pip show "$package" | grep Requires: | sed 's/^Requires: //'); do

@@ -67,7 +67,7 @@ def allo(text):
             date = date.string.strip().encode("ascii", errors="ignore").decode()
             date = datetime.strptime(str(year) + ' ' + date, '%Y %b %d %I:%M %p').strftime('%Y-%m-%d %H:%M')
         contents = text_tag.string
-        match = re.search(r'translate3d\(0px, (-[0-9]+)px, 0px\);', tag['style'].strip())
+        match = re.search(r'translate3d\(0px, (-?[0-9]+)px, 0px\);', tag['style'].strip())
         position = int(match.group(1))
         utterances.append((position, date, speaker, contents))
     prev_time = None

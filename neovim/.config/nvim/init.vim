@@ -284,6 +284,7 @@ endif
 	set   confirm
 	set   display=lastline,uhex
 	set noerrorbells
+	set   expandtab
 	set   guioptions-=L
 	set   guioptions-=T
 	set   guioptions-=r

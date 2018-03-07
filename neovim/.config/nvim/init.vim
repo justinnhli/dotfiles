@@ -278,24 +278,21 @@ endif
 	if has('syntax')
 		syntax enable
 	endif
+	set   autoindent " neovim default
+	set   autoread " neovim default
+	set   backspace=indent,eol,start " neovim default
 	set   confirm
 	set   display=lastline,uhex
 	set noerrorbells
-	set   guioptions-=T
 	set   guioptions-=L
+	set   guioptions-=T
 	set   guioptions-=r
+	set   ignorecase
 	set   laststatus=2 " neovim default
 	set   lazyredraw
 	set   listchars=tab:>>,trail:.
 	set   mouse=
 	set   number
-	set   tabpagemax=50 " neovim default
-	set   title
-	set nowrap
-	set   autoindent " neovim default
-	set   autoread " neovim default
-	set   backspace=indent,eol,start " neovim default
-	set   ignorecase
 	set   scrolloff=1
 	set   shiftwidth=4
 	set   sidescroll=1
@@ -303,9 +300,12 @@ endif
 	set   smartcase
 	set   smarttab " neovim default
 	set nostartofline
+	set   tabpagemax=50 " neovim default
 	set   tabstop=4
 	set   tags+=./.tags,.tags
+	set   title
 	set   whichwrap=b,s,<,>,h,l,[,]
+	set nowrap
 	if has('cmdline_info')
 		set   showcmd
 	endif

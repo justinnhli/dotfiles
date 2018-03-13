@@ -1,5 +1,5 @@
 #!/bin/sh
 
-for d in $(find . -maxdepth 1 -type d -name '[a-z]*' | sed 's#^./##'); do
-	stow -t "$HOME" "$d"
+find . -mindepth 1 -maxdepth 1 -type d -name '[a-z]*' | sed 's#^./##' | while read package; do
+	stow --verbose --restow --target "$HOME" "$package"
 done

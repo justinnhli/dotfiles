@@ -1,4 +1,13 @@
-<style>
-	body {margin:auto auto; width:80ex; max-width:95%;}
-	blockquote {border-left: 1ex solid #E0E0E0; margin: 0; padding: 0 3ex;}
-</style>
+<!DOCTYPE HTML>
+<head>
+	<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+	<style>
+		body {margin:auto auto; width:80ex; max-width:95%;}
+		blockquote {border-left: 1ex solid #E0E0E0; margin: 0; padding: 0 3ex;}
+		img {display:block; margin:auto auto; max-width:100%;}
+	</style>
+</head>
+<body>
+
+</body>
+</html>

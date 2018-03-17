@@ -692,9 +692,6 @@ endif
 " autocommands {
 	augroup justinnhli
 		" filetypes
-		autocmd      BufRead,BufNewFile  *.lisp  setlocal expandtab
-		autocmd      BufRead,BufNewFile  *.py    setlocal foldmethod=indent tabstop=4 expandtab
-		autocmd      BufRead,BufNewFile  *.tex   setlocal foldmethod=indent spell
 		autocmd      BufNewFile          *       call s:LoadFileTypeTemplate()
 		" keep windows equal in size
 		autocmd      VimResized          *       normal! <c-w>=

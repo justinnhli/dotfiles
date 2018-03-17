@@ -93,7 +93,6 @@ endif
 
 	function! s:DuplicateBufferInTab()
 		let l:bufnum = bufnr('%')
-		echom l:bufnum
 		tabnew
 		exec 'b '.l:bufnum
 	endfunction

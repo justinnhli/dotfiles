@@ -22,3 +22,5 @@
 	branches = branch -a
 	# remotes
 	remotes = remote -v
+	# other
+	aliases = config --get-regexp ^alias\\.

@@ -683,6 +683,7 @@ endif
 	nnoremap           <leader>]     <C-w><C-]><C-w>T
 	vnoremap           <leader>]     <C-w><C-]><C-w>T
 	nnoremap           <leader><cr>  :make<cr>
+	vnoremap           <leader><cr>  y<Esc>:!<C-r>"<cr>
 	nnoremap  <silent> <leader>;     :lcd %:p:h<cr>
 	" custom functions
 	nnoremap  <silent> <leader>.     :exec 'set foldenable foldlevel='.foldlevel('.')<cr>

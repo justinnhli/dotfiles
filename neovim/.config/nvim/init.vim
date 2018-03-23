@@ -100,7 +100,12 @@ endif
 	function! s:LoadFileTypeTemplate()
 		let l:templates_file = fnamemodify($MYVIMRC, ':p:h').'/templates/'.&filetype
 		if filereadable(l:templates_file)
+			" read in the template file
 			exec '0r '.l:templates_file
+			" delete the blank last line
+			exec "normal! :$\<cr>dd"
+			" place cursor at first triple blank line
+			exec "normal! /\\n\\n\\n\<cr>jj"
 		endif
 	endfunction
 " }

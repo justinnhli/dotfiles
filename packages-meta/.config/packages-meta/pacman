@@ -19,12 +19,13 @@ git
 graphviz
 gthumb
 htop
-i3status
 i3-wm
+i3status
 inkscape
 jdk8-openjdk
 lftp
 libreoffice-fresh
+npm
 ntp
 nvidia
 openssh

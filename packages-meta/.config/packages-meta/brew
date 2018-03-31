@@ -6,6 +6,7 @@ graphviz
 homebrew/tex/latex-mk
 htop-osx
 neovim/neovim/neovim
+node
 python3
 shellcheck
 stow

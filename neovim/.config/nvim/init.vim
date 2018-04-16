@@ -30,6 +30,7 @@ if has('nvim')
 		Plug 'tpope/vim-sleuth'
 		" syntax
 		Plug 'justinnhli/journal.vim', {'for': 'journal'}
+		Plug 'leafgarland/typescript-vim'
 		call plug#end()
 	catch
 	endtry

@@ -45,7 +45,7 @@ Thumbs.db
 
 # Metadata #
 ############
-.converage
+.coverage
 .ipynb_checkpoints
 .pytest_cache
 .tags

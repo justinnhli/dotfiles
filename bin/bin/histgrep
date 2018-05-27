@@ -18,6 +18,7 @@ Event = namedtuple('Event', ('date', 'machine', 'pwd', 'command'))
 
 history_path = realpath(expanduser('~/Dropbox/personal/logs/'))
 
+results = set()
 for history_file in sorted(listdir(history_path)):
     history_file = join_path(history_path, history_file)
     if not history_file.endswith('.shistory'):
@@ -38,6 +39,7 @@ for history_file in sorted(listdir(history_path)):
             if not all(re.search(pat, event.command) for pat in args.patterns):
                 continue
             if args.quiet:
-                print(event.command)
+                results.add(event.command)
             else:
-                print('\t'.join((event.date, event.machine, event.pwd, event.command)))
+                results.add('\t'.join((event.date, event.machine, event.pwd, event.command)))
+print('\n'.join(sorted(results)))

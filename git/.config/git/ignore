@@ -47,6 +47,7 @@ Thumbs.db
 ############
 .coverage
 .ipynb_checkpoints
+.mypy_cache
 .pytest_cache
 .tags
 .tags.*

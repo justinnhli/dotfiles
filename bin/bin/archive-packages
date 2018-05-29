@@ -34,7 +34,7 @@ case "$1" in
 			<(sort $HOME/git/dotfiles/packages-meta/.config/packages-meta/pacman) \
 			<( \
 				( \
-					set-difference <(pacman -Qenq) <(pacman -Qgq base) <(pacman -Qgq base-devel) <(pacman -Qgq texlive-most) && \
+					set-difference <(pacman -Qenq) <(pacman -Qgq base base-devel texlive-most | sort | uniq) && \
 					echo base-devel && \
 					echo texlive-most \
 				) | sort

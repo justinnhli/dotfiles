@@ -92,6 +92,14 @@ endif
 		endif
 	endfunction
 
+	function! s:ToggleColorScheme()
+		if g:colors_name ==# 'default'
+			exec 'colorscheme '.g:colorscheme
+		else
+			colorscheme default
+		endif
+	endfunction
+
 	function! s:DuplicateBufferInTab()
 		let l:bufnum = bufnr('%')
 		tabnew
@@ -672,6 +680,7 @@ endif
 	nnoremap           <leader><leader>c     :setlocal colorcolumn=<c-r>=&colorcolumn == 0 ? 80 : 0<cr><cr>
 	nnoremap           <leader><leader>f     :call <SID>ToggleFoldMethod()<cr>:set foldmethod?<cr>
 	nnoremap           <leader><leader>l     :set list!<cr>:set list?<cr>
+	nnoremap           <leader><leader>m     :call <SID>ToggleColorScheme()<cr>:colorscheme<cr>
 	nnoremap           <leader><leader>n     :set number!<cr>:set number?<cr>
 	nnoremap           <leader><leader>p     :set paste!<cr>:set paste?<cr>
 	nnoremap           <leader><leader>s     :set spell!<cr>:set spell?<cr>
@@ -743,9 +752,10 @@ endif
 
 " colorscheme {
 	" place after autocmds to patch colors
+	let g:colorscheme = 'iceberg'
 	set background=dark
 	try
-		colorscheme iceberg
+		exec 'colorscheme '.g:colorscheme
 	catch
 		colorscheme default
 	endtry

@@ -29,9 +29,12 @@ npm
 ntp
 nvidia
 openssh
+parted
 python
+python-coverage
 python-pycodestyle
 python-pylint
+python-pytest
 rsync
 shellcheck
 sqlitebrowser
@@ -52,4 +55,5 @@ wget
 xfce4-terminal
 xorg-xinit
 yapf
+zathura-pdf-mupdf
 zip

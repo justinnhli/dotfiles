@@ -1,5 +1,6 @@
-caskroom/cask
-caskroom/versions
+homebrew/cask
+homebrew/cask-fonts
 homebrew/core
 homebrew/tex
 neovim/neovim
+universal-ctags/universal-ctags

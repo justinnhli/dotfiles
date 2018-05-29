@@ -19,6 +19,24 @@ case "$1" in
 		echo 'cannot find `brew` command'
 		exit 1
 	fi;;
+"brew-taps")
+	if which brew >/dev/null 2>&1; then
+		comm \
+			"/Users/justinnhli/git/dotfiles/packages-meta/.config/packages-meta/brew-tap" \
+			<(brew tap)
+	else
+		echo 'cannot find `brew` command'
+		exit 1
+	fi;;
+"npm")
+	if which npm >/dev/null 2>&1; then
+		comm \
+			"/Users/justinnhli/git/dotfiles/packages-meta/.config/packages-meta/npm" \
+			<(npm list --global --parseable --depth=0 | grep node_modules | while read module; do basename "$module"; done | sort | uniq)
+	else
+		echo 'cannot find `npm` command'
+		exit 1
+	fi;;
 "pacaur")
 	if which pacaur >/dev/null 2>&1; then
 		comm \

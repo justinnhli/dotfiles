@@ -717,15 +717,15 @@ endif
 " autocommands {
 	augroup justinnhli
 		" filetypes
-		autocmd      BufNewFile          *       call s:LoadFileTypeTemplate()
+		autocmd  BufNewFile          *       call s:LoadFileTypeTemplate()
 		" keep windows equal in size
-		autocmd      VimResized          *       normal! <c-w>=
+		autocmd  VimResized          *       normal! <c-w>=
 		" restore cursor position
-		autocmd      BufReadPost         *       if line("'\"") > 1 && line("'\"") <= line('$') | exec 'normal! g`"' | endif
+		autocmd  BufReadPost         *       if line("'\"") > 1 && line("'\"") <= line('$') | exec 'normal! g`"' | endif
 		" disable audio bell in MacVim
-		autocmd      GUIEnter            *       set visualbell t_vb=
+		autocmd  GUIEnter            *       set visualbell t_vb=
 		" automatically leave insert mode after 'updatetime' milliseconds
-		autocmd      CursorHoldI         *       stopinsert
+		autocmd  CursorHoldI         *       stopinsert
 		autocmd  InsertEnter         *       let updaterestore=&updatetime | set updatetime=5000
 		autocmd  InsertLeave         *       let &updatetime=updaterestore
 		" easily cancel the command line window
@@ -742,8 +742,8 @@ endif
 			autocmd  TermOpen            *       setlocal nonumber nospell scrollback=-1
 		endif
 		" patch colorschemes
-		autocmd      ColorScheme         iceberg call s:PatchColorschemeIceberg()
-		autocmd      ColorScheme         molokai call s:PatchColorschemeMolokai()
+		autocmd  ColorScheme         iceberg call s:PatchColorschemeIceberg()
+		autocmd  ColorScheme         molokai call s:PatchColorschemeMolokai()
 
 		" protect large files (>10M) from sourcing and other overhead.
 		" Set options:
@@ -756,7 +756,7 @@ endif
 
 		" override above settings for specific files
 		" automatically fold notes.journal
-		autocmd      BufRead             notes.journal syntax match flag '^.\{2000,\}$' | setlocal breakindent breakindentopt=shift:1 foldenable foldlevel=0
+		autocmd BufRead             notes.journal syntax match flag '^.\{2000,\}$' | setlocal breakindent breakindentopt=shift:1 foldenable foldlevel=0
 	augroup END
 " }
 

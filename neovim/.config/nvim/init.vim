@@ -205,7 +205,7 @@ endif
 " }
 
 " setting functions {
-	function! MyTabLine()
+	function! BuildTabLine()
 		let l:tabline = ''
 		let s:cur_tab = tabpagenr()
 		" for each tab page
@@ -412,7 +412,7 @@ endif
 	if has('windows')
 		set   splitbelow
 		set   showtabline=2
-		set   tabline=%!MyTabLine()
+		set   tabline=%!BuildTabLine()
 	endif
 	if exists('&breakindent')
 		set   breakindent

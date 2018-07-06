@@ -237,6 +237,18 @@ endif
 		return l:tabline
 	endfunction
 
+	function! GetGitBranch()
+		let gitoutput = system('git status --porcelain=1 -b '.shellescape(expand('%')).' 2>/dev/null')
+		if len(gitoutput) == 0
+			return ''
+		endif
+		" python equivalent: gitoutput.splitlines()[0]
+		let line = get(split(gitoutput, '\n'), 0, '')
+		" python equivalent: line.split('...')[3:]
+		let branch = strpart(get(split(line, '\.\.\.'), 0, ''), 3)
+		return ' ('.branch.')'
+	endfunc
+
 	function! s:PatchColorschemeIceberg()
 		" emphasize spelling errors more
 		highlight SpellBad ctermfg=216 guifg=#e2a478
@@ -360,9 +372,7 @@ endif
 		" buffer number
 		set   statusline+=%n
 		" git branch
-		if exists('fugitive#head')
-			set   statusline+=%(\ %{fugitive#head()!=''?'[git:'.fugitive#head().']':''}%)
-		endif
+		set   statusline+=%{GetGitBranch()}
 		" file name
 		set   statusline+=\ %f
 		" modified

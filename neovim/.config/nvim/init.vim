@@ -672,8 +672,9 @@ endif
 	nnoremap           <leader>C     :tabnew ~/Dropbox/personal/contacts/contacts.vcf<cr>
 	nnoremap           <leader>H     :tabnew ~/Dropbox/personal/logs/<C-R>=strftime("%Y")<cr>.shistory<cr>
 	nnoremap           <leader>T     :tabnew ~/Dropbox/personal/logs/ifttt/tweets.txt<cr>
-	nnoremap           <leader>L     :tabnew <C-r>=g:justinnhli_scholarship_path<cr>/journal/library.bib<cr>
 	nnoremap           <leader>R     :tabnew <C-r>=g:justinnhli_scholarship_path<cr>/journal/<C-R>=strftime("%Y")<cr>.journal<cr>:$<cr>
+	nnoremap           <leader>L     :tabnew <C-r>=g:justinnhli_scholarship_path<cr>/journal/library.bib<cr>
+	nnoremap           <leader>P     :tabnew <C-r>=g:justinnhli_scholarship_path<cr>/journal/papers<cr>
 	if executable('zathura')
 		nnoremap           <leader>O     eb"zye:!zathura $(find <C-r>=g:justinnhli_library_path<cr> -name <C-r>=expand('<cword>')<cr>.pdf) &<cr><cr>
 	else

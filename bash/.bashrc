@@ -39,6 +39,7 @@ export PYTHONIOENCODING='utf-8'
 if [ -f "$HOME/.dot_secrets/bashrc" ]; then
 	source "$HOME/.dot_secrets/bashrc"
 fi
+export NLTK_DATA="$HOME/.local/share/nltk"
 
 # soar variables
 if [ -d "$HOME/git/Soar" ]; then

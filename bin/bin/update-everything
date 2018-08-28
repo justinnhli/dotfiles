@@ -35,8 +35,8 @@ if which cabal >/dev/null 2>&1; then
 	echo
 fi
 
-if which pacaur >/dev/null 2>&1; then
-	pacaur -Syu
+if which pikaur >/dev/null 2>&1; then
+	pikaur -Syu
 	echo
 fi
 

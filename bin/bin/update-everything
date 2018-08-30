@@ -95,7 +95,7 @@ if [ -d "$HOME/Dropbox" ]; then
 fi
 echo
 
-if_exists_do "updating papers library" "$HOME/papers" "libsync pull"
+if_exists_do "updating papers library" "$HOME/papers" "blib.py pull"
 
 nvim -c ':PlugUpgrade | qa!'
 if_exists_do "updating nvim plugins" "$HOME/.config/nvim/plugged" "git-all pull"

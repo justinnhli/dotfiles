@@ -151,7 +151,19 @@ if which python3 >/dev/null 2>&1; then
 			echo "venv $1 already exists"
 			return 1
 		else
-			python3 -m venv "$PYTHON_VENV_HOME/$1"
+			# should ensure that system python3 is used
+			# (as opposed to python3 in a venv)
+			py="$(which python3)"
+			if readlink "$py" >/dev/null; then
+				newpy="$(readlink "$py")"
+				# if the link is relative, prepend the original
+				if [[ "$newpy" == .* ]]; then
+					py="$(dirname "$py")/$newpy"
+				else
+					py="$py"
+				fi
+			fi
+			$py -m venv "$PYTHON_VENV_HOME/$1"
 			workon "$1"
 			pip install --upgrade pip
 		fi

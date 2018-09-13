@@ -407,7 +407,7 @@ endif
 	if has('wildmenu')
 		set   wildmenu " neovim default
 		set   wildmode=longest,list
-		set   wildignore+=*.aux,*.bbl,*.blg,*.eps,*.nav,*.pyc,*.snm,*.toc
+		set   wildignore+=*.aux,*.bbl,*.blg,*.nav,*.pyc,*.snm,*.toc
 	endif
 	if has('windows')
 		set   splitbelow

@@ -708,7 +708,7 @@ endif
 	nnoremap           <leader>@     :<C-f>ilet @=<C-r><C-r>
 	nnoremap           <leader>]     <C-w><C-]><C-w>T
 	vnoremap           <leader>]     <C-w><C-]><C-w>T
-	nnoremap           <leader><cr>  :make<cr>
+	nnoremap           <leader><cr>  :lmake<cr>
 	vnoremap           <leader><cr>  y<Esc>:!<C-r>"<cr>
 	nnoremap  <silent> <leader>;     :lcd %:p:h<cr>
 	" custom functions

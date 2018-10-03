@@ -24,9 +24,10 @@ import re
 from argparse import ArgumentParser
 from ast import literal_eval
 from collections import Counter, defaultdict
-from os.path import exists as file_exists, expanduser, realpath
+from os import listdir
+from os.path import exists as file_exists, join as join_path, expanduser, realpath
 
-SHELL_HISTORY = realpath(expanduser("~/Dropbox/personal/logs/shell_history"))
+SHELL_HISTORY = realpath(expanduser("~/Dropbox/personal/logs/"))
 COMPLETION_FILE = realpath(expanduser("~/.bash_completion.d/completions.dict"))
 
 KEYWORDS = ("if", "while", "for", "then", "do")
@@ -55,15 +56,18 @@ def is_weird(command):
 def read_history():
     history = set()
     if file_exists(SHELL_HISTORY):
-        with open(SHELL_HISTORY) as fd:
-            for entry in fd.readlines():
-                # only take COMMAND from 'DATE HOST PWD COMMAND'
-                entry = entry.strip().split("\t", maxsplit=3)[-1].strip()
-                for line in entry.split(";"):
-                    for conjunction in line.split("|"):
-                        for command in conjunction.split("&&"):
-                            if not is_weird(command) and len(command.split()) > 0:
-                                history.add(command.strip())
+        for shistory in listdir(SHELL_HISTORY):
+            if not shistory.endswith('.shistory'):
+                continue
+            with open(join_path(SHELL_HISTORY, shistory)) as fd:
+                for entry in fd.readlines():
+                    # only take COMMAND from 'DATE HOST PWD COMMAND'
+                    entry = entry.strip().split("\t", maxsplit=3)[-1].strip()
+                    for line in entry.split(";"):
+                        for conjunction in line.split("|"):
+                            for command in conjunction.split("&&"):
+                                if not is_weird(command) and len(command.split()) > 0:
+                                    history.add(command.strip())
         # filter out commands that begin with shell keywords
         history = set(command for command in history if command.split()[0] not in KEYWORDS)
         # filter out commands that begin with non-alphabet characters

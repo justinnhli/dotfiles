@@ -2,10 +2,28 @@
 
 import re
 from sys import argv, stdin
-from datetime import datetime
+from textwrap import dedent
+from datetime import datetime, timedelta
+
+try:
+    from bs4 import BeautifulSoup
+    from bs4.element import NavigableString
+except ModuleNotFoundError as err:
+    import sys
+    from os import execv
+    from os.path import exists, realpath, expanduser
+    VENV = 'ir'
+    VENV_PYTHON = expanduser(f'~/.venv/{VENV}/bin/python3')
+    if not exists(VENV_PYTHON):
+        raise FileNotFoundError(' '.join([
+            f'tried load module "{err.name}" with venv "{VENV}"',
+            f'but could not find executable {VENV_PYTHON}',
+        ]))
+    execv(VENV_PYTHON, [VENV_PYTHON, *sys.argv])
 
 
-def read_all_inputs(files):
+
+def _read_all_inputs(files):
     if files:
         result = []
         for file in files:
@@ -16,6 +34,15 @@ def read_all_inputs(files):
         return stdin.read()
     else:
         return ""
+
+
+def _extract_text(soup):
+    text = []
+    for desc in soup.descendants:
+        if not hasattr(desc, 'contents'):
+            if desc.strip():
+                text.append(desc.strip())
+    return re.sub(r'  \+', ' ', ''.join(text).strip())
 
 
 def hangout(text):
@@ -49,8 +76,6 @@ def sms(text):
 
 
 def allo(text):
-    from bs4 import BeautifulSoup
-    from bs4.element import NavigableString
     year = datetime.now().year
     utterances = []
     soup = BeautifulSoup(text, 'html.parser')
@@ -78,15 +103,59 @@ def allo(text):
         prev_time = time
 
 
-def main():
-    exceptions = ("main", "read_all_inputs")
-    formats = dict((k, v) for k, v in globals().items() if callable(v) and k not in exceptions)
+def slack(text):
+    soup = BeautifulSoup(text, 'html.parser')
+    date = None
+    speaker = None
+    for item in soup.select('.c-virtual_list__item'):
+        date_tag = item.select('.c-message_list__day_divider__label')
+        if date_tag:
+            date = _extract_text(date_tag[0])
+            if date == 'Today':
+                date = datetime.today()
+            elif date == 'Yesterday':
+                date = datetime.today() - timedelta(days=1)
+            else:
+                while date[-1].isalpha():
+                    date = date[:-1]
+                date = datetime.strptime(date, '%A, %B %d')
+            date = date.strftime('%Y-%m-%d')
+            continue
+        message = item.select('.c-message')
+        if not message:
+            continue
+        message = message[0]
+        header = item.select('.c-message__content_header')
+        if header:
+            speaker = header[0].select('.c-message__sender')[0].string
+            time = header[0].select('.c-timestamp__label')[0].string
+        else:
+            time = item.select('.c-message__gutter .c-timestamp__label')[0].string
+        body = item.select('.c-message__body')
+        if body:
+            text = _extract_text(body[0])
+            print(f'({date} {time}) {speaker}: {text}')
+
+def _is_format(string):
+    exceptions = 'datetime timedelta dedent'.split()
+    return not string.startswith('_') and string == string.lower() and string not in exceptions
+
+def _main():
+    formats = dict((k, v) for k, v in globals().items() if callable(v) and _is_format(k))
     if len(argv) < 2 or argv[1] not in formats:
-        print("Usage: chat-formatter {} FILE ...".format("|".join(sorted(formats.keys()))))
+        print(dedent('''
+            Usage: chat-formatter <FORMAT> [FILE] ...
+
+            Available formats:
+            {}
+            '''.rstrip()).format(
+                '\n'.join(f'    {f}' for f in sorted(formats.keys()))
+            )
+        )
         exit(1)
-    text = read_all_inputs(argv[2:]).strip()
+    text = _read_all_inputs(argv[2:]).strip()
     formats[argv[1]](text)
 
 
 if __name__ == "__main__":
-    main()
+    _main()

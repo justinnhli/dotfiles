@@ -1,0 +1,5 @@
+#!/bin/sh
+
+grep -o 'cite\([Ap]\)\?{[^}]*}' $@ | sed 's/.*{//; s/}//;' | grep -o '[^,]\+' | sort -u | while read line; do
+	sed -n "/{$line,/,/^$/p" ~/scholarship/journal/library.bib
+done

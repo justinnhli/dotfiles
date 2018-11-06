@@ -542,6 +542,18 @@ endif
 		" Shift+HL for moving between tabs
 		nnoremap  <S-h>  :tabprev<cr>
 		nnoremap  <S-l>  :tabnext<cr>
+
+		" Meta+N and Alt+N for going to tabs
+		nnoremap <M-1> :tabnext 1<cr>
+		nnoremap <M-2> :tabnext 2<cr>
+		nnoremap <M-3> :tabnext 3<cr>
+		nnoremap <M-4> :tabnext 4<cr>
+		nnoremap <M-5> :tabnext 5<cr>
+		nnoremap <M-6> :tabnext 6<cr>
+		nnoremap <M-7> :tabnext 7<cr>
+		nnoremap <M-8> :tabnext 8<cr>
+		nnoremap <M-9> :tabnext 9<cr>
+		nnoremap <M-0> :tabnext 0<cr>
 	" }
 
 	" window management {

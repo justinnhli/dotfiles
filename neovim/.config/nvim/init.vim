@@ -540,8 +540,8 @@ endif
 		nnoremap  <leader>t9  :tabmove 9<cr>
 
 		" Shift+HL for moving between tabs
-		noremap  <S-h>  :tabprev<cr>
-		noremap  <S-l>  :tabnext<cr>
+		nnoremap  <S-h>  :tabprev<cr>
+		nnoremap  <S-l>  :tabnext<cr>
 	" }
 
 	" window management {
@@ -563,10 +563,10 @@ endif
 
 		" Ctrl+HJKL for moving between windows
 		if !exists('g:loaded_tmux_navigator')
-			noremap  <C-h>  <C-w>h
-			noremap  <C-j>  <C-w>j
-			noremap  <C-k>  <C-w>k
-			noremap  <C-l>  <C-w>l
+			nnoremap  <C-h>  <C-w>h
+			nnoremap  <C-j>  <C-w>j
+			nnoremap  <C-k>  <C-w>k
+			nnoremap  <C-l>  <C-w>l
 		endif
 
 		" terminal shortcuts

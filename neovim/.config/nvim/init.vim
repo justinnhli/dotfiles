@@ -84,6 +84,14 @@ endif
 		endif
 	endfunction
 
+	function! s:ToggleDiff()
+		if &diff
+			diffoff 
+		else 
+			diffthis 
+		endif
+	endfunction
+
 	function! s:ToggleFoldMethod()
 		if &foldmethod ==# 'indent'
 			set foldmethod=syntax
@@ -702,6 +710,7 @@ endif
 	nnoremap           <leader>JD    :tabnew<cr>:r!dynalist.py<cr>:0d<cr>:set ft=journal<cr>zM
 	" toggle settings with double leader
 	nnoremap           <leader><leader>c     :setlocal colorcolumn=<c-r>=&colorcolumn == 0 ? 80 : 0<cr><cr>
+	nnoremap           <leader><leader>d     :call <SID>ToggleDiff()<cr>:echo (&diff ? 'diffthis' : 'diffoff')<cr>
 	nnoremap           <leader><leader>f     :call <SID>ToggleFoldMethod()<cr>:set foldmethod?<cr>
 	nnoremap           <leader><leader>l     :set list!<cr>:set list?<cr>
 	nnoremap           <leader><leader>m     :call <SID>ToggleColorScheme()<cr>:colorscheme<cr>

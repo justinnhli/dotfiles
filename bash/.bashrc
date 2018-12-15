@@ -77,25 +77,25 @@ alias cp='cp -i'
 alias mv='mv -i'
 alias grep='grep --color=auto'
 
-if which bc >/dev/null 2>&1; then
+if command -v bc >/dev/null 2>&1; then
 	alias bc='bc -l'
 fi
-if which flake8 >/dev/null 2>&1; then
+if command -v flake8 >/dev/null 2>&1; then
 	alias flake8='flake8 --ignore=E501'
 fi
-if which pydocstyle >/dev/null 2>&1; then
+if command -v pydocstyle >/dev/null 2>&1; then
 	alias pydocstyle='pydocstyle --convention=pep257 --add-ignore=D105,D413'
 fi
-if which scons >/dev/null 2>&1 && which python3 >/dev/null 2>&1; then
-	alias scons="scons --python=$(which python3)"
+if command -v scons >/dev/null 2>&1 && command -v python3 >/dev/null 2>&1; then
+	alias scons="scons --python=\$(command -v python3)"
 fi
 if [ -d "$HOME/git/Soar" ]; then
 	alias soar="$HOME/git/Soar/out/testcli"
 fi
-if which valgrind >/dev/null 2>&1; then
+if command -v valgrind >/dev/null 2>&1; then
 	alias valgrind='valgrind --dsymutil=yes --leak-check=yes --track-origins=yes'
 fi
-if which yapf >/dev/null 2>&1; then
+if command -v yapf >/dev/null 2>&1; then
 	alias yapf="yapf --style=$HOME/.config/yapf/style"
 fi
 
@@ -104,25 +104,25 @@ alias vim="$VISUAL"
 if [ "$NVIM_LISTEN_ADDRESS" != '' ]; then
 	unset MANPAGER
 	export PATH="$PYTHON_VENV_HOME/neovim/bin:$PATH"
-	alias :="$(which nvimcmd)"
-	alias vi="$(which nvimcmd) tabnew"
-	alias vim="$(which nvimcmd) tabnew"
-	alias nvim="$(which nvimcmd) tabnew"
+	alias :="\$(command -v nvimcmd)"
+	alias vi="\$(command -v nvimcmd) tabnew"
+	alias vim="\$(command -v nvimcmd) tabnew"
+	alias nvim="\$(command -v nvimcmd) tabnew"
 	if [ -d "$HOME/journal" ]; then
-		alias vino="$(which nvimcmd) tabnew $HOME/journal/notes.journal"
+		alias vino="\$(command -v nvimcmd) tabnew \"\$HOME/journal/notes.journal\""
 	fi
 fi
 
 case "$(uname)" in
 	'Linux')
 		alias ls='ls --color=auto --time-style=long-iso'
-		if which xdg-open >/dev/null 2>&1; then
+		if command -v xdg-open >/dev/null 2>&1; then
 			alias open='xdg-open'
 		fi
-		if which vncserver >/dev/null 2>&1; then
+		if command -v vncserver >/dev/null 2>&1; then
 			alias vncserver='vncserver -depth 8'
 		fi
-		if which x11vnc >/dev/null 2>&1; then
+		if command -v x11vnc >/dev/null 2>&1; then
 			alias x11vnc='x11vnc -display :0 -xkb -usepw -noxdamage'
 		fi;;
 	'Darwin')
@@ -130,15 +130,14 @@ case "$(uname)" in
 esac
 
 # python modules
-if which python3 >/dev/null 2>&1; then
+if command -v python3 >/dev/null 2>&1; then
 	alias doctest='python3 -m doctest'
 	alias pydoc='python3 -m pydoc -b'
 fi
 
 # python venv
-if which python3 >/dev/null 2>&1; then
+if command -v python3 >/dev/null 2>&1; then
 	alias pip='python3 -m pip'
-	VENV_LIST="$HOME/.config/packages-meta/venv"
 	export PYTHON_VENV_HOME="$HOME/.venv"
 	if [ ! -d "$PYTHON_VENV_HOME" ]; then
 		mkdir "$PYTHON_VENV_HOME"
@@ -153,7 +152,7 @@ if which python3 >/dev/null 2>&1; then
 		else
 			# should ensure that system python3 is used
 			# (as opposed to python3 in a venv)
-			py="$(which python3)"
+			py="$(command -v python3)"
 			if readlink "$py" >/dev/null; then
 				newpy="$(readlink "$py")"
 				# if the link is relative, prepend the original
@@ -198,13 +197,13 @@ if which python3 >/dev/null 2>&1; then
 			(
 				find ~/git -maxdepth 2 -name requirements.txt
 				find ~/Dropbox/projects -maxdepth 2 -name requirements.txt
-			) | while read requirements; do
+			) | while read -r requirements; do
 				path="$(dirname "$requirements")"
 				name="$(basename "$path")"
-				modules="$(cat $requirements | tr '\n' ' ')"
+				modules="$(tr '\n' ' ' < "$requirements")"
 				echo "$name" "$path" "$modules"
 			done
-			cat ~/.config/packages-meta/venv | while read line; do
+			cat ~/.config/packages-meta/venv | while read -r line; do
 				path="$HOME/.config/packages-meta/venv"
 				name="$(echo "$line" | cut -d ' ' -f 1)"
 				modules="$(echo "$line" | cut -d ' ' -f 2-)"
@@ -215,7 +214,7 @@ if which python3 >/dev/null 2>&1; then
 		if [ $# -eq 0 ]; then
 			echo "$results"
 		else
-			echo $@ | sort | while read line; do
+			echo $@ | sort | while read -r line; do
 				echo "$results" | grep "^$line "
 			done
 		fi
@@ -224,19 +223,19 @@ if which python3 >/dev/null 2>&1; then
 		comm <(workon) <(venv-source | cut -d ' ' -f 1)
 	}
 	venv-all() {
-		lsvenv | sort | while read venv; do
+		lsvenv | sort | while read -r venv; do
 			venv="$(basename "$venv")"
 			echo "$venv" && workon "$venv" && $@ && deactivate
 		done
 	}
 	venv-freeze() {
-		lsvenv | sort | while read venv; do
+		lsvenv | sort | while read -r venv; do
 			venv="$(basename "$venv")"
 			workon "$venv" && echo "$venv $(pip list --not-required --format freeze | sed 's/=.*//;' | tr '\n' ' ')" && deactivate
 		done
 	}
 	venv-setup() {
-		venv-source | sort --ignore-case | while read line; do
+		venv-source | sort --ignore-case | while read -r line; do
 			venv="$(echo "$line" | cut -d ' ' -f 1)"
 			packages="$(echo "$line" | cut -d ' ' -f 3-)"
 			echo
@@ -268,7 +267,7 @@ if [ -d "$HOME/journal" ]; then
 		printf '\t%s\n' "$*" >> "$HOME/journal/scratch.journal"
 	}
 	alias vino="$VISUAL $HOME/journal/notes.journal"
-	if which journal.py >/dev/null 2>&1; then
+	if command -v journal.py >/dev/null 2>&1; then
 		alias jrnl="journal.py --ignore '$(ls $HOME/journal/[a-z-]*.journal 2>/dev/null | grep -v '[ ()]' | tr '\n' ',')'"
 	fi
 fi
@@ -286,7 +285,7 @@ _generic_completion() {
 	COMPREPLY=( $($HOME/.bash_completion.d/shellscrape.py "$(pwd)" "$context") )
 }
 
-if which python3 >/dev/null 2>&1 && [ -f "$HOME/.bash_completion.d/shellscrape.py" ]; then
+if command -v python3 >/dev/null 2>&1 && [ -f "$HOME/.bash_completion.d/shellscrape.py" ]; then
 	for program in $($HOME/.bash_completion.d/shellscrape.py); do
 		if type "$program" >/dev/null 2>&1; then
 			complete -o default -F _generic_completion "$program"

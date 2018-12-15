@@ -5,8 +5,8 @@ import sys
 from os import environ
 from os.path import expanduser, realpath
 
-from neovim import attach
-from neovim.api.nvim import NvimError
+from pynvim import attach
+from pynvim.api.nvim import NvimError
 
 # FIXME
 # if sys.argv[0] in ('vi', 'vim'), don't treat argument as commands

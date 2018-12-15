@@ -3,6 +3,6 @@ datavis bokeh jupyter pandas xlrd
 flask-heroku flask gunicorn
 images pillow
 ir beautifulsoup4 requests
-neovim neovim
+neovim pynvim
 networkx networkx pygraphviz
 nlp spacy

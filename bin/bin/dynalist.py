@@ -281,14 +281,6 @@ def sync(filename):
         },
     )
     assert response['_code'] == 'Ok', response
-    with open(expanduser(f'~/journal/{filename}.journal')) as fd:
-        old_text = get_file(filename).strip()
-        new_text = fd.read().strip()
-        assert old_text == new_text, '\n'.join([
-            *old_text.splitlines(),
-            50 * '-',
-            *new_text.splitlines(),
-        ])
 
 
 def main():

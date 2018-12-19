@@ -286,14 +286,14 @@ def sync(filename):
 def main():
     arg_parser = ArgumentParser()
     arg_parser.set_defaults(action='pull')
-    arg_parser.add_argument('--push', dest='action', action='store_const', const='push', help='Push file to Dynalist')
-    arg_parser.add_argument('--filename', help='Dynalist filename. Defaults to "mobile"')
+    arg_parser.add_argument('--push', dest='action', action='store_const', const='push', help='push file to Dynalist')
+    arg_parser.add_argument('--filename', help='Dynalist filename. Defaults to "mobile" if pulling and "notes" if pushing.')
     args = arg_parser.parse_args()
     if not args.filename:
-        if args.push:
-            args.filename = 'notes'
-        else:
+        if args.action == 'pull':
             args.filename = 'mobile'
+        else:
+            args.filename = 'notes'
     if args.action == 'pull':
         print(treelines_to_file(dynalist_to_treelines(args.filename)))
     elif args.action == 'push':

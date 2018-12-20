@@ -59,12 +59,14 @@ def parse_args(args):
     """
     start, end = args.start, args.end
     today = date.today()
-    mark_date = None
+    if args.no_marker:
+        mark_date = None
+    else:
+        mark_date = today
     if end is None:
         if start is None:
             start_date = today - 28 * ONE_DAY
             end_date = today + 28 * ONE_DAY
-            mark_date = today
         elif len(start) == 10:
             anchor = str_to_date(start)
             end_date = anchor + 28 * ONE_DAY
@@ -81,8 +83,6 @@ def parse_args(args):
             f'start date must be before end date,',
             f'but got {start_date} and {end_date}',
         ]))
-    if args.no_marker:
-        mark_date = None
     return start_date, end_date, mark_date
 
 

@@ -117,7 +117,6 @@ def structure_diff(old_treelines, new_treelines, ignore_min=-1, ignore_max=-1):
             if ignore_min <= old_index < ignore_max and old_index < len(old_treelines):
                 yield old_treeline, empty_treeline
                 old_index += 1
-                old_treeline = old_treelines[old_index]
             else:
                 yield old_treeline, new_treeline
                 old_index += 1
@@ -125,11 +124,9 @@ def structure_diff(old_treelines, new_treelines, ignore_min=-1, ignore_max=-1):
         elif old_treeline.indent < new_treeline.indent:
             yield empty_treeline, new_treeline
             new_index += 1
-            new_treeline = new_treelines[new_index]
         elif old_treeline.indent > new_treeline.indent:
             yield old_treeline, empty_treeline
             old_index += 1
-            old_treeline = old_treelines[old_index]
     while old_index < len(old_treelines):
         old_treeline = old_treelines[old_index]
         yield old_treeline, empty_treeline

@@ -121,10 +121,8 @@ def slack(text):
                 date = datetime.strptime(date, '%A, %B %d')
             date = date.strftime('%Y-%m-%d')
             continue
-        message = item.select('.c-message')
-        if not message:
+        if not item.select('.c-message'):
             continue
-        message = message[0]
         header = item.select('.c-message__content_header')
         if header:
             speaker = header[0].select('.c-message__sender')[0].string

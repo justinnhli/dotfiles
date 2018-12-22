@@ -112,27 +112,31 @@ def slack(text):
         if date_tag:
             date = _extract_text(date_tag[0])
             if date == 'Today':
-                date = datetime.today()
+                date = datetime.now()
             elif date == 'Yesterday':
-                date = datetime.today() - timedelta(days=1)
+                date = datetime.now() - timedelta(days=1)
             else:
                 while date[-1].isalpha():
                     date = date[:-1]
                 date = datetime.strptime(date, '%A, %B %d')
-            date = date.strftime('%Y-%m-%d')
             continue
         if not item.select('.c-message'):
             continue
+        date = date.date()
         header = item.select('.c-message__content_header')
         if header:
             speaker = header[0].select('.c-message__sender')[0].string
             time = header[0].select('.c-timestamp__label')[0].string
         else:
             time = item.select('.c-message__gutter .c-timestamp__label')[0].string
+        date = datetime.strptime(
+            date.strftime('%Y-%m-%d') + ' ' + time,
+            '%Y-%m-%d %H:%M %p',
+        )
         body = item.select('.c-message__body')
         if body:
             text = _extract_text(body[0])
-            print(f'({date} {time}) {speaker}: {text}')
+            print(f'({date.isoformat(sep=" ")}) {speaker}: {text}')
 
 def _is_format(string):
     exceptions = 'datetime timedelta dedent'.split()

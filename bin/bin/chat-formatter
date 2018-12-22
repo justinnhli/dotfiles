@@ -42,7 +42,9 @@ def _extract_text(soup):
         if not hasattr(desc, 'contents'):
             if desc.strip():
                 text.append(desc.strip())
-    return re.sub(r'  \+', ' ', ''.join(text).strip())
+        elif str(desc) == '<br/>':
+            text.append('<br>')
+    return re.sub(r'  \+', ' ', ''.join(text).strip()).replace('<br>', '\n')
 
 
 def hangout(text):
@@ -107,6 +109,7 @@ def slack(text):
     soup = BeautifulSoup(text, 'html.parser')
     date = None
     speaker = None
+    lines = []
     for item in soup.select('.c-virtual_list__item'):
         date_tag = item.select('.c-message_list__day_divider__label')
         if date_tag:
@@ -135,12 +138,21 @@ def slack(text):
         )
         body = item.select('.c-message__body')
         if body:
-            text = _extract_text(body[0])
-            print(f'({date.isoformat(sep=" ")}) {speaker}: {text}')
+            for text in _extract_text(body[0]).splitlines():
+                lines.append((
+                    f'({date.isoformat(sep=" ")})',
+                    f'{speaker}: {text}',
+                ))
+    print('\n'.join(
+        ' '.join(line) for line
+        in sorted(lines, key=(lambda line: line[0]))
+    ))
+
 
 def _is_format(string):
     exceptions = 'datetime timedelta dedent'.split()
     return not string.startswith('_') and string == string.lower() and string not in exceptions
+
 
 def _main():
     formats = dict((k, v) for k, v in globals().items() if callable(v) and _is_format(k))

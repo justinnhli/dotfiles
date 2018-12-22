@@ -153,7 +153,6 @@ def treeline_diff(old_treelines, new_treelines):
             continue
         elif symbol == ' ':
             if section_start:
-
                 ignore_min = -1
                 ignore_max = -1
                 if section_start[0] < old_index:
@@ -289,7 +288,7 @@ def main():
     if not args.filename:
         if args.action == 'pull':
             args.filename = 'mobile'
-        else:
+        elif args.action == 'push':
             args.filename = 'notes'
     if args.action == 'pull':
         print(treelines_to_file(dynalist_to_treelines(args.filename)))

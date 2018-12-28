@@ -195,14 +195,7 @@ def treeline_diff(old_treelines, new_treelines):
         new_index += 1
 
 
-def sync(filename):
-    file_id = get_file_id(filename)
-    old_treelines = list(dynalist_to_treelines(filename))
-    time = datetime.now().isoformat(sep=' ', timespec='seconds')
-    with open(expanduser(f'~/journal/{filename}.journal')) as fd:
-        text = f'synced {time}\n' + fd.read()
-    new_treelines = list(text_to_treelines(text))
-    # find lines to add and delete
+def _sync_phase_1(file_id, old_treelines, new_treelines):
     parents = []
     id_map = {}
     changes = []
@@ -244,19 +237,21 @@ def sync(filename):
         if new_treeline.id is not None:
             ancestry = ancestry[:new_treeline.indent + 1]
             ancestry.append(new_treeline.id)
-    # issue changes to Dynalist
-    response = send_json_post(
-        'https://dynalist.io/api/v1/doc/edit',
-        {
-            'token': TOKEN,
-            'file_id': file_id,
-            'changes': changes,
-        },
-    )
-    assert response['_code'] == 'Ok', response
-    old_treelines = list(dynalist_to_treelines(filename))
+    if changes:
+        response = send_json_post(
+            'https://dynalist.io/api/v1/doc/edit',
+            {
+                'token': TOKEN,
+                'file_id': file_id,
+                'changes': changes,
+            },
+        )
+        assert response['_code'] == 'Ok', response
+    return parents, id_map
+
+
+def _sync_phase_2(file_id, old_treelines, parents, id_map):
     text_to_id = {treeline.text: treeline.id for treeline in old_treelines[-len(parents):]}
-    # move new nodes into place
     changes = []
     for child_treeline, parent_id in parents:
         child_id = text_to_id[child_treeline.text]
@@ -267,7 +262,8 @@ def sync(filename):
             'parent_id': id_map.get(parent_id, parent_id),
             'index': child_treeline.sibling_index,
         })
-    # issue changes to Dynalist
+    if not changes:
+        return
     response = send_json_post(
         'https://dynalist.io/api/v1/doc/edit',
         {
@@ -277,6 +273,20 @@ def sync(filename):
         },
     )
     assert response['_code'] == 'Ok', response
+
+
+def sync(filename):
+    file_id = get_file_id(filename)
+    old_treelines = list(dynalist_to_treelines(filename))
+    with open(expanduser(f'~/journal/{filename}.journal')) as fd:
+        time = datetime.now().isoformat(sep=' ', timespec='seconds')
+        text = f'synced {time}\n' + fd.read()
+    new_treelines = list(text_to_treelines(text))
+    # find lines to modify in place
+    parents, id_map = _sync_phase_1(file_id, old_treelines, new_treelines)
+    old_treelines = list(dynalist_to_treelines(filename))
+    # move new nodes into place
+    _sync_phase_2(file_id, old_treelines, parents, id_map)
 
 
 def main():

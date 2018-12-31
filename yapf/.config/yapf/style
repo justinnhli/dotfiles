@@ -4,4 +4,5 @@ blank_line_before_nested_class_or_def = true
 blank_line_before_class_docstring = false
 column_limit = 120
 dedent_closing_brackets = true
-spaces_before_comment=1
+coalesce_brackets = true
+spaces_before_comment = 1

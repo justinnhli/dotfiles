@@ -112,7 +112,7 @@ if not raw_entries:
     arg_parser.error('no journal entries found or specified')
 entries = dict((entry[:DATE_LENGTH], entry.strip()) for entry in raw_entries.strip().split('\n\n') if entry and DATE_REGEX.match(entry))
 
-if args.op == 'show' and args.log and file_exists(log_file):
+if args.op in ('show', 'list') and args.log and file_exists(log_file):
     options = []
     for option_string, option in arg_parser._option_string_actions.items():
         if re.match('^-[a-gi-z]$', option_string):
@@ -122,7 +122,11 @@ if args.op == 'show' and args.log and file_exists(log_file):
                     options.append(option_string[1])
                 else:
                     options.append(' {} {}'.format(option_string, option_value))
-    log_args = '-S' + ''.join(sorted(options, key=(lambda x: (len(x) != 1, x.upper())))).replace(' -', '', 1)
+    if args.op == 'show':
+        op_flag = '-S'
+    elif args.op == 'list':
+        op_flag = '-L'
+    log_args = op_flag + ''.join(sorted(options, key=(lambda x: (len(x) != 1, x.upper())))).replace(' -', '', 1)
     terms = ' '.join('"{}"'.format(term.replace('"', '\\"')) for term in sorted(args.terms))
     with open(log_file, 'a') as fd:
         fd.write('{}\t{} -- {}'.format(datetime.today().isoformat(' '), log_args, terms).strip() + '\n')

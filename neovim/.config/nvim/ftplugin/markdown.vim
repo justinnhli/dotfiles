@@ -1,4 +1,5 @@
 setlocal expandtab
+setlocal wrap
 if executable('cmark')
-	autocmd      BufEnter        *.md    setlocal wrap makeprg=cmark\ '%:p'\ >\ '%:p:r.html'
+	setlocal makeprg=cmark\ '%:p'\ >\ '%:p:r.html'
 endif

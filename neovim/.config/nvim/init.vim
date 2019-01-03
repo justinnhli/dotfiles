@@ -646,8 +646,8 @@ endif
 		vnoremap  q: :
 
 		" Shift+JK for moving between quickfixes
-		nnoremap  <S-j>  :lnext<cr>
-		nnoremap  <S-k>  :lprevious<cr>
+		nnoremap  <S-j>  :cnext<cr>
+		nnoremap  <S-k>  :cprevious<cr>
 	" }
 
 	" terminal {
@@ -730,7 +730,7 @@ endif
 	nnoremap           <leader>@     :<C-f>ilet @=<C-r><C-r>
 	nnoremap           <leader>]     <C-w><C-]><C-w>T
 	vnoremap           <leader>]     <C-w><C-]><C-w>T
-	nnoremap           <leader><cr>  :lmake<cr>
+	nnoremap           <leader><cr>  :make<cr>
 	vnoremap           <leader><cr>  y<Esc>:!<C-r>"<cr>
 	nnoremap  <silent> <leader>;     :lcd %:p:h<cr>
 	" custom functions
@@ -755,7 +755,7 @@ endif
 		autocmd  CmdwinEnter         *       nnoremap <buffer> <C-c> :quit<cr>
 		autocmd  CmdwinEnter         *       inoremap <buffer> <C-c> <Esc>
 		" automatically open and close the quickfix window
-		autocmd  QuickFixCmdPost     l*grep* lwindow
+		autocmd  QuickFixCmdPost     [^l]*   nested cwindow
 		autocmd  WinEnter            *       if winnr('$') == 1 && getbufvar(winbufnr(winnr()), '&buftype') == 'quickfix' | q | endif
 		" bound scope of search to the original window
 		autocmd  WinLeave            *       let w:search_on = &hlsearch | let w:last_search = @/

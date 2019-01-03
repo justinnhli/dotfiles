@@ -762,7 +762,7 @@ endif
 		autocmd  WinEnter            *       if exists('w:search_on') && w:search_on | let @/ = w:last_search | else | set nohlsearch | endif
 		" disable spellcheck in virtual terminal
 		if exists('##TermOpen')
-			autocmd  TermOpen            *       setlocal nonumber nospell scrollback=-1
+			autocmd  TermOpen        *       setlocal nonumber nospell scrollback=-1
 		endif
 		" patch colorschemes
 		autocmd  ColorScheme         iceberg call s:PatchColorschemeIceberg()
@@ -775,7 +775,7 @@ endif
 		" bufhidden=unload (save memory when other file is viewed)
 		" undolevels=-1 (no undo possible)
 		let g:LargeFile = 1024 * 1024 * 10
-		autocmd BufReadPre * let f=expand('<afile>') | if getfsize(f) > g:LargeFile | set eventignore+=FileType | setlocal noswapfile bufhidden=unload undolevels=-1 | else | set eventignore-=FileType | endif
+		autocmd BufReadPre           *       let f=expand('<afile>') | if getfsize(f) > g:LargeFile | set eventignore+=FileType | setlocal noswapfile bufhidden=unload undolevels=-1 | else | set eventignore-=FileType | endif
 
 		" override above settings for specific files
 		" automatically fold notes.journal

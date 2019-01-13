@@ -6,7 +6,7 @@ from argparse import ArgumentParser
 from collections import namedtuple
 from difflib import Differ
 from os import environ
-from os.path import expanduser
+from os.path import realpath, expanduser
 
 try:
     import requests
@@ -275,35 +275,30 @@ def _sync_phase_2(file_id, old_treelines, parents, id_map):
     assert response['_code'] == 'Ok', response
 
 
-def sync(filename):
-    file_id = get_file_id(filename)
-    old_treelines = list(dynalist_to_treelines(filename))
-    with open(expanduser(f'~/journal/{filename}.journal')) as fd:
+def push(local, remote):
+    file_id = get_file_id(remote)
+    old_treelines = list(dynalist_to_treelines(remote))
+    with open(local) as fd:
         time = datetime.now().isoformat(sep=' ', timespec='seconds')
         text = f'synced {time}\n' + fd.read()
     new_treelines = list(text_to_treelines(text))
     # find lines to modify in place
     parents, id_map = _sync_phase_1(file_id, old_treelines, new_treelines)
-    old_treelines = list(dynalist_to_treelines(filename))
+    old_treelines = list(dynalist_to_treelines(remote))
     # move new nodes into place
     _sync_phase_2(file_id, old_treelines, parents, id_map)
 
 
 def main():
     arg_parser = ArgumentParser()
-    arg_parser.set_defaults(action='pull')
-    arg_parser.add_argument('--push', dest='action', action='store_const', const='push', help='push file to Dynalist')
-    arg_parser.add_argument('--filename', help='Dynalist filename. Defaults to "mobile" if pulling and "notes" if pushing.')
+    arg_parser.add_argument('local', nargs='?', help='Local file to push.')
+    arg_parser.add_argument('remote', help='Dynalist file to read from or write to.')
     args = arg_parser.parse_args()
-    if not args.filename:
-        if args.action == 'pull':
-            args.filename = 'mobile'
-        elif args.action == 'push':
-            args.filename = 'notes'
-    if args.action == 'pull':
+    if args.local is None:
         print(treelines_to_file(dynalist_to_treelines(args.filename)))
-    elif args.action == 'push':
-        sync(args.filename)
+    else:
+        args.local = realpath(expanduser(args.local))
+        push(args.local, args.remote)
 
 
 if __name__ == '__main__':

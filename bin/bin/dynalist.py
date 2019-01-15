@@ -295,7 +295,7 @@ def main():
     arg_parser.add_argument('remote', help='Dynalist file to read from or write to.')
     args = arg_parser.parse_args()
     if args.local is None:
-        print(treelines_to_file(dynalist_to_treelines(args.filename)))
+        print(treelines_to_file(dynalist_to_treelines(args.remote)))
     else:
         args.local = realpath(expanduser(args.local))
         push(args.local, args.remote)

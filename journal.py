@@ -450,7 +450,7 @@ def do_verify(journal, _):
 
 
 @register('list entries that hyphenate the terms differently')
-def do_hyphen_consistency(journal, args):
+def do_hyphenation(journal, args):
     for puncts in product(['', ' ', '-'], repeat=(len(args.terms) - 1)):
         possibility = ''.join(
             part + punct for part, punct

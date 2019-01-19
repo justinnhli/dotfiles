@@ -7,7 +7,7 @@ from argparse import ArgumentParser
 from collections import namedtuple, defaultdict
 from copy import copy
 from datetime import datetime, timedelta
-from itertools import chain, groupby
+from itertools import chain, groupby, product
 from os import chdir as cd, chmod, environ, execvp, fork, remove as rm, wait, walk
 from os.path import basename, exists as file_exists, expanduser, join as join_path, realpath, relpath
 from stat import S_IRUSR
@@ -449,6 +449,63 @@ def do_verify(journal, _):
     journal.verify()
 
 
+@register('list entries that hyphenate the terms differently')
+def do_hyphen_consistency(journal, args):
+    for puncts in product(['', ' ', '-'], repeat=(len(args.terms) - 1)):
+        possibility = ''.join(
+            part + punct for part, punct
+            in zip(args.terms, puncts)
+        ) + args.terms[-1]
+        entries = journal.filter(terms=[possibility])
+        print(possibility)
+        for date in sorted(entries):
+            print('    ' + date)
+
+
+@register('list the length of the longest line of each entry')
+def do_longest_line(journal, args):
+    entries = filter_entries(journal, args)
+    for date, entry in sorted(entries.items()):
+        print(date, max(len(line) for line in entry.text.splitlines()))
+
+
+@register('list the Kincaid reading grade level of each entry')
+def do_readability(journal, args):
+
+    def split_into_sentences(text):
+        sentences = text.split('. ')
+        sentences = chain(*(sentence.split('! ') for sentence in sentences))
+        sentences = chain(*(sentence.split('? ') for sentence in sentences))
+        return tuple(sentence for sentence in sentences if len(sentence.split()) > 2)
+
+    def strip_punct(text):
+        text = text.replace(' - ', ' ')
+        text = text.replace("'", '')
+        text = re.sub('([0-9A-Za-z])-([0-9A-Za-z])', r'\1 \2', text)
+        text = re.sub('[^ 0-9A-Za-z]', '', text)
+        return text
+
+    def letters_to_syllables(letters, rate):
+        return letters / rate
+
+    def kincaid(text):
+        paragraphs = tuple(line.strip() for line in text.splitlines() if line.strip())
+        sentences = tuple(chain(*(split_into_sentences(paragraph) for paragraph in paragraphs)))
+        sentences = tuple(strip_punct(sentence) for sentence in sentences)
+        num_letters = sum(len(word) for sentence in sentences for word in sentence)
+        num_words = sum(len(sentence.split()) for sentence in sentences)
+        num_sentences = len(sentences)
+        return (
+            0.39 * (num_words / num_sentences) +
+            11.8 * (letters_to_syllables(num_letters, 4.10) / num_words) -
+            15.59
+        )
+
+    entries = filter_entries(journal, args)
+    for date, entry in sorted(entries.items()):
+        print(date, '{: >6.3f}'.format(kincaid(entry.text)))
+
+
 # CLI
 
 
@@ -461,7 +518,7 @@ def make_arg_parser():
     for flag, desc, function in sorted(OPERATIONS):
         if flag:
             group.add_argument(flag, dest='operation', action='store_const', const=function, help=desc)
-    for flag, desc, function in sorted(OPERATIONS):
+    for flag, desc, function in sorted(OPERATIONS, key=(lambda option: option.function.__name__)):
         if not flag:
             flag = f'--{function.__name__[3:].replace("_", "-")}'
             group.add_argument(flag, dest='operation', action='store_const', const=function, help=desc)
@@ -510,7 +567,6 @@ def parse_args():
         arg_parser.error('argument -n: "{}" should be a positive integer'.format(args.num_results))
     args.directory = realpath(expanduser(args.directory))
     args.ignores = set(realpath(expanduser(path.strip())) for arg in args.ignores for path in arg.split(','))
-    args.terms = set(args.terms)
     return args
 
 

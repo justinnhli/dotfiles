@@ -231,6 +231,14 @@ class Journal:
 # utility functions
 
 
+def filter_entries(journal, args):
+    return journal.filter(
+        terms=args.terms,
+        date_ranges=args.date_ranges,
+        icase=args.icase,
+    )
+
+
 def print_table(data, headers=None, gap_size=2):
     if headers is None:
         rows = data
@@ -331,11 +339,7 @@ def do_count(journal, args):
         else:
             return 0
 
-    entries = journal.filter(
-        terms=args.terms,
-        date_ranges=args.date_ranges,
-        icase=args.icase,
-    )
+    entries = filter_entries(journal, args)
     columns = ['DATE', 'POSTS', 'FREQ', 'SIZE', 'WORDS', 'MIN', 'MED', 'MAX', 'MEAN', 'STDEV']
     unit_length = STRING_LENGTHS[args.unit]
     length_map = {date: len(entry.text.split()) for date, entry in entries.items()}
@@ -360,11 +364,7 @@ def do_count(journal, args):
 
 @register('-G', 'graph entry references in DOT')
 def do_graph(journal, args):
-    entries = journal.filter(
-        terms=args.terms,
-        date_ranges=args.date_ranges,
-        icase=args.icase,
-    )
+    entries = filter_entries(journal, args)
     disjoint_sets = dict((k, k) for k in entries)
     ancestors = defaultdict(set)
     edges = dict((k, set()) for k in entries)
@@ -406,21 +406,13 @@ def do_graph(journal, args):
 
 @register('-L', 'list entry dates')
 def do_list(journal, args):
-    entries = journal.filter(
-        terms=args.terms,
-        date_ranges=args.date_ranges,
-        icase=args.icase,
-    )
+    entries = filter_entries(journal, args)
     print('\n'.join(sorted(entries.keys())))
 
 
 @register('-S', 'show entry contents')
 def do_show(journal, args):
-    entries = journal.filter(
-        terms=args.terms,
-        date_ranges=args.date_ranges,
-        icase=args.icase,
-    )
+    entries = filter_entries(journal, args)
     text = '\n\n'.join(entry.text for _, entry in sorted(entries.items()))
     if stdout.isatty():
         temp_file = mkstemp(FILE_EXTENSION)[1]

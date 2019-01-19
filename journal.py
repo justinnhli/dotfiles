@@ -256,7 +256,24 @@ def get_journal_files(args):
 
 # operations
 
+OPERATIONS = []
+Option = namedtuple('Option', 'flag, help, function')
 
+def register(*args):
+    def wrapped(function):
+        assert 1 <= len(args) <= 2
+        assert function.__name__.startswith('do_')
+        if len(args) == 1:
+            flag = ''
+            help = args[0]
+        elif len(args) == 2:
+            flag, help = args
+        OPERATIONS.append(Option(flag, help, function))
+        return function
+    return wrapped
+
+
+@register('-A', 'archive to datetimed tarball')
 def do_archive(directory):
     filename = 'jrnl' + datetime.now().strftime('%Y%m%d%H%M%S')
     with tarfile.open('{}.txz'.format(filename), 'w:xz') as tar:
@@ -264,6 +281,7 @@ def do_archive(directory):
         tar.add(argv[0], arcname=join_path(filename, basename(argv[0])))
 
 
+@register('-C', 'count words and entries')
 def do_count(journal, args):
 
     def _count_fn_date(journal, unit, dates, num_words):
@@ -353,6 +371,7 @@ def do_count(journal, args):
     print_table(table, headers=columns)
 
 
+@register('-G', 'graph entry references in DOT')
 def do_graph(journal, args):
     entries = journal.filter(
         terms=args.terms,
@@ -392,6 +411,7 @@ def do_graph(journal, args):
     print('}')
 
 
+@register('-L', 'list entry dates')
 def do_list(journal, args):
     entries = journal.filter(
         terms=args.terms,
@@ -401,6 +421,7 @@ def do_list(journal, args):
     print('\n'.join(sorted(entries.keys())))
 
 
+@register('-S', 'show entry contents')
 def do_show(journal, args):
     entries = journal.filter(
         terms=args.terms,
@@ -433,10 +454,12 @@ def do_show(journal, args):
         print(text)
 
 
+@register('-U', 'update tags and cache file')
 def do_update(journal, _):
     journal.update_metadata()
 
 
+@register('-V', 'verify journal sanity')
 def do_verify(journal, _):
     journal.verify()
 
@@ -450,13 +473,13 @@ def make_arg_parser():
     arg_parser.set_defaults(directory='./', ignores=[], icase=re.IGNORECASE, terms=[], unit='year')
     arg_parser.add_argument('terms', metavar='TERM', nargs='*', help='pattern which must exist in entries')
     group = arg_parser.add_argument_group('OPERATIONS').add_mutually_exclusive_group(required=True)
-    group.add_argument('-A', dest='operation', action='store_const', const='archive', help='archive to datetimed tarball')
-    group.add_argument('-C', dest='operation', action='store_const', const='count', help='count words and entries')
-    group.add_argument('-G', dest='operation', action='store_const', const='graph', help='graph entry references in DOT')
-    group.add_argument('-L', dest='operation', action='store_const', const='list', help='list entry dates')
-    group.add_argument('-S', dest='operation', action='store_const', const='show', help='show entry contents')
-    group.add_argument('-U', dest='operation', action='store_const', const='update', help='update tags and cache file')
-    group.add_argument('-V', dest='operation', action='store_const', const='verify', help='verify journal sanity')
+    for flag, help, function in sorted(OPERATIONS):
+        if flag:
+            group.add_argument(flag, dest='operation', action='store_const', const=function, help=help)
+    for flag, help, function in sorted(OPERATIONS):
+        if not flag:
+            flag = f'--{function.__name__[3:].replace("_", "-")}'
+            group.add_argument(flag, dest='operation', action='store_const', const=function, help=help)
     group = arg_parser.add_argument_group('INPUT OPTIONS')
     group.add_argument('--directory', dest='directory', action='store', help='use journal files in directory')
     group.add_argument('--ignore', dest='ignores', action='append', help='ignore specified file')
@@ -509,7 +532,7 @@ def parse_args():
 def main():
     args = parse_args()
     journal = Journal(args.directory, ignores=args.ignores)
-    globals()[f'do_{args.operation}'](journal, args)
+    args.operation(journal, args)
 
 
 if __name__ == '__main__':

@@ -472,11 +472,17 @@ def do_longest_line(journal, args):
 @register('list the Kincaid reading grade level of each entry')
 def do_readability(journal, args):
 
-    def split_into_sentences(text):
-        sentences = text.split('. ')
-        sentences = chain(*(sentence.split('! ') for sentence in sentences))
-        sentences = chain(*(sentence.split('? ') for sentence in sentences))
-        return tuple(sentence for sentence in sentences if len(sentence.split()) > 2)
+    def to_sentences(text):
+        for paragraph in text.splitlines():
+            paragraph = paragraph.strip()
+            if not paragraph:
+                continue
+            sentences = paragraph.split('. ')
+            sentences = chain(*(sentence.split('! ') for sentence in sentences))
+            sentences = chain(*(sentence.split('? ') for sentence in sentences))
+            for sentence in sentences:
+                if len(sentence.split()) > 2:
+                    yield sentence
 
     def strip_punct(text):
         text = text.replace(' - ', ' ')
@@ -489,16 +495,14 @@ def do_readability(journal, args):
         return letters / rate
 
     def kincaid(text):
-        paragraphs = tuple(line.strip() for line in text.splitlines() if line.strip())
-        sentences = tuple(chain(*(split_into_sentences(paragraph) for paragraph in paragraphs)))
-        sentences = tuple(strip_punct(sentence) for sentence in sentences)
+        sentences = [strip_punct(sentence) for sentence in to_sentences(text)]
         num_letters = sum(len(word) for sentence in sentences for word in sentence)
         num_words = sum(len(sentence.split()) for sentence in sentences)
         num_sentences = len(sentences)
         return (
-            0.39 * (num_words / num_sentences) +
-            11.8 * (letters_to_syllables(num_letters, 4.10) / num_words) -
-            15.59
+            0.39 * (num_words / num_sentences)
+            + 11.8 * (letters_to_syllables(num_letters, 4.10) / num_words)
+            - 15.59
         )
 
     entries = filter_entries(journal, args)

@@ -246,14 +246,6 @@ def print_table(data, headers=None, gap_size=2):
     print('\n'.join(gap.join(col.rjust(widths[i]) for i, col in enumerate(row)) for row in data))
 
 
-def get_journal_files(args):
-    journal_files = set()
-    for path, _, files in walk(args.directory):
-        journal_files.update(join_path(path, f) for f in files if f.endswith(FILE_EXTENSION))
-    journal_files -= args.ignores
-    return journal_files
-
-
 # operations
 
 OPERATIONS = []

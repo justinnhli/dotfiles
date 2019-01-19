@@ -4,243 +4,366 @@ import re
 import tarfile
 from ast import literal_eval
 from argparse import ArgumentParser
-from collections import defaultdict, OrderedDict
+from collections import namedtuple, defaultdict
 from copy import copy
 from datetime import datetime, timedelta
 from itertools import chain, groupby
 from os import chdir as cd, chmod, environ, execvp, fork, remove as rm, wait, walk
-from os.path import basename, exists as file_exists, expanduser, getmtime, join as join_path, realpath, relpath
+from os.path import basename, exists as file_exists, expanduser, join as join_path, realpath, relpath
 from stat import S_IRUSR
 from statistics import mean, median, stdev
 from sys import stdout, argv
 from tempfile import mkstemp
 
+Entry = namedtuple('Entry', 'date, text, filepath')
+
 FILE_EXTENSION = '.journal'
-DATE_REGEX = re.compile('([0-9]{4}-[0-9]{2}-[0-9]{2})(, (Mon|Tues|Wednes|Thurs|Fri|Satur|Sun)day)?')
-RANGE_REGEX = re.compile('^([0-9]{4}(-[0-9]{2}(-[0-9]{2})?)?)?:?([0-9]{4}(-[0-9]{2}(-[0-9]{2})?)?)?$')
-REF_REGEX = re.compile('([0-9]{4}-[0-9]{2}-[0-9]{2})')
 STRING_LENGTHS = {
     'year': 4,
     'month': 7,
     'day': 10,
 }
-DATE_LENGTH = 10
+DATE_LENGTH = STRING_LENGTHS['day']
+DATE_REGEX = re.compile('([0-9]{4}-[0-9]{2}-[0-9]{2})(, (Mon|Tues|Wednes|Thurs|Fri|Satur|Sun)day)?')
+RANGE_REGEX = re.compile('^([0-9]{4}(-[0-9]{2}(-[0-9]{2})?)?)?:?([0-9]{4}(-[0-9]{2}(-[0-9]{2})?)?)?$')
+REF_REGEX = re.compile('([0-9]{4}-[0-9]{2}-[0-9]{2})')
 
-LOG_FILE = '.log'
-METADATA_FILE = '.metadata'
-TAGS_FILE = '.tags'
-CACHE_FILE = '.cache'
-INDEX_FILE = '.index'
 
-arg_parser = ArgumentParser(usage='%(prog)s <operation> [options] [TERM ...]', description='A command line tool for viewing and maintaining a journal.')
-arg_parser.set_defaults(directory='./', ignores=[], icase=re.IGNORECASE, terms=[], unit='year')
-arg_parser.add_argument('terms', metavar='TERM', nargs='*', help='pattern which must exist in entries')
-group = arg_parser.add_argument_group('OPERATIONS').add_mutually_exclusive_group(required=True)
-group.add_argument('-A',           dest='op',          action='store_const', const='archive',                  help='archive to datetimed tarball')
-group.add_argument('-C',           dest='op',          action='store_const', const='count',                    help='count words and entries')
-group.add_argument('-G',           dest='op',          action='store_const', const='graph',                    help='graph entry references in DOT')
-group.add_argument('-L',           dest='op',          action='store_const', const='list',                     help='list entry dates')
-group.add_argument('-S',           dest='op',          action='store_const', const='show',                     help='show entry contents')
-group.add_argument('-U',           dest='op',          action='store_const', const='update',                   help='update tags and cache file')
-group.add_argument('-V',           dest='op',          action='store_const', const='verify',                   help='verify journal sanity')
-group = arg_parser.add_argument_group('INPUT OPTIONS')
-group.add_argument('--directory',  dest='directory',   action='store',                                         help='use journal files in directory')
-group.add_argument('--ignore',     dest='ignores',     action='append',                                        help='ignore specified file')
-group.add_argument('--skip-cache', dest='skip_cache',  action='store_true',                                    help='skip cached entries and indices')
-group = arg_parser.add_argument_group('FILTER OPTIONS (APPLIES TO -[CGLS])')
-group.add_argument('-d',           dest='date_range',  action='store',                                         help='only use entries in range')
-group.add_argument('-i',           dest='icase',       action='store_false',                                   help='ignore case-insensitivity')
-group.add_argument('-n',           dest='num_results', action='store',       type=int,                         help='limit number of results')
-group = arg_parser.add_argument_group('OUTPUT OPTIONS')
-group.add_argument('-r',           dest='reverse',     action='store_true',                                    help='reverse chronological order')
-group = arg_parser.add_argument_group('OPERATION-SPECIFIC OPTIONS')
-group.add_argument('--no-log',     dest='log',         action='store_false',                                   help='[S] do not log search')
-group.add_argument('--no-headers', dest='headers',     action='store_false',                                   help='[C] do not print headers')
-group.add_argument('--unit',       dest='unit',        action='store',       choices=('year', 'month', 'day'), help='[C] set tabulation unit')
-args = arg_parser.parse_args()
+class Journal:
 
-is_maintenance_op = args.op in ('archive', 'update', 'verify')
-if is_maintenance_op:
-    for option_dest in ('date_range', 'icase', 'terms'):
-        setattr(args, option_dest, arg_parser.get_default(option_dest))
+    DATE_REGEX = re.compile(
+        '([0-9]{4}-[0-9]{2}-[0-9]{2})'
+        '(, (Mon|Tues|Wednes|Thurs|Fri|Satur|Sun)day)?'
+    )
 
-if args.date_range and not all(dr and RANGE_REGEX.match(dr) for dr in args.date_range.split(',')):
-    arg_parser.error("argument -d: '{}' should be in format [YYYY[-MM[-DD]]][:][YYYY[-MM[-DD]]][,...]".format(args.date_range))
-if args.num_results is not None and args.num_results < 1:
-    arg_parser.error("argument -n: '{}' should be a positive integer".format(args.num_results))
-args.directory = realpath(expanduser(args.directory))
-args.ignores = set(realpath(expanduser(path.strip())) for arg in args.ignores for path in arg.split(','))
-args.terms = set(args.terms)
+    def __init__(self, directory, use_cache=True, ignores=None):
+        self.directory = realpath(expanduser(directory))
+        if ignores is None:
+            ignores = []
+        self.ignores = set(realpath(expanduser(filepath)) for filepath in ignores)
+        self.use_cache = use_cache
+        self.entries = {}
+        self.metadata = {}
+        self.tags = {}
+        if self.use_cache:
+            self._check_cache_files()
+        self._initialize()
 
-if args.op == 'archive':
-    filename = 'jrnl' + datetime.now().strftime('%Y%m%d%H%M%S')
-    with tarfile.open('{}.txz'.format(filename), 'w:xz') as tar:
-        tar.add(args.directory, arcname=filename, filter=(lambda tarinfo: None if basename(tarinfo.name)[0] in '._' else tarinfo))
-        tar.add(argv[0], arcname=join_path(filename, basename(argv[0])))
-    exit()
+    def __getitem__(self, key):
+        return self.entries[key]
 
-log_file = join_path(args.directory, LOG_FILE)
-metadata_file = join_path(args.directory, METADATA_FILE)
-tags_file = join_path(args.directory, TAGS_FILE)
-cache_file = join_path(args.directory, CACHE_FILE)
-index_file = join_path(args.directory, INDEX_FILE)
+    @property
+    def journal_files(self):
+        for path, _, files in walk(self.directory):
+            for journal_file in files:
+                if not journal_file.endswith(FILE_EXTENSION):
+                    continue
+                journal_file = join_path(path, journal_file)
+                if journal_file in self.ignores:
+                    continue
+                yield journal_file
 
-use_index = True
-if not args.skip_cache:
-    if all(file_exists(file) for file in (metadata_file, tags_file, cache_file, index_file)):
-        use_index = True
-    elif args.op == 'update':
-        use_index = False
-    else:
-        arg_parser.error('argument -[CGLSV]: cache files corrupted or not found; please run -U first')
+    @property
+    def metadata_file(self):
+        return join_path(self.directory, '.metadata')
 
-journal_files = set()
-raw_entries = ''
-if not is_maintenance_op and use_index:
-    with open(cache_file) as fd:
-        raw_entries = fd.read()
-else:
-    for path, dirs, files in walk(args.directory):
-        journal_files.update(join_path(path, f) for f in files if f.endswith(FILE_EXTENSION))
-    journal_files -= args.ignores
-    file_entries = []
-    for journal in journal_files:
-        with open(journal) as fd:
-            file_entries.append(fd.read().strip())
-    raw_entries = '\n\n'.join(file_entries)
-if not raw_entries:
-    arg_parser.error('no journal entries found or specified')
-entries = dict((entry[:DATE_LENGTH], entry.strip()) for entry in raw_entries.strip().split('\n\n') if entry and DATE_REGEX.match(entry))
+    @property
+    def tags_file(self):
+        return join_path(self.directory, '.tags')
 
-if args.op in ('show', 'list') and args.log and file_exists(log_file):
-    options = []
-    for option_string, option in arg_parser._option_string_actions.items():
-        if re.match('^-[a-gi-z]$', option_string):
-            option_value = getattr(args, option.dest)
-            if option_value != option.default:
-                if option.const in (True, False):
-                    options.append(option_string[1])
-                else:
-                    options.append(' {} {}'.format(option_string, option_value))
-    if args.op == 'show':
-        op_flag = '-S'
-    elif args.op == 'list':
-        op_flag = '-L'
-    log_args = op_flag + ''.join(sorted(options, key=(lambda x: (len(x) != 1, x.upper())))).replace(' -', '', 1)
-    terms = ' '.join('"{}"'.format(term.replace('"', '\\"')) for term in sorted(args.terms))
-    with open(log_file, 'a') as fd:
-        fd.write('{}\t{} -- {}'.format(datetime.today().isoformat(' '), log_args, terms).strip() + '\n')
+    @property
+    def cache_file(self):
+        return join_path(self.directory, '.cache')
 
-metadata = {}
-index = defaultdict(set)
-tags = {}
-if use_index:
-    with open(metadata_file) as fd:
-        metadata = literal_eval('{' + fd.read() + '}')
-    with open(index_file) as fd:
-        index = literal_eval('{' + fd.read() + '}')
-        for term in index:
-            index[term] = set(index[term])
-    with open(tags_file) as fd:
-        for line in fd.read().splitlines():
-            entry, file, line_number = line.split()
-            tags[entry] = (file, line_number)
+    def _check_cache_files(self):
+        cache_files = (
+            self.metadata_file,
+            self.tags_file,
+            self.cache_file,
+        )
+        for cache_file in cache_files:
+            if not file_exists(cache_file):
+                raise OSError(f'cache file {cache_file} not found')
 
-selected = set(entries.keys())
+    def _initialize(self):
+        self._read_files()
+        self._load_metadata()
 
-if is_maintenance_op and use_index:
-    update_timestamp = datetime.strptime(metadata['updated'], '%Y-%m-%d').timestamp()
-    for entry, file_line in tags.items():
-        file = file_line[0]
-        if not file_exists(file):
-            print('Missing {} referenced from tags file; quitting...'.format(file))
-            exit(1)
-        if getmtime(file) < update_timestamp:
-            journal_files.discard(join_path(args.directory, file))
-            selected.remove(entry)
-    for term in index:
-        index[term] -= selected
+    def _read_file(self, filepath):
+        with open(filepath) as fd:
+            for raw_entry in fd.read().strip().split('\n\n'):
+                if self.DATE_REGEX.match(raw_entry):
+                    entry = Entry(
+                        raw_entry[:DATE_LENGTH],
+                        raw_entry,
+                        filepath,
+                    )
+                    self.entries[entry.date] = entry
 
-unindexed_terms = args.terms
-if args.op == 'update':
-    unindexed_terms = set(index.keys())
-elif use_index:
-    selected.intersection_update(*(index[term.lower()] for term in args.terms if term.lower() in index))
-    if args.icase:
-        unindexed_terms = set(term for term in args.terms if term not in index)
-
-candidates = copy(selected)
-if args.date_range:
-    first_date = min(selected)
-    last_date = (datetime.strptime(max(selected), '%Y-%m-%d') + timedelta(days=1)).strftime('%Y-%m-%d')
-    selected = set()
-    for date_range in args.date_range.split(','):
-        if ':' in date_range:
-            start_date, end_date = date_range.split(':')
-            start_date, end_date = (start_date or first_date, end_date or last_date)
-            start_date, end_date = (date + '-01' * int((DATE_LENGTH - len(date)) / len('-01')) for date in (start_date, end_date))
-            selected |= set(k for k in candidates if start_date <= k < end_date)
+    def _read_files(self):
+        if self.use_cache:
+            self._read_file(self.cache_file)
         else:
-            selected |= set(k for k in candidates if k.startswith(date_range))
+            for path, _, files in walk(self.directory):
+                for file in files:
+                    if not file.endswith(FILE_EXTENSION):
+                        continue
+                    filepath = join_path(path, file)
+                    if filepath in self.ignores:
+                        continue
+                    self._read_file(filepath)
 
-candidates = copy(selected)
-index_updates = defaultdict(set)
-if args.op == 'update' or len(entries) == len(candidates):
-    for term in unindexed_terms:
-        term = term.lower()
-        index_updates[term] = set(k for k in candidates if re.search(term, entries[k], flags=(re.IGNORECASE | re.MULTILINE)))
-        selected &= index_updates[term]
+    def _load_metadata(self):
+        if not self.use_cache:
+            return
+        with open(self.metadata_file) as fd:
+            self.metadata = literal_eval('{' + fd.read() + '}')
+        with open(self.tags_file) as fd:
+            for line in fd.read().splitlines():
+                entry, filepath, line_number = line.split()
+                self.tags[entry] = (filepath, line_number)
 
-if not is_maintenance_op:
-    if index_updates:
-        with open(index_file, 'a') as fd:
-            fd.write(''.join('{}: {},\n'.format(repr(k.lower()), repr(sorted(v))) for k, v in index_updates.items()))
+    def _filter_by_terms(self, selected, terms, icase):
+        flags = re.MULTILINE
+        if icase:
+            flags |= re.IGNORECASE
+        for term in terms:
+            if icase:
+                term = term.lower()
+            matches = set(
+                date for date, entry in self.entries.items()
+                if re.search(term, entry.text, flags=flags)
+            )
+            selected &= matches
+        return selected
 
-    for term in unindexed_terms:
-        selected = set(k for k in selected if re.search(term, entries[k], flags=(args.icase | re.MULTILINE)))
+    def _filter_by_date(self, selected, *date_ranges):
+        # pylint: disable = no-self-use
+        first_date = min(selected)
+        last_date = (
+            datetime.strptime(max(selected), '%Y-%m-%d') + timedelta(days=1)
+        ).strftime('%Y-%m-%d')
+        candidates = copy(selected)
+        selected = set()
+        for date_range in date_ranges:
+            if len(date_range) == 2:
+                start_date, end_date = date_range
+                start_date, end_date = (start_date or first_date, end_date or last_date)
+                selected |= set(k for k in candidates if start_date <= k < end_date)
+            else:
+                selected |= set(k for k in candidates if k.startswith(date_range))
+        return selected
 
-    selected = sorted(selected, reverse=args.reverse)
-    if args.num_results:
-        selected = selected[:args.num_results]
+    def filter(self, terms=None, date_ranges=None, icase=True):
+        selected = set(self.entries.keys())
+        if date_ranges:
+            selected = self._filter_by_date(selected, *date_ranges)
+        if terms:
+            selected = self._filter_by_terms(selected, terms, icase)
+        return {date: self.entries[date] for date in selected}
 
-    if not selected:
-        exit()
+    def update_metadata(self):
+        for journal_file in self.journal_files:
+            rel_path = relpath(journal_file, self.directory)
+            with open(journal_file) as fd:
+                lines = fd.read().splitlines()
+            for line_number, line in enumerate(lines, start=1):
+                if DATE_REGEX.match(line):
+                    self.tags[line[:DATE_LENGTH]] = (rel_path, line_number)
+        with open(self.metadata_file, 'w') as fd:
+            fd.write(f'"updated":"{datetime.today().date().isoformat()}",\n')
+        with open(self.tags_file, 'w') as fd:
+            for tag, (filepath, line) in sorted(self.tags.items()):
+                fd.write('\t'.join([tag, filepath, str(line)]) + '\n')
+        with open(self.cache_file, 'w') as fd:
+            for entry in sorted(self.entries.values()):
+                fd.write(str(entry.text) + '\n\n')
 
-if args.op == 'count':
-    gap_size = 2
+    def verify(self):
+        errors = []
+        dates = set()
+        long_dates = None
+        for journal_file in self.journal_files:
+            with open(journal_file) as fd:
+                lines = fd.read().splitlines()
+            prev_indent = 0
+            for line_number, line in enumerate(lines, start=1):
+                indent = len(re.match('\t*', line).group(0))
+                if not re.fullmatch('(\t*([^ \t][ -~]*)?[^ \t])?', line):
+                    errors.append((journal_file, line_number, 'non-tab indentation, ending blank, or non-ASCII character'))
+                if not line.lstrip().startswith('|') and '  ' in line:
+                    errors.append((journal_file, line_number, 'multiple spaces'))
+                if indent == 0:
+                    if DATE_REGEX.match(line):
+                        entry_date = line[:DATE_LENGTH]
+                        cur_date = datetime.strptime(entry_date, '%Y-%m-%d')
+                        if prev_indent != 0:
+                            errors.append((journal_file, line_number, 'no empty line between entries'))
+                        if not entry_date.startswith(re.sub(FILE_EXTENSION, '', basename(journal_file))):
+                            errors.append((journal_file, line_number, "filename doesn't match entry"))
+                        if long_dates is None:
+                            long_dates = (len(line) > DATE_LENGTH)
+                        elif long_dates != (len(line) > DATE_LENGTH):
+                            errors.append((journal_file, line_number, 'inconsistent date format'))
+                        if long_dates and line != cur_date.strftime('%Y-%m-%d, %A'):
+                            errors.append((journal_file, line_number, 'date-weekday correctness'))
+                        if cur_date in dates:
+                            errors.append((journal_file, line_number, 'duplicate dates'))
+                        dates.add(cur_date)
+                    else:
+                        if line:
+                            if line[0] == '\ufeff':
+                                errors.append((journal_file, line_number, 'byte order mark'))
+                            else:
+                                errors.append((journal_file, line_number, 'unindented text'))
+                        if prev_indent == 0:
+                            errors.append((journal_file, line_number, 'consecutive unindented lines'))
+                elif indent - prev_indent > 1:
+                    errors.append((journal_file, line_number, 'unexpected indentation'))
+                prev_indent = indent
+            if prev_indent == 0:
+                errors.append((journal_file, len(lines), 'file ends on blank line'))
+        if errors:
+            print('\n'.join('{}:{}: {}'.format(*error) for error in sorted(errors)))
+            exit(1)
+
+
+# utility functions
+
+
+def print_table(data, headers=None, gap_size=2):
+    if headers is None:
+        rows = data
+    else:
+        rows = [headers] + data
+    widths = []
+    for col in range(len(data[0])):
+        widths.append(max(len(row[col]) for row in rows))
     gap = gap_size * ' '
-    columns = OrderedDict((
-        ('DATE',  (lambda u, p, ds, ls: u)),
-        ('POSTS', (lambda u, p, ds, ls: p)),
-        ('FREQ',  (lambda u, p, ds, ls: format(((datetime.strptime(max(ds), '%Y-%m-%d') - datetime.strptime(min(ds), '%Y-%m-%d')).days + 1) / p, '.2f'))),
-        ('SIZE',  (lambda u, p, ds, ls: format(sum(len(entries[k]) for k in ds), ',d'))),
-        ('WORDS', (lambda u, p, ds, ls: format(sum(ls), ',d'))),
-        ('MIN',   (lambda u, p, ds, ls: min(ls))),
-        ('MED',   (lambda u, p, ds, ls: round(median(ls)))),
-        ('MAX',   (lambda u, p, ds, ls: max(ls))),
-        ('MEAN',  (lambda u, p, ds, ls: round(mean(ls)))),
-        ('STDEV', (lambda u, p, ds, ls: round(stdev(ls)) if len(ls) > 1 else 0)),
-    ))
-    unit_length = STRING_LENGTHS[args.unit]
-    length_map = dict((date, len(entries[date].split())) for date in selected)
-    table = []
-    for unit, selected_dates in chain(groupby(selected, (lambda k: k[:unit_length])), [('all', selected)]):
-        selected_dates = tuple(selected_dates)
-        lengths = tuple(length_map[date] for date in selected_dates)
-        table.append(tuple(str(fn(unit, len(selected_dates), selected_dates, lengths)) for fn in columns.values()))
-    headers = tuple(columns.keys())
-    widths = tuple(max(len(row[col]) for row in chain([headers], table)) for col in range(len(columns)))
-    if args.headers:
+    if headers:
         print(gap.join(col.center(widths[i]) for i, col in enumerate(headers)))
         print(gap.join(width * '-' for width in widths))
-    print('\n'.join(gap.join(col.rjust(widths[i]) for i, col in enumerate(row)) for row in table))
+    print('\n'.join(gap.join(col.rjust(widths[i]) for i, col in enumerate(row)) for row in data))
 
-elif args.op == 'graph':
-    disjoint_sets = dict((k, k) for k in selected)
+
+def get_journal_files(args):
+    journal_files = set()
+    for path, _, files in walk(args.directory):
+        journal_files.update(join_path(path, f) for f in files if f.endswith(FILE_EXTENSION))
+    journal_files -= args.ignores
+    return journal_files
+
+
+# operations
+
+
+def do_archive(directory):
+    filename = 'jrnl' + datetime.now().strftime('%Y%m%d%H%M%S')
+    with tarfile.open('{}.txz'.format(filename), 'w:xz') as tar:
+        tar.add(directory, arcname=filename, filter=(lambda tarinfo: None if basename(tarinfo.name)[0] in '._' else tarinfo))
+        tar.add(argv[0], arcname=join_path(filename, basename(argv[0])))
+
+
+def do_count(journal, args):
+
+    def _count_fn_date(journal, unit, dates, num_words):
+        # pylint: disable = unused-argument
+        return unit
+
+
+    def _count_fn_posts(journal, unit, dates, num_words):
+        # pylint: disable = unused-argument
+        return len(dates)
+
+
+    def _count_fn_freq(journal, unit, dates, num_words):
+        # pylint: disable = unused-argument
+        num_days = (
+            datetime.strptime(max(dates), '%Y-%m-%d')
+            - datetime.strptime(min(dates), '%Y-%m-%d')
+        ).days
+        return f'{(num_days + 1) / len(dates):.2f}'
+
+
+    def _count_fn_size(journal, unit, dates, num_words):
+        # pylint: disable = unused-argument
+        size = sum(len(journal[date].text) for date in dates)
+        return f'{size:,d}'
+
+
+    def _count_fn_words(journal, unit, dates, num_words):
+        # pylint: disable = unused-argument
+        return f'{sum(num_words):,d}'
+
+
+    def _count_fn_min(journal, unit, dates, num_words):
+        # pylint: disable = unused-argument
+        return min(num_words)
+
+
+    def _count_fn_med(journal, unit, dates, num_words):
+        # pylint: disable = unused-argument
+        return round(median(num_words))
+
+
+    def _count_fn_max(journal, unit, dates, num_words):
+        # pylint: disable = unused-argument
+        return max(num_words)
+
+
+    def _count_fn_mean(journal, unit, dates, num_words):
+        # pylint: disable = unused-argument
+        return round(mean(num_words))
+
+
+    def _count_fn_stdev(journal, unit, dates, num_words):
+        # pylint: disable = unused-argument
+        if len(num_words) > 1:
+            return round(stdev(num_words))
+        else:
+            return 0
+
+    entries = journal.filter(
+        terms=args.terms,
+        date_ranges=args.date_ranges,
+        icase=args.icase,
+    )
+    columns = ['DATE', 'POSTS', 'FREQ', 'SIZE', 'WORDS', 'MIN', 'MED', 'MAX', 'MEAN', 'STDEV']
+    unit_length = STRING_LENGTHS[args.unit]
+    length_map = {
+        date: len(entry.text.split())
+        for date, entry in entries.items()
+    }
+    grouped_timespans = chain(
+        groupby(
+            sorted(entries.keys(), reverse=args.reverse),
+            (lambda k: k[:unit_length]),
+        ),
+        [('all', tuple(entries.keys()))],
+    )
+    table = []
+    for timespan, selected_dates in grouped_timespans:
+        selected_dates = tuple(selected_dates)
+        lengths = tuple(length_map[date] for date in selected_dates)
+        row = []
+        for column in columns:
+            func = vars()[f'_count_fn_{column.lower()}']
+            row.append(str(func(journal, timespan, selected_dates, lengths)))
+        table.append(row)
+    print_table(table, headers=columns)
+
+
+def do_graph(journal, args):
+    entries = journal.filter(
+        terms=args.terms,
+        date_ranges=args.date_ranges,
+        icase=args.icase,
+    )
+    disjoint_sets = dict((k, k) for k in entries)
     ancestors = defaultdict(set)
-    edges = dict((k, set()) for k in selected)
-    for src in sorted(selected):
-        dests = set(dest for dest in REF_REGEX.findall(entries[src]) if src > dest and dest in selected)
+    edges = dict((k, set()) for k in entries)
+    for src in sorted(entries):
+        dests = set(dest for dest in REF_REGEX.findall(entries[src]) if src > dest and dest in entries)
         ancestors[src] = set().union(*(ancestors[parent] for parent in dests))
         for dest in dests - ancestors[src]:
             edges[src].add(dest)
@@ -268,11 +391,23 @@ elif args.op == 'graph':
         print('')
     print('}')
 
-elif args.op == 'list':
-    print('\n'.join(selected))
 
-elif args.op == 'show':
-    text = '\n\n'.join(entries[k] for k in selected)
+def do_list(journal, args):
+    entries = journal.filter(
+        terms=args.terms,
+        date_ranges=args.date_ranges,
+        icase=args.icase,
+    )
+    print('\n'.join(sorted(entries.keys())))
+
+
+def do_show(journal, args):
+    entries = journal.filter(
+        terms=args.terms,
+        date_ranges=args.date_ranges,
+        icase=args.icase,
+    )
+    text = '\n\n'.join(entry.text for _, entry in sorted(entries.items()))
     if stdout.isatty():
         temp_file = mkstemp(FILE_EXTENSION)[1]
         with open(temp_file, 'w') as fd:
@@ -287,73 +422,95 @@ elif args.op == 'show':
             vim_args = [editor, temp_file, '-c', 'set hlsearch nospell']
             if args.terms:
                 vim_args[-1] += ' ' + ('nosmartcase' if args.icase else 'noignorecase')
-                vim_args.extend(('-c', r'let @/="\\v' + '|'.join('({})'.format(term) for term in args.terms).replace('"', r'\"').replace('@', r'\\@') + '"'))
+                vim_args.extend((
+                    '-c',
+                    r'let @/="\\v' + '|'.join(
+                        '({})'.format(term) for term in args.terms
+                    ).replace('"', r'\"').replace('@', r'\\@') + '"',
+                ))
             execvp(editor, vim_args)
     else:
         print(text)
 
-elif args.op == 'update':
-    for journal in journal_files:
-        rel_path = relpath(journal, args.directory)
-        with open(journal) as fd:
-            lines = fd.read().splitlines()
-        for line_number, line in enumerate(lines, start=1):
-            if DATE_REGEX.match(line):
-                tags[line[:DATE_LENGTH]] = (rel_path, line_number)
-    with open(metadata_file, 'w') as fd:
-        fd.write('"updated":"{}",'.format(datetime.now().strftime('%Y-%m-%d')) + '\n')
-    with open(tags_file, 'w') as fd:
-        fd.write('\n'.join('{}\t{}\t{}'.format(entry, *fileline) for entry, fileline in sorted(tags.items())) + '\n')
-    with open(cache_file, 'w') as fd:
-        fd.write('\n\n'.join(sorted(entries.values())) + '\n')
-    with open(index_file, 'w') as fd:
-        for term in sorted(set(index.keys()) | set(index_updates.keys())):
-            fd.write('"{}": {},\n'.format(term.replace('"', r'\"'), sorted(index[term] | index_updates[term])))
 
-elif args.op == 'verify':
-    errors = []
-    dates = set()
-    long_dates = None
-    for journal in journal_files:
-        with open(journal) as fd:
-            lines = fd.read().splitlines()
-        prev_indent = 0
-        for line_number, line in enumerate(lines, start=1):
-            indent = len(re.match('\t*', line).group(0))
-            if not re.search('^(\t*([^ \t][ -~]*)?[^ \t])?$', line):
-                errors.append((journal, line_number, 'non-tab indentation, ending blank, or non-ASCII character'))
-            if not line.strip().startswith('|') and '  ' in line:
-                errors.append((journal, line_number, 'multiple spaces'))
-            if indent == 0:
-                if DATE_REGEX.match(line):
-                    entry_date = line[:DATE_LENGTH]
-                    cur_date = datetime.strptime(entry_date, '%Y-%m-%d')
-                    if prev_indent != 0:
-                        errors.append((journal, line_number, 'no empty line between entries'))
-                    if not entry_date.startswith(re.sub(FILE_EXTENSION, '', basename(journal))):
-                        errors.append((journal, line_number, "filename doesn't match entry"))
-                    if long_dates is None:
-                        long_dates = (len(line) > DATE_LENGTH)
-                    elif long_dates != (len(line) > DATE_LENGTH):
-                        errors.append((journal, line_number, 'inconsistent date format'))
-                    if long_dates and line != cur_date.strftime('%Y-%m-%d, %A'):
-                        errors.append((journal, line_number, 'date-weekday correctness'))
-                    if cur_date in dates:
-                        errors.append((journal, line_number, 'duplicate dates'))
-                    dates.add(cur_date)
+def do_update(journal, _):
+    journal.update_metadata()
+
+
+def do_verify(journal, _):
+    journal.verify()
+
+
+# CLI
+
+
+def make_arg_parser():
+    # pylint: disable = line-too-long
+    arg_parser = ArgumentParser(usage='%(prog)s <operation> [options] [TERM ...]', description='A command line tool for viewing and maintaining a journal.')
+    arg_parser.set_defaults(directory='./', ignores=[], icase=re.IGNORECASE, terms=[], unit='year')
+    arg_parser.add_argument('terms', metavar='TERM', nargs='*', help='pattern which must exist in entries')
+    group = arg_parser.add_argument_group('OPERATIONS').add_mutually_exclusive_group(required=True)
+    group.add_argument('-A', dest='operation', action='store_const', const='archive', help='archive to datetimed tarball')
+    group.add_argument('-C', dest='operation', action='store_const', const='count', help='count words and entries')
+    group.add_argument('-G', dest='operation', action='store_const', const='graph', help='graph entry references in DOT')
+    group.add_argument('-L', dest='operation', action='store_const', const='list', help='list entry dates')
+    group.add_argument('-S', dest='operation', action='store_const', const='show', help='show entry contents')
+    group.add_argument('-U', dest='operation', action='store_const', const='update', help='update tags and cache file')
+    group.add_argument('-V', dest='operation', action='store_const', const='verify', help='verify journal sanity')
+    group = arg_parser.add_argument_group('INPUT OPTIONS')
+    group.add_argument('--directory', dest='directory', action='store', help='use journal files in directory')
+    group.add_argument('--ignore', dest='ignores', action='append', help='ignore specified file')
+    group.add_argument('--skip-cache', dest='skip_cache', action='store_true', help='skip cached entries and indices')
+    group = arg_parser.add_argument_group('FILTER OPTIONS (APPLIES TO -[CGLS])')
+    group.add_argument('-d', dest='date_ranges', action='store', help='only use entries in range')
+    group.add_argument('-i', dest='icase', action='store_false', help='ignore case-insensitivity')
+    group.add_argument('-n', dest='num_results', action='store', type=int, help='limit number of results')
+    group = arg_parser.add_argument_group('OUTPUT OPTIONS')
+    group.add_argument('-r', dest='reverse', action='store_true', help='reverse chronological order')
+    group = arg_parser.add_argument_group('OPERATION-SPECIFIC OPTIONS')
+    group.add_argument('--no-headers', dest='headers', action='store_false', help='[C] do not print headers')
+    group.add_argument('--unit', dest='unit', action='store', choices=('year', 'month', 'day'), help='[C] set tabulation unit')
+    return arg_parser
+
+
+def parse_args():
+    arg_parser = make_arg_parser()
+    args = arg_parser.parse_args()
+    if args.date_ranges:
+        date_ranges = []
+        for date_range in args.date_ranges.split(','):
+            if not (date_range and RANGE_REGEX.match(date_range)):
+                arg_parser.error(
+                    f'argument -d: "{args.date_range}" should be in format '
+                    '[YYYY[-MM[-DD]]][:][YYYY[-MM[-DD]]][,...]'
+                )
+            if ':' in date_range:
+                start_date, end_date = date_range.split(':')
+                if start_date:
+                    start_date = start_date + '-01' * int((DATE_LENGTH - len(start_date)) / len('-01'))
                 else:
-                    if line:
-                        if line[0] == '\ufeff':
-                            errors.append((journal, line_number, 'byte order mark'))
-                        else:
-                            errors.append((journal, line_number, 'unindented text'))
-                    if prev_indent == 0:
-                        errors.append((journal, line_number, 'consecutive unindented lines'))
-            elif indent - prev_indent > 1:
-                errors.append((journal, line_number, 'unexpected indentation'))
-            prev_indent = indent
-        if prev_indent == 0:
-            errors.append((journal, len(lines), 'file ends on blank line'))
-    if errors:
-        print('\n'.join('{}:{}: {}'.format(*error) for error in sorted(errors)))
-        exit(1)
+                    start_date = None
+                if end_date:
+                    end_date = end_date + '-01' * int((DATE_LENGTH - len(end_date)) / len('-01'))
+                else:
+                    end_date = None
+                date_ranges.append((start_date, end_date))
+            else:
+                date_ranges.append(date_range)
+        args.date_ranges = date_ranges
+    if args.num_results is not None and args.num_results < 1:
+        arg_parser.error('argument -n: "{}" should be a positive integer'.format(args.num_results))
+    args.directory = realpath(expanduser(args.directory))
+    args.ignores = set(realpath(expanduser(path.strip())) for arg in args.ignores for path in arg.split(','))
+    args.terms = set(args.terms)
+    return args
+
+
+def main():
+    args = parse_args()
+    journal = Journal(args.directory, ignores=args.ignores)
+    globals()[f'do_{args.operation}'](journal, args)
+
+
+if __name__ == '__main__':
+    main()

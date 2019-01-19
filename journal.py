@@ -259,7 +259,9 @@ def get_journal_files(args):
 OPERATIONS = []
 Option = namedtuple('Option', 'flag, desc, function')
 
+
 def register(*args):
+
     def wrapped(function):
         assert 1 <= len(args) <= 2
         assert function.__name__.startswith('do_')
@@ -270,6 +272,7 @@ def register(*args):
             flag, desc = args
         OPERATIONS.append(Option(flag, desc, function))
         return function
+
     return wrapped
 
 
@@ -292,11 +295,9 @@ def do_count(journal, args):
         # pylint: disable = unused-argument
         return unit
 
-
     def _count_fn_posts(journal, unit, dates, num_words):
         # pylint: disable = unused-argument
         return len(dates)
-
 
     def _count_fn_freq(journal, unit, dates, num_words):
         # pylint: disable = unused-argument
@@ -306,37 +307,30 @@ def do_count(journal, args):
         ).days
         return f'{(num_days + 1) / len(dates):.2f}'
 
-
     def _count_fn_size(journal, unit, dates, num_words):
         # pylint: disable = unused-argument
         size = sum(len(journal[date].text) for date in dates)
         return f'{size:,d}'
 
-
     def _count_fn_words(journal, unit, dates, num_words):
         # pylint: disable = unused-argument
         return f'{sum(num_words):,d}'
-
 
     def _count_fn_min(journal, unit, dates, num_words):
         # pylint: disable = unused-argument
         return min(num_words)
 
-
     def _count_fn_med(journal, unit, dates, num_words):
         # pylint: disable = unused-argument
         return round(median(num_words))
-
 
     def _count_fn_max(journal, unit, dates, num_words):
         # pylint: disable = unused-argument
         return max(num_words)
 
-
     def _count_fn_mean(journal, unit, dates, num_words):
         # pylint: disable = unused-argument
         return round(mean(num_words))
-
 
     def _count_fn_stdev(journal, unit, dates, num_words):
         # pylint: disable = unused-argument
@@ -352,10 +346,7 @@ def do_count(journal, args):
     )
     columns = ['DATE', 'POSTS', 'FREQ', 'SIZE', 'WORDS', 'MIN', 'MED', 'MAX', 'MEAN', 'STDEV']
     unit_length = STRING_LENGTHS[args.unit]
-    length_map = {
-        date: len(entry.text.split())
-        for date, entry in entries.items()
-    }
+    length_map = {date: len(entry.text.split()) for date, entry in entries.items()}
     grouped_timespans = chain(
         groupby(
             sorted(entries.keys(), reverse=args.reverse),
@@ -386,7 +377,10 @@ def do_graph(journal, args):
     ancestors = defaultdict(set)
     edges = dict((k, set()) for k in entries)
     for src in sorted(entries):
-        dests = set(dest for dest in REF_REGEX.findall(entries[src]) if src > dest and dest in entries)
+        dests = set(
+            dest for dest in REF_REGEX.findall(entries[src])
+            if src > dest and dest in entries
+        )
         ancestors[src] = set().union(*(ancestors[parent] for parent in dests))
         for dest in dests - ancestors[src]:
             edges[src].add(dest)

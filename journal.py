@@ -476,7 +476,7 @@ def make_arg_parser():
     group = arg_parser.add_argument_group('INPUT OPTIONS')
     group.add_argument('--directory', dest='directory', action='store', help='use journal files in directory')
     group.add_argument('--ignore', dest='ignores', action='append', help='ignore specified file')
-    group.add_argument('--skip-cache', dest='skip_cache', action='store_true', help='skip cached entries and indices')
+    group.add_argument('--skip-cache', dest='use_cache', action='store_false', help='skip cached entries and indices')
     group = arg_parser.add_argument_group('FILTER OPTIONS (APPLIES TO -[CGLS])')
     group.add_argument('-d', dest='date_ranges', action='store', help='only use entries in range')
     group.add_argument('-i', dest='icase', action='store_false', help='ignore case-insensitivity')
@@ -524,7 +524,7 @@ def parse_args():
 
 def main():
     args = parse_args()
-    journal = Journal(args.directory, ignores=args.ignores)
+    journal = Journal(args.directory, use_cache=args.use_cache, ignores=args.ignores)
     args.operation(journal, args)
 
 

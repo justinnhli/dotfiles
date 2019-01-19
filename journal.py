@@ -180,6 +180,7 @@ class Journal:
                 fd.write(str(entry.text) + '\n\n')
 
     def verify(self):
+        # pylint: disable = line-too-long, too-many-nested-blocks, too-many-branches
         errors = []
         dates = set()
         long_dates = None

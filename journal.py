@@ -257,7 +257,7 @@ def get_journal_files(args):
 # operations
 
 OPERATIONS = []
-Option = namedtuple('Option', 'flag, help, function')
+Option = namedtuple('Option', 'flag, desc, function')
 
 def register(*args):
     def wrapped(function):
@@ -265,10 +265,10 @@ def register(*args):
         assert function.__name__.startswith('do_')
         if len(args) == 1:
             flag = ''
-            help = args[0]
+            desc = args[0]
         elif len(args) == 2:
-            flag, help = args
-        OPERATIONS.append(Option(flag, help, function))
+            flag, desc = args
+        OPERATIONS.append(Option(flag, desc, function))
         return function
     return wrapped
 
@@ -277,7 +277,11 @@ def register(*args):
 def do_archive(directory):
     filename = 'jrnl' + datetime.now().strftime('%Y%m%d%H%M%S')
     with tarfile.open('{}.txz'.format(filename), 'w:xz') as tar:
-        tar.add(directory, arcname=filename, filter=(lambda tarinfo: None if basename(tarinfo.name)[0] in '._' else tarinfo))
+        tar.add(
+            directory,
+            arcname=filename,
+            filter=(lambda tarinfo: None if basename(tarinfo.name)[0] in '._' else tarinfo),
+        )
         tar.add(argv[0], arcname=join_path(filename, basename(argv[0])))
 
 
@@ -406,7 +410,10 @@ def do_graph(journal, args):
         for src in sorted(srcs, reverse=args.reverse):
             print('\t"{}" [fontsize="{}"];'.format(src, len(entries[src].split()) / 100))
             if edges[src]:
-                print('\n'.join('\t"{}" -> "{}";'.format(src, dest) for dest in sorted(edges[src], reverse=args.reverse)))
+                print('\n'.join(
+                    '\t"{}" -> "{}";'.format(src, dest)
+                    for dest in sorted(edges[src], reverse=args.reverse)
+                ))
         print('')
     print('}')
 
@@ -473,13 +480,13 @@ def make_arg_parser():
     arg_parser.set_defaults(directory='./', ignores=[], icase=re.IGNORECASE, terms=[], unit='year')
     arg_parser.add_argument('terms', metavar='TERM', nargs='*', help='pattern which must exist in entries')
     group = arg_parser.add_argument_group('OPERATIONS').add_mutually_exclusive_group(required=True)
-    for flag, help, function in sorted(OPERATIONS):
+    for flag, desc, function in sorted(OPERATIONS):
         if flag:
-            group.add_argument(flag, dest='operation', action='store_const', const=function, help=help)
-    for flag, help, function in sorted(OPERATIONS):
+            group.add_argument(flag, dest='operation', action='store_const', const=function, help=desc)
+    for flag, desc, function in sorted(OPERATIONS):
         if not flag:
             flag = f'--{function.__name__[3:].replace("_", "-")}'
-            group.add_argument(flag, dest='operation', action='store_const', const=function, help=help)
+            group.add_argument(flag, dest='operation', action='store_const', const=function, help=desc)
     group = arg_parser.add_argument_group('INPUT OPTIONS')
     group.add_argument('--directory', dest='directory', action='store', help='use journal files in directory')
     group.add_argument('--ignore', dest='ignores', action='append', help='ignore specified file')

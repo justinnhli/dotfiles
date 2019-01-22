@@ -121,7 +121,10 @@ def slack(text):
             else:
                 while date[-1].isalpha():
                     date = date[:-1]
-                date = datetime.strptime(date, '%A, %B %d')
+                try:
+                    date = datetime.strptime(date + f' {datetime.now().year}', '%A, %B %d %Y')
+                except ValueError:
+                    date = datetime.strptime(re.sub('[a-z]*,', ',', date), '%B %d, %Y')
             continue
         if not item.select('.c-message'):
             continue

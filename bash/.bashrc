@@ -83,6 +83,9 @@ fi
 if command -v flake8 >/dev/null 2>&1; then
 	alias flake8='flake8 --ignore=E501'
 fi
+if command -v pyan.py >/dev/null 2>&1; then
+	alias pyan='pyan.py --grouped --colored --no-defines --dot'
+fi
 if command -v pydocstyle >/dev/null 2>&1; then
 	alias pydocstyle='pydocstyle --convention=pep257 --add-ignore=D105,D413'
 fi

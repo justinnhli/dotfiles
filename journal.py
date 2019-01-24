@@ -233,18 +233,19 @@ class Journal:
 # utility functions
 
 
-def filter_entries(journal, args):
+def filter_entries(journal, args, **kwargs):
     entries = journal.filter(
-        terms=args.terms,
-        date_ranges=args.date_ranges,
-        icase=args.icase,
+        terms=kwargs.get('terms', args.terms),
+        date_ranges=kwargs.get('date_ranges', args.date_ranges),
+        icase=kwargs.get('icase', args.icase),
     )
-    if args.num_results is None:
+    num_results = kwargs.get('num_results', args.num_results)
+    if num_results is None:
         return entries
-    if args.reverse:
-        dates = nlargest(args.num_results, entries)
+    if kwargs.get('reverse', args.reverse):
+        dates = nlargest(num_results, entries)
     else:
-        dates = nsmallest(args.num_results, entries)
+        dates = nsmallest(num_results, entries)
     return {date: entries[date] for date in dates}
 
 
@@ -465,7 +466,7 @@ def do_hyphenation(journal, args):
             part + punct for part, punct
             in zip(args.terms, puncts)
         ) + args.terms[-1]
-        entries = journal.filter(terms=[possibility])
+        entries = filter_entries(journal, args, terms=[possibility])
         print(possibility)
         for date in sorted(entries):
             print('    ' + date)
@@ -539,7 +540,7 @@ def make_arg_parser():
     group.add_argument('--directory', dest='directory', action='store', help='use journal files in directory')
     group.add_argument('--ignore', dest='ignores', action='append', help='ignore specified file')
     group.add_argument('--skip-cache', dest='use_cache', action='store_false', help='skip cached entries and indices')
-    group = arg_parser.add_argument_group('FILTER OPTIONS (APPLIES TO -[CGLS])')
+    group = arg_parser.add_argument_group('FILTER OPTIONS (IGNORED BY -[AUV])')
     group.add_argument('-d', dest='date_spec', action='store', help='only use entries in range')
     group.add_argument('-i', dest='icase', action='store_false', help='ignore case-insensitivity')
     group.add_argument('-n', dest='num_results', action='store', type=int, help='limit number of results')

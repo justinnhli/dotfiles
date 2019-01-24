@@ -540,7 +540,7 @@ def make_arg_parser():
     group.add_argument('--ignore', dest='ignores', action='append', help='ignore specified file')
     group.add_argument('--skip-cache', dest='use_cache', action='store_false', help='skip cached entries and indices')
     group = arg_parser.add_argument_group('FILTER OPTIONS (APPLIES TO -[CGLS])')
-    group.add_argument('-d', dest='date_ranges', action='store', help='only use entries in range')
+    group.add_argument('-d', dest='date_spec', action='store', help='only use entries in range')
     group.add_argument('-i', dest='icase', action='store_false', help='ignore case-insensitivity')
     group.add_argument('-n', dest='num_results', action='store', type=int, help='limit number of results')
     group = arg_parser.add_argument_group('OUTPUT OPTIONS')
@@ -554,9 +554,11 @@ def make_arg_parser():
 def parse_args():
     arg_parser = make_arg_parser()
     args = arg_parser.parse_args()
-    if args.date_ranges:
+    if args.date_spec is None:
+        args.date_ranges = None
+    else:
         date_ranges = []
-        for date_range in args.date_ranges.split(','):
+        for date_range in args.date_spec.split(','):
             if not (date_range and RANGE_REGEX.match(date_range)):
                 arg_parser.error(
                     f'argument -d: "{args.date_range}" should be in format '

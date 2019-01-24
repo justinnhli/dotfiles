@@ -548,11 +548,12 @@ def make_arg_parser():
     group = arg_parser.add_argument_group('OPERATION-SPECIFIC OPTIONS')
     group.add_argument('--no-headers', dest='headers', action='store_false', help='[C] do not print headers')
     group.add_argument('--unit', dest='unit', action='store', choices=('year', 'month', 'day'), help='[C] set tabulation unit')
+    group = arg_parser.add_argument_group('MISCELLANEOUS OPTIONS')
+    group.add_argument('--no-log', dest='log', action='store_false', help='do not log filter')
     return arg_parser
 
 
-def parse_args():
-    arg_parser = make_arg_parser()
+def parse_args(arg_parser):
     args = arg_parser.parse_args()
     if args.date_spec is None:
         args.date_ranges = None
@@ -585,9 +586,35 @@ def parse_args():
     return args
 
 
+def log_search(arg_parser, args, journal):
+    # pylint: disable = protected-access
+    if args.operation.__name__[3:] not in ('show', 'list'):
+        return
+    log_file = join_path(journal.directory, '.log')
+    if args.log and file_exists(log_file):
+        options = []
+        for option_string, option in arg_parser._option_string_actions.items():
+            if re.match('^-[a-gi-z]$', option_string):
+                option_value = getattr(args, option.dest)
+                if option_value != option.default:
+                    if option.const in (True, False):
+                        options.append(option_string[1])
+                    else:
+                        options.append(' {} {}'.format(option_string, option_value))
+            elif args.operation is option.const:
+                op_flag = option_string
+        log_args = op_flag + ''.join(sorted(options, key=(lambda x: (len(x) != 1, x.upper())))).replace(' -', '', 1)
+        terms = ' '.join('"{}"'.format(term.replace('"', '\\"')) for term in sorted(args.terms))
+        with open(log_file, 'a') as fd:
+            fd.write('{}\t{} -- {}'.format(datetime.today().isoformat(' '), log_args, terms).strip() + '\n')
+
+
 def main():
-    args = parse_args()
+    arg_parser = make_arg_parser()
+    args = parse_args(arg_parser)
     journal = Journal(args.directory, use_cache=args.use_cache, ignores=args.ignores)
+    if args.log:
+        log_search(arg_parser, args, journal)
     args.operation(journal, args)
 
 

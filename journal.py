@@ -2,8 +2,8 @@
 
 import re
 import tarfile
-from ast import literal_eval
 from argparse import ArgumentParser
+from ast import literal_eval
 from collections import namedtuple, defaultdict
 from copy import copy
 from datetime import datetime, timedelta

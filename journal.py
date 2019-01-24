@@ -7,6 +7,7 @@ from argparse import ArgumentParser
 from collections import namedtuple, defaultdict
 from copy import copy
 from datetime import datetime, timedelta
+from heapq import nlargest, nsmallest
 from itertools import chain, groupby, product
 from os import chdir as cd, chmod, environ, execvp, fork, remove as rm, wait, walk
 from os.path import basename, exists as file_exists, expanduser, join as join_path, realpath, relpath
@@ -233,11 +234,18 @@ class Journal:
 
 
 def filter_entries(journal, args):
-    return journal.filter(
+    entries = journal.filter(
         terms=args.terms,
         date_ranges=args.date_ranges,
         icase=args.icase,
     )
+    if args.num_results is None:
+        return entries
+    if args.reverse:
+        dates = nlargest(args.num_results, entries)
+    else:
+        dates = nsmallest(args.num_results, entries)
+    return {date: entries[date] for date in dates}
 
 
 def print_table(data, headers=None, gap_size=2):

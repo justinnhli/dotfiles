@@ -125,7 +125,6 @@ def slack(text):
                     date = datetime.strptime(date + f' {datetime.now().year}', '%A, %B %d %Y')
                 except ValueError:
                     date = datetime.strptime(re.sub('[a-z]*,', ',', date), '%B %d, %Y')
-            continue
         if not item.select('.c-message'):
             continue
         date = date.date()
@@ -137,7 +136,7 @@ def slack(text):
             time = item.select('.c-message__gutter .c-timestamp__label')[0].string
         date = datetime.strptime(
             date.strftime('%Y-%m-%d') + ' ' + time,
-            '%Y-%m-%d %H:%M %p',
+            '%Y-%m-%d %I:%M %p',
         )
         body = item.select('.c-message__body')
         if body:

@@ -278,11 +278,11 @@ def register(*args):
 
 
 @register('-A', 'archive to datetimed tarball')
-def do_archive(directory):
+def do_archive(_, args):
     filename = 'jrnl' + datetime.now().strftime('%Y%m%d%H%M%S')
     with tarfile.open('{}.txz'.format(filename), 'w:xz') as tar:
         tar.add(
-            directory,
+            args.directory,
             arcname=filename,
             filter=(lambda tarinfo: None if basename(tarinfo.name)[0] in '._' else tarinfo),
         )

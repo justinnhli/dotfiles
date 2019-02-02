@@ -82,9 +82,8 @@ class Journal:
             self.tags_file,
             self.cache_file,
         )
-        for cache_file in cache_files:
-            if not file_exists(cache_file):
-                raise OSError(f'cache file {cache_file} not found')
+        if not all(file_exists(cache_file) for cache_file in cache_files):
+            self.update_metadata()
 
     def _initialize(self):
         self._read_files()
@@ -164,7 +163,10 @@ class Journal:
         return {date: self.entries[date] for date in selected}
 
     def update_metadata(self):
+        self.entries = {}
+        self.tags = {}
         for journal_file in self.journal_files:
+            self._read_file(journal_file)
             rel_path = relpath(journal_file, self.directory)
             with open(journal_file) as fd:
                 lines = fd.read().splitlines()

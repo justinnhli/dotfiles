@@ -43,7 +43,6 @@ class Journal:
         self.ignores = set(realpath(expanduser(filepath)) for filepath in ignores)
         self.use_cache = use_cache
         self.entries = {}
-        self.tags = {}
         if self.use_cache:
             self._check_cache_files()
         self._initialize()
@@ -79,15 +78,11 @@ class Journal:
             self.update_metadata()
 
     def _initialize(self):
-        if not self.use_cache:
+        if self.use_cache:
+            self._read_file(self.cache_file)
+        else:
             for journal_file in self.journal_files:
                 self._read_file(journal_file)
-            return
-        self._read_file(self.cache_file)
-        with open(self.tags_file) as fd:
-            for line in fd.read().splitlines():
-                entry, filepath, line_number = line.split()
-                self.tags[entry] = (filepath, line_number)
 
     def _read_file(self, filepath):
         with open(filepath) as fd:
@@ -141,7 +136,7 @@ class Journal:
 
     def update_metadata(self):
         self.entries = {}
-        self.tags = {}
+        tags = {}
         for journal_file in self.journal_files:
             self._read_file(journal_file)
             rel_path = relpath(journal_file, self.directory)
@@ -149,9 +144,9 @@ class Journal:
                 lines = fd.read().splitlines()
             for line_number, line in enumerate(lines, start=1):
                 if DATE_REGEX.match(line):
-                    self.tags[line[:DATE_LENGTH]] = (rel_path, line_number)
+                    tags[line[:DATE_LENGTH]] = (rel_path, line_number)
         with open(self.tags_file, 'w') as fd:
-            for tag, (filepath, line) in sorted(self.tags.items()):
+            for tag, (filepath, line) in sorted(tags.items()):
                 fd.write('\t'.join([tag, filepath, str(line)]) + '\n')
         with open(self.cache_file, 'w') as fd:
             for entry in sorted(self.entries.values()):

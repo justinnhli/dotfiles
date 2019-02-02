@@ -18,16 +18,10 @@ export PYTHONPATH="$HOME/Dropbox/projects:$HOME/git"
 export PYTHONPATH="$(find "$HOME/git" -maxdepth 2 -type f -name 'setup.py' -exec dirname {} ';' 2>/dev/null | sort -f | uniq | tr '\n' ':' | sed 's/:$//'):$PYTHONPATH"
 
 # environment
-case "$(uname)" in
-'Linux')
-	WHICH='which --skip-alias';;
-'Darwin')
-	WHICH='which';;
-esac
-if $WHICH nvim >/dev/null 2>&1; then
+if command -v nvim >/dev/null 2>&1; then
 	export EDITOR=nvim
 	export MANPAGER="nvim -c 'set ft=man' -"
-elif $WHICH vim >/dev/null 2>&1; then
+elif command -v vim >/dev/null 2>&1; then
 	export EDITOR=vim
 else
 	export EDITOR=vi

@@ -3,7 +3,6 @@
 import re
 import tarfile
 from argparse import ArgumentParser
-from ast import literal_eval
 from collections import namedtuple, defaultdict
 from copy import copy
 from datetime import datetime, timedelta
@@ -44,7 +43,6 @@ class Journal:
         self.ignores = set(realpath(expanduser(filepath)) for filepath in ignores)
         self.use_cache = use_cache
         self.entries = {}
-        self.metadata = {}
         self.tags = {}
         if self.use_cache:
             self._check_cache_files()
@@ -65,10 +63,6 @@ class Journal:
                 yield journal_file
 
     @property
-    def metadata_file(self):
-        return join_path(self.directory, '.metadata')
-
-    @property
     def tags_file(self):
         return join_path(self.directory, '.tags')
 
@@ -78,7 +72,6 @@ class Journal:
 
     def _check_cache_files(self):
         cache_files = (
-            self.metadata_file,
             self.tags_file,
             self.cache_file,
         )
@@ -86,8 +79,15 @@ class Journal:
             self.update_metadata()
 
     def _initialize(self):
-        self._read_files()
-        self._load_metadata()
+        if not self.use_cache:
+            for journal_file in self.journal_files:
+                self._read_file(journal_file)
+            return
+        self._read_file(self.cache_file)
+        with open(self.tags_file) as fd:
+            for line in fd.read().splitlines():
+                entry, filepath, line_number = line.split()
+                self.tags[entry] = (filepath, line_number)
 
     def _read_file(self, filepath):
         with open(filepath) as fd:
@@ -99,29 +99,6 @@ class Journal:
                         filepath,
                     )
                     self.entries[entry.date] = entry
-
-    def _read_files(self):
-        if self.use_cache:
-            self._read_file(self.cache_file)
-        else:
-            for path, _, files in walk(self.directory):
-                for file in files:
-                    if not file.endswith(FILE_EXTENSION):
-                        continue
-                    filepath = join_path(path, file)
-                    if filepath in self.ignores:
-                        continue
-                    self._read_file(filepath)
-
-    def _load_metadata(self):
-        if not self.use_cache:
-            return
-        with open(self.metadata_file) as fd:
-            self.metadata = literal_eval('{' + fd.read() + '}')
-        with open(self.tags_file) as fd:
-            for line in fd.read().splitlines():
-                entry, filepath, line_number = line.split()
-                self.tags[entry] = (filepath, line_number)
 
     def _filter_by_terms(self, selected, terms, icase):
         flags = re.MULTILINE
@@ -173,8 +150,6 @@ class Journal:
             for line_number, line in enumerate(lines, start=1):
                 if DATE_REGEX.match(line):
                     self.tags[line[:DATE_LENGTH]] = (rel_path, line_number)
-        with open(self.metadata_file, 'w') as fd:
-            fd.write(f'"updated":"{datetime.today().date().isoformat()}",\n')
         with open(self.tags_file, 'w') as fd:
             for tag, (filepath, line) in sorted(self.tags.items()):
                 fd.write('\t'.join([tag, filepath, str(line)]) + '\n')

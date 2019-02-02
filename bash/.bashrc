@@ -17,7 +17,7 @@ export PATH="$(find "$HOME/Dropbox/projects" -maxdepth 2 -type f -perm -100 -exe
 export PYTHONPATH="$HOME/Dropbox/projects:$HOME/git"
 export PYTHONPATH="$(find "$HOME/git" -maxdepth 2 -type f -name 'setup.py' -exec dirname {} ';' 2>/dev/null | sort -f | uniq | tr '\n' ':' | sed 's/:$//'):$PYTHONPATH"
 
-# environment
+# basic environment
 if command -v nvim >/dev/null 2>&1; then
 	export EDITOR=nvim
 	export MANPAGER="nvim -c 'set ft=man' -"
@@ -29,13 +29,13 @@ fi
 export VISUAL="$EDITOR"
 export HISTSIZE=10000
 export HISTCONTROL=ignoredups
-export PYTHONIOENCODING='utf-8'
-if [ -f "$HOME/.dot_secrets/bashrc" ]; then
-	source "$HOME/.dot_secrets/bashrc"
-fi
-export NLTK_DATA="$HOME/.local/share/nltk"
 
-# soar variables
+# environment variables
+# nltk
+export NLTK_DATA="$HOME/.local/share/nltk"
+# python
+export PYTHONIOENCODING='utf-8'
+# soar
 if [ -d "$HOME/git/Soar" ]; then
 	case "$(uname)" in
 	'Linux')
@@ -49,6 +49,10 @@ if [ -d "$HOME/git/Soar" ]; then
 		export DYLD_LIBRARY_PATH="$DYLD_LIBRARY_PATH:$HOME/git/Soar/out";;
 	esac
 	export PYTHONPATH="$HOME/git/Soar/out:$PYTHONPATH"
+fi
+
+if [ -f "$HOME/.dot_secrets/bashrc" ]; then
+	source "$HOME/.dot_secrets/bashrc"
 fi
 
 # clean up the paths

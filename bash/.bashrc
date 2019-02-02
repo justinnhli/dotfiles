@@ -18,6 +18,9 @@ export PYTHONPATH="$HOME/Dropbox/projects:$HOME/git"
 export PYTHONPATH="$(find "$HOME/git" -maxdepth 2 -type f -name 'setup.py' -exec dirname {} ';' 2>/dev/null | sort -f | uniq | tr '\n' ':' | sed 's/:$//'):$PYTHONPATH"
 
 # basic environment
+export XDG_CONFIG_HOME=$HOME/.config
+export XDG_CACHE_HOME=$HOME/.cache
+export XDG_DATA_HOME=$HOME/.local/share
 if command -v nvim >/dev/null 2>&1; then
 	export EDITOR=nvim
 	export MANPAGER="nvim -c 'set ft=man' -"
@@ -50,6 +53,8 @@ if [ -d "$HOME/git/Soar" ]; then
 	esac
 	export PYTHONPATH="$HOME/git/Soar/out:$PYTHONPATH"
 fi
+# sqlite
+export SQLITE_HISTORY="$XDG_DATA_HOME/sqlite_history"
 
 if [ -f "$HOME/.dot_secrets/bashrc" ]; then
 	source "$HOME/.dot_secrets/bashrc"
@@ -95,6 +100,9 @@ if [ -d "$HOME/git/Soar" ]; then
 fi
 if command -v valgrind >/dev/null 2>&1; then
 	alias valgrind='valgrind --dsymutil=yes --leak-check=yes --track-origins=yes'
+fi
+if command -v wget >/dev/null 2>&1; then
+	alias wget="wget --hsts-file='$XDG_CACHE_HOME/wget-hsts'"
 fi
 if command -v yapf >/dev/null 2>&1; then
 	alias yapf="yapf --style=$HOME/.config/yapf/style"

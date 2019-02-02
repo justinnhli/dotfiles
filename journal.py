@@ -417,13 +417,13 @@ def do_graph(journal, args):
 @register('-L', 'list entry dates')
 def do_list(journal, args):
     entries = filter_entries(journal, args)
-    print('\n'.join(sorted(entries.keys())))
+    print('\n'.join(sorted(entries.keys(), reverse=args.reverse)))
 
 
 @register('-S', 'show entry contents')
 def do_show(journal, args):
     entries = filter_entries(journal, args)
-    text = '\n\n'.join(entry.text for _, entry in sorted(entries.items()))
+    text = '\n\n'.join(entry.text for _, entry in sorted(entries.items(), reverse=args.reverse))
     if stdout.isatty():
         temp_file = mkstemp(FILE_EXTENSION)[1]
         with open(temp_file, 'w') as fd:

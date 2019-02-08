@@ -12,7 +12,7 @@ from os import chdir as cd, chmod, environ, execvp, fork, remove as rm, wait, wa
 from os.path import basename, exists as file_exists, expanduser, join as join_path, realpath, relpath
 from stat import S_IRUSR
 from statistics import mean, median, stdev
-from sys import stdout, argv
+from sys import stdout
 from tempfile import mkstemp
 
 Entry = namedtuple('Entry', 'date, text, filepath')
@@ -267,7 +267,7 @@ def do_archive(_, args):
             arcname=filename,
             filter=(lambda tarinfo: None if basename(tarinfo.name)[0] in '._' else tarinfo),
         )
-        tar.add(argv[0], arcname=join_path(filename, basename(argv[0])))
+        tar.add(__file__, arcname=join_path(filename, basename(__file__)))
 
 
 @register('-C', 'count words and entries')

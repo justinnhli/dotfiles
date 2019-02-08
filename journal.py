@@ -496,33 +496,111 @@ def do_readability(journal, args):
 
 
 def make_arg_parser():
-    # pylint: disable = line-too-long
-    arg_parser = ArgumentParser(usage='%(prog)s <operation> [options] [TERM ...]', description='A command line tool for viewing and maintaining a journal.')
+    arg_parser = ArgumentParser(
+        usage='%(prog)s <operation> [options] [TERM ...]',
+        description='A command line tool for viewing and maintaining a journal.',
+    )
     arg_parser.set_defaults(directory='./', ignores=[], icase=re.IGNORECASE, terms=[], unit='year')
-    arg_parser.add_argument('terms', metavar='TERM', nargs='*', help='pattern which must exist in entries')
+    arg_parser.add_argument(
+        'terms',
+        metavar='TERM',
+        nargs='*',
+        help='pattern which must exist in entries',
+    )
+
     group = arg_parser.add_argument_group('OPERATIONS').add_mutually_exclusive_group(required=True)
     for flag, desc, function in sorted(OPERATIONS):
         if flag:
-            group.add_argument(flag, dest='operation', action='store_const', const=function, help=desc)
+            group.add_argument(
+                flag,
+                dest='operation',
+                action='store_const',
+                const=function,
+                help=desc,
+            )
     for flag, desc, function in sorted(OPERATIONS, key=(lambda option: option.function.__name__)):
         if not flag:
-            flag = f'--{function.__name__[3:].replace("_", "-")}'
-            group.add_argument(flag, dest='operation', action='store_const', const=function, help=desc)
+            flag = '--' + function.__name__[3:].replace("_", "-")
+            group.add_argument(
+                flag,
+                dest='operation',
+                action='store_const',
+                const=function,
+                help=desc,
+            )
+
     group = arg_parser.add_argument_group('INPUT OPTIONS')
-    group.add_argument('--directory', dest='directory', action='store', help='use journal files in directory')
-    group.add_argument('--ignore', dest='ignores', action='append', help='ignore specified file')
-    group.add_argument('--skip-cache', dest='use_cache', action='store_false', help='skip cached entries and indices')
+    group.add_argument(
+        '--directory',
+        dest='directory',
+        action='store',
+        help='use journal files in directory',
+    )
+    group.add_argument(
+        '--ignore',
+        dest='ignores',
+        action='append',
+        help='ignore specified file',
+    )
+    group.add_argument(
+        '--skip-cache',
+        dest='use_cache',
+        action='store_false',
+        help='skip cached entries and indices',
+    )
+
     group = arg_parser.add_argument_group('FILTER OPTIONS (IGNORED BY -[AUV])')
-    group.add_argument('-d', dest='date_spec', action='store', help='only use entries in range')
-    group.add_argument('-i', dest='icase', action='store_false', help='ignore case-insensitivity')
-    group.add_argument('-n', dest='num_results', action='store', type=int, help='limit number of results')
+    group.add_argument(
+        '-d',
+        dest='date_spec',
+        action='store',
+        help='only use entries in range',
+    )
+    group.add_argument(
+        '-i',
+        dest='icase',
+        action='store_false',
+        help='ignore case-insensitivity',
+    )
+    group.add_argument(
+        '-n',
+        dest='num_results',
+        action='store',
+        type=int,
+        help='limit number of results',
+    )
+
     group = arg_parser.add_argument_group('OUTPUT OPTIONS')
-    group.add_argument('-r', dest='reverse', action='store_true', help='reverse chronological order')
+    group.add_argument(
+        '-r',
+        dest='reverse',
+        action='store_true',
+        help='reverse chronological order',
+    )
+
     group = arg_parser.add_argument_group('OPERATION-SPECIFIC OPTIONS')
-    group.add_argument('--no-headers', dest='headers', action='store_false', help='[C] do not print headers')
-    group.add_argument('--unit', dest='unit', action='store', choices=('year', 'month', 'day'), help='[C] set tabulation unit')
+    group.add_argument(
+        '--no-headers',
+        dest='headers',
+        action='store_false',
+        help='[C] do not print headers',
+    )
+    group.add_argument(
+        '--unit',
+        dest='unit',
+        action='store',
+        choices=('year', 'month', 'day'),
+        help='[C] set tabulation unit',
+    )
+
     group = arg_parser.add_argument_group('MISCELLANEOUS OPTIONS')
-    group.add_argument('--no-log', dest='log', action='store_false', help='do not log filter')
+    group.add_argument(
+        '--no-log',
+        dest='log',
+        action='store_false',
+        help='do not log filter',
+    )
+
     return arg_parser
 
 

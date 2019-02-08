@@ -257,14 +257,14 @@ def register(*args):
 @register('-A', 'archive to datetimed tarball')
 def do_archive(_, args):
     from os.path import basename, join as join_path
-    filename = 'jrnl' + datetime.now().strftime('%Y%m%d%H%M%S')
-    with tarfile.open(filename + '.txz', 'w:xz') as tar:
+    archive_name = 'jrnl' + datetime.now().strftime('%Y%m%d%H%M%S')
+    with tarfile.open(archive_name + '.txz', 'w:xz') as tar:
         tar.add(
             args.directory,
-            arcname=filename,
+            arcname=archive_name,
             filter=(lambda tarinfo: None if basename(tarinfo.name)[0] in '._' else tarinfo),
         )
-        tar.add(__file__, arcname=join_path(filename, basename(__file__)))
+        tar.add(__file__, arcname=join_path(archive_name, basename(__file__)))
 
 
 @register('-C', 'count words and entries')

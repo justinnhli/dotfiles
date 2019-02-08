@@ -8,8 +8,8 @@ from copy import copy
 from datetime import datetime, timedelta
 from heapq import nlargest, nsmallest
 from itertools import chain, groupby, product
-from os import chdir as cd, chmod, environ, execvp, fork, remove as rm, wait, walk
-from os.path import basename, exists as file_exists, expanduser, join as join_path, realpath, relpath
+from os import chdir as cd, chmod, environ, execvp, fork, remove as rm, wait
+from pathlib import Path
 from stat import S_IRUSR
 from statistics import mean, median, stdev
 from sys import stdout
@@ -37,10 +37,10 @@ class Journal:
     )
 
     def __init__(self, directory, use_cache=True, ignores=None):
-        self.directory = realpath(expanduser(directory))
+        self.directory = directory
         if ignores is None:
-            ignores = []
-        self.ignores = set(realpath(expanduser(filepath)) for filepath in ignores)
+            ignores = set()
+        self.ignores = ignores
         self.use_cache = use_cache
         self.entries = {}
         if self.use_cache:
@@ -52,29 +52,25 @@ class Journal:
 
     @property
     def journal_files(self):
-        for path, _, files in walk(self.directory):
-            for journal_file in files:
-                if not journal_file.endswith(FILE_EXTENSION):
-                    continue
-                journal_file = join_path(path, journal_file)
-                if journal_file in self.ignores:
-                    continue
-                yield journal_file
+        for journal_file in self.directory.glob('**/*.journal'):
+            if journal_file in self.ignores:
+                continue
+            yield journal_file
 
     @property
-    def tags_file(self):
-        return join_path(self.directory, '.tags')
+    def tags_file(self) -> Path:
+        return Path(self.directory, '.tags').resolve()
 
     @property
-    def cache_file(self):
-        return join_path(self.directory, '.cache')
+    def cache_file(self) -> Path:
+        return Path(self.directory, '.cache').resolve()
 
     def _check_cache_files(self):
         cache_files = (
             self.tags_file,
             self.cache_file,
         )
-        if not all(file_exists(cache_file) for cache_file in cache_files):
+        if not all(cache_file.exists() for cache_file in cache_files):
             self.update_metadata()
 
     def _initialize(self):
@@ -139,16 +135,16 @@ class Journal:
         tags = {}
         for journal_file in self.journal_files:
             self._read_file(journal_file)
-            rel_path = relpath(journal_file, self.directory)
-            with open(journal_file) as fd:
+            rel_path = journal_file.relative_to(self.directory)
+            with journal_file.open() as fd:
                 lines = fd.read().splitlines()
             for line_number, line in enumerate(lines, start=1):
                 if DATE_REGEX.match(line):
                     tags[line[:DATE_LENGTH]] = (rel_path, line_number)
-        with open(self.tags_file, 'w') as fd:
+        with self.tags_file.open('w') as fd:
             for tag, (filepath, line) in sorted(tags.items()):
-                fd.write('\t'.join([tag, filepath, str(line)]) + '\n')
-        with open(self.cache_file, 'w') as fd:
+                fd.write('\t'.join([tag, str(filepath), str(line)]) + '\n')
+        with self.cache_file.open('w') as fd:
             for entry in sorted(self.entries.values()):
                 fd.write(str(entry.text) + '\n\n')
 
@@ -158,7 +154,7 @@ class Journal:
         dates = set()
         long_dates = None
         for journal_file in self.journal_files:
-            with open(journal_file) as fd:
+            with journal_file.open() as fd:
                 lines = fd.read().splitlines()
             prev_indent = 0
             for line_number, line in enumerate(lines, start=1):
@@ -173,7 +169,7 @@ class Journal:
                         cur_date = datetime.strptime(entry_date, '%Y-%m-%d')
                         if prev_indent != 0:
                             errors.append((journal_file, line_number, 'no empty line between entries'))
-                        if not entry_date.startswith(re.sub(FILE_EXTENSION, '', basename(journal_file))):
+                        if not entry_date.startswith(journal_file.stem):
                             errors.append((journal_file, line_number, "filename doesn't match entry"))
                         if long_dates is None:
                             long_dates = (len(line) > DATE_LENGTH)
@@ -260,8 +256,9 @@ def register(*args):
 
 @register('-A', 'archive to datetimed tarball')
 def do_archive(_, args):
+    from os.path import basename, join as join_path
     filename = 'jrnl' + datetime.now().strftime('%Y%m%d%H%M%S')
-    with tarfile.open('{}.txz'.format(filename), 'w:xz') as tar:
+    with tarfile.open(filename + '.txz', 'w:xz') as tar:
         tar.add(
             args.directory,
             arcname=filename,
@@ -397,8 +394,8 @@ def do_show(journal, args):
     entries = filter_entries(journal, args)
     text = '\n\n'.join(entry.text for _, entry in sorted(entries.items(), reverse=args.reverse))
     if stdout.isatty():
-        temp_file = mkstemp(FILE_EXTENSION)[1]
-        with open(temp_file, 'w') as fd:
+        temp_file = Path(mkstemp(FILE_EXTENSION)[1])
+        with temp_file.open('w') as fd:
             fd.write(text)
         chmod(temp_file, S_IRUSR)
         if fork():
@@ -534,12 +531,14 @@ def make_arg_parser():
         '--directory',
         dest='directory',
         action='store',
+        type=Path,
         help='use journal files in directory',
     )
     group.add_argument(
         '--ignore',
         dest='ignores',
         action='append',
+        type=Path,
         help='ignore specified file',
     )
     group.add_argument(
@@ -632,8 +631,8 @@ def parse_args(arg_parser):
         args.date_ranges = date_ranges
     if args.num_results is not None and args.num_results < 1:
         arg_parser.error('argument -n: "{}" should be a positive integer'.format(args.num_results))
-    args.directory = realpath(expanduser(args.directory))
-    args.ignores = set(realpath(expanduser(path.strip())) for arg in args.ignores for path in arg.split(','))
+    args.directory = args.directory.resolve()
+    args.ignores = set(path.resolve() for path in args.ignores)
     return args
 
 
@@ -641,8 +640,8 @@ def log_search(arg_parser, args, journal):
     # pylint: disable = protected-access
     if args.operation.__name__[3:] not in ('show', 'list'):
         return
-    log_file = join_path(journal.directory, '.log')
-    if args.log and file_exists(log_file):
+    log_file = Path(journal.directory, '.log').resolve()
+    if args.log and log_file.exists():
         options = []
         for option_string, option in arg_parser._option_string_actions.items():
             if re.match('^-[a-gi-z]$', option_string):
@@ -656,7 +655,7 @@ def log_search(arg_parser, args, journal):
                 op_flag = option_string
         log_args = op_flag + ''.join(sorted(options, key=(lambda x: (len(x) != 1, x.upper())))).replace(' -', '', 1)
         terms = ' '.join('"{}"'.format(term.replace('"', '\\"')) for term in sorted(args.terms))
-        with open(log_file, 'a') as fd:
+        with log_file.open('a') as fd:
             fd.write('{}\t{} -- {}'.format(datetime.today().isoformat(' '), log_args, terms).strip() + '\n')
 
 

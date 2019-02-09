@@ -283,7 +283,7 @@ fi
 if [ -d "$HOME/journal" ]; then
 	alias vino="$VISUAL $HOME/journal/notes.journal"
 	if command -v journal.py >/dev/null 2>&1; then
-		alias jrnl="journal.py --ignore '$(ls $HOME/journal/[a-z-]*.journal 2>/dev/null | grep -v '[ ()]' | tr '\n' ',')'"
+		alias jrnl="journal.py $(ls $HOME/journal/[a-z-]*.journal 2>/dev/null | grep -v '[ ()]' | sed 's/^/--ignore /' | tr '\n' ' ')"
 	fi
 fi
 

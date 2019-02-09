@@ -24,17 +24,19 @@ STRING_LENGTHS = {
     'day': 10,
 }
 DATE_LENGTH = STRING_LENGTHS['day']
-DATE_REGEX = re.compile('([0-9]{4}-[0-9]{2}-[0-9]{2})(, (Mon|Tues|Wednes|Thurs|Fri|Satur|Sun)day)?')
-RANGE_REGEX = re.compile('^([0-9]{4}(-[0-9]{2}(-[0-9]{2})?)?)?:?([0-9]{4}(-[0-9]{2}(-[0-9]{2})?)?)?$')
-REF_REGEX = re.compile('([0-9]{4}-[0-9]{2}-[0-9]{2})')
+DATE_REGEX = re.compile(
+    '([0-9]{4}-[0-9]{2}-[0-9]{2})'
+    '(, (Mon|Tues|Wednes|Thurs|Fri|Satur|Sun)day)?'
+)
+RANGE_REGEX = re.compile(
+    '([0-9]{4}(-[0-9]{2}(-[0-9]{2})?)?)?'
+    ':?'
+    '([0-9]{4}(-[0-9]{2}(-[0-9]{2})?)?)?'
+)
+REF_REGEX = re.compile('[0-9]{4}-[0-9]{2}-[0-9]{2}')
 
 
 class Journal:
-
-    DATE_REGEX = re.compile(
-        '([0-9]{4}-[0-9]{2}-[0-9]{2})'
-        '(, (Mon|Tues|Wednes|Thurs|Fri|Satur|Sun)day)?'
-    )
 
     def __init__(self, directory, use_cache=True, ignores=None):
         self.directory = directory
@@ -83,7 +85,7 @@ class Journal:
     def _read_file(self, filepath):
         with open(filepath) as fd:
             for raw_entry in fd.read().strip().split('\n\n'):
-                if self.DATE_REGEX.match(raw_entry):
+                if DATE_REGEX.match(raw_entry):
                     entry = Entry(
                         raw_entry[:DATE_LENGTH],
                         raw_entry,
@@ -139,7 +141,7 @@ class Journal:
             with journal_file.open() as fd:
                 lines = fd.read().splitlines()
             for line_number, line in enumerate(lines, start=1):
-                if DATE_REGEX.match(line):
+                if DATE_REGEX.fullmatch(line):
                     tags[line[:DATE_LENGTH]] = (rel_path, line_number)
         with self.tags_file.open('w') as fd:
             for tag, (filepath, line) in sorted(tags.items()):
@@ -164,7 +166,7 @@ class Journal:
                 if not line.lstrip().startswith('|') and '  ' in line:
                     errors.append((journal_file, line_number, 'multiple spaces'))
                 if indent == 0:
-                    if DATE_REGEX.match(line):
+                    if DATE_REGEX.fullmatch(line):
                         entry_date = line[:DATE_LENGTH]
                         cur_date = datetime.strptime(entry_date, '%Y-%m-%d')
                         if prev_indent != 0:
@@ -610,7 +612,7 @@ def parse_args(arg_parser):
     else:
         date_ranges = []
         for date_range in args.date_spec.split(','):
-            if not (date_range and RANGE_REGEX.match(date_range)):
+            if not (date_range and RANGE_REGEX.fullmatch(date_range)):
                 arg_parser.error(
                     f'argument -d: "{args.date_range}" should be in format '
                     '[YYYY[-MM[-DD]]][:][YYYY[-MM[-DD]]][,...]'

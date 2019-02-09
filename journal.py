@@ -59,11 +59,11 @@ class Journal:
 
     @property
     def tags_file(self) -> Path:
-        return Path(self.directory, '.tags').resolve()
+        return self.directory.joinpath('.tags').resolve()
 
     @property
     def cache_file(self) -> Path:
-        return Path(self.directory, '.cache').resolve()
+        return self.directory.joinpath('.cache').resolve()
 
     def _check_cache_files(self):
         cache_files = (
@@ -640,7 +640,7 @@ def log_search(arg_parser, args, journal):
     # pylint: disable = protected-access
     if args.operation.__name__[3:] not in ('show', 'list'):
         return
-    log_file = Path(journal.directory, '.log').resolve()
+    log_file = journal.directory.joinpath('.log').resolve()
     if args.log and log_file.exists():
         options = []
         for option_string, option in arg_parser._option_string_actions.items():

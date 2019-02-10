@@ -106,7 +106,7 @@ if [ -d "$HOME/git/Soar" ]; then
 	alias soar="$HOME/git/Soar/out/testcli"
 fi
 if command -v tmux >/dev/null 2>&1; then
-	alias tmux='tmux -f $XDG_CONFIG_HOME/.tmux/tmux.conf'
+	alias tmux='tmux -f $XDG_CONFIG_HOME/tmux/tmux.conf'
 fi
 if command -v valgrind >/dev/null 2>&1; then
 	alias valgrind='valgrind --dsymutil=yes --leak-check=yes --track-origins=yes'

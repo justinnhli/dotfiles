@@ -51,3 +51,4 @@ Thumbs.db
 .pytest_cache
 .tags
 .tags.*
+htmlcov

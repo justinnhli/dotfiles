@@ -1,5 +1,4 @@
-# Compiled source #
-###################
+# COMPILED PRODUCTS
 *.com
 *.class
 *.dll
@@ -9,37 +8,7 @@
 *.so
 __pycache__
 
-# Packages #
-############
-# it's better to unpack these files and commit the raw source
-# git has its own built in compression methods
-*.7z
-*.dmg
-*.gz
-*.iso
-*.jar
-*.rar
-*.tar
-*.zip
-
-# Logs and databases #
-######################
-*.log
-*.sqlite
-
-# OS generated files #
-######################
-.DS_Store*
-Icon?
-Thumbs.db
-
-# IDE generated files #
-#######################
-.idea
-*.iml
-
-# LaTeX generated files #
-#########################
+# LATEX COMPILED PRODUCTS
 *-blx.bib
 *.4ct
 *.4og
@@ -59,14 +28,31 @@ Thumbs.db
 *.vrb
 *.xref
 
-# Temporary files #
-###################
-.*.swp
-.*.un~
-*.tmp
+# ARCHIVES
+# uncompress and commit instead
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
 
-# Metadata #
-############
+# LOGS AND DATABASES
+*.log
+*.sqlite
+
+# OS METADATA
+.DS_Store*
+Icon?
+Thumbs.db
+
+# IDE METADATA
+.idea
+*.iml
+
+# OTHER METADATA
 .coverage
 .ipynb_checkpoints
 .mypy_cache
@@ -74,3 +60,8 @@ Thumbs.db
 .tags
 .tags.*
 htmlcov
+
+# TEMPORARY FILES
+.*.swp
+.*.un~
+*.tmp

@@ -8,7 +8,7 @@ import os
 import readline
 
 histfile = os.path.join(
-    os.environ.get('XDG_CACHE_HOME', os.path.expanduser('~/.cache')),
+    os.environ.get('XDG_CONFIG_HOME', os.path.expanduser('~/.config')),
     'python',
     '.python_history',
 )

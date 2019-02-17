@@ -43,7 +43,7 @@ export PYTHONIOENCODING='utf-8'
 if command -v python3 >/dev/null 2>&1 && python3 -c 'import readline' >/dev/null 2>&1; then
 	# Python on macOS does not include readline by default
 	# https://pypi.org/project/gnureadline/
-	export PYTHONSTARTUP="$XDG_CACHE_HOME/python/pythonstartup.py"
+	export PYTHONSTARTUP="$XDG_CONFIG_HOME/python/pythonstartup.py"
 fi
 # soar
 if [ -d "$HOME/git/Soar" ]; then

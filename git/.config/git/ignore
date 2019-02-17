@@ -38,10 +38,32 @@ Thumbs.db
 .idea
 *.iml
 
+# LaTeX generated files #
+#########################
+*-blx.bib
+*.4ct
+*.4og
+*.4tc
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.idv
+*.lg
+*.log
+*.nav
+*.snm
+*.toc
+*.vrb
+*.xref
+
 # Temporary files #
 ###################
 .*.swp
 .*.un~
+*.tmp
 
 # Metadata #
 ############

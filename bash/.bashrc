@@ -34,6 +34,8 @@ export HISTSIZE=10000
 export HISTCONTROL=ignoredups
 
 # environment variables
+# jupyter
+export JUPYTER_CONFIG_DIR="$XDG_CONFIG_HOME/jupyter"
 # nltk
 export NLTK_DATA="$HOME/.local/share/nltk"
 # npm

@@ -223,7 +223,7 @@ if command -v python3 >/dev/null 2>&1; then
 			) | while read -r requirements; do
 				path="$(dirname "$requirements")"
 				name="$(basename "$path")"
-				modules="$(tr '\n' ' ' < "$requirements")"
+				modules="$(sed 's/#.*//' "$requirements" | tr '\n' ' ')"
 				echo "$name" "$path" "$modules"
 			done
 			cat ~/.config/packages-meta/venv | while read -r line; do

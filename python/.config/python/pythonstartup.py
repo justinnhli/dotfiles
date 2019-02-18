@@ -5,7 +5,10 @@
 
 import atexit
 import os
-import readline
+try:
+    import readline
+except ImportError:
+    exit()
 
 histfile = os.path.join(
     os.environ.get('XDG_CONFIG_HOME', os.path.expanduser('~/.config')),

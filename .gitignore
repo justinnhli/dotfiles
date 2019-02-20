@@ -13,6 +13,7 @@ neovim/.config/nvim/nviminfo
 neovim/.config/nvim/plugged/
 neovim/.config/nvim/spell/*
 !neovim/.config/nvim/spell/en.utf-8.add
+python/.config/python/.python_history
 ssh/.ssh/authorized_keys
 ssh/.ssh/id_rsa
 ssh/.ssh/id_rsa.pub

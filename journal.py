@@ -163,36 +163,36 @@ class Journal:
             for line_number, line in enumerate(lines, start=1):
                 indent = len(re.match('\t*', line).group(0))
                 if not re.fullmatch('(\t*([^ \t][ -~]*)?[^ \t])?', line):
-                    log_error('non-tab indentation, ending blank, or non-ASCII character')
+                    errors.append(log_error('non-tab indentation, ending blank, or non-ASCII character'))
                 if not line.lstrip().startswith('|') and '  ' in line:
-                    log_error('multiple spaces')
+                    errors.append(log_error('multiple spaces'))
                 if indent == 0:
                     if DATE_REGEX.fullmatch(line):
                         entry_date = line[:DATE_LENGTH]
                         cur_date = datetime.strptime(entry_date, '%Y-%m-%d')
                         if prev_indent != 0:
-                            log_error('no empty line between entries')
+                            errors.append(log_error('no empty line between entries'))
                         if not entry_date.startswith(journal_file.stem):
                             errors.append((journal_file, line_number, "filename doesn't match entry"))
                         if long_dates is None:
                             long_dates = (len(line) > DATE_LENGTH)
                         elif long_dates != (len(line) > DATE_LENGTH):
-                            log_error('inconsistent date format')
+                            errors.append(log_error('inconsistent date format'))
                         if long_dates and line != cur_date.strftime('%Y-%m-%d, %A'):
-                            log_error('date-weekday correctness')
+                            errors.append(log_error('date-weekday correctness'))
                         if cur_date in dates:
-                            log_error('duplicate dates')
+                            errors.append(log_error('duplicate dates'))
                         dates.add(cur_date)
                     else:
                         if line:
                             if line[0] == '\ufeff':
-                                log_error('byte order mark')
+                                errors.append(log_error('byte order mark'))
                             else:
-                                log_error('unindented text')
+                                errors.append(log_error('unindented text'))
                         if prev_indent == 0:
-                            log_error('consecutive unindented lines')
+                            errors.append(log_error('consecutive unindented lines'))
                 elif indent - prev_indent > 1:
-                    log_error('unexpected indentation')
+                    errors.append(log_error('unexpected indentation'))
                 prev_indent = indent
             if prev_indent == 0:
                 errors.append((journal_file, len(lines), 'file ends on blank line'))

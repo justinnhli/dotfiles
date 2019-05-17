@@ -7,6 +7,7 @@ from collections import namedtuple, defaultdict
 from copy import copy
 from datetime import datetime, timedelta
 from heapq import nlargest, nsmallest
+from inspect import currentframe
 from itertools import chain, groupby, product
 from os import chdir as cd, chmod, environ, execvp, fork, remove as rm, wait
 from pathlib import Path
@@ -162,36 +163,36 @@ class Journal:
             for line_number, line in enumerate(lines, start=1):
                 indent = len(re.match('\t*', line).group(0))
                 if not re.fullmatch('(\t*([^ \t][ -~]*)?[^ \t])?', line):
-                    errors.append((journal_file, line_number, 'non-tab indentation, ending blank, or non-ASCII character'))
+                    log_error('non-tab indentation, ending blank, or non-ASCII character')
                 if not line.lstrip().startswith('|') and '  ' in line:
-                    errors.append((journal_file, line_number, 'multiple spaces'))
+                    log_error('multiple spaces')
                 if indent == 0:
                     if DATE_REGEX.fullmatch(line):
                         entry_date = line[:DATE_LENGTH]
                         cur_date = datetime.strptime(entry_date, '%Y-%m-%d')
                         if prev_indent != 0:
-                            errors.append((journal_file, line_number, 'no empty line between entries'))
+                            log_error('no empty line between entries')
                         if not entry_date.startswith(journal_file.stem):
                             errors.append((journal_file, line_number, "filename doesn't match entry"))
                         if long_dates is None:
                             long_dates = (len(line) > DATE_LENGTH)
                         elif long_dates != (len(line) > DATE_LENGTH):
-                            errors.append((journal_file, line_number, 'inconsistent date format'))
+                            log_error('inconsistent date format')
                         if long_dates and line != cur_date.strftime('%Y-%m-%d, %A'):
-                            errors.append((journal_file, line_number, 'date-weekday correctness'))
+                            log_error('date-weekday correctness')
                         if cur_date in dates:
-                            errors.append((journal_file, line_number, 'duplicate dates'))
+                            log_error('duplicate dates')
                         dates.add(cur_date)
                     else:
                         if line:
                             if line[0] == '\ufeff':
-                                errors.append((journal_file, line_number, 'byte order mark'))
+                                log_error('byte order mark')
                             else:
-                                errors.append((journal_file, line_number, 'unindented text'))
+                                log_error('unindented text')
                         if prev_indent == 0:
-                            errors.append((journal_file, line_number, 'consecutive unindented lines'))
+                            log_error('consecutive unindented lines')
                 elif indent - prev_indent > 1:
-                    errors.append((journal_file, line_number, 'unexpected indentation'))
+                    log_error('unexpected indentation')
                 prev_indent = indent
             if prev_indent == 0:
                 errors.append((journal_file, len(lines), 'file ends on blank line'))
@@ -232,6 +233,15 @@ def print_table(data, headers=None, gap_size=2):
         print(gap.join(col.center(widths[i]) for i, col in enumerate(headers)))
         print(gap.join(width * '-' for width in widths))
     print('\n'.join(gap.join(col.rjust(widths[i]) for i, col in enumerate(row)) for row in data))
+
+
+def log_error(message):
+    local_vars = currentframe().f_back.f_locals
+    return (
+        local_vars['journal_file'],
+        local_vars['line_number'],
+        message,
+    )
 
 
 # operations

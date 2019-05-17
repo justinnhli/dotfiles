@@ -159,6 +159,8 @@ class Journal:
         for journal_file in self.journal_files:
             with journal_file.open() as fd:
                 lines = fd.read().splitlines()
+            if lines[-1].strip() == '':
+                errors.append((journal_file, len(lines), 'file ends on blank line'))
             prev_indent = 0
             for line_number, line in enumerate(lines, start=1):
                 indent = len(re.match('\t*', line).group(0))
@@ -194,8 +196,6 @@ class Journal:
                 elif indent - prev_indent > 1:
                     errors.append(log_error('unexpected indentation'))
                 prev_indent = indent
-            if prev_indent == 0:
-                errors.append((journal_file, len(lines), 'file ends on blank line'))
         if errors:
             print('\n'.join('{}:{}: {}'.format(*error) for error in sorted(errors)))
             exit(1)

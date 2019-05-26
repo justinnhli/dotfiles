@@ -84,6 +84,16 @@ endif
 		endif
 	endfunction
 
+	function! s:ToggleColorColumn()
+		if &colorcolumn == 0
+			setlocal colorcolumn=80
+		elseif &colorcolumn == 80
+			setlocal colorcolumn=100
+		else
+			setlocal colorcolumn=0
+		endif
+	endfunction
+
 	function! s:ToggleDiff()
 		if &diff
 			diffoff 
@@ -709,7 +719,7 @@ endif
 	nnoremap           <leader>JR    :tabnew <C-r>=g:justinnhli_journal_path<cr>/research.journal<cr>
 	nnoremap           <leader>JD    :tabnew<cr>:r!dynalist.py mobile<cr>:0d<cr>:set buftype=nowrite filetype=journal<cr>zM
 	" toggle settings with double leader
-	nnoremap           <leader><leader>c     :setlocal colorcolumn=<c-r>=&colorcolumn == 0 ? 80 : 0<cr><cr>
+	nnoremap           <leader><leader>c     :call <SID>ToggleColorColumn()<cr>:setlocal colorcolumn?<cr>
 	nnoremap           <leader><leader>d     :call <SID>ToggleDiff()<cr>:echo (&diff ? 'diffthis' : 'diffoff')<cr>
 	nnoremap           <leader><leader>f     :call <SID>ToggleFoldMethod()<cr>:set foldmethod?<cr>
 	nnoremap           <leader><leader>l     :set list!<cr>:set list?<cr>

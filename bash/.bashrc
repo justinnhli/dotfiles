@@ -49,6 +49,8 @@ if command -v python3 >/dev/null 2>&1 && python3 -c 'import readline' >/dev/null
 	# https://pypi.org/project/gnureadline/
 	export PYTHONSTARTUP="$XDG_CONFIG_HOME/python/pythonstartup.py"
 fi
+# scikit-learn
+export SCIKIT_LEARN_DATA="$XDG_DATA_HOME/scikit-learn"
 # soar
 if [ -d "$HOME/git/Soar" ]; then
 	case "$(uname)" in

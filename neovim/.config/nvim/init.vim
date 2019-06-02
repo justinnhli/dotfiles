@@ -699,6 +699,7 @@ endif
 	let g:justinnhli_library_path=expand('~/papers')
 	nnoremap           <leader>B     :tabnew ~/.bashrc<cr>
 	nnoremap           <leader>V     :tabnew ~/.config/nvim/init.vim<cr>
+	nnoremap           <leader>S     :tabnew ~/.config/nvim/spell/en.utf-8.add<cr>
 	nnoremap           <leader>C     :tabnew ~/Dropbox/personal/contacts/contacts.vcf<cr>
 	nnoremap           <leader>H     :tabnew ~/Dropbox/personal/logs/<C-R>=strftime('%Y')<cr>.shistory<cr>
 	nnoremap           <leader>T     :tabnew ~/Dropbox/personal/logs/ifttt/tweets.txt<cr>

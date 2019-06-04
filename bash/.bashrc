@@ -160,7 +160,7 @@ fi
 # python venv
 if command -v python3 >/dev/null 2>&1; then
 	alias pip='python3 -m pip'
-	export PYTHON_VENV_HOME="$HOME/.venv"
+	export PYTHON_VENV_HOME="$XDG_DATA_HOME/venv"
 	if [ ! -d "$PYTHON_VENV_HOME" ]; then
 		mkdir "$PYTHON_VENV_HOME"
 	fi

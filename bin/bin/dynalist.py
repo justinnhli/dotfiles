@@ -11,17 +11,20 @@ from os.path import realpath, expanduser
 try:
     import requests
 except ModuleNotFoundError as err:
-    import sys # pylint: disable=ungrouped-imports,reimported
-    from os import execv # pylint: disable=ungrouped-imports,reimported
-    from os.path import exists, expanduser # pylint: disable=ungrouped-imports,reimported
-    VENV = 'ir'
-    VENV_PYTHON = expanduser(f'~/.venv/{VENV}/bin/python3')
-    if not exists(VENV_PYTHON):
-        raise FileNotFoundError(' '.join([
-            f'tried load module "{err.name}" with venv "{VENV}"',
-            f'but could not find executable {VENV_PYTHON}',
-        ]))
-    execv(VENV_PYTHON, [VENV_PYTHON, *sys.argv])
+    def run_with_venv(venv):
+        # pylint: disable = ungrouped-imports, reimported, redefined-outer-name
+        import sys
+        from os import environ, execv
+        from pathlib import Path
+        venv_python = Path(environ['PYTHON_VENV_HOME'], 'ir', 'bin', 'python3').expanduser()
+        if not venv_python.exists():
+            raise FileNotFoundError(' '.join([
+                f'tried load module "{err.name}" with venv "{venv}"',
+                f'but could not find executable {venv_python}',
+            ]))
+        execv(str(venv_python), [str(venv_python), *sys.argv])
+    run_with_venv('ir')
+
 
 TOKEN = environ['DYNALIST_TOKEN']
 

@@ -732,6 +732,7 @@ endif
 	nnoremap           <leader><leader>/     :set hlsearch!<cr>:set hlsearch?<cr>
 	" editor function shortcuts
 	nnoremap           <leader>a     ggVG
+	nnoremap           <leader>f     q:ivimgrep //g **/*<esc>Fg<left>i
 	nnoremap           <leader>o     :!open 
 	nnoremap           <leader>p     "+p
 	nnoremap           <leader>y     "+y

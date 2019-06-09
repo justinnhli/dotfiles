@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# If not running interactively, don't do anything
-[ -z "$PS1" ] && return
-
 update_dot_files() {
 	curl -L 'https://raw.githubusercontent.com/justinnhli/dotfiles/master/bash/.bash_profile' > "$HOME/.bash_profile"
 	curl -L 'https://raw.githubusercontent.com/justinnhli/dotfiles/master/bash/.bashrc' > "$HOME/.bashrc"

@@ -71,6 +71,8 @@ TreeLine = namedtuple('TreeLine', 'line_num, id, text, indent, sibling_index')
 def dynalist_to_treelines(filename):
     nodes = get_file_nodes(filename)
     line_num = 1
+    if 'children' not in nodes['root']:
+        return
     for root_sibling_num, root_id in enumerate(nodes['root']['children'], start=1):
         stack = [(nodes[root_id], 0, root_sibling_num)]
         while stack:

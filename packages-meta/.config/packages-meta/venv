@@ -6,3 +6,4 @@ ir beautifulsoup4 requests
 neovim pynvim
 networkx networkx pygraphviz
 nlp spacy
+slack slackclient

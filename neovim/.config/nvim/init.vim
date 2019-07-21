@@ -718,7 +718,7 @@ endif
 	nnoremap           <leader>JH    :tabnew <C-r>=g:justinnhli_journal_path<cr>/htsacsd.journal<cr>
 	nnoremap           <leader>JP    :tabnew <C-r>=g:justinnhli_journal_path<cr>/ponderings.journal<cr>
 	nnoremap           <leader>JR    :tabnew <C-r>=g:justinnhli_journal_path<cr>/research.journal<cr>
-	nnoremap           <leader>JD    :tabnew<cr>:r!dynalist.py mobile<cr>:0d<cr>:set buftype=nowrite filetype=journal<cr>zM
+	nnoremap           <leader>JD    :tabnew<cr>:r!dynalist.py mobile<cr>:0d<cr>:setlocal buftype=nowrite filetype=journal nomodifiable<cr>zM
 	" toggle settings with double leader
 	nnoremap           <leader><leader>c     :call <SID>ToggleColorColumn()<cr>:setlocal colorcolumn?<cr>
 	nnoremap           <leader><leader>d     :call <SID>ToggleDiff()<cr>:echo (&diff ? 'diffthis' : 'diffoff')<cr>

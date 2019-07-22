@@ -106,7 +106,10 @@ def text_to_treelines(text):
 
 
 def treelines_to_file(lines):
-    return '\n'.join(line.indent * '\t' + line.text for line in lines)
+    return '\n'.join(
+        line.indent * '\t' + line.text.rstrip()
+        for line in lines if line.text.strip()
+    )
 
 
 def get_file(filename):

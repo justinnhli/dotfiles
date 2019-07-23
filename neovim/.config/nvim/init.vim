@@ -23,9 +23,7 @@ if has('nvim')
 		Plug 'rhysd/clever-f.vim'
 		Plug 'tpope/vim-fugitive'
 		" color schemes
-		Plug 'tomasr/molokai'
 		Plug 'cocopon/iceberg.vim'
-		Plug 'jacoborus/tender.vim'
 		" settings
 		Plug 'tpope/vim-sleuth'
 		" syntax
@@ -273,14 +271,6 @@ endif
 		highlight SpellCap ctermbg=234 ctermfg=203 guibg=#161821 guifg=#e27878
 		highlight SpellLocal ctermfg=216 guifg=#e2a478 
 		highlight SpellRare ctermbg=234 ctermfg=203 guibg=#161821 guifg=#e27878
-	endfunction
-
-	function! s:PatchColorschemeMolokai()
-		" fix matchparen (see https://github.com/tomasr/molokai/pull/44)
-		highlight MatchParen guifg=#FD971F guibg=#000000 gui=bold
-		if &t_Co > 255
-			highlight MatchParen ctermfg=208 ctermbg=233 cterm=bold
-		endif
 	endfunction
 " }
 
@@ -778,7 +768,6 @@ endif
 		endif
 		" patch colorschemes
 		autocmd  ColorScheme         iceberg call s:PatchColorschemeIceberg()
-		autocmd  ColorScheme         molokai call s:PatchColorschemeMolokai()
 
 		" protect large files (>10M) from sourcing and other overhead.
 		" Set options:

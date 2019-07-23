@@ -94,9 +94,9 @@ endif
 
 	function! s:ToggleDiff()
 		if &diff
-			diffoff 
-		else 
-			diffthis 
+			diffoff
+		else
+			diffthis
 		endif
 	endfunction
 
@@ -270,7 +270,7 @@ endif
 			" emphasize spelling errors more
 			highlight SpellBad ctermfg=216 guifg=#e2a478
 			highlight SpellCap ctermbg=234 ctermfg=203 guibg=#161821 guifg=#e27878
-			highlight SpellLocal ctermfg=216 guifg=#e2a478 
+			highlight SpellLocal ctermfg=216 guifg=#e2a478
 			highlight SpellRare ctermbg=234 ctermfg=203 guibg=#161821 guifg=#e27878
 		endif
 	endfunction

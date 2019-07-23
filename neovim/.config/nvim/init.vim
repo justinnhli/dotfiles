@@ -265,12 +265,14 @@ endif
 		return ' ('.branch.')'
 	endfunc
 
-	function! s:PatchColorschemeIceberg()
-		" emphasize spelling errors more
-		highlight SpellBad ctermfg=216 guifg=#e2a478
-		highlight SpellCap ctermbg=234 ctermfg=203 guibg=#161821 guifg=#e27878
-		highlight SpellLocal ctermfg=216 guifg=#e2a478 
-		highlight SpellRare ctermbg=234 ctermfg=203 guibg=#161821 guifg=#e27878
+	function! s:PatchColorschemes()
+		if g:colors_name ==# 'iceberg'
+			" emphasize spelling errors more
+			highlight SpellBad ctermfg=216 guifg=#e2a478
+			highlight SpellCap ctermbg=234 ctermfg=203 guibg=#161821 guifg=#e27878
+			highlight SpellLocal ctermfg=216 guifg=#e2a478 
+			highlight SpellRare ctermbg=234 ctermfg=203 guibg=#161821 guifg=#e27878
+		endif
 	endfunction
 " }
 
@@ -767,7 +769,7 @@ endif
 			autocmd  TermOpen        *       setlocal nonumber nospell scrollback=-1
 		endif
 		" patch colorschemes
-		autocmd  ColorScheme         iceberg call s:PatchColorschemeIceberg()
+		autocmd  ColorScheme         *       call s:PatchColorschemes()
 
 		" protect large files (>10M) from sourcing and other overhead.
 		" Set options:

@@ -44,11 +44,13 @@ class Journal:
         if ignores is None:
             ignores = set()
         self.ignores = ignores
-        self.use_cache = use_cache
         self.entries = {}
-        if self.use_cache:
+        if use_cache:
             self._check_cache_files()
-        self._initialize()
+            self._read_file(self.cache_file)
+        else:
+            for journal_file in self.journal_files:
+                self._read_file(journal_file)
 
     def __getitem__(self, key):
         return self.entries[key]
@@ -75,13 +77,6 @@ class Journal:
         )
         if not all(cache_file.exists() for cache_file in cache_files):
             self.update_metadata()
-
-    def _initialize(self):
-        if self.use_cache:
-            self._read_file(self.cache_file)
-        else:
-            for journal_file in self.journal_files:
-                self._read_file(journal_file)
 
     def _read_file(self, filepath):
         with open(filepath) as fd:

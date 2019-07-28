@@ -449,7 +449,7 @@ def do_hyphenation(journal, args):
 
 
 @register('list the length of the longest line of each entry')
-def do_longest_line(journal, args):
+def do_lengths(journal, args):
     entries = filter_entries(journal, args)
     for date, entry in sorted(entries.items()):
         print(date, max(len(line) for line in entry.text.splitlines()))

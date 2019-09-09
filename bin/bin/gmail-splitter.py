@@ -48,6 +48,7 @@ def format_emails(text):
     lines = text.splitlines()
     subject = lines[1]
     num_emails = int(lines[2].split()[0])
+    email_num = 0
     email_start = None
     for line_num, line in enumerate(lines[3:], start=3):
         if line.startswith('To: '):
@@ -57,9 +58,13 @@ def format_emails(text):
                     continue
                 email_lines = lines[email_start:line_num-1]
                 emails.append(parse_email(email_lines, subject))
+                email_num += 1
+                if email_num == num_emails:
+                    break
             email_start = line_num - 1
-    email_lines = lines[email_start:]
-    emails.append(parse_email(email_lines, subject))
+    if email_num != num_emails:
+        email_lines = lines[email_start:]
+        emails.append(parse_email(email_lines, subject))
     if len(emails) != num_emails:
         print('WARNING: Gmail lists {} emails, but I found {}'.format(num_emails, len(emails)))
     for email in emails:

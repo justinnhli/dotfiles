@@ -55,6 +55,8 @@ def format_emails(text):
             if email_start is not None:
                 match = re.match('(.*) <([^<>]*@[^<>]*)>(.*)', lines[email_start])
                 if not match:
+                    num_emails -= 1
+                    email_start = None
                     continue
                 email_lines = lines[email_start:line_num-1]
                 emails.append(parse_email(email_lines, subject))

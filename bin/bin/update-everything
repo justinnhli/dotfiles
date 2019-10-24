@@ -30,15 +30,9 @@ if which brew >/dev/null 2>&1; then
 	echo
 fi
 
-if which cabal >/dev/null 2>&1; then
-	cabal new-update
-	echo
-fi
+python3 $HOME/bin/update-everything.py update-cabal
 
-if which pikaur >/dev/null 2>&1; then
-	pikaur -Syu
-	echo
-fi
+python3 $HOME/bin/update-everything.py update-arch
 
 if which python3 >/dev/null 2>&1 && python3 -m pip > /dev/null 2>&1; then
 	python3 -m pip list --outdated --format=freeze | sed 's/=.*//;' | xargs python3 -m pip install --upgrade
@@ -53,34 +47,11 @@ fi
 if [ -d "$HOME/Dropbox" ]; then
 	cd "$HOME/Dropbox" || exit
 
-	# remove old vim undo files
-	echo "removing old vim undo files from ~/Dropbox..."
-	orphan-undos | sed 's/^/	/'
+	python3 $HOME/bin/update-everything.py remove-orphans
 
-	# remove OS files
-	echo "removing OS files..."
-	find . -name "$(echo -e 'Icon\r')" | while read -r f; do
-		echo "	deleted $f"
-	done
-	find . -name "$(echo -e 'Icon\r')" -delete
-	find . -name .DS_Store | while read -r f; do
-		rm -f "$f" && echo "	deleted $f"
-	done
-	find . -name __MACOSX | while read -r f; do
-		rm -f "$f" && echo "	deleted $f"
-	done
+	python3 $HOME/bin/update-everything.py delete-os-metadata
 
-	# merge command line history
-	echo "merging command line history..."
-	filename="$(mktemp /tmp/histfix.XXXXXX)"
-	for year in $(ls $HOME/Dropbox/personal/logs/*.shistory | grep conflicted | sed 's/ .*//' | sort | uniq); do
-		year="$(basename "$year")"
-		sort $HOME/Dropbox/personal/logs/$year* | uniq | sed 's/ \+$//' > "$filename"
-		mv -f "$filename" "$HOME/Dropbox/personal/logs/$year.shistory"
-		find "$HOME/Dropbox/personal/logs/" -name "$year *.shistory" | while read -r line; do
-			rm -f "$line"
-		done
-	done
+	python3 $HOME/bin/update-everything.py merge-hsitory
 
 	# set directories to correct permissions
 	echo "correcting directory permissions..."
@@ -88,9 +59,7 @@ if [ -d "$HOME/Dropbox" ]; then
 		chmod 755 "$f" && echo "	fixed permissions of $f"
 	done
 
-	# find any conflicting files
-	echo "finding conflicted files..."
-	find . -name '*conflicted*' | grep -v '\.dropbox\.cache' | sed 's/^/found /; s/^/	/;'
+	python3 $HOME/bin/update-everything.py merge-hsitory
 
 fi
 echo

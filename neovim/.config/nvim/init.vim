@@ -169,11 +169,13 @@ endif
 		%s/\%u2014/ - /eg " em dash
 		%s/\%u2015/ - /eg " horizontal bar
 		%s/\%u2500/ - /eg " box drawings light horizontal
-		" ellipsis
+		" ellipsis (0x2E)
 		%s/\%u2026/.../eg " horizontal ellipsis
 		" ligatures
 		%s/\%uFB01/fi/eg " fi
 		%s/\%uFB02/fl/eg " fl
+		" specials
+		%s/\%uFFFC//eg " object replacement character
 	endfunction
 
 	function! MoveToRelTab(n)

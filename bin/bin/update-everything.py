@@ -7,22 +7,26 @@ from pathlib import Path
 from subprocess import run
 from shutil import which
 
-
 # utilities
+
 
 def run_if_exists(command):
     if which(command[0]):
-        run(command)
+        run(command, check=True)
+
 
 # registry
 
 REGISTRY = OrderedDict()
 
+
 def register(func):
     REGISTRY[func.__name__.replace('_', '-')] = func
     return func
 
+
 # main actions
+
 
 @register
 def do_all():
@@ -31,7 +35,9 @@ def do_all():
         if name != 'do-all':
             func()
 
+
 # package manager actions
+
 
 @register
 def update_arch():
@@ -44,10 +50,10 @@ def update_brew():
     """Update Homebrew packages."""
     if not which('brew'):
         return
-    run(['brew', 'update'])
-    run(['brew', 'upgrade'])
+    run(['brew', 'update'], check=True)
+    run(['brew', 'upgrade'], check=True)
     # FIXME deal with brew cask? unsure if its still necessary
-    run(['brew', 'cleanup'])
+    run(['brew', 'cleanup'], check=True)
 
 
 @register
@@ -57,6 +63,7 @@ def update_cabal():
 
 
 # file cleanup actions
+
 
 @register
 def delete_orphans():
@@ -100,7 +107,7 @@ def merge_history():
             continue
         shistory = set()
         for filepath in filepaths:
-            shistory.extend(filepath.open().readlines())
+            shistory |= filepath.open().readlines()
             filepath.unlink()
         with Path(history_path).joinpath(f'{year}.shistory').open('w') as fd:
             for history in sorted(shistory):

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
+from datetime import datetime
 from collections import OrderedDict
 from pathlib import Path
 from subprocess import run
@@ -60,9 +61,15 @@ def update_cabal():
 @register
 def delete_orphans():
     """Delete orphaned vim undo (.*.un~) files."""
+    timestamp = datetime.now().timestamp()
+    threshold = 60 * 60 * 24 * 10 # 10 days
     for filepath in Path().glob('**/.*.un~'):
         original = filepath.parent.joinpath(filepath.name[1:-4])
-        if not original.exists():
+        should_delete = (
+            (not original.exists())
+            or (timestamp - filepath.stat().st_mtime > threshold)
+        )
+        if should_delete:
             filepath.unlink()
 
 

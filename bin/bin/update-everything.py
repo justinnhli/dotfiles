@@ -61,6 +61,7 @@ def update_cabal():
 @register
 def delete_orphans():
     """Delete orphaned vim undo (.*.un~) files."""
+    print('deleting orphaned vim undo files')
     timestamp = datetime.now().timestamp()
     threshold = 60 * 60 * 24 * 10 # 10 days
     for filepath in Path().glob('**/.*.un~'):
@@ -71,19 +72,23 @@ def delete_orphans():
         )
         if should_delete:
             filepath.unlink()
+            print(f'    deleted {filepath}')
 
 
 @register
 def delete_os_metadata():
     """Delete OS metadata files (Icon, .DS_Store, __MACOXS)."""
+    print('deleting OS metadata files')
     for filename in ('Icon\r', '.DS_Store', '__MACOSX'):
         for filepath in Path().glob(f'**/{filename}'):
             filepath.unlink()
+            print(f'    deleted {filepath}')
 
 
 @register
 def merge_history():
-    """Merge duplicated shell history logs."""
+    """Merge shell history logs."""
+    print('merging shell history logs')
     history_path = Path('~/Dropbox/personal/logs').expanduser().resolve()
     years = set()
     for filepath in history_path.glob('*.shistory'):
@@ -106,6 +111,7 @@ def merge_history():
 @register
 def find_conflicts():
     """Find conflicted Dropbox files."""
+    print('finding conflicted Dropbox files')
     dropbox_path = Path('~/Dropbox').expanduser().resolve()
     for filepath in dropbox_path.glob('*conflicted*'):
         if '.dropbox.cache' not in str(filepath):

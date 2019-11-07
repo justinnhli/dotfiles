@@ -66,12 +66,14 @@ def update_cabal():
 
 
 @register
-def delete_orphans():
+def delete_orphans(path=None):
     """Delete orphaned vim undo (.*.un~) files."""
     print('deleting orphaned vim undo files')
+    if path is None:
+        path = Path()
     timestamp = datetime.now().timestamp()
     threshold = 60 * 60 * 24 * 10 # 10 days
-    for filepath in Path().glob('**/.*.un~'):
+    for filepath in path.glob('**/.*.un~'):
         original = filepath.parent.joinpath(filepath.name[1:-4])
         should_delete = (
             (not original.exists())

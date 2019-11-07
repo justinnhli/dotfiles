@@ -90,6 +90,20 @@ def delete_orphans(path=None):
             print(f'    deleted {filepath}')
 
 
+@register(hidden=True)
+def delete_dropbox_orphans():
+    dropbox = Path('~/Dropbox').expanduser().resolve()
+    if dropbox.exists():
+        delete_orphans(dropbox)
+
+
+@register(hidden=True)
+def delete_desktop_orphans():
+    desktop = Path('~/Desktop').expanduser().resolve()
+    if desktop.exists():
+        delete_orphans(desktop)
+
+
 @register()
 def delete_os_metadata():
     """Delete OS metadata files (Icon, .DS_Store, __MACOXS)."""

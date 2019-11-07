@@ -2,7 +2,7 @@
 
 import argparse
 from datetime import datetime
-from collections import OrderedDict
+from collections import OrderedDict, namedtuple
 from pathlib import Path
 from subprocess import run
 from shutil import which
@@ -17,35 +17,42 @@ def run_if_exists(command):
 
 # registry
 
+
 REGISTRY = OrderedDict()
+Function = namedtuple('Function', 'name, function, do_all, hidden')
 
 
-def register(func):
-    REGISTRY[func.__name__.replace('_', '-')] = func
-    return func
+def register(do_all=True, hidden=False):
+
+    def _register(func):
+        name = func.__name__.replace('_', '-')
+        REGISTRY[name] = Function(name, func, do_all, hidden)
+        return func
+
+    return _register
 
 
 # main actions
 
 
-@register
+@register(do_all=False)
 def do_all():
     """Do all available actions."""
-    for name, func in REGISTRY.items():
-        if name != 'do-all':
-            func()
+    for func in REGISTRY.values():
+        if func.do_all:
+            func.function()
 
 
 # package manager actions
 
 
-@register
+@register()
 def update_arch():
     """Update Arch Linux packages."""
     run_if_exists(['pikaur', '-Syu'])
 
 
-@register
+@register()
 def update_brew():
     """Update Homebrew packages."""
     if not which('brew'):
@@ -56,7 +63,7 @@ def update_brew():
     run(['brew', 'cleanup'], check=True)
 
 
-@register
+@register()
 def update_cabal():
     """Update Cabal packages."""
     run_if_exists(['cabal', 'new-update'])
@@ -64,8 +71,7 @@ def update_cabal():
 
 # file cleanup actions
 
-
-@register
+@register(do_all=False)
 def delete_orphans(path=None):
     """Delete orphaned vim undo (.*.un~) files."""
     print('deleting orphaned vim undo files')
@@ -84,7 +90,7 @@ def delete_orphans(path=None):
             print(f'    deleted {filepath}')
 
 
-@register
+@register()
 def delete_os_metadata():
     """Delete OS metadata files (Icon, .DS_Store, __MACOXS)."""
     print('deleting OS metadata files')
@@ -94,7 +100,7 @@ def delete_os_metadata():
             print(f'    deleted {filepath}')
 
 
-@register
+@register()
 def merge_history():
     """Merge shell history logs."""
     print('merging shell history logs')
@@ -117,7 +123,7 @@ def merge_history():
                 fd.write('\n')
 
 
-@register
+@register()
 def find_conflicts():
     """Find conflicted Dropbox files."""
     print('finding conflicted Dropbox files')
@@ -129,10 +135,11 @@ def find_conflicts():
 
 def generate_description():
     description = ['Available Actions:']
-    width = max(len(action) for action in REGISTRY.keys())
+    callables = {k: v for k, v in REGISTRY.items() if not v.hidden}
+    width = max(len(action) for action in callables.keys())
     format_str = f'{{: <{width}s}}'
-    for action, function in REGISTRY.items():
-        description.append(f'  {format_str.format(action)}  {function.__doc__}')
+    for action, function in callables.items():
+        description.append(f'  {format_str.format(action)}  {function.function.__doc__}')
     return '\n'.join(description)
 
 

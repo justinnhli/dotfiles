@@ -1,6 +1,6 @@
 set nocompatible " neovim default
 
-let g:python3_host_prog = $HOME.'/.venv/neovim/bin/python3'
+let g:python3_host_prog = $PYTHON_VENV_HOME.'/neovim/bin/python3'
 
 if has('nvim')
 	"auto-install vim-plug

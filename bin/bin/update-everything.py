@@ -177,7 +177,7 @@ def main():
         do_all()
     else:
         for key in args.actions:
-            REGISTRY[key]()
+            REGISTRY[key].function()
 
 
 if __name__ == '__main__':

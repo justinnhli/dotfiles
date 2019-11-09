@@ -3,7 +3,10 @@
 read -r -d '' paths <<EOF
 /etc/X11/xorg.conf.d/10-marble-mouse.conf
 /etc/fstab 
+/etc/locale.conf
 /etc/pacman.conf 
+/etc/resolv.conf
+/etc/resolv.conf.head
 /etc/wpa_supplicant/wpa_supplicant.conf
 /var/spool/cron/justinnhli
 EOF

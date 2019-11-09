@@ -7,13 +7,6 @@ from pathlib import Path
 from subprocess import run
 from shutil import which
 
-# utilities
-
-
-def run_if_exists(command):
-    if which(command[0]):
-        run(command, check=True)
-
 
 # registry
 
@@ -49,7 +42,9 @@ def do_all():
 @register()
 def update_arch():
     """Update Arch Linux packages."""
-    run_if_exists(['pikaur', '-Syu'])
+    if not which('pikaur'):
+        return
+    run(['pikaur', '-Syu'])
 
 
 @register()
@@ -66,6 +61,8 @@ def update_brew():
 @register()
 def update_cabal():
     """Update Cabal packages."""
+    if not which('cabal'):
+        return
     run_if_exists(['cabal', 'new-update'])
 
 

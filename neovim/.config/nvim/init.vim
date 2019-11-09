@@ -139,9 +139,10 @@ endif
 	function! UnicodeToAscii()
 		set fileformat=unix
 		" newline (0x13)
-		%s///eg
+		%s///eg " newline
 		%s/\%u2029//eg " paragraph separator
 		" space (0x20)
+		%s/\%u000B/ /eg " vertical tab
 		%s/\%u00A0/ /eg " no-break space
 		%s/\%u00AD/ /eg " soft hyphen
 		%s/\%u2002/ /eg " en space

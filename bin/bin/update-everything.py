@@ -71,6 +71,7 @@ def update_cabal():
 
 # file cleanup actions
 
+
 @register(do_all=False)
 def delete_orphans(path=None):
     """Delete orphaned vim undo (.*.un~) files."""
@@ -145,6 +146,9 @@ def find_conflicts():
     for filepath in dropbox_path.glob('*conflicted*'):
         if '.dropbox.cache' not in str(filepath):
             print(filepath)
+
+
+# CLI entry point
 
 
 def generate_description():

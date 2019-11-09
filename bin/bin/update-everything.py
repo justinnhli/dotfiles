@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
+from json import loads as json_from_str
 from datetime import datetime
 from collections import OrderedDict, namedtuple
 from pathlib import Path
@@ -64,6 +65,27 @@ def update_cabal():
     if not which('cabal'):
         return
     run_if_exists(['cabal', 'new-update'])
+
+
+@register()
+def update_pip(venv=None):
+    """Update Python pip venv packages."""
+    if venv is None:
+        pip = Path(which('pip')).resolve()
+    else:
+        pip = Path(env['PYTHON_VENV_HOME']).joinpath(venv).resolve()
+    if not pip.exists():
+        return
+    process = run(
+        [pip, 'list', '--format', 'json'],
+        check=True, capture_output=True,
+    )
+    packages = [
+        package['name'] for package in
+        json_from_str(process.stdout.decode('utf-8'))
+    ]
+    if packages:
+        run(['pip', 'install', '--upgrade', *packages], check=True)
 
 
 # file cleanup actions

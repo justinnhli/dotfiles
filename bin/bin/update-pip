@@ -1,6 +1,0 @@
-#!/bin/sh
-
-packages="$(python3 -m pip list --outdated --format freeze | sed 's/=.*//;' | tr '\n' ' ')"
-if [ "$packages" != "" ]; then
-    pip install --upgrade $packages
-fi

@@ -131,6 +131,8 @@ if [ "$NVIM_LISTEN_ADDRESS" != '' ]; then
 	alias vim="\$(command -v nvimcmd) tabnew"
 	alias nvim="\$(command -v nvimcmd) tabnew"
 	if [ -d "$HOME/journal" ]; then
+		alias vili="\$(command -v nvimcmd) tabnew \"\$HOME/journal/list.journal\""
+		alias vine="\$(command -v nvimcmd) tabnew \"\$HOME/journal/next.journal\""
 		alias vino="\$(command -v nvimcmd) tabnew \"\$HOME/journal/notes.journal\""
 	fi
 fi
@@ -284,6 +286,8 @@ fi
 
 # journal related settings
 if [ -d "$HOME/journal" ]; then
+	alias vili="$VISUAL $HOME/journal/list.journal"
+	alias vine="$VISUAL $HOME/journal/next.journal"
 	alias vino="$VISUAL $HOME/journal/notes.journal"
 	if command -v journal.py >/dev/null 2>&1; then
 		alias jrnl="journal.py $(ls $HOME/journal/[a-z-]*.journal 2>/dev/null | grep -v '[ ()]' | sed 's/^/--ignore /' | tr '\n' ' ')"

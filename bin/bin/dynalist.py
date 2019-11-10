@@ -78,7 +78,7 @@ def dynalist_to_treelines(filename):
         stack = [(nodes[root_id], 0, root_sibling_num)]
         while stack:
             node, indent, sibling_index = stack.pop()
-            node['content'] = re.sub(r'!\(([0-9]{4}-[0-9]{2}-[0-9]{2})\)', r'\1', node['content'])
+            node['content'] = re.sub(r'!\(([0-9]{4}-[0-9]{2}-[0-9]{2})\)', r'(\1)', node['content'])
             yield TreeLine(line_num, node['id'], node['content'], indent, sibling_index)
             line_num += 1
             if 'children' in node:

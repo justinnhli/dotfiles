@@ -111,17 +111,13 @@ def delete_orphans(path=None):
 
 
 @register(hidden=True)
-def delete_dropbox_orphans():
-    dropbox = Path('~/Dropbox').expanduser().resolve()
-    if dropbox.exists():
-        delete_orphans(dropbox)
+def delete_desktop_orphans():
+    delete_orphans(Path('~/Desktop').expanduser().resolve())
 
 
 @register(hidden=True)
-def delete_desktop_orphans():
-    desktop = Path('~/Desktop').expanduser().resolve()
-    if desktop.exists():
-        delete_orphans(desktop)
+def delete_dropbox_orphans():
+    delete_orphans(Path('~/Dropbox').expanduser().resolve())
 
 
 @register()

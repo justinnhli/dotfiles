@@ -120,6 +120,11 @@ def delete_dropbox_orphans():
     delete_orphans(Path('~/Dropbox').expanduser().resolve())
 
 
+@register(hidden=True)
+def delete_git_orphans():
+    delete_orphans(Path('~/git').expanduser().resolve())
+
+
 @register()
 def delete_os_metadata():
     """Delete OS metadata files (Icon, .DS_Store, __MACOXS)."""

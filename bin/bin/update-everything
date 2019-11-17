@@ -14,21 +14,7 @@ if_exists_do() {
 	fi
 }
 
-if which brew >/dev/null 2>&1; then
-	brew update && brew upgrade
-	brew cask list 2>/dev/null | while read -r package; do
-		package="$(echo "$package" | sed 's/ .*//g')"
-		current="$(brew cask list --versions "$package" | sed 's/.* //')"
-		cask_info="$(brew cask info "$package")"
-		newest="$(echo "$cask_info" | head -n 1 | sed 's/.* //')"
-		if [ "$current" != "$newest" ]; then
-			echo "$package $current $newest"
-			brew cask reinstall "$package"
-		fi
-	done
-	brew cleanup
-	echo
-fi
+python3 $HOME/bin/update-everything.py update-brew
 
 python3 $HOME/bin/update-everything.py update-cabal
 python3 $HOME/bin/update-everything.py update-arch

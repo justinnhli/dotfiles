@@ -55,7 +55,7 @@ def update_brew():
         return
     run(['brew', 'update'], check=True)
     run(['brew', 'upgrade'], check=True)
-    # FIXME deal with brew cask? unsure if its still necessary
+    run(['brew', 'cask', 'upgrade'], check=True)
     run(['brew', 'cleanup'], check=True)
 
 

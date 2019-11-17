@@ -25,12 +25,12 @@ fi
 
 if [ -d "$HOME/Desktop" ]; then
 	cd "$HOME/Desktop" || exit
-	python3 $HOME/bin/update-everything.py remove-orphans
+	python3 $HOME/bin/update-everything.py delete-orphans
 fi
 
 if [ -d "$HOME/Dropbox" ]; then
 	cd "$HOME/Dropbox" || exit
-	python3 $HOME/bin/update-everything.py remove-orphans
+	python3 $HOME/bin/update-everything.py delete-orphans
 	python3 $HOME/bin/update-everything.py delete-os-metadata
 	python3 $HOME/bin/update-everything.py merge-hsitory
 

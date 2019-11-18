@@ -152,7 +152,7 @@ def merge_history():
             continue
         shistory = set()
         for filepath in filepaths:
-            shistory |= filepath.open().readlines()
+            shistory |= set(filepath.open().read().splitlines())
             filepath.unlink()
         with Path(history_path).joinpath(f'{year}.shistory').open('w') as fd:
             for history in sorted(shistory):

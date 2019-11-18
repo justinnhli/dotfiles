@@ -71,11 +71,13 @@ def update_cabal():
 def update_pip(venv=None):
     """Update Python pip venv packages."""
     if venv is None:
+        if not which('pip'):
+            return
         pip = Path(which('pip')).resolve()
     else:
         pip = Path(env['PYTHON_VENV_HOME']).joinpath(venv).resolve()
-    if not pip.exists():
-        return
+        if not pip.exists():
+            return
     process = run(
         [pip, 'list', '--format', 'json'],
         check=True, capture_output=True,
@@ -85,7 +87,7 @@ def update_pip(venv=None):
         json_from_str(process.stdout.decode('utf-8'))
     ]
     if packages:
-        run(['pip', 'install', '--upgrade', *packages], check=True)
+        run([pip, 'install', '--upgrade', *packages], check=True)
 
 
 # file cleanup actions

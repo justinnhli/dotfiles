@@ -32,7 +32,7 @@ if [ -d "$HOME/Dropbox" ]; then
 	cd "$HOME/Dropbox" || exit
 	python3 $HOME/bin/update-everything.py delete-orphans
 	python3 $HOME/bin/update-everything.py delete-os-metadata
-	python3 $HOME/bin/update-everything.py merge-hsitory
+	python3 $HOME/bin/update-everything.py merge-history
 
 	# set directories to correct permissions
 	echo "correcting directory permissions..."

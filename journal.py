@@ -439,6 +439,8 @@ def do_verify(journal, _):
 
 @register('list entries that hyphenate the terms differently')
 def do_hyphenation(journal, args):
+    if len(args.terms) < 2:
+        raise ValueError('argument --hyphenation: two or more terms required')
     for puncts in product(['', ' ', '-'], repeat=(len(args.terms) - 1)):
         possibility = ''.join(
             part + punct for part, punct
@@ -621,7 +623,7 @@ def parse_args(arg_parser):
         for date_range in args.date_spec.split(','):
             if not (date_range and RANGE_REGEX.fullmatch(date_range)):
                 arg_parser.error(
-                    f'argument -d: "{args.date_range}" should be in format '
+                    f'argument -d: "{date_range}" should be in format '
                     '[YYYY[-MM[-DD]]][:][YYYY[-MM[-DD]]][,...]'
                 )
             if ':' in date_range:
@@ -639,7 +641,7 @@ def parse_args(arg_parser):
                 date_ranges.append(date_range)
         args.date_ranges = date_ranges
     if args.num_results is not None and args.num_results < 1:
-        arg_parser.error('argument -n: "{}" should be a positive integer'.format(args.num_results))
+        arg_parser.error(f'argument -n: "{args.num_results}" should be a positive integer')
     args.directory = args.directory.resolve()
     args.ignores = set(path.resolve() for path in args.ignores)
     return args
@@ -674,7 +676,10 @@ def main():
     journal = Journal(args.directory, use_cache=args.use_cache, ignores=args.ignores)
     if args.log:
         log_search(arg_parser, args, journal)
-    args.operation(journal, args)
+    try:
+        args.operation(journal, args)
+    except ValueError as err:
+        arg_parser.error(err)
 
 
 if __name__ == '__main__':

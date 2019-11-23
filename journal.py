@@ -448,7 +448,7 @@ def do_hyphenation(journal, args):
         ) + args.terms[-1]
         entries = filter_entries(journal, args, terms=[possibility])
         print(possibility)
-        for date in sorted(entries):
+        for date in sorted(entries, reverse=args.reverse):
             print('    ' + date)
 
 

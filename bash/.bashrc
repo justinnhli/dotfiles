@@ -123,19 +123,6 @@ fi
 
 alias vi="$VISUAL"
 alias vim="$VISUAL"
-if [ "$NVIM_LISTEN_ADDRESS" != '' ]; then
-	unset MANPAGER
-	export PATH="$PYTHON_VENV_HOME/neovim/bin:$PATH"
-	alias :="\$(command -v nvimcmd)"
-	alias vi="\$(command -v nvimcmd) tabnew"
-	alias vim="\$(command -v nvimcmd) tabnew"
-	alias nvim="\$(command -v nvimcmd) tabnew"
-	if [ -d "$HOME/journal" ]; then
-		alias vili="\$(command -v nvimcmd) tabnew \"\$HOME/journal/list.journal\""
-		alias vine="\$(command -v nvimcmd) tabnew \"\$HOME/journal/next.journal\""
-		alias vino="\$(command -v nvimcmd) tabnew \"\$HOME/journal/notes.journal\""
-	fi
-fi
 
 case "$(uname)" in
 	'Linux')
@@ -282,6 +269,22 @@ if command -v python3 >/dev/null 2>&1; then
 			fi
 		done
 	}
+fi
+
+# nvim terminal
+if [ "$NVIM_LISTEN_ADDRESS" != '' ]; then
+	unset MANPAGER
+	export PATH="$PYTHON_VENV_HOME/neovim/bin:$PATH"
+	alias :="\$(command -v nvimcmd)"
+	alias vi="\$(command -v nvimcmd) tabnew"
+	alias vim="\$(command -v nvimcmd) tabnew"
+	alias nvim="\$(command -v nvimcmd) tabnew"
+	if [ -d "$HOME/journal" ]; then
+		alias vili="\$(command -v nvimcmd) tabnew \"\$HOME/journal/list.journal\""
+		alias vine="\$(command -v nvimcmd) tabnew \"\$HOME/journal/next.journal\""
+		alias vino="\$(command -v nvimcmd) tabnew \"\$HOME/journal/notes.journal\""
+	fi
+	workon neovim
 fi
 
 # journal related settings

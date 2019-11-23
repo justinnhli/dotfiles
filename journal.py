@@ -326,6 +326,8 @@ def do_count(journal, args):
             return 0
 
     entries = filter_entries(journal, args)
+    if len(entries) == 0:
+        return
     columns = ['DATE', 'POSTS', 'FREQ', 'SIZE', 'WORDS', 'MIN', 'MED', 'MAX', 'MEAN', 'STDEV']
     unit_length = STRING_LENGTHS[args.unit]
     length_map = {date: len(entry.text.split()) for date, entry in entries.items()}

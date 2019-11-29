@@ -276,7 +276,6 @@ fi
 # nvim terminal
 if [ "$NVIM_LISTEN_ADDRESS" != '' ]; then
 	unset MANPAGER
-	export PATH="$PYTHON_VENV_HOME/neovim/bin:$PATH"
 	alias :="\$(command -v nvimcmd)"
 	alias vi="\$(command -v nvimcmd) tabnew"
 	alias vim="\$(command -v nvimcmd) tabnew"

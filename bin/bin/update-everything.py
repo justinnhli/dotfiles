@@ -45,7 +45,7 @@ def update_arch():
     """Update Arch Linux packages."""
     if not which('pikaur'):
         return
-    run(['pikaur', '-Syu'])
+    run(['pikaur', '-Syu'], check=True)
 
 
 @register()
@@ -64,7 +64,7 @@ def update_cabal():
     """Update Cabal packages."""
     if not which('cabal'):
         return
-    run(['cabal', 'new-update'])
+    run(['cabal', 'new-update'], check=True)
 
 
 @register()

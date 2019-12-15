@@ -96,7 +96,7 @@ def update_pip(venv=None):
 @register(do_all=False)
 def delete_orphans(path=None):
     """Delete orphaned vim undo (.*.un~) files."""
-    print('deleting orphaned vim undo files')
+    printed_header = False
     if path is None:
         path = Path()
     timestamp = datetime.now().timestamp()
@@ -109,6 +109,9 @@ def delete_orphans(path=None):
         )
         if should_delete:
             filepath.unlink()
+            if not printed_header:
+                print('deleting orphaned vim undo files')
+                printed_header = True
             print(f'    deleted {filepath}')
 
 

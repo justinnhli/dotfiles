@@ -64,7 +64,7 @@ def update_cabal():
     """Update Cabal packages."""
     if not which('cabal'):
         return
-    run_if_exists(['cabal', 'new-update'])
+    run(['cabal', 'new-update'])
 
 
 @register()

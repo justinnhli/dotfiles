@@ -139,11 +139,11 @@ def slack(text):
             date.strftime('%Y-%m-%d') + ' ' + time,
             '%Y-%m-%d %I:%M %p',
         )
-        body = item.select('.c-message__body')
+        body = item.select('.p-rich_text_section')
         if body:
             for text in _extract_text(body[0]).splitlines():
                 lines.append((
-                    f'({date.isoformat(sep=" ")})',
+                    f'({date.isoformat(sep=" ")[:-3]})',
                     f'{speaker}: {text}',
                 ))
     print('\n'.join(

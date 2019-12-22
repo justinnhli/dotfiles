@@ -333,8 +333,8 @@ if [ "$( ( echo "$BASH_VERSION" && echo 4 ) | sort -n | tail -n 1 )" != "4" ]; t
 fi
 
 # disable output stop keyboard shortcut (so <C-s> can be mapped in vim)
-stty stop '' -ixoff
+stty stop '' -ixoff 2>/dev/null
 
 # make C-w stop at slashes
-stty werase undef
+stty werase undef 2>/dev/null
 bind '"\C-w": unix-filename-rubout'

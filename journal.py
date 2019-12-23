@@ -413,7 +413,7 @@ def do_show(journal, args):
         else:
             cd(args.directory)
             editor = environ.get('VISUAL', environ.get('EDITOR', 'nvim'))
-            vim_args = [editor, temp_file, '-c', 'set hlsearch nospell']
+            vim_args = [editor, temp_file, '-c', f'cd {args.directory}', '-c', 'set hlsearch nospell']
             if args.terms:
                 vim_args[-1] += ' ' + ('nosmartcase' if args.icase else 'noignorecase')
                 vim_args.extend((

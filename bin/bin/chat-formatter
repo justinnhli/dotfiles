@@ -139,7 +139,9 @@ def slack(text):
             date.strftime('%Y-%m-%d') + ' ' + time,
             '%Y-%m-%d %I:%M %p',
         )
-        body = item.select('.p-rich_text_section')
+        body = item.select('.c-message__body')
+        if not body:
+            body = item.select('.p-rich_text_section')
         if body:
             for text in _extract_text(body[0]).splitlines():
                 lines.append((

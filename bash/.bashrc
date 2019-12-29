@@ -27,6 +27,7 @@ else
 	export EDITOR=vi
 fi
 export VISUAL="$EDITOR"
+export BROWSER='firefox'
 export HISTSIZE=10000
 export HISTCONTROL=ignoredups
 

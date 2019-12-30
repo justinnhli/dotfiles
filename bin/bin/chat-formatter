@@ -9,18 +9,24 @@ try:
     from bs4 import BeautifulSoup
     from bs4.element import NavigableString
 except ModuleNotFoundError as err:
+
     def run_with_venv(venv):
-        # pylint: disable = ungrouped-imports, reimported, redefined-outer-name
+        """Run this script in a virtual environment.
+
+        Parameters:
+            venv (str): The virtual environment to use.
+        """
+        # pylint: disable = ungrouped-imports, reimported, redefined-outer-name, import-outside-toplevel
         import sys
         from os import environ, execv
         from pathlib import Path
-        venv_python = Path(environ['PYTHON_VENV_HOME'], 'ir', 'bin', 'python3').expanduser()
+        venv_python = Path(environ['PYTHON_VENV_HOME'], venv, 'bin', 'python3').expanduser()
         if not venv_python.exists():
-            raise FileNotFoundError(' '.join([
-                f'tried load module "{err.name}" with venv "{venv}"',
-                f'but could not find executable {venv_python}',
-            ]))
+            raise FileNotFoundError(f'could not find venv "{venv}" at executable {venv_python}')
+        if sys.executable == str(venv_python):
+            raise ImportError(f'no module {err.name} in venv "{venv}" ({venv_python})')
         execv(str(venv_python), [str(venv_python), *sys.argv])
+
     run_with_venv('ir')
 
 

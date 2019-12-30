@@ -242,15 +242,11 @@ def _sync_phase_1(file_id, old_treelines, new_treelines):
                 old_treeline.text == new_treeline.text
             )
             if not same:
-                #print('% ' + new_treeline.indent * 4 * ' ' + new_treeline.text)
                 changes.append({
                     'action': 'edit',
                     'node_id': old_treeline.id,
                     'content': new_treeline.text,
                 })
-            else: # FIXME can delete
-                #print('  ' + old_treeline.indent * 4 * ' ' + old_treeline.text)
-                pass
         if new_treeline.id is not None:
             ancestry = ancestry[:new_treeline.indent + 1]
             ancestry.append(new_treeline.id)

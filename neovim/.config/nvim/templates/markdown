@@ -3,9 +3,19 @@
     <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
     <style>
         body {margin:auto auto; width:80ex; max-width:95%;}
-        blockquote {border-left: 1ex solid #E0E0E0; margin: 0; padding: 0 3ex;}
+        blockquote {border-left:1ex solid #E0E0E0; margin:0; padding:0 3ex;}
         img {display:block; margin:auto auto; max-width:100%;}
+        ol {list-style-type:decimal;}
+        ol ol {list-style-type:lower-alpha;}
+        ol ol ol {list-style-type:lower-roman;}
+        /* CSS for code-prettify */
+        .prettyprinted ol {counter-reset:decimalOnly;}
+        .prettyprinted li {counter-increment:decimalOnly; position:relative;}
+        .prettyprinted li:before {content:counter(decimalOnly); margin-right:5px; position:absolute; right:100%;}
+        .prettyprinted li {list-style-type:" " !important; background:transparent !important;}
+        .prettyprinted li:hover {background:#EEEEEE !important;}
     </style>
+    <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
 </head>
 <body>
 

@@ -1,0 +1,5 @@
+doc484
+mypy
+pydocstyle
+pylint
+yapf

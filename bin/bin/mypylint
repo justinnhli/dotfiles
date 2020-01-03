@@ -16,6 +16,33 @@ VENV_PYTHON = Path(environ['PYTHON_VENV_HOME'], 'mypylint', 'bin', 'python3').ex
 Error = namedtuple('Error', 'filename, linenum, column, message')
 
 
+def _module_exists(module):
+    # type: (str) -> bool
+    """Check if a module exists.
+
+    Parameters:
+        module (str): The module to check for.
+
+    Returns:
+        bool: True if the module exists in the venv, False otherwise.
+    """
+    try:
+        subprocess.run([VENV_PYTHON, '-c', 'import pylint'], check=True, capture_output=True)
+    except subprocess.CalledProcessError:
+        return False
+    return True
+
+
+def _err_print(message):
+    # type: (str) -> None
+    """Print to stderr.
+    
+    Parameters:
+        message (str): The message to print.
+    """
+    print(message, file=sys.stderr)
+
+
 def run_pylint(path):
     # type: (Path) -> List[Error]
     """Get errors from pylint.
@@ -146,14 +173,27 @@ def run_mypy(path):
 def main():
     # type: () -> None
     """Deal with command line arguments."""
+    has_pylint = _module_exists('pylint')
+    if not has_pylint:
+        _err_print('pylint not found, skipping')
+    has_pydocstyle = _module_exists('pydocstyle')
+    if not has_pydocstyle:
+        _err_print('pydocstyle not found, skipping')
+    has_mypy = _module_exists('mypy')
+    if not has_pydocstyle:
+        _err_print('mypy not found, skipping')
+
     has_errors = False
     for arg in sys.argv[1:]:
         errors = []
-        errors.extend(run_pylint(Path(arg)))
-        errors.extend(run_pydocstyle(Path(arg)))
-        errors.extend(run_mypy(Path(arg)))
+        if has_pylint:
+            errors.extend(run_pylint(Path(arg)))
+        if has_mypy:
+            errors.extend(run_mypy(Path(arg)))
+        if has_pydocstyle:
+            errors.extend(run_pydocstyle(Path(arg)))
         for error in sorted(errors):
-            print(f'{error.filename}:{error.linenum}:{error.column}: {error.message}', file=sys.stderr)
+            _err_print(f'{error.filename}:{error.linenum}:{error.column}: {error.message}')
         has_errors |= bool(errors)
     if has_errors:
         sys.exit(1)

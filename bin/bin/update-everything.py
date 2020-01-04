@@ -13,28 +13,17 @@ from shutil import which
 
 
 REGISTRY = OrderedDict()
-Function = namedtuple('Function', 'name, function, do_all, hidden')
+Function = namedtuple('Function', 'name, function, hidden')
 
 
-def register(do_all=True, hidden=False):
+def register(hidden=False):
 
     def _register(func):
         name = func.__name__.replace('_', '-')
-        REGISTRY[name] = Function(name, func, do_all, hidden)
+        REGISTRY[name] = Function(name, func, hidden)
         return func
 
     return _register
-
-
-# main actions
-
-
-@register(do_all=False)
-def do_all():
-    """Do all available actions."""
-    for func in REGISTRY.values():
-        if func.do_all:
-            func.function()
 
 
 # package manager actions
@@ -93,7 +82,7 @@ def update_pip(venv=None):
 # file cleanup actions
 
 
-@register(do_all=False)
+@register()
 def delete_orphans(path=None):
     """Delete orphaned vim undo (.*.un~) files."""
     printed_header = False
@@ -115,27 +104,12 @@ def delete_orphans(path=None):
             print(f'    deleted {filepath}')
 
 
-@register(hidden=True)
-def delete_desktop_orphans():
-    delete_orphans(Path('~/Desktop').expanduser().resolve())
-
-
-@register(hidden=True)
-def delete_dropbox_orphans():
-    delete_orphans(Path('~/Dropbox').expanduser().resolve())
-
-
-@register(hidden=True)
-def delete_git_orphans():
-    delete_orphans(Path('~/git').expanduser().resolve())
-
-
 @register()
-def delete_os_metadata():
+def delete_os_metadata(path=None):
     """Delete OS metadata files (Icon, .DS_Store, __MACOXS)."""
     print('deleting OS metadata files')
     for filename in ('Icon\r', '.DS_Store', '__MACOSX'):
-        for filepath in Path().glob(f'**/{filename}'):
+        for filepath in path.glob(f'**/{filename}'):
             filepath.unlink()
             print(f'    deleted {filepath}')
 
@@ -164,13 +138,32 @@ def merge_history():
 
 
 @register()
-def find_conflicts():
-    """Find conflicted Dropbox files."""
-    print('finding conflicted Dropbox files')
-    dropbox_path = Path('~/Dropbox').expanduser().resolve()
-    for filepath in dropbox_path.glob('*conflicted*'):
+def find_conflicts(filepath):
+    """Find conflicted files."""
+    print('finding conflicted files')
+    for filepath in filepath.glob('*conflicted*'):
         if '.dropbox.cache' not in str(filepath):
             print(filepath)
+
+
+# bundles
+
+
+@register()
+def update_everything():
+    """Perform general computer maintenance."""
+    desktop_path = Path('~/Desktop').expanduser().resolve()
+    dropbox_path = Path('~/Dropbox').expanduser().resolve()
+    git_path = Path('~/git').expanduser().resolve()
+    update_arch()
+    update_brew()
+    update_cabal()
+    update_pip()
+    for path in (desktop_path, dropbox_path, git_path):
+        delete_orphans(path)
+        delete_os_metadata(path)
+        find_conflicts(path)
+    merge_history()
 
 
 # CLI entry point
@@ -194,15 +187,12 @@ def main():
     )
     arg_parser.add_argument(
         'actions', nargs='*',
-        choices=sorted(REGISTRY.keys()), default='do-all',
+        choices=sorted(REGISTRY.keys()), default='update-everything',
         help=argparse.SUPPRESS
     )
     args = arg_parser.parse_args()
-    if args.actions == 'do-all':
-        do_all()
-    else:
-        for key in args.actions:
-            REGISTRY[key].function()
+    for key in args.actions:
+        REGISTRY[key].function()
 
 
 if __name__ == '__main__':

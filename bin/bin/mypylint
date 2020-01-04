@@ -139,6 +139,7 @@ def run_mypy(path):
             '--strict',
             '--ignore-missing-imports',
             '--no-warn-return-any',
+            '--no-strict-optional',
             '--show-column-numbers',
             '--show-error-codes',
             str(path),

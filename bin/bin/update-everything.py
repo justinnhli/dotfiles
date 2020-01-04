@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
+from os import environ
 from json import loads as json_from_str
 from datetime import datetime
 from collections import OrderedDict, namedtuple
@@ -64,7 +65,7 @@ def update_pip(venv=None):
             return
         pip = Path(which('pip')).resolve()
     else:
-        pip = Path(env['PYTHON_VENV_HOME']).joinpath(venv).resolve()
+        pip = Path(environ['PYTHON_VENV_HOME']).joinpath(venv).resolve()
         if not pip.exists():
             return
     process = run(

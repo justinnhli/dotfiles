@@ -58,6 +58,14 @@ def update_cabal():
 
 
 @register()
+def update_vimplug():
+    """Update neovim packages."""
+    if not which('nvim'):
+        return
+    run(['nvim', '-c', ':PlugUpgrade | PlugUpdate | qa'], check=True)
+
+
+@register()
 def update_pip(venv=None):
     """Update Python pip venv packages."""
     if venv is None:
@@ -147,6 +155,34 @@ def find_conflicts(filepath):
             print(filepath)
 
 
+# personal update actions
+
+@register()
+def sync_library():
+    """Sync paper library."""
+    library_path = Path('~/papers').expanduser().resolve()
+    if not library_path.exists():
+        return
+    run(['blib.py', 'pull'], check=True)
+
+
+@register()
+def pull_git():
+    """Pull on all git repos."""
+    git_path = Path('~/git').expanduser().resolve()
+    if not git_path.exists():
+        return
+    run(['git-all', 'pull'], cwd=git_path, check=True)
+
+
+@register()
+def update_actr():
+    actr_path = Path('~/act-r').expanduser().resolve()
+    if not actr_path.exists():
+        return
+    run(['git-all', 'pull'], cwd=actr_path, check=True)
+
+
 # bundles
 
 
@@ -165,6 +201,10 @@ def update_everything():
         delete_os_metadata(path)
         find_conflicts(path)
     merge_history()
+    sync_library()
+    update_vimplug()
+    pull_git()
+    update_actr()
 
 
 # CLI entry point

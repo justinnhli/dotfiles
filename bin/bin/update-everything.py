@@ -211,6 +211,7 @@ def update_everything():
 
 
 def generate_description():
+    """Generate descriptions of command line arguments."""
     description = ['Available Actions:']
     callables = {k: v for k, v in REGISTRY.items() if not v.hidden}
     width = max(len(action) for action in callables.keys())
@@ -221,6 +222,7 @@ def generate_description():
 
 
 def main():
+    """Deal with command line arguments."""
     arg_parser = argparse.ArgumentParser(
         usage='%(prog)s [actions ...]',
         description=generate_description(),

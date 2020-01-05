@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""A script to update everything on a system."""
 
 import argparse
 from os import environ
@@ -218,14 +219,14 @@ def generate_description():
     format_str = f'{{: <{width}s}}'
     for action, function in callables.items():
         description.append(f'  {format_str.format(action)}  {function.function.__doc__}')
-    return '\n'.join(description)
+    return description
 
 
 def main():
     """Deal with command line arguments."""
     arg_parser = argparse.ArgumentParser(
         usage='%(prog)s [actions ...]',
-        description=generate_description(),
+        description='\n'.join(generate_description()),
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     arg_parser.add_argument(
@@ -234,6 +235,8 @@ def main():
         help=argparse.SUPPRESS
     )
     args = arg_parser.parse_args()
+    if isinstance(args.actions, str):
+        args.actions = [args.actions,]
     for key in args.actions:
         REGISTRY[key].function()
 

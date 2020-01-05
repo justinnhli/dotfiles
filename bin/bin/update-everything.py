@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """A script to update everything on a system."""
 
+"""A script to update everything on a system."""
+
 import argparse
 from os import environ
 from json import loads as json_from_str
@@ -9,6 +11,7 @@ from collections import OrderedDict, namedtuple
 from pathlib import Path
 from subprocess import run
 from shutil import which
+from typing import Any, Callable, List, Set
 
 
 # registry
@@ -19,8 +22,16 @@ Function = namedtuple('Function', 'name, function, hidden')
 
 
 def register(hidden=False):
+    # type: (bool) -> Callable[..., Any]
+    """Register a function as a top-level action.
+
+    Parameters:
+        hidden (bool): Whether the function should be listed with --help.
+            Defaults to False.
+    """
 
     def _register(func):
+        # type: (Callable[..., Any]) -> Callable[..., Any]
         name = func.__name__.replace('_', '-')
         REGISTRY[name] = Function(name, func, hidden)
         return func
@@ -33,6 +44,7 @@ def register(hidden=False):
 
 @register()
 def update_arch():
+    # type: () -> None
     """Update Arch Linux packages."""
     if not which('pikaur'):
         return
@@ -41,6 +53,7 @@ def update_arch():
 
 @register()
 def update_brew():
+    # type: () -> None
     """Update Homebrew packages."""
     if not which('brew'):
         return
@@ -52,6 +65,7 @@ def update_brew():
 
 @register()
 def update_cabal():
+    # type: () -> None
     """Update Cabal packages."""
     if not which('cabal'):
         return
@@ -60,6 +74,7 @@ def update_cabal():
 
 @register()
 def update_vimplug():
+    # type: () -> None
     """Update neovim packages."""
     if not which('nvim'):
         return
@@ -68,7 +83,12 @@ def update_vimplug():
 
 @register()
 def update_pip(venv=None):
-    """Update Python pip venv packages."""
+    # type: (str) -> None
+    """Update Python pip venv packages.
+
+    Parameters:
+        venv (str): The name of the virtual environment to update
+    """
     if venv is None:
         if not which('pip'):
             return
@@ -94,7 +114,12 @@ def update_pip(venv=None):
 
 @register()
 def delete_orphans(path=None):
-    """Delete orphaned vim undo (.*.un~) files."""
+    # type: (Path) -> None
+    """Delete orphaned vim undo (.*.un~) files.
+
+    Parameters:
+        path (Path): The directory to clear of orphans.
+    """
     printed_header = False
     if path is None:
         path = Path()
@@ -116,7 +141,12 @@ def delete_orphans(path=None):
 
 @register()
 def delete_os_metadata(path=None):
-    """Delete OS metadata files (Icon, .DS_Store, __MACOXS)."""
+    # type: (Path) -> None
+    """Delete OS metadata files (Icon, .DS_Store, __MACOXS).
+
+    Parameters:
+        path (Path): The directory to clear of OS metadata.
+    """
     print('deleting OS metadata files')
     for filename in ('Icon\r', '.DS_Store', '__MACOSX'):
         for filepath in path.glob(f'**/{filename}'):
@@ -126,6 +156,7 @@ def delete_os_metadata(path=None):
 
 @register()
 def merge_history():
+    # type: () -> None
     """Merge shell history logs."""
     print('merging shell history logs')
     history_path = Path('~/Dropbox/personal/logs').expanduser().resolve()
@@ -137,7 +168,7 @@ def merge_history():
         filepaths = list(history_path.glob(f'{year}*.shistory'))
         if len(filepaths) == 1:
             continue
-        shistory = set()
+        shistory = set() # type: Set[str]
         for filepath in filepaths:
             shistory |= set(filepath.open().read().splitlines())
             filepath.unlink()
@@ -148,18 +179,24 @@ def merge_history():
 
 
 @register()
-def find_conflicts(filepath):
-    """Find conflicted files."""
+def find_conflicts(path=None):
+    # type: (Path) -> None
+    """Find conflicted files.
+
+    Parameters:
+        path (Path): The directory to clear of OS metadata.
+    """
     print('finding conflicted files')
-    for filepath in filepath.glob('*conflicted*'):
-        if '.dropbox.cache' not in str(filepath):
-            print(filepath)
+    for conflict in path.glob('*conflicted*'):
+        if '.dropbox.cache' not in str(conflict):
+            print(conflict)
 
 
 # personal update actions
 
 @register()
 def sync_library():
+    # type: () -> None
     """Sync paper library."""
     library_path = Path('~/papers').expanduser().resolve()
     if not library_path.exists():
@@ -169,6 +206,7 @@ def sync_library():
 
 @register()
 def pull_git():
+    # type: () -> None
     """Pull on all git repos."""
     git_path = Path('~/git').expanduser().resolve()
     if not git_path.exists():
@@ -178,6 +216,8 @@ def pull_git():
 
 @register()
 def update_actr():
+    # type: () -> None
+    """Update the ACT-R subversion repository."""
     actr_path = Path('~/act-r').expanduser().resolve()
     if not actr_path.exists():
         return
@@ -189,6 +229,7 @@ def update_actr():
 
 @register()
 def update_everything():
+    # type: () -> None
     """Perform general computer maintenance."""
     desktop_path = Path('~/Desktop').expanduser().resolve()
     dropbox_path = Path('~/Dropbox').expanduser().resolve()
@@ -206,13 +247,23 @@ def update_everything():
     update_vimplug()
     pull_git()
     update_actr()
+    '''
+    find . -type d -perm 777 | while read -r f; do
+            chmod 755 "$f" && echo "	fixed permissions of $f"
+    done
+    '''
 
 
 # CLI entry point
 
 
 def generate_description():
-    """Generate descriptions of command line arguments."""
+    # type: () -> List[str]
+    """Generate descriptions of command line arguments.
+
+    Returns:
+        List[str]: A list of arguments and their descriptions.
+    """
     description = ['Available Actions:']
     callables = {k: v for k, v in REGISTRY.items() if not v.hidden}
     width = max(len(action) for action in callables.keys())
@@ -223,6 +274,7 @@ def generate_description():
 
 
 def main():
+    # type: () -> None
     """Deal with command line arguments."""
     arg_parser = argparse.ArgumentParser(
         usage='%(prog)s [actions ...]',

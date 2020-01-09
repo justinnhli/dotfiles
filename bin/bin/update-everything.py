@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 """A script to update everything on a system."""
 
-"""A script to update everything on a system."""
-
 import argparse
 from os import environ
 from json import loads as json_from_str

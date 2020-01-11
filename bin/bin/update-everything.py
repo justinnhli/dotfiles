@@ -2,13 +2,13 @@
 """A script to update everything on a system."""
 
 import argparse
-from os import environ
-from json import loads as json_from_str
-from datetime import datetime
 from collections import OrderedDict, namedtuple
+from datetime import datetime
+from json import loads as json_from_str
+from os import environ
 from pathlib import Path
-from subprocess import run
 from shutil import which
+from subprocess import run
 from typing import Any, Callable, List, Set
 
 

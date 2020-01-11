@@ -8,7 +8,7 @@
         ol {list-style-type:decimal;}
         ol ol {list-style-type:lower-alpha;}
         ol ol ol {list-style-type:lower-roman;}
-        /* CSS for code-prettify */
+        /* CSS for code-prettify (prepend <!--?prettify linenums=true?--> to use) */
         .prettyprinted ol {counter-reset:decimalOnly;}
         .prettyprinted li {counter-increment:decimalOnly; position:relative;}
         .prettyprinted li:before {content:counter(decimalOnly); margin-right:5px; position:absolute; right:100%;}

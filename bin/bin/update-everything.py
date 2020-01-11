@@ -4,8 +4,9 @@
 import argparse
 from collections import OrderedDict, namedtuple
 from datetime import datetime
+from inspect import signature
 from json import loads as json_from_str
-from os import environ
+from os import environ, getcwd
 from pathlib import Path
 from shutil import which
 from subprocess import run
@@ -288,7 +289,13 @@ def main():
     if isinstance(args.actions, str):
         args.actions = [args.actions,]
     for key in args.actions:
-        REGISTRY[key].function()
+        function = REGISTRY[key].function
+        sig = signature(function)
+        if sig.parameters:
+            function(Path(getcwd()))
+        else:
+            function()
+
 
 
 if __name__ == '__main__':

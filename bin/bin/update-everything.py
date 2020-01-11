@@ -267,7 +267,7 @@ def generate_description():
     width = max(len(action) for action in callables.keys())
     format_str = f'{{: <{width}s}}'
     for action, function in callables.items():
-        description.append(f'  {format_str.format(action)}  {function.function.__doc__}')
+        description.append(f'  {format_str.format(action)}  {function.function.__doc__.splitlines()[0]}')
     return description
 
 

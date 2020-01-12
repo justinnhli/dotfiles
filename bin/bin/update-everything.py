@@ -26,6 +26,10 @@ def register(hidden=False):
     Parameters:
         hidden (bool): Whether the function should be listed with --help.
             Defaults to False.
+
+    Returns:
+        Callable[[Callable[..., Any]], Callable[..., Any]]:
+            The function being registered.
     """
 
     def _register(func):

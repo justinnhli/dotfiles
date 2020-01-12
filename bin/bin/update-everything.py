@@ -4,9 +4,8 @@
 import argparse
 from collections import OrderedDict, namedtuple
 from datetime import datetime
-from inspect import signature
 from json import loads as json_from_str
-from os import environ, getcwd
+from os import environ
 from pathlib import Path
 from shutil import which
 from subprocess import run
@@ -121,7 +120,7 @@ def delete_orphans(path=None):
     """
     printed_header = False
     if path is None:
-        path = Path()
+        path = Path.cwd()
     timestamp = datetime.now().timestamp()
     threshold = 60 * 60 * 24 * 10 # 10 days
     for filepath in path.glob('**/.*.un~'):
@@ -146,6 +145,8 @@ def delete_os_metadata(path=None):
     Parameters:
         path (Path): The directory to clear of OS metadata.
     """
+    if path is None:
+        path = Path.cwd()
     print('deleting OS metadata files')
     for filename in ('Icon\r', '.DS_Store', '__MACOSX'):
         for filepath in path.glob(f'**/{filename}'):
@@ -185,6 +186,8 @@ def find_conflicts(path=None):
     Parameters:
         path (Path): The directory to clear of OS metadata.
     """
+    if path is None:
+        path = Path.cwd()
     print('finding conflicted files')
     for conflict in path.glob('*conflicted*'):
         if '.dropbox.cache' not in str(conflict):
@@ -289,13 +292,7 @@ def main():
     if isinstance(args.actions, str):
         args.actions = [args.actions,]
     for key in args.actions:
-        function = REGISTRY[key].function
-        sig = signature(function)
-        if sig.parameters:
-            function(Path(getcwd()))
-        else:
-            function()
-
+        REGISTRY[key].function()
 
 
 if __name__ == '__main__':

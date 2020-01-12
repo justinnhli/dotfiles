@@ -55,12 +55,12 @@ def run_pylint(path):
     """
     process = subprocess.run(
         [
-            VENV_PYTHON,
+            str(VENV_PYTHON),
             '-m',
             'pylint',
             str(path),
             '--msg-template',
-            '{filename}:{linenum}:{column}: {msg} [{msg_id} {symbol}]',
+            '{path}:{line}:{column}: {msg} [{msg_id} {symbol}]',
         ],
         check=False,
         capture_output=True,

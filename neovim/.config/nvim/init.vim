@@ -529,7 +529,7 @@ endif
 	" }
 
 	" tab management {
-		nnoremap  <leader>tn  :tabnew 
+		nnoremap  <leader>tn  :tabnew<space>
 		nnoremap  <leader>te  :Texplore<cr>
 		nnoremap  <leader>to  :tabonly<cr>
 		nnoremap  <leader>tp  :call <SID>CloseRightTabs()<cr>
@@ -569,10 +569,10 @@ endif
 		nnoremap  <leader>wnj  :rightbelow new<cr>
 		nnoremap  <leader>wnk  :leftabove new<cr>
 		nnoremap  <leader>wnl  :rightbelow vnew<cr>
-		nnoremap  <leader>wh   :leftabove vsplit 
-		nnoremap  <leader>wj   :rightbelow split 
-		nnoremap  <leader>wk   :leftabove split 
-		nnoremap  <leader>wl   :rightbelow vsplit 
+		nnoremap  <leader>wh   :leftabove vsplit<space>
+		nnoremap  <leader>wj   :rightbelow split<space>
+		nnoremap  <leader>wk   :leftabove split<space>
+		nnoremap  <leader>wl   :rightbelow vsplit<space>
 		nnoremap  <leader>weh  :Vexplore<cr>
 		nnoremap  <leader>wej  :Hexplore<cr>
 		nnoremap  <leader>wek  :Hexplore!<cr>
@@ -609,7 +609,7 @@ endif
 	" }
 
 	" buffer management {
-		nnoremap  <leader>e    :e 
+		nnoremap  <leader>e    :e<space>
 	" }
 
 	" disable annoying features {
@@ -725,7 +725,7 @@ endif
 	" editor function shortcuts
 	nnoremap           <leader>a     ggVG
 	nnoremap           <leader>f     q:ivimgrep //g **/*<esc>Fg<left>i
-	nnoremap           <leader>o     :!open 
+	nnoremap           <leader>o     :!open<space>
 	nnoremap           <leader>p     "+p
 	nnoremap           <leader>y     "+y
 	vnoremap           <leader>y     "+y
@@ -813,7 +813,7 @@ endif
 	let g:clever_f_fix_key_direction = 1
 	let g:clever_f_timeout_ms = 5000
 	" fugitive
-	nnoremap  <leader>G     :Git 
+	nnoremap  <leader>G     :Git<space>
 	nnoremap  <leader>gc    :Gcommit -m "
 	nnoremap  <leader>gd    :Gdiff<cr>
 	nnoremap  <leader>gs    :Gstatus<cr>

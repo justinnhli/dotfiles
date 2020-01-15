@@ -11,7 +11,7 @@
 	default = simple
 [alias]
 	# staging
-	unstage = reset HEAD --
+	unstage = restore --staged
 	precommit = diff --cached
 	# rebasing
 	abort = rebase --abort

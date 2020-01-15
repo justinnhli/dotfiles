@@ -19,6 +19,7 @@
 	# stashes
 	stashes = stash list
 	# branches
+	new-branch = switch --create
 	branches = branch --all
 	# remotes
 	remotes = remote --verbose

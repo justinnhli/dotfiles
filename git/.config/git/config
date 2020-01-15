@@ -13,9 +13,6 @@
 	# staging
 	unstage = restore --staged
 	precommit = diff --cached
-	# rebasing
-	abort = rebase --abort
-	continue = rebase --continue
 	# stashes
 	stashes = stash list
 	# branches

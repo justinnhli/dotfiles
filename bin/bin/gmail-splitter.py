@@ -27,10 +27,10 @@ def parse_email(lines, subject):
     date_str = match.group(3).strip()
     date = datetime.strptime(date_str, '%a, %b %d, %Y at %I:%M %p')
     recipients = []
-    for offset in range(1, 4):
-        if lines[offset][:3] not in ('To:', 'Cc:', 'Bcc'):
+    for line in lines[1:4]:
+        if line[:3] not in ('To:', 'Cc:', 'Bcc'):
             continue
-        field, addressees = lines[offset].split(':', maxsplit=1)
+        field, addressees = line.split(':', maxsplit=1)
         assert field in ('To', 'Cc', 'Bcc')
         recipients = addressees.strip()
     text_start = 2

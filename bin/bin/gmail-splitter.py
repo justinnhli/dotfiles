@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-
 import re
 import sys
 from collections import namedtuple
@@ -8,6 +7,7 @@ from textwrap import indent
 
 Person = namedtuple('Person', ('name', 'email'))
 Email = namedtuple('Email', ('date', 'sender', 'recipients', 'subject', 'text'))
+
 
 def read_all_inputs(files):
     if files:
@@ -20,6 +20,7 @@ def read_all_inputs(files):
         return sys.stdin.read()
     else:
         return ""
+
 
 def parse_email(lines, subject):
     match = re.match('([^<>]*) <([^<>]*@[^<>]*)>(.*)', lines[0])
@@ -39,8 +40,12 @@ def parse_email(lines, subject):
             text_start += 1
         else:
             break
-    text = '\n'.join(line.rstrip() for line in lines[text_start:] if line.strip() not in ('', '[Quoted text hidden]'))
+    text = '\n'.join(
+        line.rstrip() for line in lines[text_start:]
+        if line.strip() not in ('', '[Quoted text hidden]')
+    )
     return Email(date, sender, recipients, subject, text)
+
 
 def format_emails(text):
     emails = []
@@ -58,7 +63,7 @@ def format_emails(text):
                     num_emails -= 1
                     email_start = None
                     continue
-                email_lines = lines[email_start:line_num-1]
+                email_lines = lines[email_start:line_num - 1]
                 emails.append(parse_email(email_lines, subject))
                 email_num += 1
                 if email_num == num_emails:
@@ -73,9 +78,11 @@ def format_emails(text):
         print(email.date.strftime('%Y-%m-%d'))
         print(indent(email.text, '\t'))
 
+
 def main():
     text = read_all_inputs(sys.argv[1:]).strip()
     format_emails(text)
+
 
 if __name__ == '__main__':
     main()

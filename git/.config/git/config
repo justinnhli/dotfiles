@@ -16,8 +16,10 @@
 	# stashes
 	stashes = stash list
 	# branches
-	new-branch = switch --create
 	branches = branch --all
+	new-branch = switch --create
+	delete-branch = branch --delete
+	force-delete-branch = branch --delete --force
 	# remotes
 	remotes = remote --verbose
 	# other

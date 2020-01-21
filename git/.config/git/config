@@ -10,6 +10,8 @@
 [push]
 	default = simple
 [alias]
+	# pushing
+	prepush = log origin..HEAD
 	# staging
 	unstage = restore --staged
 	precommit = diff --cached

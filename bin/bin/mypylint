@@ -76,7 +76,7 @@ def run_pylint(path):
         )
         if not match:
             continue
-        filename = match.group('filename')
+        filename = str(Path(match.group('filename')).expanduser().resolve())
         linenum = match.group('linenum')
         column = match.group('column')
         message = match.group('message')
@@ -112,7 +112,7 @@ def run_pydocstyle(path):
         match2 = re.fullmatch('^(?P<message_id>[^:]*): (?P<message>.*)', line2.strip())
         if match1 is None or match2 is None:
             continue
-        filename = match1.group('filename')
+        filename = str(Path(match1.group('filename')).expanduser().resolve())
         linenum = match1.group('linenum')
         column = 0
         message = match2.group('message')
@@ -159,7 +159,7 @@ def run_mypy(path):
         )
         if not match:
             continue
-        filename = match.group('filename')
+        filename = str(Path(match.group('filename')).expanduser().resolve())
         linenum = match.group('linenum')
         column = match.group('column')
         output_type = match.group('output_type')

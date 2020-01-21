@@ -186,13 +186,14 @@ def main():
 
     has_errors = False
     for arg in sys.argv[1:]:
+        arg = Path(arg).expanduser().resolve()
         errors = []
         if has_pylint:
-            errors.extend(run_pylint(Path(arg)))
+            errors.extend(run_pylint(arg))
         if has_mypy:
-            errors.extend(run_mypy(Path(arg)))
+            errors.extend(run_mypy(arg))
         if has_pydocstyle:
-            errors.extend(run_pydocstyle(Path(arg)))
+            errors.extend(run_pydocstyle(arg))
         for error in sorted(errors):
             _err_print(f'{error.filename}:{error.linenum}:{error.column}: {error.message}')
         has_errors |= bool(errors)

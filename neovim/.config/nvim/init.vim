@@ -816,10 +816,9 @@ endif
 	let g:clever_f_fix_key_direction = 1
 	let g:clever_f_timeout_ms = 5000
 	" fugitive
-	nnoremap  <leader>G     :Git<space>
+	nnoremap  <leader>gg    :Git<space>
 	nnoremap  <leader>gc    :Gcommit -m "
 	nnoremap  <leader>gd    :Gdiff<cr>
-	nnoremap  <leader>gs    :Gstatus<cr>
 	nnoremap  <leader>gp    :Gpush<cr>
 	" goyo.vim
 	nnoremap  <leader><leader>g     :Goyo<cr>

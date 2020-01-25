@@ -534,18 +534,6 @@ endif
 		nnoremap  <leader>to  :tabonly<cr>
 		nnoremap  <leader>tp  :call <SID>CloseRightTabs()<cr>
 		nnoremap  <leader>tc  :tabclose<cr>
-		nnoremap  <leader>th  :tabmove -1<cr>
-		nnoremap  <leader>tl  :tabmove +1<cr>
-		nnoremap  <leader>t0  :tabmove 0<cr>
-		nnoremap  <leader>t1  :tabmove 1<cr>
-		nnoremap  <leader>t2  :tabmove 2<cr>
-		nnoremap  <leader>t3  :tabmove 3<cr>
-		nnoremap  <leader>t4  :tabmove 4<cr>
-		nnoremap  <leader>t5  :tabmove 5<cr>
-		nnoremap  <leader>t6  :tabmove 6<cr>
-		nnoremap  <leader>t7  :tabmove 7<cr>
-		nnoremap  <leader>t8  :tabmove 8<cr>
-		nnoremap  <leader>t9  :tabmove 9<cr>
 
 		" Shift+HL for moving between tabs
 		nnoremap  <S-h>  :tabprev<cr>
@@ -562,6 +550,22 @@ endif
 		nnoremap <M-8> :tabnext 8<cr>
 		nnoremap <M-9> :tabnext 9<cr>
 		nnoremap <M-0> :tabnext 0<cr>
+
+		" Leader+T+N to move a tab to an absolute position
+		nnoremap  <leader>t1  :tabmove 0<cr>
+		nnoremap  <leader>t2  :tabmove 1<cr>
+		nnoremap  <leader>t3  :tabmove 2<cr>
+		nnoremap  <leader>t4  :tabmove 3<cr>
+		nnoremap  <leader>t5  :tabmove 4<cr>
+		nnoremap  <leader>t6  :tabmove 5<cr>
+		nnoremap  <leader>t7  :tabmove 6<cr>
+		nnoremap  <leader>t8  :tabmove 7<cr>
+		nnoremap  <leader>t9  :tabmove 8<cr>
+		nnoremap  <leader>t0  :tabmove 9<cr>
+
+		" Leader+T+HL to move a tab to a relative position
+		nnoremap  <leader>th  :tabmove -1<cr>
+		nnoremap  <leader>tl  :tabmove +1<cr>
 	" }
 
 	" window management {

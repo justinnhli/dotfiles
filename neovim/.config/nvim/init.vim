@@ -706,7 +706,6 @@ endif
 	nnoremap           <leader>JJ    :tabnew <C-r>=g:justinnhli_journal_path<cr>/notes.journal<cr>
 	nnoremap           <leader>JE    :tabnew <C-r>=g:justinnhli_journal_path<cr>/next.journal<cr>
 	nnoremap           <leader>JL    :tabnew <C-r>=g:justinnhli_journal_path<cr>/list.journal<cr>
-	nnoremap           <leader>JS    :tabnew <C-r>=g:justinnhli_journal_path<cr>/scratch.journal<cr>
 	nnoremap           <leader>JH    :tabnew <C-r>=g:justinnhli_journal_path<cr>/htsacsd.journal<cr>
 	nnoremap           <leader>JP    :tabnew <C-r>=g:justinnhli_journal_path<cr>/ponderings.journal<cr>
 	nnoremap           <leader>JR    :tabnew <C-r>=g:justinnhli_journal_path<cr>/research.journal<cr>

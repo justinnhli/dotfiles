@@ -74,6 +74,7 @@ def format_emails(text):
         emails.append(parse_email(email_lines, subject))
     if len(emails) != num_emails:
         print('WARNING: Gmail lists {} emails, but I found {}'.format(num_emails, len(emails)))
+        print()
     for email in emails:
         print(email.date.strftime('%Y-%m-%d'))
         print(indent(email.text, '\t'))

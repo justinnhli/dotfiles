@@ -817,6 +817,7 @@ endif
 	let g:clever_f_timeout_ms = 5000
 	" fugitive
 	nnoremap  <leader>gg    :Git<space>
+	nnoremap  <leader>gb    :Gblame<cr>
 	nnoremap  <leader>gc    :Gcommit -m "
 	nnoremap  <leader>gd    :Gdiff<cr>
 	nnoremap  <leader>gp    :Gpush<cr>

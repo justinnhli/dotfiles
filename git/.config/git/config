@@ -33,4 +33,4 @@
 	# other
 	discards = !git unpushed | sed 's/^/branch: /' | sed '$a\\' && git staged | sed 's/^/staged: /'  && git modified | sed 's/^/modified: /'  && git untracked | sed 's/^/untracked: /'
 	aliases = config --get-regexp ^alias\\.
-	log-graph = log --all --decorate --graph --abbrev-commit --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%ai%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n          %C(white)%s%C(reset)'
+	log-graph = log --all --graph --abbrev-commit --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%ai%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n          %C(white)%s%C(reset)'

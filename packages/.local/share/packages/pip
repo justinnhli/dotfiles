@@ -1,7 +1,0 @@
-neovim
-pip
-pip-autoremove
-pylint
-setuptools
-wheel
-yapf

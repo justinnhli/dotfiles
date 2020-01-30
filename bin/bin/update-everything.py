@@ -91,6 +91,7 @@ def update_pip(venv=None):
     Parameters:
         venv (str): The name of the virtual environment to update
     """
+    # FIXME deal with PIP_REQUIRE_VIRTUALENV
     if venv is None:
         if not which('pip'):
             return

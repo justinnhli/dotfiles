@@ -707,12 +707,9 @@ endif
 		nnoremap           <leader>O     eb"zye:!open $(find <C-r>=g:justinnhli_library_path<cr> -name <C-r>=expand('<cword>')<cr>.pdf) &<cr><cr>
 	endif
 	" open journal files with leader-J
-	nnoremap           <leader>JJ    :tabnew <C-r>=g:justinnhli_journal_path<cr>/notes.journal<cr>
 	nnoremap           <leader>JE    :tabnew <C-r>=g:justinnhli_journal_path<cr>/next.journal<cr>
 	nnoremap           <leader>JL    :tabnew <C-r>=g:justinnhli_journal_path<cr>/list.journal<cr>
-	nnoremap           <leader>JH    :tabnew <C-r>=g:justinnhli_journal_path<cr>/htsacsd.journal<cr>
-	nnoremap           <leader>JP    :tabnew <C-r>=g:justinnhli_journal_path<cr>/ponderings.journal<cr>
-	nnoremap           <leader>JR    :tabnew <C-r>=g:justinnhli_journal_path<cr>/research.journal<cr>
+	nnoremap           <leader>JR    :tabnew <C-r>=g:justinnhli_journal_path<cr>/repo.journal<cr>
 	nnoremap           <leader>JD    :tabnew<cr>:r!dynalist.py mobile<cr>:0d<cr>:setlocal buftype=nowrite filetype=journal nomodifiable<cr>zM
 	" toggle settings with double leader
 	nnoremap           <leader><leader>c     :call <SID>ToggleColorColumn()<cr>:setlocal colorcolumn?<cr>
@@ -782,10 +779,6 @@ endif
 		" undolevels=-1 (no undo possible)
 		let g:LargeFile = 1024 * 1024 * 10
 		autocmd BufReadPre           *       let f=expand('<afile>') | if getfsize(f) > g:LargeFile | set eventignore+=FileType | setlocal noswapfile bufhidden=unload undolevels=-1 | else | set eventignore-=FileType | endif
-
-		" override above settings for specific files
-		" automatically fold notes.journal
-		autocmd BufRead             notes.journal syntax match flag '^.\{2000,\}$' | setlocal breakindent breakindentopt=shift:1 foldenable foldlevel=0
 	augroup END
 " }
 

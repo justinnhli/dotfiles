@@ -318,6 +318,7 @@ endif
 	set   autoindent " neovim default
 	set   autoread " neovim default
 	set   backspace=indent,eol,start " neovim default
+	set   cinoptions=(s,m1
 	set   confirm
 	set   display=lastline,uhex
 	set noerrorbells

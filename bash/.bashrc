@@ -293,7 +293,7 @@ fi
 if [ -d "$HOME/journal" ]; then
 	alias vili="$VISUAL $HOME/journal/list.journal"
 	alias vine="$VISUAL $HOME/journal/next.journal"
-	alias vino="$VISUAL $HOME/journal/notes.journal"
+	alias vire="$VISUAL $HOME/journal/repo.journal"
 	if command -v journal.py >/dev/null 2>&1; then
 		alias jrnl="journal.py $(ls $HOME/journal/[a-z-]*.journal 2>/dev/null | grep -v '[ ()]' | sed 's/^/--ignore /' | tr '\n' ' ')"
 	fi

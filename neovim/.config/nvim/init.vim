@@ -531,6 +531,7 @@ endif
 
 	" tab management {
 		nnoremap  <leader>tn  :tabnew<space>
+		nnoremap  <leader>tr  :tabnew scp://user@server.tld//absolute/path/to/file
 		nnoremap  <leader>te  :Texplore<cr>
 		nnoremap  <leader>to  :tabonly<cr>
 		nnoremap  <leader>tp  :call <SID>CloseRightTabs()<cr>
@@ -574,6 +575,10 @@ endif
 		nnoremap  <leader>wnj  :rightbelow new<cr>
 		nnoremap  <leader>wnk  :leftabove new<cr>
 		nnoremap  <leader>wnl  :rightbelow vnew<cr>
+		nnoremap  <leader>wrh  :leftabove vsplit scp://user@server.tld//absolute/path/to/file
+		nnoremap  <leader>wri  :rightbelow split scp://user@server.tld//absolute/path/to/file
+		nnoremap  <leader>wrk  :leftabove split scp://user@server.tld//absolute/path/to/file
+		nnoremap  <leader>wrl  :rightbelow vsplit scp://user@server.tld//absolute/path/to/file
 		nnoremap  <leader>wh   :leftabove vsplit<space>
 		nnoremap  <leader>wj   :rightbelow split<space>
 		nnoremap  <leader>wk   :leftabove split<space>

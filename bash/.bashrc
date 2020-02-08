@@ -287,6 +287,7 @@ fi
 # journal related settings
 if [ -d "$HOME/journal" ]; then
 	alias vili="$VISUAL $HOME/journal/list.journal"
+	alias vidy="$VISUAL -c 'normal 1 JD'"
 	alias vine="$VISUAL $HOME/journal/next.journal"
 	alias vire="$VISUAL $HOME/journal/repo.journal"
 	if command -v journal.py >/dev/null 2>&1; then

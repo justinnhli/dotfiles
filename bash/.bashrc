@@ -281,11 +281,6 @@ if [ "$NVIM_LISTEN_ADDRESS" != '' ]; then
 	alias vi="\$(command -v nvimcmd) tabnew"
 	alias vim="\$(command -v nvimcmd) tabnew"
 	alias nvim="\$(command -v nvimcmd) tabnew"
-	if [ -d "$HOME/journal" ]; then
-		alias vili="\$(command -v nvimcmd) tabnew \"\$HOME/journal/list.journal\""
-		alias vine="\$(command -v nvimcmd) tabnew \"\$HOME/journal/next.journal\""
-		alias vire="\$(command -v nvimcmd) tabnew \"\$HOME/journal/repo.journal\""
-	fi
 	workon neovim
 fi
 

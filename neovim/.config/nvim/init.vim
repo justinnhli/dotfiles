@@ -773,6 +773,7 @@ endif
 		" disable spellcheck in virtual terminal
 		if exists('##TermOpen')
 			autocmd  TermOpen        *       setlocal nonumber nospell scrollback=-1
+			autocmd  TermClose       *       call feedkeys("i")
 		endif
 		" patch colorschemes
 		autocmd  ColorScheme         *       call s:PatchColorschemes()

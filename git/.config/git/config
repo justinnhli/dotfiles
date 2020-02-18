@@ -1,44 +1,44 @@
 [user]
-	name = Justin Li
-	email = justinnhli@gmail.com
+    name = Justin Li
+    email = justinnhli@gmail.com
 [core]
-	editor = nvim
+    editor = nvim
 [diff]
-	tool = nvim -d
+    tool = nvim -d
 [merge]
-	tool = nvim -d
+    tool = nvim -d
 [push]
-	default = simple
+    default = simple
 [alias]
-	# tracking
-	untracked = ls-files --others --exclude-standard
-	# stashes
-	stashes = stash list
-	# diff
-	modified = diff --name-only
-	# staging
-	staged = diff --cached --name-only
-	unstage = restore --staged
-	precommit = diff --cached
-	# ignored
-	ignored = !git ls-files --ignored --others --exclude-from "$(git rev-parse --show-toplevel)/.gitignore"
-	# branches
-	branches = branch --all
-	new-branch = switch --create
-	delete-branch = branch --delete
-	force-delete-branch = branch --delete --force
-	# remotes
-	remotes = remote --verbose
-	# pushing
-	unpushed = log --branches --not --remotes --no-walk --oneline --format=format:'%s (%D)'
-	prepush = log origin..HEAD
-	# other
-	discards = ! \
-		git unpushed | sed 's/^/branch: /' | sed '$a\\' && \
-		git staged | sed 's/^/staged: /' && \
-		git stashes | sed 's/^[^:]*: /stashed: /' && \
-		git modified | sed 's/^/modified: /' && \
-		git untracked | sed 's/^/untracked: /' && \
-		git ignored | sed 's/^/ignored: /'
-	aliases = config --get-regexp ^alias\\.
-	log-graph = log --all --graph --abbrev-commit --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%ai%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n          %C(white)%s%C(reset)'
+    # tracking
+    untracked = ls-files --others --exclude-standard
+    # stashes
+    stashes = stash list
+    # diff
+    modified = diff --name-only
+    # staging
+    staged = diff --cached --name-only
+    unstage = restore --staged
+    precommit = diff --cached
+    # ignored
+    ignored = !git ls-files --ignored --others --exclude-from "$(git rev-parse --show-toplevel)/.gitignore"
+    # branches
+    branches = branch --all
+    new-branch = switch --create
+    delete-branch = branch --delete
+    force-delete-branch = branch --delete --force
+    # remotes
+    remotes = remote --verbose
+    # pushing
+    unpushed = log --branches --not --remotes --no-walk --oneline --format=format:'%s (%D)'
+    prepush = log origin..HEAD
+    # other
+    discards = ! \
+        git unpushed | sed 's/^/branch: /' | sed '$a\\' && \
+        git staged | sed 's/^/staged: /' && \
+        git stashes | sed 's/^[^:]*: /stashed: /' && \
+        git modified | sed 's/^/modified: /' && \
+        git untracked | sed 's/^/untracked: /' && \
+        git ignored | sed 's/^/ignored: /'
+    aliases = config --get-regexp ^alias\\.
+    log-graph = log --all --graph --abbrev-commit --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%ai%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n          %C(white)%s%C(reset)'

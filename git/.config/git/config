@@ -21,7 +21,13 @@
     unstage = restore --staged
     precommit = diff --cached
     # ignored
-    ignored = !git ls-files --ignored --others --exclude-from "$(git rev-parse --show-toplevel)/.gitignore"
+    ignored = "! \
+        if [ -e \"$(git rev-parse --show-toplevel)/.gitignore\" ]; then \
+            git ls-files --ignored --others --exclude-from \"$(git rev-parse --show-toplevel)/.gitignore\"; \
+        else \
+            git ls-files --ignored --others --exclude-standard; \
+        fi \
+    "
     # branches
     branches = branch --all
     new-branch = switch --create

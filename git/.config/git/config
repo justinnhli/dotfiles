@@ -36,6 +36,7 @@
 	discards = ! \
 		git unpushed | sed 's/^/branch: /' | sed '$a\\' && \
 		git staged | sed 's/^/staged: /' && \
+		git stashes | sed 's/^[^:]*: /stashed: /' && \
 		git modified | sed 's/^/modified: /' && \
 		git untracked | sed 's/^/untracked: /' && \
 		git ignored | sed 's/^/ignored: /'

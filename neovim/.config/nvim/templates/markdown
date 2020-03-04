@@ -10,11 +10,9 @@
         ol ol {list-style-type:lower-alpha;}
         ol ol ol {list-style-type:lower-roman;}
         /* CSS for code-prettify (prepend <!--?prettify linenums=true?--> to use) */
-        .prettyprinted ol {counter-reset:decimalOnly;}
-        .prettyprinted li {counter-increment:decimalOnly; position:relative;}
-        .prettyprinted li:before {content:counter(decimalOnly); margin-right:5px; position:absolute; right:100%;}
-        .prettyprinted li {list-style-type:" " !important; background:transparent !important;}
-        .prettyprinted li:hover {background:#EEEEEE !important;}
+        .prettyprinted ol.linenums {counter-reset:codeLineNum;}
+        .prettyprinted ol.linenums li {counter-increment:codeLineNum; position:relative; list-style-type:none; background-color:transparent;}
+        .prettyprinted ol.linenums li:before {content:counter(codeLineNum); position:absolute; right:100%; margin-right:1em;}
     </style>
     <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
 </head>

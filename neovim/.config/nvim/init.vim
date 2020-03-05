@@ -713,8 +713,8 @@ endif
 		nnoremap           <leader>O     eb"zye:!open $(find <C-r>=g:justinnhli_library_path<cr> -name <C-r>=expand('<cword>')<cr>.pdf) &<cr><cr>
 	endif
 	" open journal files with leader-J
-	nnoremap           <leader>JE    :tabnew <C-r>=g:justinnhli_journal_path<cr>/next.journal<cr>
 	nnoremap           <leader>JL    :tabnew <C-r>=g:justinnhli_journal_path<cr>/list.journal<cr>
+	nnoremap           <leader>JN    :tabnew <C-r>=g:justinnhli_journal_path<cr>/next.journal<cr>
 	nnoremap           <leader>JR    :tabnew <C-r>=g:justinnhli_journal_path<cr>/repo.journal<cr>
 	nnoremap           <leader>JD    :tabnew<cr>:r!dynalist.py mobile<cr>:0d<cr>:setlocal buftype=nowrite filetype=journal nomodifiable<cr>zM
 	" toggle settings with double leader

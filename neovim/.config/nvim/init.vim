@@ -8,7 +8,7 @@ if has('nvim')
 		silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 		augroup justinnhli_vimplug
 			autocmd!
-			autocmd VimEnter * PlugInstall
+			autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 		augroup END
 	endif
 

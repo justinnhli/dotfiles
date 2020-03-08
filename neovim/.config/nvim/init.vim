@@ -53,10 +53,6 @@ endif
 	mapclear
 	mapclear!
 	let g:mapleader = ' '
-
-	" buffer management {
-		nnoremap  <leader>e    :e<space>
-	" }
 " }
 
 " autocommands {

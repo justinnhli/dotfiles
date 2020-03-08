@@ -159,7 +159,7 @@ endif
 " autocommands {
 	augroup justinnhli
 		" filetypes
-		autocmd  BufNewFile          *       call s:LoadFileTypeTemplate()
+		autocmd  BufNewFile          *       call <SID>LoadFileTypeTemplate()
 		" keep windows equal in size
 		autocmd  VimResized          *       normal! <c-w>=
 		" restore cursor position

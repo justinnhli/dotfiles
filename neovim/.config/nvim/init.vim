@@ -110,12 +110,6 @@ endif
 		endif
 	endfunction
 
-	function! s:DuplicateBufferInTab()
-		let l:bufnum = bufnr('%')
-		tabnew
-		exec 'b '.l:bufnum
-	endfunction
-
 	function! s:LoadFileTypeTemplate()
 		let l:templates_file = fnamemodify($MYVIMRC, ':p:h').'/templates/'.&filetype
 		if filereadable(l:templates_file)
@@ -523,36 +517,7 @@ endif
 		vnoremap <silent> ]/ <esc>:call <SID>IndentTextObject(1, 0, 1)<cr><esc>gv
 	" }
 
-	" window management {
-		nnoremap  <leader>wnh  :leftabove vnew<cr>
-		nnoremap  <leader>wnj  :rightbelow new<cr>
-		nnoremap  <leader>wnk  :leftabove new<cr>
-		nnoremap  <leader>wnl  :rightbelow vnew<cr>
-		nnoremap  <leader>wrh  :leftabove vsplit scp://user@server.tld//absolute/path/to/file
-		nnoremap  <leader>wri  :rightbelow split scp://user@server.tld//absolute/path/to/file
-		nnoremap  <leader>wrk  :leftabove split scp://user@server.tld//absolute/path/to/file
-		nnoremap  <leader>wrl  :rightbelow vsplit scp://user@server.tld//absolute/path/to/file
-		nnoremap  <leader>wh   :leftabove vsplit<space>
-		nnoremap  <leader>wj   :rightbelow split<space>
-		nnoremap  <leader>wk   :leftabove split<space>
-		nnoremap  <leader>wl   :rightbelow vsplit<space>
-		nnoremap  <leader>weh  :Vexplore<cr>
-		nnoremap  <leader>wej  :Hexplore<cr>
-		nnoremap  <leader>wek  :Hexplore!<cr>
-		nnoremap  <leader>wel  :Vexplore!<cr>
-		nnoremap  <leader>wo   :only<cr>
-		nnoremap  <leader>wc   :close<cr>
-		nnoremap  <leader>wd   :call <SID>DuplicateBufferInTab()<cr>
-
-		" Ctrl+HJKL for moving between windows
-		if !exists('g:loaded_tmux_navigator')
-			nnoremap  <C-h>  <C-w>h
-			nnoremap  <C-j>  <C-w>j
-			nnoremap  <C-k>  <C-w>k
-			nnoremap  <C-l>  <C-w>l
-		endif
-
-		" terminal shortcuts
+	" terminal shortcuts {
 		if exists(':terminal')
 			nnoremap       <leader>!     :call <SID>StartTerminal(['silent! lcd '.expand('%:p:h')], '')<cr>
 			nnoremap       <leader>wth   :call <SID>StartTerminal(['leftabove vnew', 'silent! lcd '.expand('%:p:h')], '')<cr>

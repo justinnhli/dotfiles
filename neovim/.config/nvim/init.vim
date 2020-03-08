@@ -62,40 +62,6 @@ endif
 		endwhile
 	endfunction
 
-	function! s:ToggleColorColumn()
-		if &colorcolumn == 0
-			setlocal colorcolumn=80
-		elseif &colorcolumn == 80
-			setlocal colorcolumn=100
-		else
-			setlocal colorcolumn=0
-		endif
-	endfunction
-
-	function! s:ToggleDiff()
-		if &diff
-			diffoff
-		else
-			diffthis
-		endif
-	endfunction
-
-	function! s:ToggleFoldMethod()
-		if &foldmethod ==# 'indent'
-			set foldmethod=syntax
-		elseif &foldmethod ==# 'syntax'
-			set foldmethod=indent
-		endif
-	endfunction
-
-	function! s:ToggleColorScheme()
-		if g:colors_name ==# 'default'
-			exec 'colorscheme '.g:colorscheme
-		else
-			colorscheme default
-		endif
-	endfunction
-
 	function! s:LoadFileTypeTemplate()
 		let l:templates_file = fnamemodify($MYVIMRC, ':p:h').'/templates/'.&filetype
 		if filereadable(l:templates_file)
@@ -602,17 +568,6 @@ endif
 	nnoremap           <leader>JN    :tabnew <C-r>=g:justinnhli_journal_path<cr>/next.journal<cr>
 	nnoremap           <leader>JR    :tabnew <C-r>=g:justinnhli_journal_path<cr>/repo.journal<cr>
 	nnoremap           <leader>JD    :tabnew<cr>:r!dynalist.py mobile<cr>:0d<cr>:setlocal buftype=nowrite filetype=journal nomodifiable<cr>zM
-	" toggle settings with double leader
-	nnoremap           <leader><leader>c     :call <SID>ToggleColorColumn()<cr>:setlocal colorcolumn?<cr>
-	nnoremap           <leader><leader>d     :call <SID>ToggleDiff()<cr>:echo (&diff ? 'diffthis' : 'diffoff')<cr>
-	nnoremap           <leader><leader>f     :call <SID>ToggleFoldMethod()<cr>:set foldmethod?<cr>
-	nnoremap           <leader><leader>l     :set list!<cr>:set list?<cr>
-	nnoremap           <leader><leader>m     :call <SID>ToggleColorScheme()<cr>:colorscheme<cr>
-	nnoremap           <leader><leader>n     :set number!<cr>:set number?<cr>
-	nnoremap           <leader><leader>p     :set paste!<cr>:set paste?<cr>
-	nnoremap           <leader><leader>s     :set spell!<cr>:set spell?<cr>
-	nnoremap           <leader><leader>w     :set wrap!<cr>:set wrap?<cr>
-	nnoremap           <leader><leader>/     :set hlsearch!<cr>:set hlsearch?<cr>
 	" editor function shortcuts
 	nnoremap           <leader>a     ggVG
 	nnoremap           <leader>f     q:ivimgrep //g **/*<esc>Fg<left>i
@@ -629,8 +584,6 @@ endif
 	nnoremap           <leader><cr>  :make<cr>
 	vnoremap           <leader><cr>  y<Esc>:!<C-r>"<cr>
 	nnoremap  <silent> <leader>;     :lcd %:p:h<cr>
-	" custom functions
-	nnoremap  <silent> <leader>.     :exec 'set foldenable foldlevel='.foldlevel('.')<cr>
 " }
 
 " autocommands {

@@ -75,27 +75,6 @@ endif
 	endfunction
 " }
 
-" plugin functions {
-	function! s:EnterLimelight()
-		if &filetype ==# 'journal'
-			let g:limelight_bop = '^.'
-			let g:limelight_eop = '\ze\n'
-		endif
-		Limelight
-	endfunction
-	function! s:LeaveLimelight()
-		if &filetype ==# 'journal'
-			if exists('g:limelight_bop')
-				unlet g:limelight_bop
-			endif
-			if exists('g:limelight_eop')
-				unlet g:limelight_eop
-			endif
-		endif
-		Limelight!
-	endfunction
-" }
-
 " sessions {
 	set   directory=.,$XDG_DATA_HOME/nvim/sessions//,/var/tmp//
 	set   history=10000 " neovim default
@@ -333,11 +312,6 @@ endif
 	let g:gutentags_ctags_tagfile = '.tags'
 	" journal.vim
 	let g:jrnl_ignore_files = split(globpath('~/journal', '*.journal'), '\n')
-	" limelight.vim
-	augroup justinnhli_limelight
-		autocmd! User GoyoEnter call <SID>EnterLimelight()
-		autocmd! User GoyoLeave call <SID>LeaveLimelight()
-	augroup END
 	" netrw
 	let g:netrw_browse_split = 3
 	let g:netrw_liststyle = 3

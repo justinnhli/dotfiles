@@ -87,12 +87,6 @@ endif
 		nnoremap  <S-k>  :cprevious<cr>
 	" }
 
-	" terminal {
-		if exists(':tnoremap')
-			tnoremap <Esc><Esc> <C-\><C-n>
-		endif
-	" }
-
 	" editing {
 		" stay in visual mode after tabbing
 		vnoremap  <tab>    >gv

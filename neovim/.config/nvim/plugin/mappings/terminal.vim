@@ -28,4 +28,8 @@ if exists(':terminal')
 	vnoremap       <leader>wtl   y<Esc>:call <SID>StartTerminal(['rightbelow vnew', 'silent! lcd '.expand('%:p:h')], '<C-r>"')<cr>
 	vnoremap       <leader>tt    y<Esc>:call <SID>StartTerminal(['tabnew', 'silent! lcd ~'], '<C-r>"')<cr>
 	vnoremap       <leader>tT    y<Esc>:call <SID>StartTerminal(['tabnew', 'silent! lcd '.expand('%:p:h')], '<C-r>"')<cr>
+
+	if exists(':tnoremap')
+		tnoremap  <Esc><Esc>  <C-\><C-n>
+	endif
 endif

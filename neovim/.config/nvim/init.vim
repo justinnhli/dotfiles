@@ -83,23 +83,6 @@ endif
 		nnoremap  <S-j>  :cnext<cr>
 		nnoremap  <S-k>  :cprevious<cr>
 	" }
-
-	" editor function shortcuts
-	nnoremap           <leader>a     ggVG
-	nnoremap           <leader>f     q:ivimgrep //g **/*<esc>Fg<left>i
-	nnoremap           <leader>o     :!open<space>
-	nnoremap           <leader>p     "+p
-	nnoremap           <leader>y     "+y
-	vnoremap           <leader>y     "+y
-	nnoremap           <leader>z     1z=
-	nnoremap           <leader>/     :2match IncSearch ''<left>
-	nnoremap           <leader>@     :<C-f>ilet @=<C-r><C-r>
-	nnoremap           <leader>]     <C-w><C-]><C-w>T
-	vnoremap           <leader>]     <C-w><C-]><C-w>T
-	vnoremap           <leader><bar> :s/  \+/	/eg<cr>:'<,'>!column -ts '	'<cr>gv
-	nnoremap           <leader><cr>  :make<cr>
-	vnoremap           <leader><cr>  y<Esc>:!<C-r>"<cr>
-	nnoremap  <silent> <leader>;     :lcd %:p:h<cr>
 " }
 
 " autocommands {

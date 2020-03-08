@@ -119,11 +119,6 @@ endif
 		let branch = strpart(get(split(line, '\.\.\.'), 0, ''), 3)
 		return ' ('.branch.')'
 	endfunc
-
-	function! s:PatchColorschemes()
-		if g:colors_name ==# 'iceberg'
-		endif
-	endfunction
 " }
 
 " plugin functions {
@@ -472,8 +467,6 @@ endif
 			autocmd  TermOpen        *       setlocal nonumber nospell scrollback=-1
 			autocmd  TermClose       *       call feedkeys("i")
 		endif
-		" patch colorschemes
-		autocmd  ColorScheme         *       call s:PatchColorschemes()
 
 		" protect large files (>10M) from sourcing and other overhead.
 		" Set options:
@@ -487,7 +480,6 @@ endif
 " }
 
 " colorscheme {
-	" place after autocmds to patch colors
 	let g:colorscheme = 'iceberg'
 	set background=dark
 	try

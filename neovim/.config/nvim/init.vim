@@ -85,28 +85,3 @@ endif
 		endif
 	augroup END
 " }
-
-" plugin settings {
-	" clever-f
-	let g:clever_f_fix_key_direction = 1
-	let g:clever_f_timeout_ms = 5000
-	" fugitive
-	nnoremap  <leader>gg    :Git<space>
-	nnoremap  <leader>gb    :Gblame<cr>
-	nnoremap  <leader>gc    :Gcommit -m "
-	nnoremap  <leader>gd    :Gdiff<cr>
-	nnoremap  <leader>gp    :Gpush<cr>
-	" goyo.vim
-	nnoremap  <leader><leader>g     :Goyo<cr>
-	" gutentag
-	let g:gutentags_ctags_tagfile = '.tags'
-	" journal.vim
-	let g:jrnl_ignore_files = split(globpath('~/journal', '*.journal'), '\n')
-	" netrw
-	let g:netrw_browse_split = 3
-	let g:netrw_liststyle = 3
-	let g:netrw_list_hide = '\.swp$,\.un\~$'
-	let g:netrw_winsize = 50
-	" undotree
-	nnoremap  <leader><leader>u     :UndotreeToggle<cr>
-" }

@@ -382,8 +382,6 @@ endif
 
 	" disable the default leader
 	nnoremap \ <nop>
-	noremap <esc> <nop>
-	noremap! <esc> <nop>
 
 	" text movement {
 		" bash/emacs home/end commands

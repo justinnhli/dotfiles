@@ -75,18 +75,6 @@ endif
 		nnoremap  <leader>e    :e<space>
 	" }
 
-	" disable annoying features {
-		" disable Shift+JK in visual mode
-		vnoremap  <S-j>  <nop>
-		vnoremap  <S-k>  <nop>
-
-		" disable the manpage lookup
-		vnoremap  K  <Nop>
-
-		" disable Ex mode
-		nnoremap  Q  <Nop>
-	" }
-
 	" search, command line, and quick fix {
 		" default to very magic search
 		nnoremap  /  /\v

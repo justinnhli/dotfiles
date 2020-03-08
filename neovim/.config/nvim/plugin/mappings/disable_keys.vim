@@ -46,3 +46,13 @@ inoremap  <F9>       <nop>
 inoremap  <F10>      <nop>
 inoremap  <F11>      <nop>
 inoremap  <F12>      <nop>
+
+" disable Shift+JK in visual mode
+vnoremap  <S-j>  <nop>
+vnoremap  <S-k>  <nop>
+
+" disable the manpage lookup
+vnoremap  K  <nop>
+
+" disable Ex mode
+nnoremap  Q  <nop>

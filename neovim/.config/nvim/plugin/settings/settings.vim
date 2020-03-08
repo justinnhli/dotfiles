@@ -49,6 +49,7 @@ if has('syntax')
 endif
 set   autoindent " neovim default
 set   autoread " neovim default
+set   background=dark
 set   backspace=indent,eol,start " neovim default
 set   cinoptions=(s,m1
 set   confirm

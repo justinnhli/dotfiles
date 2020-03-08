@@ -86,16 +86,6 @@ endif
 	augroup END
 " }
 
-" colorscheme {
-	let g:colorscheme = 'iceberg'
-	set background=dark
-	try
-		exec 'colorscheme '.g:colorscheme
-	catch
-		colorscheme default
-	endtry
-" }
-
 " plugin settings {
 	" clever-f
 	let g:clever_f_fix_key_direction = 1

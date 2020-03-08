@@ -52,12 +52,14 @@ set   autoread " neovim default
 set   backspace=indent,eol,start " neovim default
 set   cinoptions=(s,m1
 set   confirm
+set   directory=.,$XDG_DATA_HOME/nvim/sessions//,/var/tmp//
 set   display=lastline,uhex
 set noerrorbells
 set   expandtab
 set   guioptions-=L
 set   guioptions-=T
 set   guioptions-=r
+set   history=10000 " neovim default
 set   ignorecase
 set   laststatus=2 " neovim default
 set   lazyredraw
@@ -107,6 +109,15 @@ if has('multi_byte')
 	set nobomb
 	set   encoding=utf-8 " neovim default
 	set   fileencoding=utf-8
+endif
+if has('persistent_undo')
+	set   undodir=.
+	set   undofile
+endif
+if exists('&shada')
+	set   shada='50,h
+else
+	set   viminfo='50,<100,h,n~/.viminfo
 endif
 if has('statusline')
 	set   statusline=

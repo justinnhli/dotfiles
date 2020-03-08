@@ -1,8 +1,3 @@
-" <C-s> to write file
-nnoremap  <C-s>          :update<cr>
-inoremap  <C-s>          <esc>:update<cr>
-vnoremap  <C-s>          <esc>:update<cr>gv
-
 " stay in visual mode after tabbing
 vnoremap  <tab>          >gv
 vnoremap  <S-tab>        <gv

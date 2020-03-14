@@ -17,5 +17,6 @@ function s:SetLargeFile()
 endfunction
 
 augroup justinnhli_large_files
+	autocmd!
 	autocmd  BufReadPre  *  call <SID>SetLargeFile()
 augroup END

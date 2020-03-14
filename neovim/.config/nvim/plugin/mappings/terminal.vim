@@ -2,7 +2,7 @@ if exists(':terminal')
 
 	function s:StartTerminal(pre_cmd, cmd)
 		for l:pre_cmd in a:pre_cmd
-			exec l:pre_cmd
+			execute l:pre_cmd
 		endfor
 		let l:cmd = substitute(a:cmd, '^\s*\(.\{-}\)\s*$', '\1', '')
 		if l:cmd == ''

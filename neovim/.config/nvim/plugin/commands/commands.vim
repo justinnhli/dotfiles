@@ -1,6 +1,6 @@
 function s:Tagnew(args)
 	tabnew
-	exec 'tag '.a:args
+	execute 'tag '.a:args
 endfunction
 
 function s:MoveToRelTab(n)
@@ -13,35 +13,35 @@ function s:MoveToRelTab(n)
 		return
 	endif
 	if l:new_tab < 1
-		exec '0tabnew'
+		executeute '0tabnew'
 		let l:cur_tab += 1
 	elseif l:new_tab > l:num_tabs
-		exec 'tablast'
-		exec 'tabnew'
+		execute 'tablast'
+		execute 'tabnew'
 	else
 		if a:n < 0
 			if l:num_tabs == tabpagenr('$')
-				exec 'tabprev '.abs(a:n)
+				execute 'tabprev '.abs(a:n)
 			elseif a:n != -1
-				exec 'tabprev '.(abs(a:n)-1)
+				execute 'tabprev '.(abs(a:n)-1)
 			endif
 		else
 			if l:num_tabs == tabpagenr('$')
-				exec 'tabnext '.l:new_tab
+				execute 'tabnext '.l:new_tab
 			elseif a:n != 1
-				exec 'tabnext '.(l:new_tab-1)
+				execute 'tabnext '.(l:new_tab-1)
 			endif
 		endif
 		vert botright split
 	endif
-	exec 'buffer '.l:cur_buf
+	execute 'buffer '.l:cur_buf
 	let l:new_tab = tabpagenr()
-	exec 'tabnext '.l:cur_tab
-	exec l:cur_win.'wincmd c'
+	execute 'tabnext '.l:cur_tab
+	execute l:cur_win.'wincmd c'
 	if l:new_tab > l:num_tabs
-		exec 'tabnext '.(l:new_tab-1)
+		execute 'tabnext '.(l:new_tab-1)
 	else
-		exec 'tabnext '.l:new_tab
+		execute 'tabnext '.l:new_tab
 	endif
 	" FIXME fails when new_tab is the highest tab
 endfunction

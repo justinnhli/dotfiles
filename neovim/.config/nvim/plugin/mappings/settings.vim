@@ -26,7 +26,7 @@ endfunction
 
 function s:ToggleColorScheme()
 	if g:colors_name ==# 'default'
-		exec 'colorscheme '.g:colorscheme
+		execute 'colorscheme '.g:colorscheme
 	else
 		colorscheme default
 	endif
@@ -42,4 +42,4 @@ nnoremap            <leader><leader>p  :set paste!<cr>:set paste?<cr>
 nnoremap            <leader><leader>s  :set spell!<cr>:set spell?<cr>
 nnoremap            <leader><leader>w  :set wrap!<cr>:set wrap?<cr>
 nnoremap            <leader><leader>/  :set hlsearch!<cr>:set hlsearch?<cr>
-nnoremap  <silent>  <leader>.          :exec 'set foldenable foldlevel='.foldlevel('.')<cr>
+nnoremap  <silent>  <leader>.          :execute 'set foldenable foldlevel='.foldlevel('.')<cr>

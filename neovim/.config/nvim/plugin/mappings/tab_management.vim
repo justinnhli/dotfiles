@@ -1,7 +1,7 @@
 function s:CloseRightTabs()
 	let l:cur = tabpagenr()
 	while l:cur < tabpagenr('$')
-		exec 'tabclose '.(l:cur + 1)
+		execute 'tabclose '.(l:cur + 1)
 	endwhile
 endfunction
 

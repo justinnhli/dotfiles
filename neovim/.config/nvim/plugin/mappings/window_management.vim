@@ -1,7 +1,7 @@
 function s:DuplicateBufferInTab()
 	let l:bufnum = bufnr('%')
 	tabnew
-	exec 'b '.l:bufnum
+	execute 'b '.l:bufnum
 endfunction
 
 " basic

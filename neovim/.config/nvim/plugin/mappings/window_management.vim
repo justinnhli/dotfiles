@@ -4,7 +4,7 @@ function s:DuplicateBufferInTab()
 	execute 'b '.l:bufnum
 endfunction
 
-" basic
+" opening windows
 nnoremap  <leader>wnh  :leftabove vnew<cr>
 nnoremap  <leader>wnj  :rightbelow new<cr>
 nnoremap  <leader>wnk  :leftabove new<cr>
@@ -21,12 +21,14 @@ nnoremap  <leader>weh  :Vexplore<cr>
 nnoremap  <leader>wej  :Hexplore<cr>
 nnoremap  <leader>wek  :Hexplore!<cr>
 nnoremap  <leader>wel  :Vexplore!<cr>
-nnoremap  <leader>wo   :only<cr>
-nnoremap  <leader>wc   :close<cr>
 nnoremap  <leader>wd   :call <SID>DuplicateBufferInTab()<cr>
 
-" Ctrl+HJKL for moving between windows
+" moving between windows
 nnoremap  <C-h>        <C-w>h
 nnoremap  <C-j>        <C-w>j
 nnoremap  <C-k>        <C-w>k
 nnoremap  <C-l>        <C-w>l
+
+" closing windows
+nnoremap  <leader>wo   :only<cr>
+nnoremap  <leader>wc   :close<cr>

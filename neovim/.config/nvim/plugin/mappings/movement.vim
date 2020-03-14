@@ -1,6 +1,6 @@
 function s:IndentTextObject(updown, inout, visual)
 	if a:visual
-		normal!gv
+		normal! gv
 	endif
 	let l:line_num = line('.')
 	let l:step = (a:updown > 0 ? 1 : -1)

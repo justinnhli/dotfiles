@@ -18,10 +18,10 @@ if has('nvim')
 		Plug 'junegunn/goyo.vim'
 		Plug 'junegunn/limelight.vim'
 		Plug 'mbbill/undotree'
+		Plug 'tpope/vim-fugitive'
 		" extensions
 		Plug 'ludovicchabant/vim-gutentags'
 		Plug 'rhysd/clever-f.vim'
-		Plug 'tpope/vim-fugitive'
 		" color schemes
 		Plug 'cocopon/iceberg.vim'
 		" settings

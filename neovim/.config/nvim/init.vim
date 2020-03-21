@@ -28,8 +28,8 @@ if has('nvim')
 		Plug 'tpope/vim-sleuth'
 		" syntax
 		Plug 'glench/vim-jinja2-syntax'
-		Plug 'justinnhli/journal.vim', {'for': 'journal'}
-		Plug 'raimon49/requirements.txt.vim', {'for': 'requirements'}
+		Plug 'justinnhli/journal.vim'
+		Plug 'raimon49/requirements.txt.vim'
 		Plug 'leafgarland/typescript-vim'
 		call plug#end()
 	catch

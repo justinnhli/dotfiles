@@ -1,3 +1,4 @@
+let g:markdown_fenced_languages = ['css', 'html', 'java', 'javascript', 'python', 'sh']
 setlocal expandtab
 setlocal wrap
 if executable('cmark')

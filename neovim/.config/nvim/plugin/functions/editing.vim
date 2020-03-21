@@ -1,7 +1,8 @@
 function UnicodeToAscii()
 	set fileformat=unix
 	" newline (0x13)
-	%s///eg " newline
+	%s/\%u000B//eg " newline
+	%s/\%u000C//eg " form feed
 	%s/\%u2029//eg " paragraph separator
 	" space (0x20)
 	%s/\%u000B/ /eg " vertical tab
@@ -35,8 +36,10 @@ function UnicodeToAscii()
 	" ellipsis (0x2E)
 	%s/\%u2026/.../eg " horizontal ellipsis
 	" ligatures
+	%s/\%uFB00/ff/eg " ff
 	%s/\%uFB01/fi/eg " fi
 	%s/\%uFB02/fl/eg " fl
+	%s/\%uFB03/ffi/eg " ffi
 	" specials
 	%s/\%uFFFC//eg " object replacement character
 endfunction

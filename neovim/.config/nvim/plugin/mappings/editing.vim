@@ -29,8 +29,8 @@ nnoremap  <leader>/         :2match IncSearch ''<left>
 nnoremap  <leader>@         :<C-f>ilet @=<C-r><C-r>
 nnoremap  <leader>]         <C-w><C-]><C-w>T
 vnoremap  <leader>]         <C-w><C-]><C-w>T
-vnoremap  <leader><bar>     :s/  \+/      /eg<cr>gv
-vnoremap  <leader><bslash>  :s/  \+/   /eg<cr>:'<,'>!column -ts '      '<cr>gv
+vnoremap  <leader><bar>     :s/  \+/	/eg<cr>gv
+vnoremap  <leader><bslash>  :s/  \+/	/eg<cr>:'<,'>!column -ts '	'<cr>gv
 nnoremap  <leader><cr>      :make<cr>
 vnoremap  <leader><cr>      y<Esc>:!<C-r>"<cr>
 nnoremap  <leader>;         :lcd %:p:h<cr>

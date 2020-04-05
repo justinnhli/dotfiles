@@ -356,9 +356,9 @@ def do_graph(journal, args):
     disjoint_sets = dict((k, k) for k in entries)
     ancestors = defaultdict(set)
     edges = dict((k, set()) for k in entries)
-    for src in sorted(entries):
+    for src, entry in sorted(entries.items()):
         dests = set(
-            dest for dest in REF_REGEX.findall(entries[src])
+            dest for dest in REF_REGEX.findall(entry.text)
             if src > dest and dest in entries
         )
         ancestors[src] = set().union(*(ancestors[parent] for parent in dests))
@@ -382,7 +382,7 @@ def do_graph(journal, args):
     for srcs in sorted(components.values(), key=(lambda s: (len(s), min(s))), reverse=(not args.reverse)):
         print('\t// component size = {}'.format(len(srcs)))
         for src in sorted(srcs, reverse=args.reverse):
-            print('\t"{}" [fontsize="{}"];'.format(src, len(entries[src].split()) / 100))
+            print('\t"{}" [fontsize="{}"];'.format(src, len(entries[src].text.split()) / 100))
             if edges[src]:
                 print('\n'.join(
                     '\t"{}" -> "{}";'.format(src, dest)

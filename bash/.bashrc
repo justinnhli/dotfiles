@@ -27,9 +27,14 @@ else
 	export EDITOR=vi
 fi
 export VISUAL="$EDITOR"
-if [ "$(uname)" != 'Linux' ]; then
-	export BROWSER='firefox'
-fi
+case "$(uname)" in
+'Linux')
+	export BROWSER='firefox';;
+'Darwin')
+	# don't set BROWSER on Mac, since it breaks jupyter
+	# see https://bugs.python.org/issue24955
+	unset BROWSER;;
+esac
 export HISTSIZE=10000
 export HISTCONTROL=ignoredups
 

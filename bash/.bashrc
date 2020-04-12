@@ -27,7 +27,9 @@ else
 	export EDITOR=vi
 fi
 export VISUAL="$EDITOR"
-export BROWSER='firefox'
+if [ "$(uname)" != 'Linux' ]; then
+	export BROWSER='firefox'
+fi
 export HISTSIZE=10000
 export HISTCONTROL=ignoredups
 

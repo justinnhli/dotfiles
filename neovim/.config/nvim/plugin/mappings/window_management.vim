@@ -40,6 +40,7 @@ nnoremap  <leader>wej    :Hexplore<cr>
 nnoremap  <leader>wek    :Hexplore!<cr>
 nnoremap  <leader>wel    :Vexplore!<cr>
 nnoremap  <leader>wd     :call <SID>DuplicateBufferInTab()<cr>
+nnoremap  <leader>wT     <C-w>T
 
 " moving between windows
 nnoremap  <C-h>          <C-w>h

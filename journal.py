@@ -381,13 +381,22 @@ def do_graph(journal, args):
     print('')
     for srcs in sorted(components.values(), key=(lambda s: (len(s), min(s))), reverse=(not args.reverse)):
         print('\t// component size = {}'.format(len(srcs)))
+        node_lines = defaultdict(set)
+        edge_lines = []
         for src in sorted(srcs, reverse=args.reverse):
-            print('\t"{}" [fontsize="{}"];'.format(src, len(entries[src].text.split()) / 100))
-            if edges[src]:
-                print('\n'.join(
-                    '\t"{}" -> "{}";'.format(src, dest)
-                    for dest in sorted(edges[src], reverse=args.reverse)
-                ))
+            node_lines[src[:STRING_LENGTHS['month']]].add(
+                '"{}" [fontsize="{}"];'.format(src, len(entries[src].text.split()) / 100)
+            )
+            for dest in sorted(edges[src], reverse=args.reverse):
+                edge_lines.append('"{}" -> "{}";'.format(src, dest))
+        for month, entry_lines in node_lines.items():
+            print('\tsubgraph {')
+            print('\t\trank=same')
+            for entry_line in entry_lines:
+                print('\t\t' + entry_line)
+            print('\t}')
+        for edge_line in edge_lines:
+            print('\t' + edge_line)
         print('')
     print('}')
 

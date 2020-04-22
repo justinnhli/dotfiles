@@ -75,7 +75,7 @@ endif
 		autocmd  CmdwinEnter         *       inoremap <buffer> <C-c> <Esc>
 		" automatically open and close the quickfix window
 		autocmd  QuickFixCmdPost     [^l]*   nested cwindow
-		autocmd  WinEnter            *       if winnr('$') == 1 && getbufvar(winbufnr(winnr()), '&buftype') == 'quickfix' | q | endif
+		autocmd  WinEnter            *       if winnr('$') == 1 && getbufvar(winbufnr(winnr()), '&buftype') == 'quickfix' | quit | endif
 		" bound scope of search to the original window
 		autocmd  WinLeave            *       let w:search_on = &hlsearch | let w:last_search = @/
 		autocmd  WinEnter            *       if exists('w:search_on') && w:search_on | let @/ = w:last_search | else | set nohlsearch | endif

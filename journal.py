@@ -391,7 +391,7 @@ def do_graph(journal, args):
                 edge_lines.append('"{}" -> "{}";'.format(src, dest))
         for month, entry_lines in node_lines.items():
             print('\tsubgraph {')
-            print('\t\trank=same')
+            print('\t\trank=same;')
             for entry_line in entry_lines:
                 print('\t\t' + entry_line)
             print('\t}')

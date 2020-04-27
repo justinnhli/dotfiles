@@ -4,9 +4,11 @@ if exists(':terminal')
 		for l:pre_cmd in a:pre_cmd
 			execute l:pre_cmd
 		endfor
+		" strip whitespace from command
 		let l:cmd = substitute(a:cmd, '^\s*\(.\{-}\)\s*$', '\1', '')
 		if l:cmd == ''
 			terminal
+			setlocal nonumber nospell scrollback=-1
 			normal! 1|
 			startinsert
 		else
@@ -32,4 +34,17 @@ if exists(':terminal')
 	if exists(':tnoremap')
 		tnoremap  <Esc><Esc>  <C-\><C-n>
 	endif
+
+	" open directories in terminal instead of netrw
+
+	function s:isdir(dir) abort
+		return !empty(a:dir) && isdirectory(a:dir)
+	endfunction
+
+	augroup justinnhli_open_directories
+		autocmd!
+		autocmd VimEnter * silent! autocmd! FileExplorer *
+		autocmd BufEnter * if s:isdir(expand('%')) | call <SID>StartTerminal(['silent! lcd '.expand('%:p:h')], '') | endif
+	augroup END
+
 endif

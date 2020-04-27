@@ -20,7 +20,8 @@ export XDG_CACHE_HOME=$HOME/.cache
 export XDG_DATA_HOME=$HOME/.local/share
 if command -v nvim >/dev/null 2>&1; then
 	export EDITOR=nvim
-	export MANPAGER="nvim -c 'set ft=man' -"
+	export MANPAGER='nvim +Man!'
+	export MANWIDTH=999
 elif command -v vim >/dev/null 2>&1; then
 	export EDITOR=vim
 else

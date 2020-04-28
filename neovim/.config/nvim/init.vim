@@ -16,7 +16,6 @@ if has('nvim')
 		call plug#begin(expand('<sfile>:p:h').'/plugged')
 		" tools
 		Plug 'junegunn/goyo.vim'
-		Plug 'junegunn/limelight.vim'
 		Plug 'mbbill/undotree'
 		Plug 'tpope/vim-fugitive'
 		" extensions

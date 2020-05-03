@@ -8,7 +8,7 @@ if exists(':terminal')
 		let l:cmd = substitute(a:cmd, '^\s*\(.\{-}\)\s*$', '\1', '')
 		if l:cmd == ''
 			terminal
-			setlocal nonumber nospell scrollback=-1
+			setlocal nonumber nospell scrollback=100000
 			normal! 1|
 			startinsert
 		else

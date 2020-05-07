@@ -209,6 +209,18 @@ if command -v python3 >/dev/null 2>&1; then
 			fi
 		fi
 	}
+	venvrun() {
+		if [ $# -lt 2 ]; then
+			echo 'usage: venvrun VENV_NAME SCRIPT [ARGS ...]'
+			return 1
+		fi
+		# try both a python file and an installed script
+		if [ -e "$2" ]; then
+			( workon "$1" && shift 1 && python3 "$@" )
+		else
+			( workon "$1" && shift 1 && "$@" )
+		fi
+	}
 	rmvenv() {
 		for venv in "$@"; do
 			rm -rf "$PYTHON_VENV_HOME/$venv"

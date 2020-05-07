@@ -3,10 +3,6 @@
     email = justinnhli@gmail.com
 [core]
     editor = nvim
-[diff]
-    tool = nvim -d
-[merge]
-    tool = nvim -d
 [push]
     default = simple
 [alias]

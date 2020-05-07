@@ -1,5 +1,5 @@
 nnoremap  <leader>gg  :Git<space>
-nnoremap  <leader>gb  :Gblame<cr>
-nnoremap  <leader>gc  :Gcommit -m "
-nnoremap  <leader>gd  :Gdiff<cr>
-nnoremap  <leader>gp  :Gpush<cr>
+nnoremap  <leader>gb  :Git blame<cr>
+nnoremap  <leader>gc  :Git commit -m "
+nnoremap  <leader>gd  :Gdiffsplit<cr>
+nnoremap  <leader>gp  :Git push<cr>

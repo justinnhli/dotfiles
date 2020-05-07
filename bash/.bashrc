@@ -192,18 +192,18 @@ if command -v python3 >/dev/null 2>&1; then
 	workon() {
 		if [ $# -eq 0 ]; then
 			lsvenv
-		elif [ $# -eq 1 ]; then
-			if [ -f "$PYTHON_VENV_HOME/$1/bin/activate" ]; then
-				source "$PYTHON_VENV_HOME/$1/bin/activate"
-			else
-				read -p "venv '$1' not found; do you want to create it (Y/n)? " response
-				if [[ ! $response =~ ^[Nn]$ ]]; then
-					mkvenv "$1"
-				fi
-			fi
-		else
+			return 0
+		elif [ $# -ne 1 ]; then
 			echo 'usage: workon [environment]'
 			return 1
+		fi
+		if [ -f "$PYTHON_VENV_HOME/$1/bin/activate" ]; then
+			source "$PYTHON_VENV_HOME/$1/bin/activate"
+		else
+			read -p "venv '$1' not found; do you want to create it (Y/n)? " response
+			if [[ ! $response =~ ^[Nn]$ ]]; then
+				mkvenv "$1"
+			fi
 		fi
 	}
 	rmvenv() {

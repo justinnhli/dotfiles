@@ -165,8 +165,8 @@ if command -v python3 >/dev/null 2>&1; then
 		mkdir "$PYTHON_VENV_HOME"
 	fi
 	mkvenv() {
-		if [ $# -ne 1 ]; then
-			echo 'usage: mkvenv VENV_NAME'
+		if [ $# -lt 1 ]; then
+			echo 'usage: mkvenv VENV_NAME [PIP_ARGS ...]'
 			return 1
 		elif [ -d "$PYTHON_VENV_HOME/$1" ]; then
 			echo "venv $1 already exists"
@@ -187,6 +187,10 @@ if command -v python3 >/dev/null 2>&1; then
 		$py -m venv "$PYTHON_VENV_HOME/$1"
 		workon "$1"
 		pip install --upgrade pip
+		if [ $# -gt 1 ]; then
+			shift 1
+			pip install "$@"
+		fi
 	}
 	workon() {
 		if [ $# -eq 0 ]; then

@@ -6,7 +6,6 @@ endfunction
 
 function s:MaximizeWindow()
 	if !exists('w:maximized') || w:maximized == 0
-		echo 'first'
 		let w:maximized = 1
 		resize
 		vertical resize
@@ -15,7 +14,6 @@ function s:MaximizeWindow()
 			autocmd WinLeave * execute "normal! \<C-w>="
 		augroup END
 	else
-		echo 'second'
 		let w:maximized = 0
 		execute "normal! \<C-w>="
 		autocmd! justinnhli_maximize_window

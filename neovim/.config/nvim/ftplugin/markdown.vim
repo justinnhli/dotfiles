@@ -1,4 +1,7 @@
-let g:markdown_fenced_languages = ['css', 'html', 'java', 'javascript', 'python', 'sh', 'vim']
+" must load Java first since it screws up `syntax spell`
+" see https://vi.stackexchange.com/questions/18335/vim-cannot-check-markdown-spell
+let g:markdown_fenced_languages = ['java']
+let g:markdown_fenced_languages += ['css', 'html', 'javascript', 'python', 'sh', 'vim']
 setlocal expandtab
 setlocal wrap
 if executable('cmark')

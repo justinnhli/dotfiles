@@ -6,6 +6,7 @@ let g:justinnhli_library_path=expand('~/papers')
 nnoremap  <leader>JL  :tabnew <C-r>=g:justinnhli_journal_path<cr>/list.journal<cr>
 nnoremap  <leader>JN  :tabnew <C-r>=g:justinnhli_journal_path<cr>/next.journal<cr>
 nnoremap  <leader>JR  :tabnew <C-r>=g:justinnhli_journal_path<cr>/repo.journal<cr>
+" TODO make asynchronous; see :help job-control-usage
 nnoremap  <leader>JD  :tabnew<cr>:r!dynalist.py mobile<cr>:0d<cr>:setlocal buftype=nowrite filetype=journal nomodifiable<cr>zM
 
 " other special files

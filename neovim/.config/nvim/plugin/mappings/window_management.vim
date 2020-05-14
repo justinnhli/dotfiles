@@ -38,6 +38,15 @@ nnoremap  <leader>wrj    :rightbelow split scp://user@server.tld//absolute/path/
 nnoremap  <leader>wrk    :leftabove split scp://user@server.tld//absolute/path/to/file
 nnoremap  <leader>wrl    :rightbelow vsplit scp://user@server.tld//absolute/path/to/file
 
+" opening tags in new windows
+nnoremap  <leader>wgh    :execute 'leftabove vertical stjump ' . expand('<cword>')<cr>
+nnoremap  <leader>wgj    :execute 'rightbelow stjump ' . expand('<cword>')<cr>
+nnoremap  <leader>wgk    :execute 'leftabove stjump ' . expand('<cword>')<cr>
+nnoremap  <leader>wgl    :execute 'rightbelow vertical stjump ' . expand('<cword>')<cr>
+vnoremap  <leader>wgh    "zy:leftabove vertical stjump <C-r>z<cr>
+vnoremap  <leader>wgj    "zy:rightbelow stjump <C-r>z<cr>
+vnoremap  <leader>wgk    "zy:leftabove stjump <C-r>z<cr>
+vnoremap  <leader>wgl    "zy:rightbelow vertical stjump <C-r>z<cr>
 
 " duplicating windows in a new tab
 nnoremap  <leader>wd     :call <SID>DuplicateBufferInTab()<cr>

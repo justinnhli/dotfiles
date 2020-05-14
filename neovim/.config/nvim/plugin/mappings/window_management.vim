@@ -26,7 +26,7 @@ nnoremap  <leader>wnj    :rightbelow new<cr>
 nnoremap  <leader>wnk    :leftabove new<cr>
 nnoremap  <leader>wnl    :rightbelow vnew<cr>
 nnoremap  <leader>wrh    :leftabove vsplit scp://user@server.tld//absolute/path/to/file
-nnoremap  <leader>wri    :rightbelow split scp://user@server.tld//absolute/path/to/file
+nnoremap  <leader>wrj    :rightbelow split scp://user@server.tld//absolute/path/to/file
 nnoremap  <leader>wrk    :leftabove split scp://user@server.tld//absolute/path/to/file
 nnoremap  <leader>wrl    :rightbelow vsplit scp://user@server.tld//absolute/path/to/file
 nnoremap  <leader>wh     :leftabove vsplit<space>

@@ -8,7 +8,6 @@ endfunction
 " basic
 nnoremap  <leader>tn  :tabnew<space>
 nnoremap  <leader>tr  :tabnew scp://user@server.tld//absolute/path/to/file
-nnoremap  <leader>te  :Texplore<cr>
 nnoremap  <leader>to  :tabonly<cr>
 nnoremap  <leader>tp  :call <SID>CloseRightTabs()<cr>
 nnoremap  <leader>tc  :tabclose<cr>

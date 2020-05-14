@@ -33,10 +33,6 @@ nnoremap  <leader>wh     :leftabove vsplit<space>
 nnoremap  <leader>wj     :rightbelow split<space>
 nnoremap  <leader>wk     :leftabove split<space>
 nnoremap  <leader>wl     :rightbelow vsplit<space>
-nnoremap  <leader>weh    :Vexplore<cr>
-nnoremap  <leader>wej    :Hexplore<cr>
-nnoremap  <leader>wek    :Hexplore!<cr>
-nnoremap  <leader>wel    :Vexplore!<cr>
 nnoremap  <leader>wd     :call <SID>DuplicateBufferInTab()<cr>
 nnoremap  <leader>wT     <C-w>T
 

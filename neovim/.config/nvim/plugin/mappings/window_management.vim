@@ -20,20 +20,29 @@ function s:MaximizeWindow()
 	endif
 endfunction
 
-" opening windows
+" opening new windows
 nnoremap  <leader>wnh    :leftabove vnew<cr>
 nnoremap  <leader>wnj    :rightbelow new<cr>
 nnoremap  <leader>wnk    :leftabove new<cr>
 nnoremap  <leader>wnl    :rightbelow vnew<cr>
-nnoremap  <leader>wrh    :leftabove vsplit scp://user@server.tld//absolute/path/to/file
-nnoremap  <leader>wrj    :rightbelow split scp://user@server.tld//absolute/path/to/file
-nnoremap  <leader>wrk    :leftabove split scp://user@server.tld//absolute/path/to/file
-nnoremap  <leader>wrl    :rightbelow vsplit scp://user@server.tld//absolute/path/to/file
+
+" opening windows
 nnoremap  <leader>wh     :leftabove vsplit<space>
 nnoremap  <leader>wj     :rightbelow split<space>
 nnoremap  <leader>wk     :leftabove split<space>
 nnoremap  <leader>wl     :rightbelow vsplit<space>
+
+" opening remote files in new windows
+nnoremap  <leader>wrh    :leftabove vsplit scp://user@server.tld//absolute/path/to/file
+nnoremap  <leader>wrj    :rightbelow split scp://user@server.tld//absolute/path/to/file
+nnoremap  <leader>wrk    :leftabove split scp://user@server.tld//absolute/path/to/file
+nnoremap  <leader>wrl    :rightbelow vsplit scp://user@server.tld//absolute/path/to/file
+
+
+" duplicating windows in a new tab
 nnoremap  <leader>wd     :call <SID>DuplicateBufferInTab()<cr>
+
+" moving windows to a new tab
 nnoremap  <leader>wT     <C-w>T
 
 " moving between windows

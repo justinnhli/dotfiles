@@ -5,12 +5,14 @@ function s:CloseRightTabs()
 	endwhile
 endfunction
 
-" basic
+" opening tabs
 nnoremap  <leader>tn  :tabnew<space>
 nnoremap  <leader>tr  :tabnew scp://user@server.tld//absolute/path/to/file
+
+" closing tabs
+nnoremap  <leader>tc  :tabclose<cr>
 nnoremap  <leader>to  :tabonly<cr>
 nnoremap  <leader>tp  :call <SID>CloseRightTabs()<cr>
-nnoremap  <leader>tc  :tabclose<cr>
 
 " Shift+HL for moving between tabs
 nnoremap  <S-h>       :tabprev<cr>

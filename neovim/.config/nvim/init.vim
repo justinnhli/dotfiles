@@ -40,11 +40,17 @@ endif
 		let l:templates_file = fnamemodify($MYVIMRC, ':p:h').'/templates/'.&filetype
 		if filereadable(l:templates_file)
 			" read in the template file
-			exec '0r '.l:templates_file
+			execute '0r '.l:templates_file
 			" delete the blank last line
-			exec "normal! :$\<cr>dd"
-			" place cursor at first triple blank line
-			exec "normal! /\\n\\n\\n\<cr>jj"
+			execute "normal! :$\<cr>dd"
+			" place cursor at first triple blank line,
+			" or at the first line otherwise
+			call cursor(0, 0)
+			if search("\\n\\n\\n", 'c')
+				normal! jj
+			else
+				normal! gg
+			endif
 		endif
 	endfunction
 " }

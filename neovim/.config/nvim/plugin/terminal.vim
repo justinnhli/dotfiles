@@ -23,13 +23,13 @@ if exists(':terminal')
 	nnoremap       <leader>wtl   :call <SID>StartTerminal(['rightbelow vnew', 'silent! lcd '.expand('%:p:h')], '')<cr>
 	nnoremap       <leader>tt    :call <SID>StartTerminal(['tabnew', 'silent! lcd ~'], '')<cr>
 	nnoremap       <leader>tT    :call <SID>StartTerminal(['tabnew', 'silent! lcd '.expand('%:p:h')], '')<cr>
-	vnoremap       <leader>!     y<Esc>:call <SID>StartTerminal(['silent! lcd '.expand('%:p:h')], '<C-r>"')<cr>
-	vnoremap       <leader>wth   y<Esc>:call <SID>StartTerminal(['leftabove vnew', 'silent! lcd '.expand('%:p:h')], '<C-r>"')<cr>
-	vnoremap       <leader>wtj   y<Esc>:call <SID>StartTerminal(['rightbelow new', 'silent! lcd '.expand('%:p:h')], '<C-r>"')<cr>
-	vnoremap       <leader>wtk   y<Esc>:call <SID>StartTerminal(['leftabove new', 'silent! lcd '.expand('%:p:h')], '<C-r>"')<cr>
-	vnoremap       <leader>wtl   y<Esc>:call <SID>StartTerminal(['rightbelow vnew', 'silent! lcd '.expand('%:p:h')], '<C-r>"')<cr>
-	vnoremap       <leader>tt    y<Esc>:call <SID>StartTerminal(['tabnew', 'silent! lcd ~'], '<C-r>"')<cr>
-	vnoremap       <leader>tT    y<Esc>:call <SID>StartTerminal(['tabnew', 'silent! lcd '.expand('%:p:h')], '<C-r>"')<cr>
+	xnoremap       <leader>!     y<Esc>:call <SID>StartTerminal(['silent! lcd '.expand('%:p:h')], '<C-r>"')<cr>
+	xnoremap       <leader>wth   y<Esc>:call <SID>StartTerminal(['leftabove vnew', 'silent! lcd '.expand('%:p:h')], '<C-r>"')<cr>
+	xnoremap       <leader>wtj   y<Esc>:call <SID>StartTerminal(['rightbelow new', 'silent! lcd '.expand('%:p:h')], '<C-r>"')<cr>
+	xnoremap       <leader>wtk   y<Esc>:call <SID>StartTerminal(['leftabove new', 'silent! lcd '.expand('%:p:h')], '<C-r>"')<cr>
+	xnoremap       <leader>wtl   y<Esc>:call <SID>StartTerminal(['rightbelow vnew', 'silent! lcd '.expand('%:p:h')], '<C-r>"')<cr>
+	xnoremap       <leader>tt    y<Esc>:call <SID>StartTerminal(['tabnew', 'silent! lcd ~'], '<C-r>"')<cr>
+	xnoremap       <leader>tT    y<Esc>:call <SID>StartTerminal(['tabnew', 'silent! lcd '.expand('%:p:h')], '<C-r>"')<cr>
 
 	if exists(':tnoremap')
 		tnoremap  <Esc><Esc>  <C-\><C-n>

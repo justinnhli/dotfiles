@@ -1,8 +1,8 @@
 " stay in visual mode after tabbing
-vnoremap  <tab>          >gv
-vnoremap  <S-tab>        <gv
-vnoremap  >              >gv
-vnoremap  <              <gv
+xnoremap  <tab>          >gv
+xnoremap  <S-tab>        <gv
+xnoremap  >              >gv
+xnoremap  <              <gv
 
 " select previously pasted text
 nnoremap  gp             `[v`]
@@ -34,14 +34,14 @@ nnoremap  <leader>f         q:ivimgrep //g **/*<esc>Fg<left>i
 nnoremap  <leader>o         :!open<space>
 nnoremap  <leader>p         "+p
 nnoremap  <leader>y         "+y
-vnoremap  <leader>y         "+y
+xnoremap  <leader>y         "+y
 nnoremap  <leader>z         1z=
 nnoremap  <leader>/         :2match IncSearch ''<left>
 nnoremap  <leader>@         :<C-f>ilet @=<C-r><C-r>
 nnoremap  <leader>]         <C-w><C-]><C-w>T
-vnoremap  <leader>]         <C-w><C-]><C-w>T
-vnoremap  <leader><bar>     :<C-u>call <SID>FormatColumns()<cr>
-vnoremap  <leader><bslash>  :<C-u>call <SID>FormatTable()<cr>
+xnoremap  <leader>]         <C-w><C-]><C-w>T
+xnoremap  <leader><bar>     :<C-u>call <SID>FormatColumns()<cr>
+xnoremap  <leader><bslash>  :<C-u>call <SID>FormatTable()<cr>
 nnoremap  <leader><cr>      :make<cr>
-vnoremap  <leader><cr>      y<Esc>:!<C-r>"<cr>
+xnoremap  <leader><cr>      y<Esc>:!<C-r>"<cr>
 nnoremap  <leader>;         :lcd %:p:h<cr>

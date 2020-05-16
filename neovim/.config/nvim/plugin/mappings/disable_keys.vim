@@ -48,11 +48,11 @@ inoremap  <F11>      <nop>
 inoremap  <F12>      <nop>
 
 " disable Shift+JK in visual mode
-vnoremap  <S-j>  <nop>
-vnoremap  <S-k>  <nop>
+xnoremap  <S-j>  <nop>
+xnoremap  <S-k>  <nop>
 
 " disable the manpage lookup
-vnoremap  K  <nop>
+xnoremap  K  <nop>
 
 " disable Ex mode
 nnoremap  Q  <nop>

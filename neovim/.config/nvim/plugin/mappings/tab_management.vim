@@ -9,7 +9,7 @@ endfunction
 nnoremap  <leader>tn  :tabnew<space>
 nnoremap  <leader>tr  :tabnew scp://user@server.tld//absolute/path/to/file
 nnoremap  <leader>tg  <C-w><C-]><C-w>T
-vnoremap  <leader>tg  <C-w><C-]><C-w>T
+xnoremap  <leader>tg  <C-w><C-]><C-w>T
 
 " closing tabs
 nnoremap  <leader>tc  :tabclose<cr>

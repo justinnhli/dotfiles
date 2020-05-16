@@ -162,7 +162,7 @@ if command -v python3 >/dev/null 2>&1; then
 	alias gpip='PIP_REQUIRE_VIRTUALENV=false python3 -m pip'
 	export PYTHON_VENV_HOME="$XDG_DATA_HOME/venv"
 	if [ ! -d "$PYTHON_VENV_HOME" ]; then
-		mkdir "$PYTHON_VENV_HOME"
+		mkdir -p "$PYTHON_VENV_HOME"
 	fi
 	mkvenv() {
 		if [ $# -lt 1 ]; then

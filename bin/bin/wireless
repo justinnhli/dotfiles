@@ -3,6 +3,6 @@
 # find device
 device="$(iwconfig 2>/dev/null | grep 'IEEE 802.11' | awk '{print $1}')"
 
-killall wpa_supplicant dhcpcd && ip link set "$device" down
+killall -9 wpa_supplicant dhcpcd && ip link set "$device" down
 iwconfig "$device" channel auto
 ip link set "$device" up && wpa_supplicant -Bi "$device" -c /root/wpa_supplicant.conf && dhcpcd "$device" --debug --debug

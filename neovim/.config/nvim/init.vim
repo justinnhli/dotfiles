@@ -4,8 +4,9 @@ let g:python3_host_prog = $PYTHON_VENV_HOME.'/neovim/bin/python3'
 
 if has('nvim')
 	"auto-install vim-plug
-	if empty(glob('~/.config/nvim/autoload/plug.vim'))
-		silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+	let s:plug_path = fnamemodify($MYVIMRC, ':p:h') . '/autoload/plug.vim'
+	if empty(glob(s:plug_path))
+		execute "silent !curl -fLo " . s:plug_path . " --create-dirs 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'"
 		augroup justinnhli_vimplug
 			autocmd!
 			autocmd VimEnter * PlugInstall --sync | source $MYVIMRC

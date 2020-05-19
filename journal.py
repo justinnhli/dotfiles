@@ -375,27 +375,27 @@ def do_graph(journal, args):
             rep = disjoint_sets[rep]
         components[rep] |= path
     print('digraph {')
-    print('\tgraph [size="48", model="subset", rankdir="{}"];'.format('TB' if args.reverse else 'BT'))
+    print('\tgraph [size="48", model="subset", rankdir="BT"];')
     print('\tnode [fontcolor="#4E9A06", shape="none"];')
     print('\tedge [color="#555753"];')
     print('')
-    for srcs in sorted(components.values(), key=(lambda s: (len(s), min(s))), reverse=(not args.reverse)):
+    for srcs in sorted(components.values(), key=(lambda s: (len(s), min(s))), reverse=True):
         print('\t// component size = {}'.format(len(srcs)))
         node_lines = defaultdict(set)
-        edge_lines = []
-        for src in sorted(srcs, reverse=args.reverse):
+        edge_lines = set()
+        for src in srcs:
             node_lines[src[:STRING_LENGTHS['month']]].add(
                 '"{}" [fontsize="{}"];'.format(src, len(entries[src].text.split()) / 100)
             )
-            for dest in sorted(edges[src], reverse=args.reverse):
-                edge_lines.append('"{}" -> "{}";'.format(src, dest))
-        for month, entry_lines in node_lines.items():
+            for dest in edges[src]:
+                edge_lines.add('"{}" -> "{}";'.format(src, dest))
+        for month, entry_lines in sorted(node_lines.items(), reverse=args.reverse):
             print('\tsubgraph {')
-            print('\t\trank=same;')
-            for entry_line in entry_lines:
+            print('\t\trank="same";')
+            for entry_line in sorted(entry_lines, reverse=args.reverse):
                 print('\t\t' + entry_line)
             print('\t}')
-        for edge_line in edge_lines:
+        for edge_line in sorted(edge_lines, reverse=args.reverse):
             print('\t' + edge_line)
         print('')
     print('}')

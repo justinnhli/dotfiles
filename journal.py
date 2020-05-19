@@ -509,6 +509,20 @@ def do_readability(journal, args):
         print(date, '{: >6.3f}'.format(kincaid(entry.text)))
 
 
+@register('list search results in vim :grep format')
+def do_vimgrep(journal, args):
+    entry_locations = {}
+    with open(journal.tags_file) as fd:
+        for line in fd.readlines():
+            date, filepath, line_num = line.strip().split('\t')
+            entry_locations[date] = f'{filepath}:{line_num}'
+    entries = filter_entries(journal, args)
+    for date, entry in sorted(entries.items()):
+        location = entry_locations[date]
+        snippet = entry.text.replace('\n', ' ')[:40]
+        print(f'{location}:{snippet}')
+
+
 # CLI
 
 

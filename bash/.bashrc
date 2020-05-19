@@ -241,15 +241,17 @@ if [ "$NVIM_LISTEN_ADDRESS" != '' ]; then
 	workon neovim
 fi
 
-# journal related settings
-if [ -d "$HOME/journal" ]; then
-	alias vili="$VISUAL $HOME/journal/list.journal"
+# PIM related settings
+if [ -d "$HOME/pim" ]; then
+	pim_dir="$HOME/pim/"
+	alias vili="$VISUAL $pim_dir/journal/list.journal"
 	alias vidy="$VISUAL -c 'normal 1 JD'"
-	alias vine="$VISUAL $HOME/journal/next.journal"
-	alias vire="$VISUAL $HOME/journal/repo.journal"
+	alias vine="$VISUAL $pim_dir/journal/next.journal"
+	alias vire="$VISUAL $pim_dir/journal/repo.journal"
 	if command -v journal.py >/dev/null 2>&1; then
-		alias jrnl="journal.py $(ls $HOME/journal/[a-z-]*.journal 2>/dev/null | grep -v '[ ()]' | sed 's/^/--ignore /' | tr '\n' ' ')"
+		alias jrnl="journal.py $(ls $pim_dir/journal/[a-z-]*.journal 2>/dev/null | grep -v '[ ()]' | sed 's/^/--ignore /' | tr '\n' ' ')"
 	fi
+	alias vish="$VISUAL $pim_dir/sheaf/inbox.ppr"
 fi
 
 # completion

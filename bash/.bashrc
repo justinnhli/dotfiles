@@ -12,7 +12,6 @@ export PATH="$HOME/Dropbox/bin:$HOME/bin:$PATH"
 export PATH="$(find "$HOME/git" -maxdepth 2 -type f -perm -100 -exec dirname {} ';' 2>/dev/null | sort -f | uniq | tr '\n' ':' | sed 's/:$//'):$PATH"
 export PATH="$(find "$HOME/Dropbox/projects" -maxdepth 2 -type f -perm -100 -exec dirname {} ';' 2>/dev/null | sort -f | uniq | tr '\n' ':' | sed 's/:$//'):$PATH"
 export PYTHONPATH="$HOME/Dropbox/projects:$HOME/git"
-export PYTHONPATH="$(find "$HOME/git" -maxdepth 2 -type f -name 'setup.py' -exec dirname {} ';' 2>/dev/null | sort -f | uniq | tr '\n' ':' | sed 's/:$//'):$PYTHONPATH"
 
 # basic environment
 export XDG_CONFIG_HOME=$HOME/.config

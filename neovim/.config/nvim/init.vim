@@ -255,7 +255,6 @@ let g:jrnl_ignore_files = split(globpath('~/journal', '*.journal'), '\n')
 augroup justinnhli_journal
 	autocmd  FileType  journal  nnoremap  <buffer>  <leader>j  q:iJournal -S
 	autocmd  FileType  journal  xnoremap  <buffer>  <leader>j  "zyq:iJournal -S "<C-r>z"
-	autocmd  FileType  journal  inoremap  <buffer>  <C-d>      <c-r>=strftime("%Y-%m-%d")<cr>
 augroup END
 " netrw {{{2
 let g:netrw_browse_split = 3
@@ -637,6 +636,8 @@ nnoremap  Q  <nop>
 nnoremap  <C-s>  :update<cr>
 inoremap  <C-s>  <esc>:update<cr>
 xnoremap  <C-s>  <esc>:update<cr>gv
+" <C-D> to insert date {{{3
+inoremap  <C-d>  <c-r>=strftime("%Y-%m-%d")<cr>
 " default to very magic search {{{3
 nnoremap  /      /\v
 nnoremap  ?      ?\v

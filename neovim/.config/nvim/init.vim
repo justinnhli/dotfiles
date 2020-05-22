@@ -4,7 +4,7 @@
 " preamble {{{2
 set nocompatible " neovim default
 
-let g:python3_host_prog = $PYTHON_VENV_HOME.'/neovim/bin/python3'
+let g:python3_host_prog = $PYTHON_VENV_HOME . '/neovim/bin/python3'
 
 let g:justinnhli_pim_path=expand('~/Dropbox/pim')
 let g:justinnhli_scholarship_path=expand('~/Dropbox/scholarship')
@@ -24,7 +24,7 @@ if has('nvim')
 	endif
 
 	try
-		call plug#begin(expand('<sfile>:p:h').'/plugged')
+		call plug#begin(expand('<sfile>:p:h') . '/plugged')
 		" tools
 		Plug 'junegunn/goyo.vim'
 		Plug 'mbbill/undotree'
@@ -66,7 +66,7 @@ function BuildTabLine()
 		endif
 		let l:tabline .= ' '
 		" set window number and modified flag
-		let l:tabline .= '['.tabpagewinnr(i + 1,'$').']'
+		let l:tabline .= '[' . tabpagewinnr(i + 1,'$') . ']'
 		" tab page is modified if any buffer is modified
 		for b in l:buffers
 			if getbufvar(b, '&modified' )
@@ -81,7 +81,7 @@ function BuildTabLine()
 endfunction
 
 function GetGitBranch()
-	let gitoutput = system('git status --porcelain=1 -b '.shellescape(expand('%')).' 2>/dev/null')
+	let gitoutput = system('git status --porcelain=1 -b ' . shellescape(expand('%')) . ' 2>/dev/null')
 	if len(gitoutput) == 0
 		return ''
 	endif
@@ -89,7 +89,7 @@ function GetGitBranch()
 	let line = get(split(gitoutput, '\n'), 0, '')
 	" python equivalent: line.split('...')[3:]
 	let branch = strpart(get(split(line, '\.\.\.'), 0, ''), 3)
-	return ' ('.branch.')'
+	return ' (' . branch . ')'
 endfunc
 
 " settings {{{2
@@ -269,7 +269,7 @@ nnoremap  <leader><leader>u  :UndotreeToggle<cr>
 " colorscheme {{{2
 let g:colorscheme = 'iceberg'
 try
-	execute 'colorscheme '.g:colorscheme
+	execute 'colorscheme ' . g:colorscheme
 catch
 	colorscheme default
 endtry
@@ -730,10 +730,10 @@ augroup justinnhli_create_directories
 augroup END
 " load filetype templates {{{2
 function s:LoadFiletypeTemplate()
-	let l:templates_file = fnamemodify($MYVIMRC, ':p:h').'/templates/'.&filetype
+	let l:templates_file = fnamemodify($MYVIMRC, ':p:h') . '/templates/' . &filetype
 	if filereadable(l:templates_file)
 		" read in the template file
-		execute '0r '.l:templates_file
+		execute '0r ' . l:templates_file
 		" delete the blank last line
 		execute "normal! :$\<cr>dd"
 		" place cursor at first triple blank line,
@@ -756,7 +756,7 @@ if exists(':terminal')
 	endfunction
 	augroup justinnhli_open_directories
 		autocmd  VimEnter  *  silent! autocmd! FileExplorer *
-		autocmd  BufEnter  *  if s:IsDir(expand('%')) | call <SID>StartTerminal(['silent! lcd '.expand('%:p:h')], '') | endif
+		autocmd  BufEnter  *  if s:IsDir(expand('%')) | call <SID>StartTerminal(['silent! lcd ' . expand('%:p:h')], '') | endif
 	augroup END
 endif
 

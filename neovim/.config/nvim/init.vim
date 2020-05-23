@@ -335,7 +335,7 @@ nnoremap  <leader>wgj  :execute 'rightbelow stjump ' . expand('<cword>')<cr>
 nnoremap  <leader>wgk  :execute 'leftabove stjump ' . expand('<cword>')<cr>
 nnoremap  <leader>wgl  :execute 'rightbelow vertical stjump ' . expand('<cword>')<cr>
 nnoremap  <leader>tg   <C-w><C-]><C-w>T
-xnoremap  <leader>wgh  "zy:tjump <C-r>z<cr>
+xnoremap  <leader>wge  "zy:tjump <C-r>z<cr>
 xnoremap  <leader>wgh  "zy:leftabove vertical stjump <C-r>z<cr>
 xnoremap  <leader>wgj  "zy:rightbelow stjump <C-r>z<cr>
 xnoremap  <leader>wgk  "zy:leftabove stjump <C-r>z<cr>
@@ -348,6 +348,12 @@ nnoremap  <leader>wfj  :rightbelow new<cr>q:ivimgrep //g **/*<esc>0f/a
 nnoremap  <leader>wfk  :leftabove new<cr>q:ivimgrep //g **/*<esc>0f/a
 nnoremap  <leader>wfl  :rightbelow vnew<cr>q:ivimgrep //g **/*<esc>0f/a
 nnoremap  <leader>tf   :tabnew<cr>q:ivimgrep //g **/*<esc>0f/a
+xnoremap  <leader>wfe  "zy:vimgrep /<C-r>z/g **/*<cr>
+xnoremap  <leader>wfh  "zy:leftabove vnew<cr>:vimgrep /<C-r>z/g **/*<cr>
+xnoremap  <leader>wfj  "zy:rightbelow new<cr>:vimgrep /<C-r>z/g **/*<cr>
+xnoremap  <leader>wfk  "zy:leftabove new<cr>:vimgrep /<C-r>z/g **/*<cr>
+xnoremap  <leader>wfl  "zy:rightbelow vnew<cr>:vimgrep /<C-r>z/g **/*<cr>
+xnoremap  <leader>tf   "zy:tabnew<cr>:vimgrep /<C-r>z/g **/*<cr>
 " window manipulation functions {{{3
 function s:DuplicateBuffer()
 	let l:bufnum = bufnr('%')
@@ -706,12 +712,12 @@ endif
 " change grep {{{2
 function s:AutosetGrepMappings()
 	if &grepprg !~# '^grep -n '
-		nnoremap  <buffer>  <leader>fe  q:isilent grep<space>
-		execute 'nnoremap  <buffer>  <leader>ft  :tabnew<cr>:setlocal filetype=' . &filetype . '<cr>q:isilent grep<space>'
-		execute 'nnoremap  <buffer>  <leader>fh  :leftabove vnew<cr>setlocal filetype=' . &filetype . 'q:isilent grep<space>'
-		execute 'nnoremap  <buffer>  <leader>fj  :rightbelow new<cr>setlocal filetype=' . &filetype . 'q:isilent grep<space>'
-		execute 'nnoremap  <buffer>  <leader>fk  :leftabove new<cr>setlocal filetype=' . &filetype . 'q:isilent grep<space>'
-		execute 'nnoremap  <buffer>  <leader>fl  :rightbelow vnew<cr>setlocal filetype=' . &filetype . 'q:isilent grep<space>'
+		nnoremap  <buffer>  <leader>wfe  q:isilent grep<space>
+		execute 'nnoremap  <buffer>  <leader>wfh  :leftabove vnew<cr>:setlocal filetype=' . &filetype . '<cr>q:isilent grep<space>'
+		execute 'nnoremap  <buffer>  <leader>wfj  :rightbelow new<cr>:setlocal filetype=' . &filetype . '<cr>q:isilent grep<space>'
+		execute 'nnoremap  <buffer>  <leader>wfk  :leftabove new<cr>:setlocal filetype=' . &filetype . '<cr>q:isilent grep<space>'
+		execute 'nnoremap  <buffer>  <leader>wfl  :rightbelow vnew<cr>:setlocal filetype=' . &filetype . '<cr>q:isilent grep<space>'
+		execute 'nnoremap  <buffer>  <leader>tf  :tabnew<cr>:setlocal filetype=' . &filetype . '<cr>q:isilent grep<space>'
 	endif
 endfunction
 augroup justinnhli_autoset_grep_mappings

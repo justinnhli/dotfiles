@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import re
+import sys
 import tarfile
 from argparse import ArgumentParser
 from collections import namedtuple, defaultdict
@@ -193,7 +194,7 @@ class Journal:
                 prev_indent = indent
         if errors:
             print('\n'.join('{}:{}: {}'.format(*error) for error in sorted(errors)))
-            exit(1)
+            sys.exit(1)
 
 
 # utility functions
@@ -389,7 +390,7 @@ def do_graph(journal, args):
             )
             for dest in edges[src]:
                 edge_lines.add('"{}" -> "{}";'.format(src, dest))
-        for month, entry_lines in sorted(node_lines.items(), reverse=args.reverse):
+        for _, entry_lines in sorted(node_lines.items(), reverse=args.reverse):
             print('\tsubgraph {')
             print('\t\trank="same";')
             for entry_line in sorted(entry_lines, reverse=args.reverse):

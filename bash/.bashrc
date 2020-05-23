@@ -185,7 +185,7 @@ if command -v python3 >/dev/null 2>&1; then
 		fi
 		$py -m venv "$PYTHON_VENV_HOME/$1"
 		workon "$1"
-		pip install --upgrade pip
+		pip install --upgrade pip wheel
 		if [ $# -gt 1 ]; then
 			shift 1
 			pip install "$@"

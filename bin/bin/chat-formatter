@@ -113,6 +113,45 @@ def allo(text):
 
 
 def slack(text):
+    time = None
+    speaker = None
+    message = None
+    time_regex = re.compile('[0-9]{2}:[0-9]{2}')
+    speaker_regex = re.compile('^[A-Z][a-z]* [A-Z][a-z]*')
+    thread_regex = re.compile('[0-9]+ repl(y|ies)')
+    reaction_regex = re.compile(':[^:]+:')
+    ignore_next = False
+    was_thread = False
+    for line in text.splitlines():
+        if ignore_next:
+            ignore_next = False
+            continue
+        line = line.strip()
+        if not line:
+            cotninue
+        if time_regex.fullmatch(line):
+            prev_time = time
+            time = line
+            if prev_time is not None and time < prev_time:
+                print()
+        elif thread_regex.fullmatch(line):
+            ignore_next = True
+        elif reaction_regex.fullmatch(line):
+            ignore_next = True
+        elif speaker_regex.match(line):
+            match = speaker_regex.match(line)
+            speaker = match.group(0)
+            message = line[len(speaker):].strip()
+        else:
+            message = line
+        if message:
+            if message.endswith(' (edited)'):
+                message = message[:-9]
+            print(f'{time} {speaker}: {message}')
+            message = None
+
+
+def slack_web(text):
     soup = BeautifulSoup(text, 'html.parser')
     date = None
     speaker = None

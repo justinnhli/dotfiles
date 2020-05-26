@@ -579,6 +579,19 @@ xnoremap  <silent>  [/  <esc>:call <SID>IndentTextObject(-1, 1, 1)<cr><esc>gv
 xnoremap  <silent>  ],  <esc>:call <SID>IndentTextObject(1, -1, 1)<cr><esc>gv
 xnoremap  <silent>  ].  <esc>:call <SID>IndentTextObject(1, 0, 1)<cr><esc>gv
 xnoremap  <silent>  ]/  <esc>:call <SID>IndentTextObject(1, 0, 1)<cr><esc>gv
+" quickfix/location functions {{{2
+function s:NextQuickFixOrLocation()
+	cnext
+endfunction
+function s:PrevQuickFixOrLocation()
+	cprev
+endfunction
+" quickfix/location mappings {{{2
+" TODO turn into autocmd that automatically maps to quickfix and location
+" the event is QuickFixCmdPost
+" check if location list is open with if get(getloclist(0, {'winid':0}), 'winid', 0)
+nnoremap  <S-j>  :call <SID>NextQuickFixOrLocation()<cr>
+nnoremap  <S-k>  :call <SID>PrevQuickFixOrLocation()<cr>
 " disabled mappings {{{2
 " disable arrow keys {{{3
 noremap   <up>       <nop>
@@ -660,9 +673,6 @@ nnoremap  :      :<C-f>i
 nnoremap  q:     :
 xnoremap  :      :<C-f>i
 xnoremap  q:     :
-" Shift+JK for moving between quickfixes {{{3
-nnoremap  <S-j>  :cnext<cr>
-nnoremap  <S-k>  :cprevious<cr>
 " editing functions {{{2
 " format table {{{3
 function s:FormatTable()

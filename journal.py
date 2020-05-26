@@ -515,6 +515,8 @@ def do_readability(journal, args):
 
 @register('list search results in vim :grep format')
 def do_vimgrep(journal, args):
+    prefix_len = 20
+    suffix_len = 40
     entry_files = {}
     with open(journal.tags_file) as fd:
         for line in fd.readlines():
@@ -529,17 +531,17 @@ def do_vimgrep(journal, args):
         col_num = len(prev_lines[-1]) + 1
         filepath = entry_files[date]
         match_line = entry.text.splitlines()[line_num - 1].strip()
-        if col_num < 20:
+        if col_num < prefix_len:
             start_index = 0
             prefix = ''
         else:
-            start_index = match_line.rfind(' ', 0, col_num - 20) + 1
+            start_index = match_line.rfind(' ', 0, col_num - prefix_len) + 1
             prefix = '[...] '
-        if col_num > len(match_line) - 40:
+        if col_num > len(match_line) - suffix_len:
             end_index = len(match_line)
             suffix = ''
         else:
-            end_index = match_line.find(' ', col_num + 40)
+            end_index = match_line.find(' ', col_num + suffix_len)
             suffix = ' [...]'
         snippet = match_line[start_index:end_index]
         print(f'{filepath}:{line_num}:{col_num}:{date} {prefix}{snippet}{suffix}')

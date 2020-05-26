@@ -526,9 +526,14 @@ def do_vimgrep(journal, args):
     for date, entry in sorted(entries.items(), reverse=True):
         matches = [re.search(term, entry.text, flags=re.IGNORECASE) for term in args.terms]
         first_index = min(match.start() for match in matches if match)
-        prev_lines = entry.text[:first_index].splitlines()
-        line_num = len(prev_lines)
-        col_num = len(prev_lines[-1]) + 1
+        if first_index == 0:
+            prev_lines = entry.text.splitlines()
+            line_num = 1
+            col_num = 1
+        else:
+            prev_lines = entry.text[:first_index].splitlines()
+            line_num = len(prev_lines)
+            col_num = len(prev_lines[-1]) + 1
         filepath = entry_files[date]
         match_line = entry.text.splitlines()[line_num - 1].strip()
         if col_num < prefix_len:

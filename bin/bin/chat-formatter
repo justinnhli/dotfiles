@@ -128,7 +128,7 @@ def slack(text):
             continue
         line = line.strip()
         if not line:
-            cotninue
+            continue
         if time_regex.fullmatch(line):
             prev_time = time
             time = line

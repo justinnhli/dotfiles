@@ -53,6 +53,9 @@ class Journal:
             for journal_file in self.journal_files:
                 self._read_file(journal_file)
 
+    def __len__(self):
+        return len(self.entries)
+
     def __getitem__(self, key):
         return self.entries[key]
 
@@ -716,6 +719,8 @@ def main():
     arg_parser = make_arg_parser()
     args = parse_args(arg_parser)
     journal = Journal(args.directory, use_cache=args.use_cache, ignores=args.ignores)
+    if len(journal) == 0:
+        arg_parser.error(f'no journal entries found in {args.directory}')
     if args.log:
         log_search(arg_parser, args, journal)
     try:

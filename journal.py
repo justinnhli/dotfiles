@@ -701,7 +701,7 @@ def parse_args(arg_parser):
 
 def log_search(arg_parser, args, journal):
     # pylint: disable = protected-access
-    if args.operation.__name__[3:] not in ('show', 'list'):
+    if args.operation.__name__[3:] not in ('show', 'list', 'vimgrep'):
         return
     log_file = journal.directory.joinpath('.log').resolve()
     if args.log and log_file.exists():

@@ -41,8 +41,9 @@ if has('nvim')
 		" syntax
 		Plug 'glench/vim-jinja2-syntax'
 		Plug 'justinnhli/journal.vim'
-		Plug 'raimon49/requirements.txt.vim'
+		Plug 'keith/swift.vim'
 		Plug 'leafgarland/typescript-vim'
+		Plug 'raimon49/requirements.txt.vim'
 		call plug#end()
 	catch
 	endtry

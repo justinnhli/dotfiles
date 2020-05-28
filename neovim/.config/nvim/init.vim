@@ -728,7 +728,7 @@ function s:AutosetGrepMappings()
 		execute 'nnoremap  <buffer>  <leader>wfk  :leftabove new<cr>:setlocal filetype=' . &filetype . '<cr>q:isilent grep<space>'
 		execute 'nnoremap  <buffer>  <leader>wfl  :rightbelow vnew<cr>:setlocal filetype=' . &filetype . '<cr>q:isilent grep<space>'
 		execute 'nnoremap  <buffer>  <leader>tf  :tabnew<cr>:setlocal filetype=' . &filetype . '<cr>q:isilent grep<space>'
-		xnoremap  <buffer>  <leader>wfe  "zy:silent grep /<C-r>z/g **/*<cr>
+		xnoremap  <buffer>  <leader>wfe  "zy:silent grep <C-r>z<cr>
 		execute 'xnoremap  <buffer>  <leader>wfh  "zy:leftabove vnew<cr>:setlocal filetype=' . &filetype . '<cr>q:isilent grep <C-r>z<cr>'
 		execute 'xnoremap  <buffer>  <leader>wfj  "zy:rightbelow new<cr>:setlocal filetype=' . &filetype . '<cr>q:isilent grep <C-r>z<cr>'
 		execute 'xnoremap  <buffer>  <leader>wfk  "zy:leftabove new<cr>:setlocal filetype=' . &filetype . '<cr>q:isilent grep <C-r>z<cr>'

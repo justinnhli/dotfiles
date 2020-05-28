@@ -713,14 +713,15 @@ xnoremap  <S-tab>  <gv
 xnoremap  >        >gv
 xnoremap  <        <gv
 " select previously pasted text {{{3
-nnoremap  gp             `[v`]
+nnoremap  gp       `[v`]
 " jump to the end of pasted text {{{3
-nnoremap  p              p`]
+nnoremap  p        p`]
 " make Y behave like other capitals {{{3
-nnoremap  Y              y$
+nnoremap  Y        y$
 " rebind undo/redo traverse the undo tree instead of the undo stack {{{3
-nnoremap  u                 g-
-nnoremap  <C-r>             g+
+nnoremap  u        g-
+nnoremap  <C-r>    g+
+" miscellaneous editing mappings {{{3
 nnoremap  <leader>a         ggVG
 nnoremap  <leader>o         :!open<space>
 nnoremap  <leader>p         "+p

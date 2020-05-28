@@ -481,7 +481,7 @@ function s:OpenExternal(arg)
 		endif
 	else
 		" research paper
-		let l:target = system('find ' .. g:justinnhli_library_path .. ' -name ' .. l:target)
+		let l:target = system('find ' .. g:justinnhli_library_path .. ' -name ' .. l:target .. '.pdf')
 		if g:os == 'Linux'
 			let l:program = 'zathura'
 		else

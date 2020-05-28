@@ -6,6 +6,8 @@ set nocompatible " neovim default
 
 let g:python3_host_prog = $PYTHON_VENV_HOME . '/neovim/bin/python3'
 
+let g:os = substitute(system('uname'), '\n', '', '')
+
 let g:justinnhli_pim_path=expand('~/Dropbox/pim')
 let g:justinnhli_scholarship_path=expand('~/Dropbox/scholarship')
 let g:justinnhli_library_path=expand('~/papers')
@@ -465,11 +467,31 @@ nnoremap  <leader>JR  :tabnew <C-r>=g:justinnhli_pim_path<cr>/journal/repo.journ
 nnoremap  <leader>JD  :tabnew<cr>:r!dynalist.py mobile<cr>:0d<cr>:setlocal buftype=nowrite filetype=journal nomodifiable<cr>zM
 nnoremap  <leader>C   :tabnew <C-r>=g:justinnhli_pim_path<cr>/contacts/contacts.vcf<cr>
 nnoremap  <leader>L   :tabnew <C-r>=g:justinnhli_pim_path<cr>/library.bib<cr>
-if executable('zathura')
-	nnoremap  <leader>O  eb"zye:!zathura $(find <C-r>=g:justinnhli_library_path<cr> -name <C-r>=expand('<cword>')<cr>.pdf) &<cr><cr>
-else
-	nnoremap  <leader>O  eb"zye:!open $(find <C-r>=g:justinnhli_library_path<cr> -name <C-r>=expand('<cword>')<cr>.pdf) &<cr><cr>
-endif
+" open external functions {{{3
+function s:OpenExternal(arg)
+	let l:target = trim(a:arg)
+	if l:target =~ '^https\?://'
+		" url
+		let l:target = l:target
+		if g:os == 'Linux'
+			let l:program = 'firefox'
+		else
+			let l:program = 'open'
+		endif
+	else
+		" research paper
+		let l:target = system('find ' .. g:justinnhli_library_path .. ' -name ' .. l:target)
+		if g:os == 'Linux'
+			let l:program = 'zathura'
+		else
+			let l:program = 'open'
+		endif
+	endif
+	call system(l:program .. ' ' .. l:target)
+endfunction
+" open external mappings{{{3
+nnoremap  <leader>O  :call <SID>OpenExternal('<C-r>=expand('<cword>')<cr>')<cr>
+xnoremap  <leader>O  "zy:call <SID>OpenExternal('<C-r>z')<cr>
 " other file mappings {{{3
 nnoremap  <leader>B   :tabnew ~/.bashrc<cr>
 nnoremap  <leader>V   :tabnew $MYVIMRC<cr>

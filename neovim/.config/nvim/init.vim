@@ -4,7 +4,7 @@
 " preamble {{{2
 set nocompatible " neovim default
 
-let g:python3_host_prog = $PYTHON_VENV_HOME . '/neovim/bin/python3'
+let g:python3_host_prog = $PYTHON_VENV_HOME .. '/neovim/bin/python3'
 
 let g:os = substitute(system('uname'), '\n', '', '')
 
@@ -16,9 +16,9 @@ let g:justinnhli_library_path=expand('~/papers')
 " vimplug {{{2
 if has('nvim')
 	"auto-install vim-plug
-	let s:plug_path = fnamemodify($MYVIMRC, ':p:h') . '/autoload/plug.vim'
+	let s:plug_path = fnamemodify($MYVIMRC, ':p:h') .. '/autoload/plug.vim'
 	if empty(glob(s:plug_path))
-		execute "silent !curl -fLo " . s:plug_path . " --create-dirs 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'"
+		call system("curl -fLo " .. s:plug_path .. " --create-dirs 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'")
 		augroup justinnhli_vimplug
 			autocmd!
 			autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
@@ -26,7 +26,7 @@ if has('nvim')
 	endif
 
 	try
-		call plug#begin(expand('<sfile>:p:h') . '/plugged')
+		call plug#begin(expand('<sfile>:p:h') .. '/plugged')
 		" tools
 		Plug 'junegunn/goyo.vim'
 		Plug 'mbbill/undotree'
@@ -69,7 +69,7 @@ function BuildTabLine()
 		endif
 		let l:tabline .= ' '
 		" set window number and modified flag
-		let l:tabline .= '[' . tabpagewinnr(i + 1,'$') . ']'
+		let l:tabline .= '[' .. tabpagewinnr(i + 1,'$') .. ']'
 		" tab page is modified if any buffer is modified
 		for b in l:buffers
 			if getbufvar(b, '&modified' )
@@ -84,7 +84,7 @@ function BuildTabLine()
 endfunction
 
 function GetGitBranch()
-	let gitoutput = system('git status --porcelain=1 -b ' . shellescape(expand('%')) . ' 2>/dev/null')
+	let gitoutput = system('git status --porcelain=1 -b ' .. shellescape(expand('%')) .. ' 2>/dev/null')
 	if len(gitoutput) == 0
 		return ''
 	endif
@@ -92,7 +92,7 @@ function GetGitBranch()
 	let line = get(split(gitoutput, '\n'), 0, '')
 	" python equivalent: line.split('...')[3:]
 	let branch = strpart(get(split(line, '\.\.\.'), 0, ''), 3)
-	return ' (' . branch . ')'
+	return ' (' .. branch .. ')'
 endfunc
 
 " settings {{{2
@@ -271,7 +271,7 @@ nnoremap  <leader><leader>u  :UndotreeToggle<cr>
 " colorscheme {{{2
 let g:colorscheme = 'iceberg'
 try
-	execute 'colorscheme ' . g:colorscheme
+	execute 'colorscheme ' .. g:colorscheme
 catch
 	colorscheme default
 endtry
@@ -325,18 +325,18 @@ nnoremap  <leader>wtk  :call <SID>StartTerminal(['leftabove new', 'silent! lcd ~
 nnoremap  <leader>wtl  :call <SID>StartTerminal(['rightbelow vnew', 'silent! lcd ~'], '')<cr>
 nnoremap  <leader>tt   :call <SID>StartTerminal(['tabnew', 'silent! lcd ~'], '')<cr>
 " open terminal at current location {{{3
-nnoremap  <leader>wTe  :call <SID>StartTerminal(['silent! lcd ' . expand('%:p:h')], '')<cr>
-nnoremap  <leader>wTh  :call <SID>StartTerminal(['leftabove vnew', 'silent! lcd ' . expand('%:p:h')], '')<cr>
-nnoremap  <leader>wTj  :call <SID>StartTerminal(['rightbelow new', 'silent! lcd ' . expand('%:p:h')], '')<cr>
-nnoremap  <leader>wTk  :call <SID>StartTerminal(['leftabove new', 'silent! lcd ' . expand('%:p:h')], '')<cr>
-nnoremap  <leader>wTl  :call <SID>StartTerminal(['rightbelow vnew', 'silent! lcd ' . expand('%:p:h')], '')<cr>
-nnoremap  <leader>tT   :call <SID>StartTerminal(['tabnew', 'silent! lcd ' . expand('%:p:h')], '')<cr>
+nnoremap  <leader>wTe  :call <SID>StartTerminal(['silent! lcd ' .. expand('%:p:h')], '')<cr>
+nnoremap  <leader>wTh  :call <SID>StartTerminal(['leftabove vnew', 'silent! lcd ' .. expand('%:p:h')], '')<cr>
+nnoremap  <leader>wTj  :call <SID>StartTerminal(['rightbelow new', 'silent! lcd ' .. expand('%:p:h')], '')<cr>
+nnoremap  <leader>wTk  :call <SID>StartTerminal(['leftabove new', 'silent! lcd ' .. expand('%:p:h')], '')<cr>
+nnoremap  <leader>wTl  :call <SID>StartTerminal(['rightbelow vnew', 'silent! lcd ' .. expand('%:p:h')], '')<cr>
+nnoremap  <leader>tT   :call <SID>StartTerminal(['tabnew', 'silent! lcd ' .. expand('%:p:h')], '')<cr>
 " open tag {{{3
-nnoremap  <leader>wge  :execute 'tjump ' . expand('<cword>')<cr>
-nnoremap  <leader>wgh  :execute 'leftabove vertical stjump ' . expand('<cword>')<cr>
-nnoremap  <leader>wgj  :execute 'rightbelow stjump ' . expand('<cword>')<cr>
-nnoremap  <leader>wgk  :execute 'leftabove stjump ' . expand('<cword>')<cr>
-nnoremap  <leader>wgl  :execute 'rightbelow vertical stjump ' . expand('<cword>')<cr>
+nnoremap  <leader>wge  :execute 'tjump ' .. expand('<cword>')<cr>
+nnoremap  <leader>wgh  :execute 'leftabove vertical stjump ' .. expand('<cword>')<cr>
+nnoremap  <leader>wgj  :execute 'rightbelow stjump ' .. expand('<cword>')<cr>
+nnoremap  <leader>wgk  :execute 'leftabove stjump ' .. expand('<cword>')<cr>
+nnoremap  <leader>wgl  :execute 'rightbelow vertical stjump ' .. expand('<cword>')<cr>
 nnoremap  <leader>tg   <C-w><C-]><C-w>T
 xnoremap  <leader>wge  "zy:tjump <C-r>z<cr>
 xnoremap  <leader>wgh  "zy:leftabove vertical stjump <C-r>z<cr>
@@ -361,7 +361,7 @@ xnoremap  <leader>tf   "zy:tabnew<cr>:vimgrep /<C-r>z/g **/*<cr>
 function s:DuplicateBuffer()
 	let l:bufnum = bufnr('%')
 	tabnew
-	execute 'buffer ' . l:bufnum
+	execute 'buffer ' .. l:bufnum
 endfunction
 function s:MaximizeWindow()
 	if !exists('w:maximized') || w:maximized == 0
@@ -381,7 +381,7 @@ endfunction
 function s:CloseRightTabs()
 	let l:cur = tabpagenr()
 	while l:cur < tabpagenr('$')
-		execute 'tabclose ' . (l:cur + 1)
+		execute 'tabclose ' .. (l:cur + 1)
 	endwhile
 endfunction
 function s:MoveToRelativeTab(n)
@@ -402,27 +402,27 @@ function s:MoveToRelativeTab(n)
 	else
 		if a:n < 0
 			if l:num_tabs == tabpagenr('$')
-				execute 'tabprev ' . abs(a:n)
+				execute 'tabprev ' .. abs(a:n)
 			elseif a:n != -1
-				execute 'tabprev ' . (abs(a:n) - 1)
+				execute 'tabprev ' .. (abs(a:n) - 1)
 			endif
 		else
 			if l:num_tabs == tabpagenr('$')
-				execute 'tabnext ' . l:new_tab
+				execute 'tabnext ' .. l:new_tab
 			elseif a:n != 1
-				execute 'tabnext ' . (l:new_tab - 1)
+				execute 'tabnext ' .. (l:new_tab - 1)
 			endif
 		endif
 		vert botright split
 	endif
-	execute 'buffer ' . l:cur_buf
+	execute 'buffer ' .. l:cur_buf
 	let l:new_tab = tabpagenr()
-	execute 'tabnext ' . l:cur_tab
-	execute l:cur_win . 'wincmd c'
+	execute 'tabnext ' .. l:cur_tab
+	execute l:cur_win .. 'wincmd c'
 	if l:new_tab > l:num_tabs
-		execute 'tabnext ' . (l:new_tab - 1)
+		execute 'tabnext ' .. (l:new_tab - 1)
 	else
-		execute 'tabnext ' . l:new_tab
+		execute 'tabnext ' .. l:new_tab
 	endif
 	" FIXME fails when new_tab is the highest tab
 endfunction
@@ -529,7 +529,7 @@ endfunction
 " toggle colorscheme {{{3
 function s:ToggleColorscheme()
 	if g:colors_name ==# 'default'
-		execute 'colorscheme ' . g:colorscheme
+		execute 'colorscheme ' .. g:colorscheme
 	else
 		colorscheme default
 	endif
@@ -737,7 +737,7 @@ xnoremap  <leader><bslash>  :<C-u>call <SID>FormatTable()<cr>
 nnoremap  <leader><cr>      :make<cr>
 xnoremap  <leader><cr>      y<Esc>:!<C-r>"<cr>
 nnoremap  <leader>;         :lcd %:p:h<cr>
-nnoremap  <silent>  <leader>.          :execute 'set foldenable foldlevel=' . foldlevel('.')<cr>
+nnoremap  <silent>  <leader>.          :execute 'set foldenable foldlevel=' .. foldlevel('.')<cr>
 if exists(':tnoremap')
 	tnoremap  <Esc><Esc>  <C-\><C-n>
 endif
@@ -747,17 +747,17 @@ endif
 function s:AutosetGrepMappings()
 	if &grepprg !~# '^grep -n '
 		nnoremap  <buffer>  <leader>wfe  q:isilent grep<space>
-		execute 'nnoremap  <buffer>  <leader>wfh  :leftabove vnew<cr>:setlocal filetype=' . &filetype . '<cr>q:isilent grep<space>'
-		execute 'nnoremap  <buffer>  <leader>wfj  :rightbelow new<cr>:setlocal filetype=' . &filetype . '<cr>q:isilent grep<space>'
-		execute 'nnoremap  <buffer>  <leader>wfk  :leftabove new<cr>:setlocal filetype=' . &filetype . '<cr>q:isilent grep<space>'
-		execute 'nnoremap  <buffer>  <leader>wfl  :rightbelow vnew<cr>:setlocal filetype=' . &filetype . '<cr>q:isilent grep<space>'
-		execute 'nnoremap  <buffer>  <leader>tf  :tabnew<cr>:setlocal filetype=' . &filetype . '<cr>q:isilent grep<space>'
+		execute 'nnoremap  <buffer>  <leader>wfh  :leftabove vnew<cr>:setlocal filetype=' .. &filetype .. '<cr>q:isilent grep<space>'
+		execute 'nnoremap  <buffer>  <leader>wfj  :rightbelow new<cr>:setlocal filetype=' .. &filetype .. '<cr>q:isilent grep<space>'
+		execute 'nnoremap  <buffer>  <leader>wfk  :leftabove new<cr>:setlocal filetype=' .. &filetype .. '<cr>q:isilent grep<space>'
+		execute 'nnoremap  <buffer>  <leader>wfl  :rightbelow vnew<cr>:setlocal filetype=' .. &filetype .. '<cr>q:isilent grep<space>'
+		execute 'nnoremap  <buffer>  <leader>tf  :tabnew<cr>:setlocal filetype=' .. &filetype .. '<cr>q:isilent grep<space>'
 		xnoremap  <buffer>  <leader>wfe  "zy:silent grep <C-r>z<cr>
-		execute 'xnoremap  <buffer>  <leader>wfh  "zy:leftabove vnew<cr>:setlocal filetype=' . &filetype . '<cr>q:isilent grep <C-r>z<cr>'
-		execute 'xnoremap  <buffer>  <leader>wfj  "zy:rightbelow new<cr>:setlocal filetype=' . &filetype . '<cr>q:isilent grep <C-r>z<cr>'
-		execute 'xnoremap  <buffer>  <leader>wfk  "zy:leftabove new<cr>:setlocal filetype=' . &filetype . '<cr>q:isilent grep <C-r>z<cr>'
-		execute 'xnoremap  <buffer>  <leader>wfl  "zy:rightbelow vnew<cr>:setlocal filetype=' . &filetype . '<cr>q:isilent grep <C-r>z<cr>'
-		execute 'xnoremap  <buffer>  <leader>tf  "zy:tabnew<cr>:setlocal filetype=' . &filetype . '<cr>q:isilent grep <C-r>z<cr>'
+		execute 'xnoremap  <buffer>  <leader>wfh  "zy:leftabove vnew<cr>:setlocal filetype=' .. &filetype .. '<cr>q:isilent grep <C-r>z<cr>'
+		execute 'xnoremap  <buffer>  <leader>wfj  "zy:rightbelow new<cr>:setlocal filetype=' .. &filetype .. '<cr>q:isilent grep <C-r>z<cr>'
+		execute 'xnoremap  <buffer>  <leader>wfk  "zy:leftabove new<cr>:setlocal filetype=' .. &filetype .. '<cr>q:isilent grep <C-r>z<cr>'
+		execute 'xnoremap  <buffer>  <leader>wfl  "zy:rightbelow vnew<cr>:setlocal filetype=' .. &filetype .. '<cr>q:isilent grep <C-r>z<cr>'
+		execute 'xnoremap  <buffer>  <leader>tf  "zy:tabnew<cr>:setlocal filetype=' .. &filetype .. '<cr>q:isilent grep <C-r>z<cr>'
 	endif
 endfunction
 augroup justinnhli_autoset_grep_mappings
@@ -777,10 +777,10 @@ augroup justinnhli_create_directories
 augroup END
 " load filetype templates {{{2
 function s:LoadFiletypeTemplate()
-	let l:templates_file = fnamemodify($MYVIMRC, ':p:h') . '/templates/' . &filetype
+	let l:templates_file = fnamemodify($MYVIMRC, ':p:h') .. '/templates/' .. &filetype
 	if filereadable(l:templates_file)
 		" read in the template file
-		execute '0r ' . l:templates_file
+		execute '0r ' .. l:templates_file
 		" delete the blank last line
 		execute "normal! :$\<cr>dd"
 		" place cursor at first triple blank line,
@@ -803,7 +803,7 @@ if exists(':terminal')
 	endfunction
 	augroup justinnhli_open_directories
 		autocmd  VimEnter  *  silent! autocmd! FileExplorer *
-		autocmd  BufEnter  *  if s:IsDir(expand('%')) | call <SID>StartTerminal(['silent! lcd ' . expand('%:p:h')], '') | endif
+		autocmd  BufEnter  *  if s:IsDir(expand('%')) | call <SID>StartTerminal(['silent! lcd ' .. expand('%:p:h')], '') | endif
 	augroup END
 endif
 

@@ -317,19 +317,13 @@ nnoremap  <leader>wrj  :rightbelow split scp://user@server.tld//absolute/path/to
 nnoremap  <leader>wrk  :leftabove split scp://user@server.tld//absolute/path/to/file
 nnoremap  <leader>wrl  :rightbelow vsplit scp://user@server.tld//absolute/path/to/file
 nnoremap  <leader>tr   :tabnew scp://user@server.tld//absolute/path/to/file
-" open terminal at $HOME {{{3
-nnoremap  <leader>wte  :call <SID>StartTerminal(['silent! lcd ~'], '')<cr>
-nnoremap  <leader>wth  :call <SID>StartTerminal(['leftabove vnew', 'silent! lcd ~'], '')<cr>
-nnoremap  <leader>wtj  :call <SID>StartTerminal(['rightbelow new', 'silent! lcd ~'], '')<cr>
-nnoremap  <leader>wtk  :call <SID>StartTerminal(['leftabove new', 'silent! lcd ~'], '')<cr>
-nnoremap  <leader>wtl  :call <SID>StartTerminal(['rightbelow vnew', 'silent! lcd ~'], '')<cr>
+" open terminal at ($HOME if new tab, current directory otherwise) {{{3
+nnoremap  <leader>wte  :call <SID>StartTerminal(['silent! lcd ' .. expand('%:p:h')], '')<cr>
+nnoremap  <leader>wth  :call <SID>StartTerminal(['leftabove vnew', 'silent! lcd ' .. expand('%:p:h')], '')<cr>
+nnoremap  <leader>wtj  :call <SID>StartTerminal(['rightbelow new', 'silent! lcd ' .. expand('%:p:h')], '')<cr>
+nnoremap  <leader>wtk  :call <SID>StartTerminal(['leftabove new', 'silent! lcd ' .. expand('%:p:h')], '')<cr>
+nnoremap  <leader>wtl  :call <SID>StartTerminal(['rightbelow vnew', 'silent! lcd ' .. expand('%:p:h')], '')<cr>
 nnoremap  <leader>tt   :call <SID>StartTerminal(['tabnew', 'silent! lcd ~'], '')<cr>
-" open terminal at current location {{{3
-nnoremap  <leader>wTe  :call <SID>StartTerminal(['silent! lcd ' .. expand('%:p:h')], '')<cr>
-nnoremap  <leader>wTh  :call <SID>StartTerminal(['leftabove vnew', 'silent! lcd ' .. expand('%:p:h')], '')<cr>
-nnoremap  <leader>wTj  :call <SID>StartTerminal(['rightbelow new', 'silent! lcd ' .. expand('%:p:h')], '')<cr>
-nnoremap  <leader>wTk  :call <SID>StartTerminal(['leftabove new', 'silent! lcd ' .. expand('%:p:h')], '')<cr>
-nnoremap  <leader>wTl  :call <SID>StartTerminal(['rightbelow vnew', 'silent! lcd ' .. expand('%:p:h')], '')<cr>
 nnoremap  <leader>tT   :call <SID>StartTerminal(['tabnew', 'silent! lcd ' .. expand('%:p:h')], '')<cr>
 " open tag {{{3
 nnoremap  <leader>wge  :execute 'tjump ' .. expand('<cword>')<cr>

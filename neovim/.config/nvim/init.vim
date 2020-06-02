@@ -1,6 +1,7 @@
 " vim: foldmethod=marker
 
 " preamble {{{1
+
 " preamble {{{2
 set nocompatible " neovim default
 
@@ -13,6 +14,7 @@ let g:justinnhli_scholarship_path=expand('~/Dropbox/scholarship')
 let g:justinnhli_library_path=expand('~/papers')
 
 " vimplug {{{1
+
 " vimplug {{{2
 if has('nvim')
 	"auto-install vim-plug
@@ -50,6 +52,7 @@ if has('nvim')
 endif
 
 " settings {{{1
+
 " setting functions {{{2
 function BuildTabLine()
 	let l:tabline = ''
@@ -234,40 +237,49 @@ if exists('&inccommand')
 endif
 
 " map leader {{{1
+
 " map leader {{{2
 mapclear
 mapclear!
 let g:mapleader = ' '
 
 " plugin settings {{{1
+
 " clever f {{{2
 let g:clever_f_fix_key_direction = 1
 let g:clever_f_timeout_ms = 5000
+
 " fugitive {{{2
 nnoremap  <leader>gg  :Git<space>
 nnoremap  <leader>gb  :Git blame<cr>
 nnoremap  <leader>gc  :Git commit -m "
 nnoremap  <leader>gd  :Gdiffsplit<cr>
 nnoremap  <leader>gp  :Git push<cr>
+
 " goyo {{{2
 nnoremap  <leader><leader>g  :Goyo<cr>
+
 " gutentags {{{2
 let g:gutentags_ctags_tagfile = '.tags'
+
 " journal {{{2
 let g:jrnl_ignore_files = split(globpath('~/journal', '*.journal'), '\n')
 augroup justinnhli_journal
 	autocmd  FileType  journal  nnoremap  <buffer>  <leader>j  q:iJournal -S
 	autocmd  FileType  journal  xnoremap  <buffer>  <leader>j  "zyq:iJournal -S "<C-r>z"
 augroup END
+
 " netrw {{{2
 let g:netrw_browse_split = 3
 let g:netrw_liststyle = 3
 let g:netrw_list_hide = '\.swp$,\.un\~$'
 let g:netrw_winsize = 50
+
 " undotree {{{2
 nnoremap  <leader><leader>u  :UndotreeToggle<cr>
 
 " colorscheme {{{1
+
 " colorscheme {{{2
 let g:colorscheme = 'iceberg'
 try
@@ -277,7 +289,9 @@ catch
 endtry
 
 " mappings {{{1
+
 " window spawning functions {{{2
+
 " start terminal {{{3
 if exists(':terminal')
 	function s:StartTerminal(pre_cmd, cmd)
@@ -296,7 +310,9 @@ if exists(':terminal')
 		endif
 	endfunction
 endif
+
 " window spawning mappings {{{2
+
 " open file {{{3
 nnoremap  <leader>we  :edit<space>
 nnoremap  <leader>wh  :leftabove vsplit<space>
@@ -304,12 +320,14 @@ nnoremap  <leader>wj  :rightbelow split<space>
 nnoremap  <leader>wk  :leftabove split<space>
 nnoremap  <leader>wl  :rightbelow vsplit<space>
 nnoremap  <leader>tn  :tabnew<space>
+
 " open new file {{{3
 nnoremap  <leader>wne  :enew<cr>
 nnoremap  <leader>wnh  :leftabove vnew<cr>
 nnoremap  <leader>wnj  :rightbelow new<cr>
 nnoremap  <leader>wnk  :leftabove new<cr>
 nnoremap  <leader>wnl  :rightbelow vnew<cr>
+
 " open remote file {{{3
 nnoremap  <leader>wre  :enew<cr>scp://user@server.tld//absolute/path/to/file
 nnoremap  <leader>wrh  :leftabove vsplit scp://user@server.tld//absolute/path/to/file
@@ -317,6 +335,7 @@ nnoremap  <leader>wrj  :rightbelow split scp://user@server.tld//absolute/path/to
 nnoremap  <leader>wrk  :leftabove split scp://user@server.tld//absolute/path/to/file
 nnoremap  <leader>wrl  :rightbelow vsplit scp://user@server.tld//absolute/path/to/file
 nnoremap  <leader>tr   :tabnew scp://user@server.tld//absolute/path/to/file
+
 " open terminal at ($HOME if new tab, current directory otherwise) {{{3
 nnoremap  <leader>wte  :call <SID>StartTerminal(['silent! lcd ' .. expand('%:p:h')], '')<cr>
 nnoremap  <leader>wth  :call <SID>StartTerminal(['leftabove vnew', 'silent! lcd ' .. expand('%:p:h')], '')<cr>
@@ -325,6 +344,7 @@ nnoremap  <leader>wtk  :call <SID>StartTerminal(['leftabove new', 'silent! lcd '
 nnoremap  <leader>wtl  :call <SID>StartTerminal(['rightbelow vnew', 'silent! lcd ' .. expand('%:p:h')], '')<cr>
 nnoremap  <leader>tt   :call <SID>StartTerminal(['tabnew', 'silent! lcd ~'], '')<cr>
 nnoremap  <leader>tT   :call <SID>StartTerminal(['tabnew', 'silent! lcd ' .. expand('%:p:h')], '')<cr>
+
 " open tag {{{3
 nnoremap  <leader>wge  :execute 'tjump ' .. expand('<cword>')<cr>
 nnoremap  <leader>wgh  :execute 'leftabove vertical stjump ' .. expand('<cword>')<cr>
@@ -338,6 +358,7 @@ xnoremap  <leader>wgj  "zy:rightbelow stjump <C-r>z<cr>
 xnoremap  <leader>wgk  "zy:leftabove stjump <C-r>z<cr>
 xnoremap  <leader>wgl  "zy:rightbelow vertical stjump <C-r>z<cr>
 xnoremap  <leader>tg   <C-w><C-]><C-w>T
+
 " open grep {{{3
 nnoremap  <leader>wfe  q:ivimgrep //g **/*<esc>0f/a
 nnoremap  <leader>wfh  :leftabove vnew<cr>q:ivimgrep //g **/*<esc>0f/a
@@ -351,6 +372,7 @@ xnoremap  <leader>wfj  "zy:rightbelow new<cr>:vimgrep /<C-r>z/g **/*<cr>
 xnoremap  <leader>wfk  "zy:leftabove new<cr>:vimgrep /<C-r>z/g **/*<cr>
 xnoremap  <leader>wfl  "zy:rightbelow vnew<cr>:vimgrep /<C-r>z/g **/*<cr>
 xnoremap  <leader>tf   "zy:tabnew<cr>:vimgrep /<C-r>z/g **/*<cr>
+
 " window manipulation functions {{{3
 function s:DuplicateBuffer()
 	let l:bufnum = bufnr('%')
@@ -420,13 +442,16 @@ function s:MoveToRelativeTab(n)
 	endif
 	" FIXME fails when new_tab is the highest tab
 endfunction
+
 " window manipulation mappings {{{2
+
 " window manipulation mappings {{{3
 nnoremap  <leader>wd     :call <SID>DuplicateBuffer()<cr>
 nnoremap  <leader>wT     <C-w>T
 nnoremap  <leader>wc     :close<cr>
 nnoremap  <leader>wo     :only<cr>
 nnoremap  <leader>w<cr>  :call <SID>MaximizeWindow()<cr>
+
 " tab manipulation mappings {{{3
 nnoremap  <leader>tc     :tabclose<cr>
 nnoremap  <leader>to     :tabonly<cr>
@@ -445,16 +470,21 @@ nnoremap  <leader>th     :tabmove -1<cr>
 nnoremap  <leader>tl     :tabmove +1<cr>
 nnoremap  <leader>t-     :call MoveToRelativeTab(-1)
 nnoremap  <leader>t=     :call MoveToRelativeTab(1)
+
 " window movement mappings {{{2
+
 " window movement mappings {{{3
 nnoremap  <C-h>  <C-w>h
 nnoremap  <C-j>  <C-w>j
 nnoremap  <C-k>  <C-w>k
 nnoremap  <C-l>  <C-w>l
+
 " tab movement mappings {{{3
 nnoremap  <S-h>  :tabprev<cr>
 nnoremap  <S-l>  :tabnext<cr>
+
 " file mappings {{{2
+
 " pim file mappings {{{3
 nnoremap  <leader>JL  :tabnew <C-r>=g:justinnhli_pim_path<cr>/journal/list.journal<cr>
 nnoremap  <leader>JN  :tabnew <C-r>=g:justinnhli_pim_path<cr>/journal/next.journal<cr>
@@ -462,6 +492,7 @@ nnoremap  <leader>JR  :tabnew <C-r>=g:justinnhli_pim_path<cr>/journal/repo.journ
 nnoremap  <leader>JD  :tabnew<cr>:r!dynalist.py mobile<cr>:0d<cr>:setlocal buftype=nowrite filetype=journal nomodifiable<cr>zM
 nnoremap  <leader>C   :tabnew <C-r>=g:justinnhli_pim_path<cr>/contacts/contacts.vcf<cr>
 nnoremap  <leader>L   :tabnew <C-r>=g:justinnhli_pim_path<cr>/library.bib<cr>
+
 " open external functions {{{3
 function s:OpenExternal(arg)
 	let l:target = trim(a:arg)
@@ -484,16 +515,20 @@ function s:OpenExternal(arg)
 	endif
 	call system(l:program .. ' ' .. l:target)
 endfunction
+
 " open external mappings{{{3
 nnoremap  <leader>O  :call <SID>OpenExternal('<C-r>=expand('<cword>')<cr>')<cr>
 xnoremap  <leader>O  "zy:call <SID>OpenExternal('<C-r>z')<cr>
+
 " other file mappings {{{3
 nnoremap  <leader>B   :tabnew ~/.bashrc<cr>
 nnoremap  <leader>V   :tabnew $MYVIMRC<cr>
 nnoremap  <leader>S   :tabnew ~/.config/nvim/spell/en.utf-8.add<cr>
 nnoremap  <leader>H   :tabnew ~/Dropbox/personal/logs/<C-R>=strftime('%Y')<cr>.shistory<cr>
 nnoremap  <leader>T   :tabnew ~/Dropbox/personal/logs/ifttt/tweets.txt<cr>
+
 " toggle functions {{{2
+
 " toggle colorcolumn {{{3
 function s:ToggleColorcolumn()
 	if &colorcolumn == 0
@@ -504,6 +539,7 @@ function s:ToggleColorcolumn()
 		setlocal colorcolumn=0
 	endif
 endfunction
+
 " toggle diff {{{3
 function s:ToggleDiff()
 	if &diff
@@ -512,6 +548,7 @@ function s:ToggleDiff()
 		diffthis
 	endif
 endfunction
+
 " toggle foldmethod {{{3
 function s:ToggleFoldmethod()
 	if &foldmethod ==# 'indent'
@@ -520,6 +557,7 @@ function s:ToggleFoldmethod()
 		set foldmethod=indent
 	endif
 endfunction
+
 " toggle colorscheme {{{3
 function s:ToggleColorscheme()
 	if g:colors_name ==# 'default'
@@ -528,7 +566,9 @@ function s:ToggleColorscheme()
 		colorscheme default
 	endif
 endfunction
+
 " setting toggle mappings {{{2
+
 " setting toggle mappings {{{3
 nnoremap  <leader><leader>c  :call <SID>ToggleColorcolumn()<cr>:setlocal colorcolumn?<cr>
 nnoremap  <leader><leader>d  :call <SID>ToggleDiff()<cr>:echo (&diff ? 'diffthis' : 'diffoff')<cr>
@@ -540,7 +580,9 @@ nnoremap  <leader><leader>p  :set paste!<cr>:set paste?<cr>
 nnoremap  <leader><leader>s  :set spell!<cr>:set spell?<cr>
 nnoremap  <leader><leader>w  :set wrap!<cr>:set wrap?<cr>
 nnoremap  <leader><leader>/  :set hlsearch!<cr>:set hlsearch?<cr>
+
 " text movement functions {{{2
+
 " indent text object {{{3
 function s:IndentTextObject(updown, inout, visual)
 	if a:visual
@@ -567,7 +609,9 @@ function s:IndentTextObject(updown, inout, visual)
 		let l:line_num += l:step
 	endwhile
 endfunction
+
 " text movement mappings {{{2
+
 " within-line movement mappings {{{3
 nnoremap  <C-a>  ^
 nnoremap  <C-e>  $
@@ -577,6 +621,7 @@ inoremap  <C-a>  <Home>
 inoremap  <C-e>  <End>
 xnoremap  <C-a>  <Home>
 xnoremap  <C-e>  <End>
+
 " text indent movement mappings {{{3
 nnoremap  <silent>  [,  :<C-u>call <SID>IndentTextObject(-1, -1, 0)<cr>
 nnoremap  <silent>  [.  :<C-u>call <SID>IndentTextObject(-1, 0, 0)<cr>
@@ -596,6 +641,7 @@ xnoremap  <silent>  [/  <esc>:call <SID>IndentTextObject(-1, 1, 1)<cr><esc>gv
 xnoremap  <silent>  ],  <esc>:call <SID>IndentTextObject(1, -1, 1)<cr><esc>gv
 xnoremap  <silent>  ].  <esc>:call <SID>IndentTextObject(1, 0, 1)<cr><esc>gv
 xnoremap  <silent>  ]/  <esc>:call <SID>IndentTextObject(1, 0, 1)<cr><esc>gv
+
 " quickfix/location functions {{{2
 function s:NextQuickFixOrLocation()
 	cnext
@@ -603,13 +649,16 @@ endfunction
 function s:PrevQuickFixOrLocation()
 	cprev
 endfunction
+
 " quickfix/location mappings {{{2
 " TODO turn into autocmd that automatically maps to quickfix and location
 " the event is QuickFixCmdPost
 " check if location list is open with if get(getloclist(0, {'winid':0}), 'winid', 0)
 nnoremap  <S-j>  :call <SID>NextQuickFixOrLocation()<cr>
 nnoremap  <S-k>  :call <SID>PrevQuickFixOrLocation()<cr>
+
 " disabled mappings {{{2
+
 " disable arrow keys {{{3
 noremap   <up>       <nop>
 noremap   <down>     <nop>
@@ -635,6 +684,7 @@ inoremap  <S-up>     <nop>
 inoremap  <S-down>   <nop>
 inoremap  <S-left>   <nop>
 inoremap  <S-right>  <nop>
+
 " disable function keys {{{3
 nnoremap  <F1>   <nop>
 nnoremap  <F2>   <nop>
@@ -667,54 +717,71 @@ xnoremap  <S-k>  <nop>
 xnoremap  K  <nop>
 " disable Ex mode
 nnoremap  Q  <nop>
+
 " editor mappings {{{2
+
 " <C-s> to write file {{{3
 nnoremap  <C-s>  :update<cr>
 inoremap  <C-s>  <esc>:update<cr>
 xnoremap  <C-s>  <esc>:update<cr>gv
+
 " <C-D> to insert date {{{3
 inoremap  <C-d>  <c-r>=strftime("%Y-%m-%d")<cr>
+
 " default to very magic search {{{3
 nnoremap  /      /\v
 nnoremap  ?      ?\v
+
 " easily search for selected text {{{3
 xnoremap  /      y<Esc>/\V<C-r>"<cr>
 xnoremap  ?      y<Esc>?\V<C-r>"<cr>
+
 " rebind n/N to always go forwards/backwards (and turns on highlighting) {{{3
 nnoremap  n      :set hlsearch<cr>/<cr>zz
 nnoremap  <S-n>  :set hlsearch<cr>?<cr>zz
 xnoremap  n      :set hlsearch<cr>/<cr>zz
 xnoremap  <S-n>  :set hlsearch<cr>?<cr>zz
+
 " force the use of the command line window {{{3
 nnoremap  :      :<C-f>i
 nnoremap  q:     :
 xnoremap  :      :<C-f>i
 xnoremap  q:     :
+
 " editing functions {{{2
+
 " format table {{{3
 function s:FormatTable()
 	:'<,'>s/\m\C  \+/	/eg
 	:silent '<,'>!column -ts '	'
 endfunction
+
 " format columns {{{3
 function s:FormatColumns()
 	:'<,'>s/\m\C  \+/	/eg
 endfunction
+
 " other mappings {{{2
+
 " stay in visual mode after tabbing {{{3
 xnoremap  <tab>    >gv
 xnoremap  <S-tab>  <gv
 xnoremap  >        >gv
 xnoremap  <        <gv
+
 " select previously pasted text {{{3
 nnoremap  gp       `[v`]
+
 " jump to the end of pasted text {{{3
 nnoremap  p        p`]
+
 " make Y behave like other capitals {{{3
 nnoremap  Y        y$
+
 " rebind undo/redo traverse the undo tree instead of the undo stack {{{3
 nnoremap  u        g-
 nnoremap  <C-r>    g+
+
 " miscellaneous editing mappings {{{3
 nnoremap  <leader>a         ggVG
 nnoremap  <leader>o         :!open<space>
@@ -737,6 +804,7 @@ if exists(':tnoremap')
 endif
 
 " autocmds {{{1
+
 " change grep {{{2
 function s:AutosetGrepMappings()
 	if &grepprg !~# '^grep -n '
@@ -757,6 +825,7 @@ endfunction
 augroup justinnhli_autoset_grep_mappings
 	autocmd  FileType  *  call <SID>AutosetGrepMappings()
 augroup END
+
 " create intermediate directories {{{2
 function s:CreateIntermediateDirectories(file, buf)
 	if empty(getbufvar(a:buf, '&buftype')) && a:file!~#'\v^\w+\:\/'
@@ -769,6 +838,7 @@ endfunction
 augroup justinnhli_create_directories
 	autocmd  BufWritePre  *  :call <SID>CreateIntermediateDirectories(expand('<afile>'), +expand('<abuf>'))
 augroup END
+
 " load filetype templates {{{2
 function s:LoadFiletypeTemplate()
 	let l:templates_file = fnamemodify($MYVIMRC, ':p:h') .. '/templates/' .. &filetype
@@ -790,6 +860,7 @@ endfunction
 augroup justinnhli_create_directories
 	autocmd  BufNewFile  *  call <SID>LoadFiletypeTemplate()
 augroup END
+
 " open directories in terminal {{{2
 if exists(':terminal')
 	function s:IsDir(dir) abort
@@ -824,6 +895,7 @@ augroup justinnhli_large_files
 augroup END
 
 " user functions {{{1
+
 " UnicodeToAscii {{{2
 function UnicodeToAscii()
 	set fileformat=unix
@@ -872,6 +944,7 @@ function UnicodeToAscii()
 endfunction
 
 " unclassified {{{1
+
 " unclassified {{{2
 augroup justinnhli
 	" keep windows equal in size

@@ -133,6 +133,7 @@ set   smarttab " neovim default
 set nostartofline
 set   tabpagemax=50 " neovim default
 set   tabstop=4
+set   tagcase=followscs
 set   tags+=./.tags,.tags
 set   timeoutlen=500
 set   title

@@ -361,12 +361,12 @@ xnoremap  <leader>wgl  "zy:rightbelow vertical stjump <C-r>z<cr>
 xnoremap  <leader>tg   <C-w><C-]><C-w>T
 
 " open grep {{{3
-nnoremap  <leader>wfe  q:ivimgrep //g **/*<esc>0f/a
-nnoremap  <leader>wfh  :leftabove vnew<cr>q:ivimgrep //g **/*<esc>0f/a
-nnoremap  <leader>wfj  :rightbelow new<cr>q:ivimgrep //g **/*<esc>0f/a
-nnoremap  <leader>wfk  :leftabove new<cr>q:ivimgrep //g **/*<esc>0f/a
-nnoremap  <leader>wfl  :rightbelow vnew<cr>q:ivimgrep //g **/*<esc>0f/a
-nnoremap  <leader>tf   :tabnew<cr>q:ivimgrep //g **/*<esc>0f/a
+nnoremap  <leader>wfe  q:ivimgrep /\m\c/g **/*<esc>Fca
+nnoremap  <leader>wfh  :leftabove vnew<cr>q:ivimgrep /\m\c/g **/*<esc>Fca
+nnoremap  <leader>wfj  :rightbelow new<cr>q:ivimgrep /\m\c/g **/*<esc>Fca
+nnoremap  <leader>wfk  :leftabove new<cr>q:ivimgrep /\m\c/g **/*<esc>Fca
+nnoremap  <leader>wfl  :rightbelow vnew<cr>q:ivimgrep /\m\c/g **/*<esc>Fca
+nnoremap  <leader>tf   :tabnew<cr>q:ivimgrep /\m\c/g **/*<esc>Fca
 xnoremap  <leader>wfe  "zy:vimgrep /<C-r>z/g **/*<cr>
 xnoremap  <leader>wfh  "zy:leftabove vnew<cr>:vimgrep /<C-r>z/g **/*<cr>
 xnoremap  <leader>wfj  "zy:rightbelow new<cr>:vimgrep /<C-r>z/g **/*<cr>

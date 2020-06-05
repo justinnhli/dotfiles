@@ -469,8 +469,8 @@ nnoremap  <leader>t9     :tabmove 8<cr>
 nnoremap  <leader>t0     :tabmove 9<cr>
 nnoremap  <leader>th     :tabmove -1<cr>
 nnoremap  <leader>tl     :tabmove +1<cr>
-nnoremap  <leader>t-     :call MoveToRelativeTab(-1)
-nnoremap  <leader>t=     :call MoveToRelativeTab(1)
+nnoremap  <leader>t-     :call <SID>MoveToRelativeTab(-1)<cr>
+nnoremap  <leader>t=     :call <SID>MoveToRelativeTab(1)<cr>
 
 " window movement mappings {{{2
 

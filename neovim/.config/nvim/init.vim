@@ -361,18 +361,18 @@ xnoremap  <leader>wgl  "zy:rightbelow vertical stjump <C-r>z<cr>
 xnoremap  <leader>tg   <C-w><C-]><C-w>T
 
 " open grep {{{3
-nnoremap  <leader>wfe  q:ivimgrep /\m\c/g **/*<esc>Fca
-nnoremap  <leader>wfh  :leftabove vnew<cr>q:ivimgrep /\m\c/g **/*<esc>Fca
-nnoremap  <leader>wfj  :rightbelow new<cr>q:ivimgrep /\m\c/g **/*<esc>Fca
-nnoremap  <leader>wfk  :leftabove new<cr>q:ivimgrep /\m\c/g **/*<esc>Fca
-nnoremap  <leader>wfl  :rightbelow vnew<cr>q:ivimgrep /\m\c/g **/*<esc>Fca
-nnoremap  <leader>tf   :tabnew<cr>q:ivimgrep /\m\c/g **/*<esc>Fca
-xnoremap  <leader>wfe  "zy:vimgrep /<C-r>z/g **/*<cr>
-xnoremap  <leader>wfh  "zy:leftabove vnew<cr>:vimgrep /<C-r>z/g **/*<cr>
-xnoremap  <leader>wfj  "zy:rightbelow new<cr>:vimgrep /<C-r>z/g **/*<cr>
-xnoremap  <leader>wfk  "zy:leftabove new<cr>:vimgrep /<C-r>z/g **/*<cr>
-xnoremap  <leader>wfl  "zy:rightbelow vnew<cr>:vimgrep /<C-r>z/g **/*<cr>
-xnoremap  <leader>tf   "zy:tabnew<cr>:vimgrep /<C-r>z/g **/*<cr>
+nnoremap  <leader>wfe  q:ilvimgrep /\m\c/g **/*<esc>Fca
+nnoremap  <leader>wfh  :leftabove vnew<cr>q:ilvimgrep /\m\c/g **/*<esc>Fca
+nnoremap  <leader>wfj  :rightbelow new<cr>q:ilvimgrep /\m\c/g **/*<esc>Fca
+nnoremap  <leader>wfk  :leftabove new<cr>q:ilvimgrep /\m\c/g **/*<esc>Fca
+nnoremap  <leader>wfl  :rightbelow vnew<cr>q:ilvimgrep /\m\c/g **/*<esc>Fca
+nnoremap  <leader>tf   :tabnew<cr>q:ilvimgrep /\m\c/g **/*<esc>Fca
+xnoremap  <leader>wfe  "zy:lvimgrep /<C-r>z/g **/*<cr>
+xnoremap  <leader>wfh  "zy:leftabove vnew<cr>:lvimgrep /<C-r>z/g **/*<cr>
+xnoremap  <leader>wfj  "zy:rightbelow new<cr>:lvimgrep /<C-r>z/g **/*<cr>
+xnoremap  <leader>wfk  "zy:leftabove new<cr>:lvimgrep /<C-r>z/g **/*<cr>
+xnoremap  <leader>wfl  "zy:rightbelow vnew<cr>:lvimgrep /<C-r>z/g **/*<cr>
+xnoremap  <leader>tf   "zy:tabnew<cr>:lvimgrep /<C-r>z/g **/*<cr>
 
 " window manipulation functions {{{3
 function s:DuplicateBuffer()
@@ -645,10 +645,10 @@ xnoremap  <silent>  ]/  <esc>:call <SID>IndentTextObject(1, 0, 1)<cr><esc>gv
 
 " quickfix/location functions {{{2
 function s:NextQuickFixOrLocation()
-	cnext
+	lnext
 endfunction
 function s:PrevQuickFixOrLocation()
-	cprev
+	lprev
 endfunction
 
 " quickfix/location mappings {{{2
@@ -796,7 +796,7 @@ nnoremap  <leader>]         <C-w><C-]><C-w>T
 xnoremap  <leader>]         <C-w><C-]><C-w>T
 xnoremap  <leader><bar>     :<C-u>call <SID>FormatColumns()<cr>
 xnoremap  <leader><bslash>  :<C-u>call <SID>FormatTable()<cr>
-nnoremap  <leader><cr>      :make<cr>
+nnoremap  <leader><cr>      :silent lmake<cr>
 xnoremap  <leader><cr>      y<Esc>:!<C-r>"<cr>
 nnoremap  <leader>;         :lcd %:p:h<cr>
 nnoremap  <silent>  <leader>.          :execute 'set foldenable foldlevel=' .. foldlevel('.')<cr>
@@ -809,18 +809,18 @@ endif
 " change grep {{{2
 function s:AutosetGrepMappings()
 	if &grepprg !~# '^grep -n '
-		nnoremap  <buffer>  <leader>wfe  q:isilent grep<space>
-		execute 'nnoremap  <buffer>  <leader>wfh  :leftabove vnew<cr>:setlocal filetype=' .. &filetype .. '<cr>q:isilent grep<space>'
-		execute 'nnoremap  <buffer>  <leader>wfj  :rightbelow new<cr>:setlocal filetype=' .. &filetype .. '<cr>q:isilent grep<space>'
-		execute 'nnoremap  <buffer>  <leader>wfk  :leftabove new<cr>:setlocal filetype=' .. &filetype .. '<cr>q:isilent grep<space>'
-		execute 'nnoremap  <buffer>  <leader>wfl  :rightbelow vnew<cr>:setlocal filetype=' .. &filetype .. '<cr>q:isilent grep<space>'
-		execute 'nnoremap  <buffer>  <leader>tf  :tabnew<cr>:setlocal filetype=' .. &filetype .. '<cr>q:isilent grep<space>'
-		xnoremap  <buffer>  <leader>wfe  "zy:silent grep <C-r>z<cr>
-		execute 'xnoremap  <buffer>  <leader>wfh  "zy:leftabove vnew<cr>:setlocal filetype=' .. &filetype .. '<cr>q:isilent grep <C-r>z<cr>'
-		execute 'xnoremap  <buffer>  <leader>wfj  "zy:rightbelow new<cr>:setlocal filetype=' .. &filetype .. '<cr>q:isilent grep <C-r>z<cr>'
-		execute 'xnoremap  <buffer>  <leader>wfk  "zy:leftabove new<cr>:setlocal filetype=' .. &filetype .. '<cr>q:isilent grep <C-r>z<cr>'
-		execute 'xnoremap  <buffer>  <leader>wfl  "zy:rightbelow vnew<cr>:setlocal filetype=' .. &filetype .. '<cr>q:isilent grep <C-r>z<cr>'
-		execute 'xnoremap  <buffer>  <leader>tf  "zy:tabnew<cr>:setlocal filetype=' .. &filetype .. '<cr>q:isilent grep <C-r>z<cr>'
+		nnoremap  <buffer>  <leader>wfe  q:isilent lgrep<space>
+		execute 'nnoremap  <buffer>  <leader>wfh  :leftabove vnew<cr>:setlocal filetype=' .. &filetype .. '<cr>q:isilent lgrep<space>'
+		execute 'nnoremap  <buffer>  <leader>wfj  :rightbelow new<cr>:setlocal filetype=' .. &filetype .. '<cr>q:isilent lgrep<space>'
+		execute 'nnoremap  <buffer>  <leader>wfk  :leftabove new<cr>:setlocal filetype=' .. &filetype .. '<cr>q:isilent lgrep<space>'
+		execute 'nnoremap  <buffer>  <leader>wfl  :rightbelow vnew<cr>:setlocal filetype=' .. &filetype .. '<cr>q:isilent lgrep<space>'
+		execute 'nnoremap  <buffer>  <leader>tf  :tabnew<cr>:setlocal filetype=' .. &filetype .. '<cr>q:isilent lgrep<space>'
+		xnoremap  <buffer>  <leader>wfe  "zy:silent lgrep <C-r>z<cr>
+		execute 'xnoremap  <buffer>  <leader>wfh  "zy:leftabove vnew<cr>:setlocal filetype=' .. &filetype .. '<cr>q:isilent lgrep <C-r>z<cr>'
+		execute 'xnoremap  <buffer>  <leader>wfj  "zy:rightbelow new<cr>:setlocal filetype=' .. &filetype .. '<cr>q:isilent lgrep <C-r>z<cr>'
+		execute 'xnoremap  <buffer>  <leader>wfk  "zy:leftabove new<cr>:setlocal filetype=' .. &filetype .. '<cr>q:isilent lgrep <C-r>z<cr>'
+		execute 'xnoremap  <buffer>  <leader>wfl  "zy:rightbelow vnew<cr>:setlocal filetype=' .. &filetype .. '<cr>q:isilent lgrep <C-r>z<cr>'
+		execute 'xnoremap  <buffer>  <leader>tf  "zy:tabnew<cr>:setlocal filetype=' .. &filetype .. '<cr>q:isilent lgrep <C-r>z<cr>'
 	endif
 endfunction
 augroup justinnhli_autoset_grep_mappings
@@ -962,7 +962,7 @@ augroup justinnhli
 	autocmd  CmdwinEnter         *       nnoremap <buffer> <C-c> :quit<cr>
 	autocmd  CmdwinEnter         *       inoremap <buffer> <C-c> <Esc>
 	" automatically open and close the quickfix window
-	autocmd  QuickFixCmdPost     [^l]*   nested cwindow
+	autocmd  QuickFixCmdPost     l*      nested lwindow
 	autocmd  WinEnter            *       if winnr('$') == 1 && getbufvar(winbufnr(winnr()), '&buftype') == 'quickfix' | quit | endif
 	" bound scope of search to the original window
 	autocmd  WinLeave            *       let w:search_on = &hlsearch | let w:last_search = @/

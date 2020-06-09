@@ -250,7 +250,7 @@ if [ -d "$HOME/pim" ]; then
 	if command -v journal.py >/dev/null 2>&1; then
 		alias jrnl="journal.py $(ls $pim_dir/journal/[a-z-]*.journal 2>/dev/null | grep -v '[ ()]' | sed 's/^/--ignore /' | tr '\n' ' ')"
 	fi
-	alias vish="$VISUAL -c 'lcd ~/pim/sheaf' -c 'vimgrep /unread/g **/*'"
+	alias vish="$VISUAL -c 'lcd ~/pim/sheaf' -c 'lvimgrep /\m\c#unread/g **/*'"
 fi
 
 # completion

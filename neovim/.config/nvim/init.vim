@@ -801,7 +801,7 @@ xnoremap  <leader><bslash>  :<C-u>call <SID>FormatTable()<cr>
 nnoremap  <leader><cr>      :silent lmake<cr>
 xnoremap  <leader><cr>      y<Esc>:!<C-r>"<cr>
 nnoremap  <leader>;         :lcd %:p:h<cr>
-nnoremap  <silent>  <leader>.          :execute 'set foldenable foldlevel=' .. foldlevel('.')<cr>
+nnoremap  <silent>  <leader>.          :execute 'set foldenable foldlevel=' .. (indent('.') / &shiftwidth)<cr>
 if exists(':tnoremap')
 	tnoremap  <Esc><Esc>  <C-\><C-n>
 endif

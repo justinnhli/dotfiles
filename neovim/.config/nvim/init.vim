@@ -60,15 +60,17 @@ function BuildTabLine()
 	" for each tab page
 	for i in range(tabpagenr('$'))
 		let l:buffers = tabpagebuflist(i + 1)
-		let l:filename = bufname(l:buffers[tabpagewinnr(i + 1) - 1])
+		let l:filename = fnamemodify(bufname(l:buffers[tabpagewinnr(i + 1) - 1]), ':p:t')
 		" set highlighting
 		let l:tabline .= (i + 1 == s:cur_tab ? '%#TabLineSel#' : '%#TabLine#')
 		let l:tabline .= ' '
 		" set filename
 		if l:filename ==# ''
 			let l:tabline .= '[No Name]'
+		elseif strlen(l:filename) > 15
+			let l:tabline .= l:filename[:12] .. '...'
 		else
-			let l:tabline .= fnamemodify(l:filename, ':p:t')
+			let l:tabline .= l:filename
 		endif
 		let l:tabline .= ' '
 		" set window number and modified flag

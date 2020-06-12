@@ -4,6 +4,7 @@ import re
 import sys
 import tarfile
 from argparse import ArgumentParser
+from ast import literal_eval
 from collections import namedtuple, defaultdict
 from copy import copy
 from datetime import datetime, timedelta
@@ -16,6 +17,7 @@ from stat import S_IRUSR
 from statistics import mean, median, stdev
 from sys import stdout
 from tempfile import mkstemp
+from textwrap import dedent
 
 Entry = namedtuple('Entry', 'date, text, filepath')
 
@@ -48,7 +50,7 @@ class Journal:
         self.entries = {}
         if use_cache:
             self._check_cache_files()
-            self._read_file(self.cache_file)
+            self._read_cache()
         else:
             for journal_file in self.journal_files:
                 self._read_file(journal_file)
@@ -83,7 +85,7 @@ class Journal:
             self.update_metadata()
 
     def _read_file(self, filepath):
-        with open(filepath) as fd:
+        with filepath.open() as fd:
             for raw_entry in fd.read().strip().split('\n\n'):
                 if DATE_REGEX.match(raw_entry):
                     entry = Entry(
@@ -92,6 +94,15 @@ class Journal:
                         filepath,
                     )
                     self.entries[entry.date] = entry
+
+    def _read_cache(self):
+        with self.cache_file.open() as fd:
+            for date, entry_dict in literal_eval(fd.read()).items():
+                self.entries[date] = Entry(
+                    date,
+                    entry_dict['text'],
+                    Path(entry_dict['filepath']),
+                )
 
     def _filter_by_terms(self, selected, terms, icase):
         flags = re.MULTILINE
@@ -132,6 +143,20 @@ class Journal:
             selected = self._filter_by_terms(selected, terms, icase)
         return {date: self.entries[date] for date in selected}
 
+    def _write_cache(self):
+        with self.cache_file.open('w') as fd:
+            fd.write('{\n')
+            for entry in sorted(self.entries.values()):
+                fd.write(dedent(f'''
+                    '{entry.date}': {{
+                        'date': '{entry.date}',
+                        'filepath': '{entry.filepath}',
+                        'text': {repr(entry.text)},
+                    }},
+                ''').strip())
+                fd.write('\n')
+            fd.write('}\n')
+
     def update_metadata(self):
         self.entries = {}
         tags = {}
@@ -146,9 +171,7 @@ class Journal:
         with self.tags_file.open('w') as fd:
             for tag, (filepath, line) in sorted(tags.items()):
                 fd.write('\t'.join([tag, str(filepath), str(line)]) + '\n')
-        with self.cache_file.open('w') as fd:
-            for entry in sorted(self.entries.values()):
-                fd.write(str(entry.text) + '\n\n')
+        self._write_cache()
 
     def verify(self):
         # pylint: disable = line-too-long, too-many-nested-blocks, too-many-branches
@@ -517,11 +540,6 @@ def do_readability(journal, args):
 def do_vimgrep(journal, args):
     prefix_len = 20
     suffix_len = 40
-    entry_files = {}
-    with open(journal.tags_file) as fd:
-        for line in fd.readlines():
-            date, filepath, _ = line.strip().split('\t')
-            entry_files[date] = filepath
     entries = filter_entries(journal, args)
     for date, entry in sorted(entries.items(), reverse=True):
         matches = [re.search(term, entry.text, flags=re.IGNORECASE) for term in args.terms]
@@ -534,7 +552,7 @@ def do_vimgrep(journal, args):
             prev_lines = entry.text[:first_index].splitlines()
             line_num = len(prev_lines)
             col_num = len(prev_lines[-1]) + 1
-        filepath = entry_files[date]
+        filepath = entry.filepath
         match_line = entry.text.splitlines()[line_num - 1].strip()
         if col_num < prefix_len:
             start_index = 0

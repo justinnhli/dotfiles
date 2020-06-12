@@ -221,7 +221,12 @@ endif
 if has('wildmenu')
 	set   wildmenu " neovim default
 	set   wildmode=longest,list
-	set   wildignore+=*.aux,*.bbl,*.blg,*.nav,*.pyc,*.snm,*.toc
+	" ignore intermediate files
+	set   wildignore+=*.aux,*.bbl,*.blg,*.nav,*.snm,*.toc
+	" ignore compiled files
+	set   wildignore+=*.pyc
+	" ignore cache files
+	set   wildignore+=__pycache__,.mypy_cache
 endif
 if has('windows')
 	set   splitbelow

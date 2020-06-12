@@ -143,6 +143,19 @@ class Journal:
             selected = self._filter_by_terms(selected, terms, icase)
         return {date: self.entries[date] for date in selected}
 
+    def _write_tags_file(self):
+        tags = {}
+        for journal_file in self.journal_files:
+            self._read_file(journal_file)
+            rel_path = journal_file.relative_to(self.directory)
+            with journal_file.open() as fd:
+                for line_number, line in enumerate(fd, start=1):
+                    if DATE_REGEX.fullmatch(line.rstrip()):
+                        tags[line[:DATE_LENGTH]] = (rel_path, line_number)
+        with self.tags_file.open('w') as fd:
+            for tag, (filepath, line) in sorted(tags.items()):
+                fd.write('\t'.join([tag, str(filepath), str(line)]) + '\n')
+
     def _write_cache(self):
         with self.cache_file.open('w') as fd:
             fd.write('{\n')
@@ -158,19 +171,7 @@ class Journal:
             fd.write('}\n')
 
     def update_metadata(self):
-        self.entries = {}
-        tags = {}
-        for journal_file in self.journal_files:
-            self._read_file(journal_file)
-            rel_path = journal_file.relative_to(self.directory)
-            with journal_file.open() as fd:
-                lines = fd.read().splitlines()
-            for line_number, line in enumerate(lines, start=1):
-                if DATE_REGEX.fullmatch(line):
-                    tags[line[:DATE_LENGTH]] = (rel_path, line_number)
-        with self.tags_file.open('w') as fd:
-            for tag, (filepath, line) in sorted(tags.items()):
-                fd.write('\t'.join([tag, str(filepath), str(line)]) + '\n')
+        self._write_tags_file()
         self._write_cache()
 
     def verify(self):

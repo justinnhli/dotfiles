@@ -154,7 +154,7 @@ class Journal:
                         tags[line[:DATE_LENGTH]] = (rel_path, line_number)
         with self.tags_file.open('w') as fd:
             for tag, (filepath, line) in sorted(tags.items()):
-                fd.write('\t'.join([tag, str(filepath), str(line)]) + '\n')
+                fd.write(f'{tag}\t{filepath}\t{line}\n')
 
     def _write_cache(self):
         with self.cache_file.open('w') as fd:
@@ -408,15 +408,15 @@ def do_graph(journal, args):
     print('\tedge [color="#555753"];')
     print('')
     for srcs in sorted(components.values(), key=(lambda s: (len(s), min(s))), reverse=True):
-        print('\t// component size = {}'.format(len(srcs)))
+        print(f'\t// component size = {len(srcs)}')
         node_lines = defaultdict(set)
         edge_lines = set()
         for src in srcs:
             node_lines[src[:STRING_LENGTHS['month']]].add(
-                '"{}" [fontsize="{}"];'.format(src, len(entries[src].text.split()) / 100)
+                f'"{src}" [fontsize="{len(entries[src].text.split()) / 100}"];'
             )
             for dest in edges[src]:
-                edge_lines.add('"{}" -> "{}";'.format(src, dest))
+                edge_lines.add(f'"{src}" -> "{dest}";')
         for _, entry_lines in sorted(node_lines.items(), reverse=args.reverse):
             print('\tsubgraph {')
             print('\t\trank="same";')
@@ -456,7 +456,7 @@ def do_show(journal, args):
                 vim_args.extend((
                     '-c',
                     r'let @/="\\v' + '|'.join(
-                        '({})'.format(term) for term in args.terms
+                        f'({term})' for term in args.terms
                     ).replace('"', r'\"').replace('@', r'\\@') + '"',
                 ))
             execvp(editor, vim_args)
@@ -534,7 +534,7 @@ def do_readability(journal, args):
 
     entries = filter_entries(journal, args)
     for date, entry in sorted(entries.items()):
-        print(date, '{: >6.3f}'.format(kincaid(entry.text)))
+        print(date, f'{kincaid(entry.text): >6.3f}')
 
 
 @register('list search results in vim :grep format')
@@ -732,7 +732,7 @@ def log_search(arg_parser, args, journal):
                     if option.const in (True, False):
                         options.append(option_string[1])
                     else:
-                        options.append(' {} {}'.format(option_string, option_value))
+                        options.append(f' {option_string} {option_value}')
             elif args.operation is option.const:
                 op_flag = option_string
         log_args = op_flag + ''.join(
@@ -743,7 +743,7 @@ def log_search(arg_parser, args, journal):
             for term in sorted(args.terms)
         ).strip()
         with log_file.open('a') as fd:
-            fd.write('{}\t{} -- {}'.format(datetime.today().isoformat(' '), log_args, terms) + '\n')
+            fd.write(f'{datetime.today().isoformat(" ")}\t{log_args} -- {terms}\n')
 
 
 def main():

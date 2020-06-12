@@ -735,10 +735,15 @@ def log_search(arg_parser, args, journal):
                         options.append(' {} {}'.format(option_string, option_value))
             elif args.operation is option.const:
                 op_flag = option_string
-        log_args = op_flag + ''.join(sorted(options, key=(lambda x: (len(x) != 1, x.upper())))).replace(' -', '', 1)
-        terms = ' '.join('"{}"'.format(term.replace('"', '\\"')) for term in sorted(args.terms))
+        log_args = op_flag + ''.join(
+            sorted(options, key=(lambda x: (len(x) != 1, x.upper())))
+        ).replace(' -', '', 1)
+        terms = ' '.join(
+            '"{}"'.format(term.replace('"', '\\"'))
+            for term in sorted(args.terms)
+        ).strip()
         with log_file.open('a') as fd:
-            fd.write('{}\t{} -- {}'.format(datetime.today().isoformat(' '), log_args, terms).strip() + '\n')
+            fd.write('{}\t{} -- {}'.format(datetime.today().isoformat(' '), log_args, terms) + '\n')
 
 
 def main():

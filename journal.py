@@ -290,7 +290,7 @@ def register(*args):
 
 @register('-A', 'archive to datetimed tarball')
 def do_archive(_, args):
-    from os.path import basename, join as join_path
+    from os.path import basename, join as join_path # pylint: disable = import-outside-toplevel
     archive_name = 'jrnl' + datetime.now().strftime('%Y%m%d%H%M%S')
     with tarfile.open(archive_name + '.txz', 'w:xz') as tar:
         tar.add(

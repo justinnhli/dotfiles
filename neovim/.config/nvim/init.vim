@@ -269,6 +269,10 @@ nnoremap  <leader><leader>g  :Goyo<cr>
 
 " gutentags {{{2
 let g:gutentags_ctags_tagfile = '.tags'
+function! ShouldEnableGutentags(path) abort
+	return fnamemodify(a:path, ':e') != 'journal'
+endfunction
+let g:gutentags_enabled_user_func = 'ShouldEnableGutentags'
 
 " journal {{{2
 let g:jrnl_ignore_files = split(globpath('~/journal', '*.journal'), '\n')

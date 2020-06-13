@@ -94,10 +94,10 @@ function GetGitBranch()
 		return ''
 	endif
 	" python equivalent: gitoutput.splitlines()[0]
-	let line = get(split(gitoutput, '\n'), 0, '')
+	let l:line = get(split(l:gitoutput, '\n'), 0, '')
 	" python equivalent: line.split('...')[3:]
-	let branch = strpart(get(split(line, '\.\.\.'), 0, ''), 3)
-	return ' (' .. branch .. ')'
+	let l:branch = strpart(get(split(l:line, '\.\.\.'), 0, ''), 3)
+	return '(' .. l:branch .. ')'
 endfunc
 
 " settings {{{2
@@ -839,9 +839,9 @@ augroup END
 " create intermediate directories {{{2
 function s:CreateIntermediateDirectories(file, buf)
 	if empty(getbufvar(a:buf, '&buftype')) && a:file!~#'\v^\w+\:\/'
-		let dir=fnamemodify(a:file, ':h')
-		if !isdirectory(dir)
-			call mkdir(dir, 'p')
+		let l:dir=fnamemodify(a:file, ':h')
+		if !isdirectory(l:dir)
+			call mkdir(l:dir, 'p')
 		endif
 	endif
 endfunction
@@ -965,8 +965,8 @@ augroup justinnhli
 	autocmd  GUIEnter            *       set visualbell t_vb=
 	" automatically leave insert mode after 'updatetime' milliseconds
 	autocmd  CursorHoldI         *       stopinsert
-	autocmd  InsertEnter         *       let updaterestore=&updatetime | set updatetime=5000
-	autocmd  InsertLeave         *       let &updatetime=updaterestore
+	autocmd  InsertEnter         *       let g:updaterestore=&updatetime | set updatetime=5000
+	autocmd  InsertLeave         *       let &updatetime=g:updaterestore
 	" easily cancel the command line window
 	autocmd  CmdwinEnter         *       nnoremap <buffer> <C-c> :quit<cr>
 	autocmd  CmdwinEnter         *       inoremap <buffer> <C-c> <Esc>

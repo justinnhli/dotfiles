@@ -88,9 +88,53 @@ function BuildTabLine()
 	return l:tabline
 endfunction
 
-function GetGitBranch()
-	let gitoutput = system('git status --porcelain=1 -b ' .. shellescape(expand('%')) .. ' 2>/dev/null')
-	if len(gitoutput) == 0
+function ContractFilePath(path)
+	let l:path = a:path
+	if l:path =~ '^' .. $HOME
+		let l:path = '~' .. l:path[strlen($HOME):]
+	endif
+	return l:path
+endfunction
+
+function GetStatusLinePwd()
+	let l:pwd = ContractFilePath(getcwd())
+	if strlen(l:pwd) <= 30
+		let l:pwd = l:pwd .. '/'
+	else
+		let l:result = ''
+		for l:part in split(l:pwd, '/')
+			let l:result .= l:part[0] .. '/'
+		endfor
+		let l:pwd = l:result
+	endif
+	return l:pwd
+endfunction
+
+function GetStatusLineFilePath()
+	let l:filepath = ContractFilePath(expand('%'))
+	if strlen(l:filepath) > 30
+		let l:dir = ContractFilePath(expand('%:h'))
+		let l:result = ''
+		if l:dir[0] ==# '^/'
+			let l:result .= '/'
+		endif
+		for l:part in split(l:dir, '/')
+			let l:result .= l:part[0] .. '/'
+		endfor
+		let l:filepath = l:result .. expand('%:t')
+	endif
+	return l:filepath
+endfunction
+
+function GetStatusLineGitBranch()
+	let l:cmd = ''
+	let l:cmd .= '( '
+	let l:cmd .= 'cd ' .. shellescape(expand('%:p:h'))
+	let l:cmd .= ' && '
+	let l:cmd .= 'git status --porcelain=1 -b ' .. shellescape(expand('%'))
+	let l:cmd .= ' ) 2>/dev/null'
+	let l:gitoutput = trim(system(l:cmd))
+	if len(l:gitoutput) == 0
 		return ''
 	endif
 	" python equivalent: gitoutput.splitlines()[0]
@@ -186,9 +230,11 @@ if has('statusline')
 	" buffer number
 	set   statusline+=%n
 	" git branch
-	set   statusline+=%{GetGitBranch()}
+	set   statusline+=\ %{GetStatusLineGitBranch()}
+	" pwd
+	set   statusline+=\ %<%1.30{GetStatusLinePwd()}
 	" file name
-	set   statusline+=\ %f
+	set   statusline+=\ %{GetStatusLineFilePath()}
 	" modified
 	set   statusline+=%(\ %M%)
 	" file format
@@ -201,8 +247,6 @@ if has('statusline')
 	set   statusline+=%#ErrorMsg#%{&paste?'[paste]':''}%*
 	" alignment separator
 	set   statusline+=%=
-	" pwd
-	set   statusline+=%<%1.30{getcwd()}
 	" cursor position
 	set   statusline+=\ (%l/%L,%c)
 	" buffer position

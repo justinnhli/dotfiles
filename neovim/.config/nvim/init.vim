@@ -307,7 +307,7 @@ if exists(':terminal')
 			execute l:pre_cmd
 		endfor
 		" strip whitespace from command
-		let l:cmd = substitute(a:cmd, '^\s*\(.\{-}\)\s*$', '\1', '')
+		let l:cmd = trim(a:cmd)
 		if l:cmd ==# ''
 			terminal
 			setlocal nonumber nospell scrollback=100000

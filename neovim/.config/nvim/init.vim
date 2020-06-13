@@ -664,8 +664,8 @@ endfunction
 " TODO turn into autocmd that automatically maps to quickfix and location
 " the event is QuickFixCmdPost
 " check if location list is open with if get(getloclist(0, {'winid':0}), 'winid', 0)
-nnoremap  <S-j>  :call <SID>NextQuickFixOrLocation()<cr>
-nnoremap  <S-k>  :call <SID>PrevQuickFixOrLocation()<cr>
+nnoremap  <S-j>  :silent! call <SID>NextQuickFixOrLocation()<cr>
+nnoremap  <S-k>  :silent! call <SID>PrevQuickFixOrLocation()<cr>
 
 " disabled mappings {{{2
 

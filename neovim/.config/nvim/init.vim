@@ -702,9 +702,11 @@ nnoremap  <expr>  {  foldclosed(search('^$', 'Wnb')) == -1 ? "{" : "{k{"
 
 " quickfix/location functions {{{2
 function s:NextQuickFixOrLocation()
+	lopen
 	lnext
 endfunction
 function s:PrevQuickFixOrLocation()
+	lopen
 	lprev
 endfunction
 
@@ -863,6 +865,18 @@ endif
 
 " autocmds {{{1
 
+" quickfix and location windows {{{2
+augroup justinnhli_autoset_grep_mappings
+	" open the location window after a quickfix command
+	autocmd  QuickFixCmdPost  l*  nested lwindow
+	" close the location window if it's the only window in a tab
+	autocmd  WinEnter         *   if winnr('$') == 1 && getbufvar(winbufnr(winnr()), '&buftype') == 'quickfix' | quit | endif
+	" hide quickfix and location windows when typing
+	autocmd  InsertEnter      *   silent! lclose | silent! cclose
+	" hide quickfix and location windows when the file has changed
+	autocmd  TextChanged      *   silent! lclose | silent! cclose
+augroup END
+
 " change grep {{{2
 function s:AutosetGrepMappings()
 	if &grepprg !~# '^grep -n '
@@ -1018,9 +1032,6 @@ augroup justinnhli
 	" easily cancel the command line window
 	autocmd  CmdwinEnter         *       nnoremap <buffer> <C-c> :quit<cr>
 	autocmd  CmdwinEnter         *       inoremap <buffer> <C-c> <Esc>
-	" automatically open and close the quickfix window
-	autocmd  QuickFixCmdPost     l*      nested lwindow
-	autocmd  WinEnter            *       if winnr('$') == 1 && getbufvar(winbufnr(winnr()), '&buftype') == 'quickfix' | quit | endif
 	" bound scope of search to the original window
 	autocmd  WinLeave            *       let w:search_on = &hlsearch | let w:last_search = @/
 	autocmd  WinEnter            *       if exists('w:search_on') && w:search_on | let @/ = w:last_search | else | set nohlsearch | endif

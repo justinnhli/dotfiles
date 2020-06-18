@@ -543,32 +543,33 @@ def do_vimgrep(journal, args):
     suffix_len = 40
     entries = filter_entries(journal, args)
     for date, entry in sorted(entries.items(), reverse=True):
-        matches = [re.search(term, entry.text, flags=re.IGNORECASE) for term in args.terms]
-        first_index = min(match.start() for match in matches if match)
-        if first_index == 0:
-            prev_lines = entry.text.splitlines()
-            line_num = 1
-            col_num = 1
-        else:
-            prev_lines = entry.text[:first_index].splitlines()
-            line_num = len(prev_lines)
-            col_num = len(prev_lines[-1]) + 1
-        filepath = entry.filepath
-        match_line = entry.text.splitlines()[line_num - 1].strip()
-        if col_num < prefix_len:
-            start_index = 0
-            prefix = ''
-        else:
-            start_index = match_line.rfind(' ', 0, col_num - prefix_len) + 1
-            prefix = '[...] '
-        if col_num > len(match_line) - suffix_len:
-            end_index = len(match_line)
-            suffix = ''
-        else:
-            end_index = match_line.find(' ', col_num + suffix_len)
-            suffix = ' [...]'
-        snippet = match_line[start_index:end_index]
-        print(f'{filepath}:{line_num}:{col_num}:{date} {prefix}{snippet}{suffix}')
+        for term in args.terms:
+            for match in re.finditer(term, entry.text, flags=args.icase):
+                first_index = match.start()
+                if first_index == 0:
+                    prev_lines = entry.text.splitlines()
+                    line_num = 1
+                    col_num = 1
+                else:
+                    prev_lines = entry.text[:first_index].splitlines()
+                    line_num = len(prev_lines)
+                    col_num = len(prev_lines[-1]) + 1
+                filepath = entry.filepath
+                match_line = entry.text.splitlines()[line_num - 1].strip()
+                if col_num < prefix_len:
+                    start_index = 0
+                    prefix = ''
+                else:
+                    start_index = match_line.rfind(' ', 0, col_num - prefix_len) + 1
+                    prefix = '[...] '
+                if col_num > len(match_line) - suffix_len:
+                    end_index = len(match_line)
+                    suffix = ''
+                else:
+                    end_index = match_line.find(' ', col_num + suffix_len)
+                    suffix = ' [...]'
+                snippet = match_line[start_index:end_index]
+                print(f'{filepath}:{line_num}:{col_num}:{date} {prefix}{snippet}{suffix}')
 
 
 # CLI

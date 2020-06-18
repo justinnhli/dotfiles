@@ -21,6 +21,8 @@ from textwrap import dedent
 
 Entry = namedtuple('Entry', 'date, text, filepath')
 
+JOURNAL_PATH = Path('~/pim/journal').expanduser().resolve()
+
 FILE_EXTENSION = '.journal'
 STRING_LENGTHS = {
     'year': 4,
@@ -163,7 +165,7 @@ class Journal:
                 fd.write(dedent(f'''
                     '{entry.date}': {{
                         'date': '{entry.date}',
-                        'filepath': '{entry.filepath}',
+                        'filepath': '{entry.filepath.relative_to(self.directory)}',
                         'text': {repr(entry.text)},
                     }},
                 ''').strip())
@@ -575,12 +577,10 @@ def do_vimgrep(journal, args):
 # CLI
 
 
-def make_arg_parser():
-    arg_parser = ArgumentParser(
-        usage='%(prog)s <operation> [options] [TERM ...]',
-        description='A command line tool for viewing and maintaining a journal.',
-    )
-    arg_parser.set_defaults(directory='./', ignores=[], icase=re.IGNORECASE, terms=[], unit='year')
+def build_arg_parser(arg_parser):
+    arg_parser.usage = '%(prog)s <operation> [options] [TERM ...]'
+    arg_parser.description = 'A command line tool for viewing and maintaining a journal.'
+    arg_parser.set_defaults(directory=JOURNAL_PATH, ignores=[], icase=re.IGNORECASE, terms=[], unit='year', function=parse_args)
     arg_parser.add_argument(
         'terms',
         metavar='TERM',
@@ -686,8 +686,7 @@ def make_arg_parser():
     return arg_parser
 
 
-def parse_args(arg_parser):
-    args = arg_parser.parse_args()
+def process_args(arg_parser, args):
     if args.date_spec is None:
         args.date_ranges = None
     else:
@@ -719,6 +718,21 @@ def parse_args(arg_parser):
     return args
 
 
+def parse_args(arg_parser, args):
+    if arg_parser is None:
+        arg_parser = build_arg_parser(ArgumentParser())
+    args = process_args(arg_parser, args)
+    journal = Journal(args.directory, use_cache=args.use_cache, ignores=args.ignores)
+    if len(journal) == 0:
+        arg_parser.error(f'no journal entries found in {args.directory}')
+    if args.log:
+        log_search(arg_parser, args, journal)
+    try:
+        args.operation(journal, args)
+    except ValueError as err:
+        arg_parser.error(err)
+
+
 def log_search(arg_parser, args, journal):
     # pylint: disable = protected-access
     if args.operation.__name__[3:] not in ('show', 'list', 'vimgrep'):
@@ -748,17 +762,9 @@ def log_search(arg_parser, args, journal):
 
 
 def main():
-    arg_parser = make_arg_parser()
-    args = parse_args(arg_parser)
-    journal = Journal(args.directory, use_cache=args.use_cache, ignores=args.ignores)
-    if len(journal) == 0:
-        arg_parser.error(f'no journal entries found in {args.directory}')
-    if args.log:
-        log_search(arg_parser, args, journal)
-    try:
-        args.operation(journal, args)
-    except ValueError as err:
-        arg_parser.error(err)
+    arg_parser = build_arg_parser(ArgumentParser())
+    args = arg_parser.parse_args()
+    args.function(arg_parser, args)
 
 
 if __name__ == '__main__':

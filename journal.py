@@ -735,7 +735,8 @@ def parse_args(arg_parser, args):
 
 def log_search(arg_parser, args, journal):
     # pylint: disable = protected-access
-    if args.operation.__name__[3:] not in ('show', 'list', 'vimgrep'):
+    logged_functions = ('do_show', 'do_list', 'do_vimgrep')
+    if args.operation.__name__ not in logged_functions:
         return
     log_file = journal.directory.joinpath('.log').resolve()
     if args.log and log_file.exists():
@@ -745,14 +746,16 @@ def log_search(arg_parser, args, journal):
                 option_value = getattr(args, option.dest)
                 if option_value != option.default:
                     if option.const in (True, False):
-                        options.append(option_string[1])
+                        options.append(option_string)
                     else:
-                        options.append(f' {option_string} {option_value}')
+                        options.append(f'{option_string} {option_value}')
             elif args.operation is option.const:
                 op_flag = option_string
-        log_args = op_flag + ''.join(
-            sorted(options, key=(lambda x: (len(x) != 1, x.upper())))
-        ).replace(' -', '', 1)
+        log_args = ' '.join([
+            op_flag,
+            *sorted(options, key=(lambda x: (len(x) != 1, x.upper())))
+        ])
+        log_args = re.sub('-([a-z]) -([a-z]) ', r'-\1\2', log_args)
         terms = ' '.join(
             '"{}"'.format(term.replace('"', '\\"'))
             for term in sorted(args.terms)

@@ -89,8 +89,6 @@ class Library:
         self.bibtex_path = bibtex_path
         self.papers = {} # type: Dict[str, Paper]
         self._read_bibtex()
-        for _, paper in sorted(self.papers.items()):
-            print(paper.bibtex)
 
     def __contains__(self, key):
         # type: (Any) -> bool

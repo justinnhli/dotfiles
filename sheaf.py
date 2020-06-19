@@ -299,6 +299,7 @@ class Sheaf:
                 tags.add(page.url)
             for tag in tags:
                 self.tags[tag] = page
+                self.tags[tag.lower()] = page
 
     def create(self, title, filename=None, tags=None, contents=''):
         if title.lower() in self.tags:
@@ -378,7 +379,8 @@ class Sheaf:
         """Write the tags file."""
         lines = []
         for tag, page in sorted(self.tags.items()):
-            lines.append('\t'.join([tag, str(page.filepath.relative_to(self.directory)), '1']))
+            if tag != tag.lower():
+                lines.append('\t'.join([tag, str(page.filepath.relative_to(self.directory)), '1']))
         with self.directory.joinpath('.tags').open('w') as fd:
             for line in sorted(lines, key=(lambda line: line.lower())):
                 fd.write(line + '\n')
@@ -400,7 +402,7 @@ class Sheaf:
             if missing:
                 print(slug)
                 for ref in missing:
-                    print(f'    {ref.text.lower()}')
+                    print(f'    {ref.text}')
 
     def _sync_archive(self):
         # type: () -> None

@@ -391,6 +391,8 @@ class Sheaf:
             for ref in page.references:
                 if DATE_REGEX.fullmatch(ref.text):
                     continue
+                if ref.text in self.library:
+                    continue
                 if ref.text.startswith('journal::') and DATE_REGEX.fullmatch(ref.text[-10:]):
                     continue
                 if ref.text.lower() not in self.tags:

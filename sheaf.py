@@ -21,7 +21,6 @@ except ModuleNotFoundError as err:
 
 SUFFIX = '.shf'
 SHEAF_PATH = Path('~/pim/sheaf').expanduser().resolve()
-ARCHIVE_PATH = Path('~/pim/archive').expanduser().resolve()
 
 # classes
 
@@ -272,7 +271,8 @@ class Sheaf:
             directory (Path): The directory path of the Sheaf Pages.
         """
         self.directory = directory
-        self.archive = Archive(ARCHIVE_PATH)
+        self.archive = Archive()
+        self.library = Library()
         self.pages = {} # type: Dict[Path, Page]
         self.tags = {} # type: Dict[str, Page]
         self._read_pages()
@@ -564,7 +564,6 @@ def build_arg_parser(parser):
     parser.usage = 'test' # FIXME
     parser.add_argument('action', choices=actions, nargs='?', default='vimgrep')
     parser.add_argument('--sheaf-directory', default=SHEAF_PATH, type=Path)
-    parser.add_argument('--archive-directory', default=ARCHIVE_PATH, type=Path)
     parser.add_argument('args', nargs='*')
     parser.set_defaults(function=parse_args)
     return parser

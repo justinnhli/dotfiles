@@ -118,7 +118,7 @@ class Archive:
         'via',
     ])
 
-    def __init__(self, directory):
+    def __init__(self, directory=ARCHIVE_PATH):
         # type: (Path) -> None
         """Initialize the Archive.
 

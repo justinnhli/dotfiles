@@ -82,8 +82,8 @@ class Paper:
 class Library:
     """A Library of research Papers."""
 
-    def __init__(self, directory, bibtex_path=None):
-        # type: (Path, Optional[Path]) -> None
+    def __init__(self, directory=PAPERS_PATH, bibtex_path=BIBTEX_PATH):
+        # type: (Path, Path) -> None
         """Initialize the Library."""
         self.directory = directory
         self.bibtex_path = bibtex_path

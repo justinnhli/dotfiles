@@ -545,6 +545,7 @@ def do_vimgrep(journal, args):
     suffix_len = 40
     entries = filter_entries(journal, args)
     for date, entry in sorted(entries.items(), reverse=True):
+        results = []
         for term in args.terms:
             for match in re.finditer(term, entry.text, flags=args.icase):
                 first_index = match.start()
@@ -556,7 +557,6 @@ def do_vimgrep(journal, args):
                     prev_lines = entry.text[:first_index].splitlines()
                     line_num = len(prev_lines)
                     col_num = len(prev_lines[-1]) + 1
-                filepath = entry.filepath
                 match_line = entry.text.splitlines()[line_num - 1].strip()
                 if col_num < prefix_len:
                     start_index = 0
@@ -571,7 +571,9 @@ def do_vimgrep(journal, args):
                     end_index = match_line.find(' ', col_num + suffix_len)
                     suffix = ' [...]'
                 snippet = match_line[start_index:end_index]
-                print(f'{filepath}:{line_num}:{col_num}:{date} {prefix}{snippet}{suffix}')
+                results.append((line_num, col_num, f'{date} {prefix}{snippet}{suffix}'))
+        for line_num, col_num, preview in sorted(results):
+            print(f'{entry.filepath}:{line_num}:{col_num}:{preview}')
 
 
 # CLI

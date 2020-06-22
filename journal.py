@@ -188,7 +188,7 @@ class Journal:
                 errors.append((journal_file, len(lines), 'file ends on blank line'))
             prev_indent = 0
             for line_number, line in enumerate(lines, start=1):
-                indent = len(re.match('\t*', line).group(0))
+                indent = len(re.match('\t*', line).group[0])
                 if not re.fullmatch('(\t*([^ \t][ -~]*)?[^ \t])?', line):
                     errors.append(log_error('non-tab indentation, ending blank, or non-ASCII character'))
                 if not line.lstrip().startswith('|') and '  ' in line:

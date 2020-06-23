@@ -483,7 +483,8 @@ class Sheaf:
         for page in matches:
             # check title
             if any(term.lower() in page.title.text.lower() for term in terms):
-                results['title'].append(page)
+                if not page.is_empty:
+                    results['title'].append(page)
             # check metadata
             for key in Page.METADATA:
                 value = Page.METADATA[key].write(getattr(page, key))

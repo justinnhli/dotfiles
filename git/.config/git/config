@@ -5,6 +5,8 @@
     editor = nvim
 [push]
     default = simple
+[pull]
+    rebase = false
 [alias]
     # tracking
     untracked = ls-files --others --exclude-standard

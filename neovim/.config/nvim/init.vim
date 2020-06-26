@@ -88,7 +88,7 @@ function BuildTabLine()
 	return l:tabline
 endfunction
 
-function ContractFilePath(path)
+function! s:use_home_tilde(path)
 	let l:path = a:path
 	if l:path =~ '^' .. $HOME
 		let l:path = '~' .. l:path[strlen($HOME):]
@@ -96,42 +96,19 @@ function ContractFilePath(path)
 	return l:path
 endfunction
 
-function GetStatusLinePwd()
-	let l:pwd = ContractFilePath(getcwd())
-	if strlen(l:pwd) <= 30
-		let l:pwd = l:pwd .. '/'
-	else
-		let l:result = ''
-		for l:part in split(l:pwd, '/')
-			let l:result .= l:part[0] .. '/'
-		endfor
-		let l:pwd = l:result
-	endif
-	return l:pwd
+function! s:editable_area_width()
+	" from https://stackoverflow.com/questions/26315925/get-usable-window-width-in-vim-script/26318602#26318602
+	redir => a | execute 'silent sign place buffer=' .. bufnr('') | redir end
+	let signlist=split(a, '\n')
+	return winwidth(0) - ((&number||&relativenumber) ? &numberwidth : 0) - &foldcolumn - (len(signlist) > 2 ? 2 : 0)
 endfunction
 
-function GetStatusLineFilePath()
-	let l:filepath = ContractFilePath(expand('%'))
-	if strlen(l:filepath) > 30
-		let l:dir = ContractFilePath(expand('%:h'))
-		let l:result = ''
-		if l:dir[0] ==# '^/'
-			let l:result .= '/'
-		endif
-		for l:part in split(l:dir, '/')
-			let l:result .= l:part[0] .. '/'
-		endfor
-		let l:filepath = l:result .. expand('%:t')
-	endif
-	return l:filepath
-endfunction
-
-function GetStatusLineGitBranch()
+function! s:get_git_branch(path)
 	let l:cmd = ''
 	let l:cmd .= '( '
-	let l:cmd .= 'cd ' .. shellescape(expand('%:p:h'))
+	let l:cmd .= 'cd ' .. shellescape(fnamemodify(a:path, ':p:h'))
 	let l:cmd .= ' && '
-	let l:cmd .= 'git status --porcelain=1 -b ' .. shellescape(expand('%'))
+	let l:cmd .= 'git status --porcelain=1 -b ' .. shellescape(a:path)
 	let l:cmd .= ' ) 2>/dev/null'
 	let l:gitoutput = trim(system(l:cmd))
 	if len(l:gitoutput) == 0
@@ -143,6 +120,21 @@ function GetStatusLineGitBranch()
 	let l:branch = strpart(get(split(l:line, '\.\.\.'), 0, ''), 3)
 	return '(' .. l:branch .. ')'
 endfunc
+
+function GetStatusLineFile()
+	" gives git branch, working path, and file path
+	let l:branch = <SID>get_git_branch(expand('%:p:h'))
+	let l:pwd = <SID>use_home_tilde(getcwd()) .. '/'
+	let l:filepath = <SID>use_home_tilde(expand('%'))
+	let l:max_width = <SID>editable_area_width() - 32
+	if strlen(l:branch) + strlen(l:pwd) + strlen(l:filepath) + 3 > l:max_width
+		let l:pwd = pathshorten(l:pwd)
+		if strlen(l:branch) + strlen(l:pwd) + strlen(l:filepath) + 3 > l:max_width
+			let l:filepath = pathshorten(l:filepath)
+		endif
+	endif
+	return l:branch .. ' ' .. l:pwd .. ' ' .. l:filepath
+endfunction
 
 " settings {{{2
 filetype plugin on
@@ -229,12 +221,8 @@ if has('statusline')
 	set   statusline=
 	" buffer number
 	set   statusline+=%n
-	" git branch
-	set   statusline+=\ %{GetStatusLineGitBranch()}
-	" pwd
-	set   statusline+=\ %<%1.30{GetStatusLinePwd()}
-	" file name
-	set   statusline+=\ %{GetStatusLineFilePath()}
+	" git branch, pwd, file path
+	set   statusline+=\ %{GetStatusLineFile()}
 	" modified
 	set   statusline+=%(\ %M%)
 	" file format

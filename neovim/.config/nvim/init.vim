@@ -96,13 +96,6 @@ function! s:use_home_tilde(path)
 	return l:path
 endfunction
 
-function! s:editable_area_width()
-	" from https://stackoverflow.com/questions/26315925/get-usable-window-width-in-vim-script/26318602#26318602
-	redir => a | execute 'silent sign place buffer=' .. bufnr('') | redir end
-	let signlist=split(a, '\n')
-	return winwidth(0) - ((&number||&relativenumber) ? &numberwidth : 0) - &foldcolumn - (len(signlist) > 2 ? 2 : 0)
-endfunction
-
 function! s:get_git_branch(path)
 	let l:cmd = ''
 	let l:cmd .= '( '
@@ -126,7 +119,7 @@ function GetStatusLineFile()
 	let l:branch = <SID>get_git_branch(expand('%:p:h'))
 	let l:pwd = <SID>use_home_tilde(getcwd()) .. '/'
 	let l:filepath = <SID>use_home_tilde(expand('%'))
-	let l:max_width = <SID>editable_area_width() - 32
+	let l:max_width = winwidth(0) - 32
 	if strlen(l:branch) + strlen(l:pwd) + strlen(l:filepath) + 3 > l:max_width
 		let l:pwd = pathshorten(l:pwd)
 		if strlen(l:branch) + strlen(l:pwd) + strlen(l:filepath) + 3 > l:max_width

@@ -25,6 +25,7 @@ class Paper:
         'howpublished',
         'institution',
         'journal',
+        'month',
         'note',
         'number',
         'organization',

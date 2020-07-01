@@ -3,6 +3,7 @@
     email = justinnhli@gmail.com
 [core]
     editor = nvim
+    pager = ( $HOME/bin/diff-highlight-finder || cat ) | less
 [push]
     default = simple
 [pull]

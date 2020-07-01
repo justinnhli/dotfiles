@@ -126,6 +126,9 @@ function GetStatusLineFile()
 			let l:filepath = pathshorten(l:filepath)
 		endif
 	endif
+	if l:filepath =~# '^\./'
+		let l:filepath = l:filepath[2:]
+	endif
 	return l:branch .. ' ' .. l:pwd .. ' ' .. l:filepath
 endfunction
 

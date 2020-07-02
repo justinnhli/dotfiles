@@ -58,9 +58,11 @@ def run_pylint(path):
             str(VENV_PYTHON),
             '-m',
             'pylint',
-            str(path),
             '--msg-template',
             '{path}:{line}:{column}: {msg} [{msg_id} {symbol}]',
+            '--disable',
+            'fixme',
+            str(path),
         ],
         check=False,
         capture_output=True,
@@ -190,9 +192,9 @@ def main():
         errors = []
         if has_pylint:
             errors.extend(run_pylint(arg))
-        if has_mypy:
+        if not errors and has_mypy:
             errors.extend(run_mypy(arg))
-        if has_pydocstyle:
+        if not errors and has_pydocstyle:
             errors.extend(run_pydocstyle(arg))
         for error in sorted(errors):
             _err_print(f'{error.filename}:{error.linenum}:{error.column}: {error.message}')

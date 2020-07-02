@@ -269,7 +269,7 @@ if exists('&esckeys')
 	set noesckeys
 endif
 if exists('&inccommand')
-	set inccommand=split
+	set inccommand=nosplit
 endif
 
 " map leader {{{1

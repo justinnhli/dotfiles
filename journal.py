@@ -546,7 +546,7 @@ def do_vimgrep(journal, args):
     entries = filter_entries(journal, args)
     if not args.terms:
         args.terms.append('^.')
-    for date, entry in sorted(entries.items(), reverse=True):
+    for date, entry in sorted(entries.items(), reverse=(not args.reverse)):
         lines = entry.text.splitlines()
         results = []
         for term in args.terms:

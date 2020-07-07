@@ -4,7 +4,7 @@ import re
 from pathlib import Path
 from datetime import date as Date
 from urllib.parse import urlsplit, parse_qsl, urlencode, urlunsplit
-from typing import Optional, Dict, List
+from typing import Optional, List, Dict
 
 from util import filenamize, run_with_venv
 

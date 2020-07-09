@@ -837,6 +837,8 @@ nnoremap  <leader>/         :2match IncSearch ''<left>
 nnoremap  <leader>@         :<C-f>ilet @=<C-r><C-r>
 nnoremap  <leader>]         <C-w><C-]><C-w>T
 xnoremap  <leader>]         <C-w><C-]><C-w>T
+nnoremap  <leader><bar>     ggVG:<C-u>call <SID>FormatColumns()<cr>
+nnoremap  <leader><bslash>  ggVG:<C-u>call <SID>FormatTable()<cr>
 xnoremap  <leader><bar>     :<C-u>call <SID>FormatColumns()<cr>
 xnoremap  <leader><bslash>  :<C-u>call <SID>FormatTable()<cr>
 nnoremap  <leader><cr>      :silent lmake<cr>

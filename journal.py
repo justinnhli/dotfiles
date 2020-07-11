@@ -584,7 +584,14 @@ def do_vimgrep(journal, args):
 def build_arg_parser(arg_parser):
     arg_parser.usage = '%(prog)s <operation> [options] [TERM ...]'
     arg_parser.description = 'A command line tool for viewing and maintaining a journal.'
-    arg_parser.set_defaults(directory=JOURNAL_PATH, ignores=[], icase=re.IGNORECASE, terms=[], unit='year', function=parse_args)
+    arg_parser.set_defaults(
+        directory=JOURNAL_PATH,
+        ignores=[],
+        icase=re.IGNORECASE,
+        terms=[],
+        unit='year',
+        function=parse_args,
+    )
     arg_parser.add_argument(
         'terms',
         metavar='TERM',

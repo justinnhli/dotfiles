@@ -222,8 +222,10 @@ class Journal:
                     errors.append(log_error('unexpected indentation'))
                 prev_indent = indent
         if errors:
-            print('\n'.join('{}:{}: {}'.format(*error) for error in sorted(errors)))
-            sys.exit(1)
+            result = []
+            for error in sorted(errors):
+                result.append('{}:{}: {}'.format(*error))
+            return '\n'.join(result)
 
 
 # utility functions
@@ -431,6 +433,15 @@ def do_graph(journal, args):
     print('}')
 
 
+@register('-I', 'list entry dates')
+def do_index(journal, args):
+    error_printout = journal.verify()
+    if error_printout:
+        print(error_printout)
+        exit(1)
+    journal.update_metadata()
+
+
 @register('-L', 'list entry dates')
 def do_list(journal, args):
     entries = filter_entries(journal, args)
@@ -464,16 +475,6 @@ def do_show(journal, args):
             execvp(editor, vim_args)
     else:
         print(text)
-
-
-@register('-U', 'update tags and cache file')
-def do_update(journal, _):
-    journal.update_metadata()
-
-
-@register('-V', 'verify journal sanity')
-def do_verify(journal, _):
-    journal.verify()
 
 
 @register('list entries that hyphenate the terms differently')

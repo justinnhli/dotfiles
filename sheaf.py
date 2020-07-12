@@ -429,7 +429,6 @@ class Sheaf:
         self._write_tags_file()
         self._write_cache()
         self._sync_archive()
-        self._list_dangling_references()
 
     # suggest functions
 

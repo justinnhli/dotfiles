@@ -15,7 +15,7 @@ from archive import Archive
 try:
     from newspaper import Article as NewspaperArticle
 except ModuleNotFoundError as err:
-    run_with_venv('sheaf')
+    run_with_venv('pim')
 
 # paths
 

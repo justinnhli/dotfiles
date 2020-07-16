@@ -519,6 +519,10 @@ def get_path(filename):
 # operations
 
 
+def do_index(sheaf, _):
+    sheaf.index()
+
+
 def do_intake(sheaf, args):
     # type: () -> Generator[str, None, None]
     """Archive new links from Dynalist."""
@@ -558,6 +562,14 @@ def do_rewrite(sheaf, args):
                     print(f'{page.filepath}:{line_num}:different')
                     print('    old: ' + old)
                     print('    new: ' + new)
+
+
+def do_suggest(sheaf, args):
+    sheaf.suggest(args.args[0])
+
+
+def do_vimgrep(sheaf, args):
+    sheaf.vimgrep(*args.args)
 
 
 # main

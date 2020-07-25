@@ -452,6 +452,8 @@ def do_list(journal, args):
 def do_show(journal, args):
     entries = filter_entries(journal, args)
     text = '\n\n'.join(entry.text for _, entry in sorted(entries.items(), reverse=args.reverse))
+    if not text:
+        return
     if stdout.isatty():
         temp_file = Path(mkstemp(FILE_EXTENSION)[1])
         with temp_file.open('w') as fd:

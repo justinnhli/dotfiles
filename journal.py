@@ -433,7 +433,7 @@ def do_graph(journal, args):
     print('}')
 
 
-@register('-I', 'list entry dates')
+@register('-I', 're-index and cache')
 def do_index(journal, args):
     error_printout = journal.verify()
     if error_printout:
@@ -645,7 +645,7 @@ def build_arg_parser(arg_parser):
         help='skip cached entries and indices',
     )
 
-    group = arg_parser.add_argument_group('FILTER OPTIONS (IGNORED BY -[AUV])')
+    group = arg_parser.add_argument_group('FILTER OPTIONS (IGNORED BY -[AI])')
     group.add_argument(
         '-d',
         dest='date_spec',

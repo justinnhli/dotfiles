@@ -232,19 +232,11 @@ class Journal:
 
 
 def filter_entries(journal, args, **kwargs):
-    entries = journal.filter(
+    return journal.filter(
         terms=kwargs.get('terms', args.terms),
         date_ranges=kwargs.get('date_ranges', args.date_ranges),
         icase=kwargs.get('icase', args.icase),
     )
-    num_results = kwargs.get('num_results', args.num_results)
-    if num_results is None:
-        return entries
-    if kwargs.get('reverse', args.reverse):
-        dates = nlargest(num_results, entries)
-    else:
-        dates = nsmallest(num_results, entries)
-    return {date: entries[date] for date in dates}
 
 
 def print_table(data, headers=None, gap_size=2):
@@ -549,7 +541,7 @@ def do_vimgrep(journal, args):
     entries = filter_entries(journal, args)
     if not args.terms:
         args.terms.append('^.')
-    for date, entry in sorted(entries.items(), reverse=(not args.reverse)):
+    for date, entry in sorted(entries.items(), reverse=args.reverse):
         lines = entry.text.splitlines()
         results = []
         for term in args.terms:
@@ -658,13 +650,6 @@ def build_arg_parser(arg_parser):
         action='store_false',
         help='ignore case-insensitivity',
     )
-    group.add_argument(
-        '-n',
-        dest='num_results',
-        action='store',
-        type=int,
-        help='limit number of results',
-    )
 
     group = arg_parser.add_argument_group('OUTPUT OPTIONS')
     group.add_argument(
@@ -725,8 +710,6 @@ def process_args(arg_parser, args):
             else:
                 date_ranges.append(date_range)
         args.date_ranges = date_ranges
-    if args.num_results is not None and args.num_results < 1:
-        arg_parser.error(f'argument -n: "{args.num_results}" should be a positive integer')
     args.directory = args.directory.resolve()
     args.ignores = set(path.resolve() for path in args.ignores)
     return args

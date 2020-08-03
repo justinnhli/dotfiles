@@ -653,10 +653,10 @@ def build_arg_parser(arg_parser):
 
     group = arg_parser.add_argument_group('OUTPUT OPTIONS')
     group.add_argument(
-        '-r',
+        '-c',
         dest='reverse',
-        action='store_true',
-        help='reverse chronological order',
+        action='store_false',
+        help='chronological order',
     )
 
     group = arg_parser.add_argument_group('OPERATION-SPECIFIC OPTIONS')

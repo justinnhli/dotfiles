@@ -385,6 +385,14 @@ nnoremap  <leader>wtl  :call <SID>StartTerminal(['rightbelow vnew', 'silent! lcd
 nnoremap  <leader>tt   :call <SID>StartTerminal(['tabnew', 'silent! lcd ~'], '')<cr>
 nnoremap  <leader>tT   :call <SID>StartTerminal(['tabnew', 'silent! lcd ' .. expand('%:p:h')], '')<cr>
 
+" open file under cursor {{{3
+nnoremap  <leader>w.e  gf
+nnoremap  <leader>w.h  :leftabove vertical wincmd f<cr>
+nnoremap  <leader>w.j  :rightbelow wincmd f<cr>
+nnoremap  <leader>w.k  :leftabove wincmd f<cr>
+nnoremap  <leader>w.l  :rightbelow vertical wincmd f<cr>
+nnoremap  <leader>t.   <C-w>gf
+
 " open tag {{{3
 nnoremap  <leader>wge  :execute 'tjump ' .. expand('<cword>')<cr>
 nnoremap  <leader>wgh  :execute 'leftabove vertical stjump ' .. expand('<cword>')<cr>

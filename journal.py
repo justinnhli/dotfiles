@@ -568,9 +568,9 @@ def do_vimgrep(journal, args):
                     end_index = match_line.find(' ', col_num + len(match.group()) + suffix_len)
                     suffix = ' [...]'
                 snippet = match_line[start_index:end_index]
-                results.append((line_num, col_num, f'{date} {prefix}{snippet}{suffix}'))
+                results.append((line_num, col_num, f'{prefix}{snippet}{suffix}'))
         for line_num, col_num, preview in sorted(results):
-            print(f'{entry.filepath}:{line_num}:{col_num}:{preview}')
+            print(f'{entry.filepath}:{line_num}:{col_num}: {preview}')
 
 
 # CLI

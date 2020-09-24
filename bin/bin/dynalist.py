@@ -12,13 +12,18 @@ from os.path import realpath, expanduser
 
 try:
     import requests
-except ModuleNotFoundError as err:
+except (ModuleNotFoundError, ImportError) as err:
 
     def run_with_venv(venv):
+        # type: (str) -> None
         """Run this script in a virtual environment.
 
         Parameters:
             venv (str): The virtual environment to use.
+
+        Raises:
+            FileNotFoundError: If the virtual environment does not exist.
+            ImportError: If the virtual environment does not contain the necessary packages.
         """
         # pylint: disable = ungrouped-imports, reimported, redefined-outer-name, import-outside-toplevel
         import sys

@@ -204,6 +204,15 @@ def slack_web(text):
     ))
 
 
+def zoom(text):
+    lines = []
+    for line in text.splitlines():
+        line = line.replace('\t ', ' ', 1).replace(' : ', ': ', 1)
+        line = re.sub(r' \(s?he(/[a-z]{3,4})*\)', '', line)
+        lines.append(line)
+    print('\n'.join(lines))
+
+
 def _is_format(string):
     exceptions = 'datetime timedelta dedent'.split()
     return not string.startswith('_') and string == string.lower() and string not in exceptions

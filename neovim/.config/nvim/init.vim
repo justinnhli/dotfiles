@@ -881,11 +881,11 @@ function s:AutosetGrepMappings()
 		execute 'nnoremap  <buffer>  <leader>wfl  :rightbelow vnew<cr>:setlocal filetype=' .. &filetype .. '<cr>q:isilent lgrep<space>'
 		execute 'nnoremap  <buffer>  <leader>tf  :tabnew<cr>:setlocal filetype=' .. &filetype .. '<cr>q:isilent lgrep<space>'
 		xnoremap  <buffer>  <leader>wfe  "zy:silent lgrep <C-r>z<cr>
-		execute 'xnoremap  <buffer>  <leader>wfh  "zy:leftabove vnew<cr>:setlocal filetype=' .. &filetype .. '<cr>q:isilent lgrep <C-r>z<cr>'
-		execute 'xnoremap  <buffer>  <leader>wfj  "zy:rightbelow new<cr>:setlocal filetype=' .. &filetype .. '<cr>q:isilent lgrep <C-r>z<cr>'
-		execute 'xnoremap  <buffer>  <leader>wfk  "zy:leftabove new<cr>:setlocal filetype=' .. &filetype .. '<cr>q:isilent lgrep <C-r>z<cr>'
-		execute 'xnoremap  <buffer>  <leader>wfl  "zy:rightbelow vnew<cr>:setlocal filetype=' .. &filetype .. '<cr>q:isilent lgrep <C-r>z<cr>'
-		execute 'xnoremap  <buffer>  <leader>tf  "zy:tabnew<cr>:setlocal filetype=' .. &filetype .. '<cr>q:isilent lgrep <C-r>z<cr>'
+		execute 'xnoremap  <buffer>  <leader>wfh  "zy:leftabove vnew<cr>:setlocal filetype=' .. &filetype .. "<cr>q:isilent lgrep '<C-r>z'<cr>"
+		execute 'xnoremap  <buffer>  <leader>wfj  "zy:rightbelow new<cr>:setlocal filetype=' .. &filetype .. "<cr>q:isilent lgrep '<C-r>z'<cr>"
+		execute 'xnoremap  <buffer>  <leader>wfk  "zy:leftabove new<cr>:setlocal filetype=' .. &filetype .. "<cr>q:isilent lgrep '<C-r>z'<cr>"
+		execute 'xnoremap  <buffer>  <leader>wfl  "zy:rightbelow vnew<cr>:setlocal filetype=' .. &filetype .. "<cr>q:isilent lgrep '<C-r>z'<cr>"
+		execute 'xnoremap  <buffer>  <leader>tf  "zy:tabnew<cr>:setlocal filetype=' .. &filetype .. "<cr>q:isilent lgrep '<C-r>z'<cr>"
 	endif
 endfunction
 augroup justinnhli_autoset_grep_mappings

@@ -34,6 +34,7 @@ except (ModuleNotFoundError, ImportError) as err:
 
     run_with_venv('neovim')
 
+
 # FIXME
 # if sys.argv[0] in ('vi', 'vim'), don't treat argument as commands
 
@@ -47,9 +48,11 @@ EDIT_COMMANDS = {
     'vsplit': True,
 }
 
+
 def print_and_exit(message):
     print(sys.argv[0] + ': ' + message)
     exit(1)
+
 
 def main():
     if len(sys.argv) == 1:
@@ -77,6 +80,7 @@ def main():
             print_and_exit(e.args[0].decode('utf-8'))
         else:
             print_and_exit(e.args[0])
+
 
 if __name__ == '__main__':
     main()

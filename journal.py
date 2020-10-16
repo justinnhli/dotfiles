@@ -288,13 +288,19 @@ def register(*args):
 @register('-A', 'archive to datetimed tarball')
 def do_archive(_, args):
     from os.path import basename, join as join_path # pylint: disable = import-outside-toplevel
+
+    def tarinfo_filter(tarinfo):
+        if basename(tarinfo.name)[0] in '._':
+            return None
+        elif tarinfo.size > 1048576:
+            return None
+        else:
+            return tarinfo
+
+
     archive_name = 'jrnl' + datetime.now().strftime('%Y%m%d%H%M%S')
     with tarfile.open(archive_name + '.txz', 'w:xz') as tar:
-        tar.add(
-            args.directory,
-            arcname=archive_name,
-            filter=(lambda tarinfo: None if basename(tarinfo.name)[0] in '._' else tarinfo),
-        )
+        tar.add(args.directory, arcname=archive_name, filter=tarinfo_filter)
         tar.add(__file__, arcname=join_path(archive_name, basename(__file__)))
 
 

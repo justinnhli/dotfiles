@@ -11,7 +11,7 @@ from util import filenamize, run_with_venv
 
 try:
     from newspaper import Article as NewspaperArticle
-except ModuleNotFoundError as err:
+except (ModuleNotFoundError, ImportError) as err:
     run_with_venv('pim')
 
 

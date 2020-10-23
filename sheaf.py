@@ -14,7 +14,7 @@ from archive import Archive
 
 try:
     from newspaper import Article as NewspaperArticle
-except ModuleNotFoundError as err:
+except (ModuleNotFoundError, ImportError) as err:
     run_with_venv('pim')
 
 # paths

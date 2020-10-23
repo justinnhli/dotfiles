@@ -7,6 +7,7 @@ from pathlib import Path
 
 DATE_REGEX = re.compile('[0-9]{4}-[0-9]{2}-[0-9]{2}')
 
+
 def run_with_venv(venv):
     # type: (str) -> None
     """Run this script in a virtual environment.
@@ -15,10 +16,13 @@ def run_with_venv(venv):
         venv (str): The virtual environment to use.
 
     Raises:
-        FileNotFoundError: If the virtual environment cannot be found.
-        ImportError: If the virtual environment does not have the modules.
+        FileNotFoundError: If the virtual environment does not exist.
+        ImportError: If the virtual environment does not contain the necessary packages.
     """
     # pylint: disable = ungrouped-imports, reimported, redefined-outer-name, import-outside-toplevel
+    import sys
+    from os import environ, execv
+    from pathlib import Path
     venv_python = Path(environ['PYTHON_VENV_HOME'], venv, 'bin', 'python3').expanduser()
     if not venv_python.exists():
         raise FileNotFoundError(f'could not find venv "{venv}" at executable {venv_python}')

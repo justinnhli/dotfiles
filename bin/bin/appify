@@ -1,5 +1,6 @@
 #!/bin/sh
 
+# turn a shell script into a runnable MacOS app
 # taken from https://mathiasbynens.be/notes/shell-script-mac-apps
 
 APPNAME="${2:-$(basename "${1}" '.sh')}"

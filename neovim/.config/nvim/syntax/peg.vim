@@ -1,8 +1,8 @@
-syntax match comment '#.*'
-highlight default link nonterminal Comment
-
 syntax match nonterminal '^[a-z_]\+'
 highlight default link nonterminal Statement
+
+syntax match comment '#.*'
+highlight default link nonterminal Comment
 
 syntax match constant '[A-Z]\+'
 highlight default link constant Constant

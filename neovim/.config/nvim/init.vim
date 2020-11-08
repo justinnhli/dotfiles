@@ -836,10 +836,10 @@ nnoremap  <C-r>    g+
 
 " miscellaneous editing mappings {{{3
 nnoremap  <leader>a         ggVG
-if has('unix')
-	nnoremap  <leader>o         :!xdg-open<space>
-elseif has('macunix')
+if has('macunix')
 	nnoremap  <leader>o         :!open<space>
+elseif has('unix')
+	nnoremap  <leader>o         :!xdg-open<space>
 endif
 nnoremap  <leader>p         "+p
 nnoremap  <leader>y         "+y

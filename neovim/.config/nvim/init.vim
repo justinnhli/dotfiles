@@ -354,71 +354,72 @@ endif
 " window spawning mappings {{{2
 
 " open file {{{3
-nnoremap  <leader>we  :edit<space>
-nnoremap  <leader>wh  :leftabove vsplit<space>
-nnoremap  <leader>wj  :rightbelow split<space>
-nnoremap  <leader>wk  :leftabove split<space>
-nnoremap  <leader>wl  :rightbelow vsplit<space>
-nnoremap  <leader>tn  :tabnew<space>
+nnoremap  <leader>wee  :edit<space>
+nnoremap  <leader>whe  :leftabove vsplit<space>
+nnoremap  <leader>wje  :rightbelow split<space>
+nnoremap  <leader>wke  :leftabove split<space>
+nnoremap  <leader>wle  :rightbelow vsplit<space>
+nnoremap  <leader>te   :tabnew<space>
 
 " open new file {{{3
-nnoremap  <leader>wne  :enew<cr>
-nnoremap  <leader>wnh  :leftabove vnew<cr>
-nnoremap  <leader>wnj  :rightbelow new<cr>
-nnoremap  <leader>wnk  :leftabove new<cr>
-nnoremap  <leader>wnl  :rightbelow vnew<cr>
+nnoremap  <leader>wen  :enew<cr>
+nnoremap  <leader>whn  :leftabove vnew<cr>
+nnoremap  <leader>wjn  :rightbelow new<cr>
+nnoremap  <leader>wkn  :leftabove new<cr>
+nnoremap  <leader>wln  :rightbelow vnew<cr>
+nnoremap  <leader>tn   :tabnew<space>
 
 " open remote file {{{3
-nnoremap  <leader>wre  :enew<cr>scp://user@server.tld//absolute/path/to/file
-nnoremap  <leader>wrh  :leftabove vsplit scp://user@server.tld//absolute/path/to/file
-nnoremap  <leader>wrj  :rightbelow split scp://user@server.tld//absolute/path/to/file
-nnoremap  <leader>wrk  :leftabove split scp://user@server.tld//absolute/path/to/file
-nnoremap  <leader>wrl  :rightbelow vsplit scp://user@server.tld//absolute/path/to/file
+nnoremap  <leader>wer  :enew<cr>scp://user@server.tld//absolute/path/to/file
+nnoremap  <leader>whr  :leftabove vsplit scp://user@server.tld//absolute/path/to/file
+nnoremap  <leader>wjr  :rightbelow split scp://user@server.tld//absolute/path/to/file
+nnoremap  <leader>wkr  :leftabove split scp://user@server.tld//absolute/path/to/file
+nnoremap  <leader>wlr  :rightbelow vsplit scp://user@server.tld//absolute/path/to/file
 nnoremap  <leader>tr   :tabnew scp://user@server.tld//absolute/path/to/file
 
 " open terminal at ($HOME if new tab, current directory otherwise) {{{3
-nnoremap  <leader>wte  :call <SID>StartTerminal(['silent! lcd ' .. expand('%:p:h')], '')<cr>
-nnoremap  <leader>wth  :call <SID>StartTerminal(['leftabove vnew', 'silent! lcd ' .. expand('%:p:h')], '')<cr>
-nnoremap  <leader>wtj  :call <SID>StartTerminal(['rightbelow new', 'silent! lcd ' .. expand('%:p:h')], '')<cr>
-nnoremap  <leader>wtk  :call <SID>StartTerminal(['leftabove new', 'silent! lcd ' .. expand('%:p:h')], '')<cr>
-nnoremap  <leader>wtl  :call <SID>StartTerminal(['rightbelow vnew', 'silent! lcd ' .. expand('%:p:h')], '')<cr>
+nnoremap  <leader>wet  :call <SID>StartTerminal(['silent! lcd ' .. expand('%:p:h')], '')<cr>
+nnoremap  <leader>wht  :call <SID>StartTerminal(['leftabove vnew', 'silent! lcd ' .. expand('%:p:h')], '')<cr>
+nnoremap  <leader>wjt  :call <SID>StartTerminal(['rightbelow new', 'silent! lcd ' .. expand('%:p:h')], '')<cr>
+nnoremap  <leader>wkt  :call <SID>StartTerminal(['leftabove new', 'silent! lcd ' .. expand('%:p:h')], '')<cr>
+nnoremap  <leader>wlt  :call <SID>StartTerminal(['rightbelow vnew', 'silent! lcd ' .. expand('%:p:h')], '')<cr>
 nnoremap  <leader>tt   :call <SID>StartTerminal(['tabnew', 'silent! lcd ~'], '')<cr>
 nnoremap  <leader>tT   :call <SID>StartTerminal(['tabnew', 'silent! lcd ' .. expand('%:p:h')], '')<cr>
 
 " open file under cursor {{{3
-nnoremap  <leader>w.e  gf
-nnoremap  <leader>w.h  :leftabove vertical wincmd f<cr>
-nnoremap  <leader>w.j  :rightbelow wincmd f<cr>
-nnoremap  <leader>w.k  :leftabove wincmd f<cr>
-nnoremap  <leader>w.l  :rightbelow vertical wincmd f<cr>
+nnoremap  <leader>we.  gf
+nnoremap  <leader>wh.  :leftabove vertical wincmd f<cr>
+nnoremap  <leader>wj.  :rightbelow wincmd f<cr>
+nnoremap  <leader>wk.  :leftabove wincmd f<cr>
+nnoremap  <leader>wl.  :rightbelow vertical wincmd f<cr>
 nnoremap  <leader>t.   <C-w>gf
 
 " open tag {{{3
-nnoremap  <leader>wge  :execute 'tjump ' .. expand('<cword>')<cr>
-nnoremap  <leader>wgh  :execute 'leftabove vertical stjump ' .. expand('<cword>')<cr>
-nnoremap  <leader>wgj  :execute 'rightbelow stjump ' .. expand('<cword>')<cr>
-nnoremap  <leader>wgk  :execute 'leftabove stjump ' .. expand('<cword>')<cr>
-nnoremap  <leader>wgl  :execute 'rightbelow vertical stjump ' .. expand('<cword>')<cr>
+nnoremap  <leader>weg  :execute 'tjump ' .. expand('<cword>')<cr>
+nnoremap  <leader>whg  :execute 'leftabove vertical stjump ' .. expand('<cword>')<cr>
+nnoremap  <leader>wjg  :execute 'rightbelow stjump ' .. expand('<cword>')<cr>
+nnoremap  <leader>wkg  :execute 'leftabove stjump ' .. expand('<cword>')<cr>
+nnoremap  <leader>wlg  :execute 'rightbelow vertical stjump ' .. expand('<cword>')<cr>
 nnoremap  <leader>tg   <C-w><C-]><C-w>T
-xnoremap  <leader>wge  "zy:tjump <C-r>z<cr>
-xnoremap  <leader>wgh  "zy:leftabove vertical stjump <C-r>z<cr>
-xnoremap  <leader>wgj  "zy:rightbelow stjump <C-r>z<cr>
-xnoremap  <leader>wgk  "zy:leftabove stjump <C-r>z<cr>
-xnoremap  <leader>wgl  "zy:rightbelow vertical stjump <C-r>z<cr>
+xnoremap  <leader>weg  "zy:tjump <C-r>z<cr>
+xnoremap  <leader>whg  "zy:leftabove vertical stjump <C-r>z<cr>
+xnoremap  <leader>wjg  "zy:rightbelow stjump <C-r>z<cr>
+xnoremap  <leader>wkg  "zy:leftabove stjump <C-r>z<cr>
+xnoremap  <leader>wlg  "zy:rightbelow vertical stjump <C-r>z<cr>
 xnoremap  <leader>tg   <C-w><C-]><C-w>T
 
 " open grep {{{3
-nnoremap  <leader>wfe  q:ilvimgrep /\m\c/g **/*<esc>Fca
-nnoremap  <leader>wfh  :leftabove vnew<cr>q:ilvimgrep /\m\c/g **/*<esc>Fca
-nnoremap  <leader>wfj  :rightbelow new<cr>q:ilvimgrep /\m\c/g **/*<esc>Fca
-nnoremap  <leader>wfk  :leftabove new<cr>q:ilvimgrep /\m\c/g **/*<esc>Fca
-nnoremap  <leader>wfl  :rightbelow vnew<cr>q:ilvimgrep /\m\c/g **/*<esc>Fca
+nnoremap  <leader>wef  q:ilvimgrep /\m\c/g **/*<esc>Fca
+nnoremap  <leader>whf  :leftabove vnew<cr>q:ilvimgrep /\m\c/g **/*<esc>Fca
+nnoremap  <leader>wjf  :rightbelow new<cr>q:ilvimgrep /\m\c/g **/*<esc>Fca
+nnoremap  <leader>wkf  :leftabove new<cr>q:ilvimgrep /\m\c/g **/*<esc>Fca
+nnoremap  <leader>wlf  :rightbelow vnew<cr>q:ilvimgrep /\m\c/g **/*<esc>Fca
 nnoremap  <leader>tf   :tabnew<cr>q:ilvimgrep /\m\c/g **/*<esc>Fca
-xnoremap  <leader>wfe  "zy:lvimgrep /<C-r>z/g **/*<cr>
-xnoremap  <leader>wfh  "zy:leftabove vnew<cr>:lvimgrep /<C-r>z/g **/*<cr>
-xnoremap  <leader>wfj  "zy:rightbelow new<cr>:lvimgrep /<C-r>z/g **/*<cr>
-xnoremap  <leader>wfk  "zy:leftabove new<cr>:lvimgrep /<C-r>z/g **/*<cr>
-xnoremap  <leader>wfl  "zy:rightbelow vnew<cr>:lvimgrep /<C-r>z/g **/*<cr>
+xnoremap  <leader>wef  "zy:lvimgrep /<C-r>z/g **/*<cr>
+xnoremap  <leader>whf  "zy:leftabove vnew<cr>:lvimgrep /<C-r>z/g **/*<cr>
+xnoremap  <leader>wjf  "zy:rightbelow new<cr>:lvimgrep /<C-r>z/g **/*<cr>
+xnoremap  <leader>wkf  "zy:leftabove new<cr>:lvimgrep /<C-r>z/g **/*<cr>
+xnoremap  <leader>wlf  "zy:rightbelow vnew<cr>:lvimgrep /<C-r>z/g **/*<cr>
 xnoremap  <leader>tf   "zy:tabnew<cr>:lvimgrep /<C-r>z/g **/*<cr>
 
 " window manipulation functions {{{3
@@ -878,17 +879,17 @@ augroup END
 " change grep {{{2
 function s:AutosetGrepMappings()
 	if &grepprg !~# '^grep -n '
-		nnoremap  <buffer>  <leader>wfe  q:isilent lgrep<space>
-		execute 'nnoremap  <buffer>  <leader>wfh  :leftabove vnew<cr>:setlocal filetype=' .. &filetype .. '<cr>q:isilent lgrep<space>'
-		execute 'nnoremap  <buffer>  <leader>wfj  :rightbelow new<cr>:setlocal filetype=' .. &filetype .. '<cr>q:isilent lgrep<space>'
-		execute 'nnoremap  <buffer>  <leader>wfk  :leftabove new<cr>:setlocal filetype=' .. &filetype .. '<cr>q:isilent lgrep<space>'
-		execute 'nnoremap  <buffer>  <leader>wfl  :rightbelow vnew<cr>:setlocal filetype=' .. &filetype .. '<cr>q:isilent lgrep<space>'
+		nnoremap  <buffer>  <leader>wef  q:isilent lgrep<space>
+		execute 'nnoremap  <buffer>  <leader>whf  :leftabove vnew<cr>:setlocal filetype=' .. &filetype .. '<cr>q:isilent lgrep<space>'
+		execute 'nnoremap  <buffer>  <leader>wjf  :rightbelow new<cr>:setlocal filetype=' .. &filetype .. '<cr>q:isilent lgrep<space>'
+		execute 'nnoremap  <buffer>  <leader>wkf  :leftabove new<cr>:setlocal filetype=' .. &filetype .. '<cr>q:isilent lgrep<space>'
+		execute 'nnoremap  <buffer>  <leader>wlf  :rightbelow vnew<cr>:setlocal filetype=' .. &filetype .. '<cr>q:isilent lgrep<space>'
 		execute 'nnoremap  <buffer>  <leader>tf  :tabnew<cr>:setlocal filetype=' .. &filetype .. '<cr>q:isilent lgrep<space>'
-		xnoremap  <buffer>  <leader>wfe  "zy:silent lgrep <C-r>z<cr>
-		execute 'xnoremap  <buffer>  <leader>wfh  "zy:leftabove vnew<cr>:setlocal filetype=' .. &filetype .. "<cr>q:isilent lgrep '<C-r>z'<cr>"
-		execute 'xnoremap  <buffer>  <leader>wfj  "zy:rightbelow new<cr>:setlocal filetype=' .. &filetype .. "<cr>q:isilent lgrep '<C-r>z'<cr>"
-		execute 'xnoremap  <buffer>  <leader>wfk  "zy:leftabove new<cr>:setlocal filetype=' .. &filetype .. "<cr>q:isilent lgrep '<C-r>z'<cr>"
-		execute 'xnoremap  <buffer>  <leader>wfl  "zy:rightbelow vnew<cr>:setlocal filetype=' .. &filetype .. "<cr>q:isilent lgrep '<C-r>z'<cr>"
+		xnoremap  <buffer>  <leader>wef  "zy:silent lgrep <C-r>z<cr>
+		execute 'xnoremap  <buffer>  <leader>whf  "zy:leftabove vnew<cr>:setlocal filetype=' .. &filetype .. "<cr>q:isilent lgrep '<C-r>z'<cr>"
+		execute 'xnoremap  <buffer>  <leader>wjf  "zy:rightbelow new<cr>:setlocal filetype=' .. &filetype .. "<cr>q:isilent lgrep '<C-r>z'<cr>"
+		execute 'xnoremap  <buffer>  <leader>wkf  "zy:leftabove new<cr>:setlocal filetype=' .. &filetype .. "<cr>q:isilent lgrep '<C-r>z'<cr>"
+		execute 'xnoremap  <buffer>  <leader>wlf  "zy:rightbelow vnew<cr>:setlocal filetype=' .. &filetype .. "<cr>q:isilent lgrep '<C-r>z'<cr>"
 		execute 'xnoremap  <buffer>  <leader>tf  "zy:tabnew<cr>:setlocal filetype=' .. &filetype .. "<cr>q:isilent lgrep '<C-r>z'<cr>"
 	endif
 endfunction

@@ -545,15 +545,22 @@ function s:OpenExternal(arg)
 	let l:target = trim(a:arg)
 	if l:target =~ '^https\?://'
 		" url
-		let l:target = l:target
 		if g:os == 'Linux'
 			let l:program = 'firefox'
 		else
 			let l:program = 'open'
 		endif
+	elseif filereadable(expand(l:target))
+		" file
+		let l:target = expand(l:target)
+		if g:os == 'Linux'
+			let l:program = 'xdg-open'
+		else
+			let l:program = 'open'
+		endif
 	else
 		" research paper
-		let l:target = system('find ' .. g:justinnhli_library_path .. ' -name ' .. l:target .. '.pdf')
+		let l:target = expand(system('find ' .. g:justinnhli_library_path .. ' -name ' .. l:target .. '.pdf'))
 		if g:os == 'Linux'
 			let l:program = 'zathura'
 		else
@@ -837,11 +844,7 @@ nnoremap  <C-r>    g+
 
 " miscellaneous editing mappings {{{3
 nnoremap  <leader>a         ggVG
-if has('macunix')
-	nnoremap  <leader>o         :!open<space>
-elseif has('unix')
-	nnoremap  <leader>o         :!xdg-open<space>
-endif
+nnoremap  <leader>o         :OpenExternal<space>
 nnoremap  <leader>p         "+p
 nnoremap  <leader>y         "+y
 xnoremap  <leader>y         "+y
@@ -861,6 +864,10 @@ nnoremap  <silent>  <leader>.          :execute 'set foldenable foldlevel=' .. (
 if exists(':tnoremap')
 	tnoremap  <Esc><Esc>  <C-\><C-n>
 endif
+
+" commands {{{1
+
+command  -nargs=1  OpenExternal  :call <SID>OpenExternal(<f-args>)
 
 " autocmds {{{1
 

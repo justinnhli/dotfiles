@@ -560,7 +560,7 @@ function s:OpenExternal(arg)
 			let l:program = 'open'
 		endif
 	endif
-	call system(l:program .. ' ' .. l:target)
+	call jobstart(l:program .. ' ' .. l:target .. ' &')
 endfunction
 
 " open external mappings{{{3

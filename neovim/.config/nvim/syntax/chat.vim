@@ -1,5 +1,5 @@
 " highlight other people first
-syntax match other '^\([^) ][^)]\{-\}[^:]\{-\}\)\?[[:alnum:]]:\( \|$\)'
+syntax match other '^\([^) ][^)]\{-\}[^:]\{-\}\)\?[[:alnum:])]:\( \|$\)'
 highlight other ctermfg=DarkCyan guifg=DarkRed
 
 " overwrite that highlighting with myself

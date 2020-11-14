@@ -550,7 +550,7 @@ function s:OpenExternal(arg)
 		else
 			let l:program = 'open'
 		endif
-	elseif filereadable(expand(l:target))
+	elseif isdirectory(expand(l:target)) || filereadable(expand(l:target))
 		" file
 		let l:target = expand(l:target)
 		if g:os == 'Linux'

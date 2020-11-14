@@ -1012,6 +1012,8 @@ function UnicodeToAscii()
 	%s/\%u2500/ - /eg " box drawings light horizontal
 	" ellipsis (0x2E)
 	%s/\%u2026/.../eg " horizontal ellipsis
+	" caret (0x5E)
+	%s/\%u02C6/^/eg " modifier letter circumflex accent
 	" ligatures
 	%s/\%uFB00/ff/eg " ff
 	%s/\%uFB01/fi/eg " fi

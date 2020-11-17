@@ -540,29 +540,17 @@ nnoremap  <leader>L   :tabnew <C-r>=g:justinnhli_pim_path<cr>/library.bib<cr>
 " open external functions {{{3
 function s:OpenExternal(arg)
 	let l:target = trim(a:arg)
-	if l:target =~ '^https\?://'
-		" url
-		if g:os == 'Linux'
-			let l:program = 'firefox'
-		else
-			let l:program = 'open'
-		endif
-	elseif isdirectory(expand(l:target)) || filereadable(expand(l:target))
-		" file
+	if isdirectory(expand(l:target)) || filereadable(expand(l:target))
+		" file or directory
 		let l:target = expand(l:target)
-		if g:os == 'Linux'
-			let l:program = 'xdg-open'
-		else
-			let l:program = 'open'
-		endif
-	else
+	elseif l:target =~ '[a-zA-Z]\+[0-9]\{4\}\([A-Z][a-zA-Z]*\)'
 		" research paper
 		let l:target = expand(system('find ' .. g:justinnhli_library_path .. ' -name ' .. l:target .. '.pdf'))
-		if g:os == 'Linux'
-			let l:program = 'zathura'
-		else
-			let l:program = 'open'
-		endif
+	endif
+	if g:os == 'Linux'
+		let l:program = 'xdg-open'
+	else
+		let l:program = 'open'
 	endif
 	call jobstart(l:program .. ' ' .. l:target .. ' &')
 endfunction

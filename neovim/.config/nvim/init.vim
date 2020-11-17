@@ -101,17 +101,14 @@ function! s:get_git_branch(path)
 	let l:cmd .= '( '
 	let l:cmd .= 'cd ' .. shellescape(fnamemodify(a:path, ':p:h'))
 	let l:cmd .= ' && '
-	let l:cmd .= 'git status --porcelain=1 -b ' .. shellescape(a:path)
+	let l:cmd .= 'git symbolic-ref --quiet --short HEAD'
 	let l:cmd .= ' ) 2>/dev/null'
 	let l:gitoutput = trim(system(l:cmd))
 	if len(l:gitoutput) == 0
 		return ''
+	else
+		return '(' .. l:gitoutput .. ')'
 	endif
-	" python equivalent: gitoutput.splitlines()[0]
-	let l:line = get(split(l:gitoutput, '\n'), 0, '')
-	" python equivalent: line.split('...')[3:]
-	let l:branch = strpart(get(split(l:line, '\.\.\.'), 0, ''), 3)
-	return '(' .. l:branch .. ')'
 endfunc
 
 function GetStatusLineFile()

@@ -852,7 +852,7 @@ endif
 
 " commands {{{1
 
-command  -nargs=1  OpenExternal  :call <SID>OpenExternal(<f-args>)
+command  -nargs=1 -complete=file  OpenExternal  :call <SID>OpenExternal(<f-args>)
 
 " autocmds {{{1
 

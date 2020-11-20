@@ -177,7 +177,7 @@ class Library:
             new_name = old_path.stem
         elif new_name.endswith('.pdf'):
             new_name = new_name[:-4]
-        new_path = Path(self.directory, old_path.name[0].lower(), new_name + '.pdf')
+        new_path = Path(self.directory, new_name[0].lower(), new_name + '.pdf')
         assert not new_path.exists()
         old_path.replace(new_path)
 

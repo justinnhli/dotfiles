@@ -165,7 +165,7 @@ if command -v python3 >/dev/null 2>&1; then
 	fi
 	mkvenv() {
 		if [ $# -lt 1 ]; then
-			echo 'usage: mkvenv VENV_NAME [PIP_ARGS ...]'
+			echo "usage: ${FUNCNAME[0]} VENV_NAME [PIP_ARGS ...]"
 			return 1
 		elif [ -d "$PYTHON_VENV_HOME/$1" ]; then
 			echo "venv $1 already exists"
@@ -207,7 +207,7 @@ if command -v python3 >/dev/null 2>&1; then
 	}
 	venvrun() {
 		if [ $# -lt 2 ]; then
-			echo 'usage: venvrun VENV_NAME SCRIPT [ARGS ...]'
+			echo "usage: ${FUNCNAME[0]} VENV_NAME SCRIPT [ARGS ...]"
 			return 1
 		fi
 		# try both a python file and an installed script

@@ -21,11 +21,17 @@
     precommit = diff --cached
     # ignored
     ignored = "! \
-        if [ -e \"$(git rev-parse --show-toplevel)/.gitignore\" ]; then \
-            git ls-files --ignored --others --exclude-from \"$(git rev-parse --show-toplevel)/.gitignore\"; \
-        else \
+        GLOBAL_IGNORE_FILE=\"$XDG_CONFIG_HOME/git/ignore\"; \
+        LOCAL_IGNORE_FILE=\"$(git rev-parse --show-toplevel)/.gitignore\"; \
+        if [ -z \"$GLOBAL_IGNORE_FILE\" ]; then \
             git ls-files --ignored --others --exclude-standard; \
-        fi \
+        elif [ -f \"$LOCAL_IGNORE_FILE\" ]; then \
+            ( \
+                git ls-files --ignored --others --exclude-from \"$LOCAL_IGNORE_FILE\" && \
+                git ls-files --ignored --others --exclude-from \"$GLOBAL_IGNORE_FILE\" && \
+                git ls-files --ignored --others --exclude-from \"$GLOBAL_IGNORE_FILE\" \
+            ) | sort | uniq -u; \
+        fi; \
     "
     # branches
     branches = branch --all

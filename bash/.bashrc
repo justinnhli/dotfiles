@@ -88,7 +88,7 @@ prompt_command_fn() {
 	echo "$(date -u +%Y-%m-%dT%H:%M:%SZ)	$(hostname)	$PWD	$(history 1 | sed 's/^ *[0-9 -]* //; s/ *$//;')" >> "$HOME/Dropbox/personal/logs/$(date -u +%Y).shistory"
 }
 PS1='[\u@\h \W]\$ '
-if [ -e "$HOME/Dropbox/personal/logs" ]; then
+if [ -f "$HOME/Dropbox/personal/logs" ]; then
 	PROMPT_COMMAND=prompt_command_fn
 fi
 
@@ -211,7 +211,7 @@ if command -v python3 >/dev/null 2>&1; then
 			return 1
 		fi
 		# try both a python file and an installed script
-		if [ -e "$2" ]; then
+		if [ -f "$2" ]; then
 			( workon "$1" && shift 1 && python3 "$@" )
 		else
 			( workon "$1" && shift 1 && "$@" )

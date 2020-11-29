@@ -673,7 +673,7 @@ def build_arg_parser(arg_parser):
         action='store',
         choices=('year', 'month', 'day'),
         default='year',
-        help='[C] set tabulation unit',
+        help='[C] set tabulation unit (default: year)',
     )
 
     group = arg_parser.add_argument_group('MISCELLANEOUS OPTIONS')

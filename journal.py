@@ -585,14 +585,6 @@ def do_vimgrep(journal, args):
 def build_arg_parser(arg_parser):
     arg_parser.usage = '%(prog)s <operation> [options] [TERM ...]'
     arg_parser.description = 'A command line tool for viewing and maintaining a journal.'
-    arg_parser.set_defaults(
-        directory=JOURNAL_PATH,
-        ignores=[],
-        icase=re.IGNORECASE,
-        terms=[],
-        unit='year',
-        function=parse_args,
-    )
     arg_parser.add_argument(
         'terms',
         metavar='TERM',
@@ -627,6 +619,7 @@ def build_arg_parser(arg_parser):
         dest='directory',
         action='store',
         type=Path,
+        default=JOURNAL_PATH,
         help='use journal files in directory',
     )
     group.add_argument(
@@ -634,6 +627,7 @@ def build_arg_parser(arg_parser):
         dest='ignores',
         action='append',
         type=Path,
+        default=[],
         help='ignore specified file',
     )
     group.add_argument(
@@ -654,6 +648,7 @@ def build_arg_parser(arg_parser):
         '-i',
         dest='icase',
         action='store_false',
+        default=re.IGNORECASE,
         help='ignore case-insensitivity',
     )
 
@@ -677,6 +672,7 @@ def build_arg_parser(arg_parser):
         dest='unit',
         action='store',
         choices=('year', 'month', 'day'),
+        default='year',
         help='[C] set tabulation unit',
     )
 
@@ -770,7 +766,7 @@ def log_search(arg_parser, args, journal):
 def main():
     arg_parser = build_arg_parser(ArgumentParser())
     args = arg_parser.parse_args()
-    args.function(arg_parser, args)
+    parse_args(arg_parser, args)
 
 
 if __name__ == '__main__':

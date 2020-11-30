@@ -1,6 +1,8 @@
+#!/usr/bin/env python3
 """An archive of online articles."""
 
 import re
+from argparse import ArgumentParser
 from pathlib import Path
 from datetime import date as Date
 from urllib.parse import urlsplit, parse_qsl, urlencode, urlunsplit
@@ -161,3 +163,16 @@ class Archive:
             self.index[url] = Article.create(url)
             self._write_index()
         return self.index[url]
+
+
+def main():
+    arg_parser = ArgumentParser()
+    arg_parser.add_argument('urls', nargs='+', help='URLs of articles to archive')
+    args = arg_parser.parse_args()
+    archive = Archive()
+    for url in args.urls:
+        archive.add(url)
+
+
+if __name__ == '__main__':
+    main()

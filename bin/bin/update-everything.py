@@ -61,7 +61,7 @@ def update_brew():
         return
     run(['brew', 'update'], check=True)
     run(['brew', 'upgrade'], check=True)
-    run(['brew', 'cask', 'upgrade'], check=True)
+    run(['brew', 'upgrade', '--cask'], check=True)
     run(['brew', 'cleanup'], check=True)
 
 

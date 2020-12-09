@@ -7,8 +7,6 @@ from collections import namedtuple
 from datetime import datetime
 from difflib import Differ
 from os import environ
-from os.path import realpath, expanduser
-
 
 try:
     import requests
@@ -296,7 +294,7 @@ def _sync_phase_2(file_id, old_treelines, parents, id_map):
 def push(local, remote):
     file_id = get_file_id(remote)
     old_treelines = list(dynalist_to_treelines(remote))
-    with open(local) as fd:
+    with local.open() as fd:
         time = datetime.now().isoformat(sep=' ', timespec='seconds')
         text = f'synced {time}\n' + fd.read()
     new_treelines = list(text_to_treelines(text))
@@ -315,8 +313,7 @@ def main():
     if args.local is None:
         print(treelines_to_str(dynalist_to_treelines(args.remote)))
     else:
-        args.local = realpath(expanduser(args.local))
-        push(args.local, args.remote)
+        push(Path(args.local).expanduser().resolve(), args.remote)
 
 
 if __name__ == '__main__':

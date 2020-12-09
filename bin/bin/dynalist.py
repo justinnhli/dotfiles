@@ -117,7 +117,7 @@ def text_to_treelines(text):
         prv_indent = indent
 
 
-def treelines_to_file(lines):
+def treelines_to_str(lines):
     return '\n'.join(
         line.indent * '\t' + line.text.rstrip()
         for line in lines if line.text.strip()
@@ -125,7 +125,7 @@ def treelines_to_file(lines):
 
 
 def get_file(filename):
-    return treelines_to_file(dynalist_to_treelines(filename))
+    return treelines_to_str(dynalist_to_treelines(filename))
 
 
 def structure_diff(old_treelines, new_treelines, ignore_min=-1, ignore_max=-1):
@@ -161,8 +161,8 @@ def structure_diff(old_treelines, new_treelines, ignore_min=-1, ignore_max=-1):
 
 def treeline_diff(old_treelines, new_treelines):
     empty_treeline = TreeLine(*(None for _ in TreeLine._fields))
-    old_lines = treelines_to_file(old_treelines).splitlines()
-    new_lines = treelines_to_file(new_treelines).splitlines()
+    old_lines = treelines_to_str(old_treelines).splitlines()
+    new_lines = treelines_to_str(new_treelines).splitlines()
     old_index = 0
     new_index = 0
     section_start = []
@@ -313,7 +313,7 @@ def main():
     arg_parser.add_argument('remote', help='Dynalist file to read from or write to.')
     args = arg_parser.parse_args()
     if args.local is None:
-        print(treelines_to_file(dynalist_to_treelines(args.remote)))
+        print(treelines_to_str(dynalist_to_treelines(args.remote)))
     else:
         args.local = realpath(expanduser(args.local))
         push(args.local, args.remote)

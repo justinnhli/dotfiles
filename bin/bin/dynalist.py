@@ -2,9 +2,9 @@
 
 import json
 import re
-from datetime import datetime
 from argparse import ArgumentParser
 from collections import namedtuple
+from datetime import datetime
 from difflib import Differ
 from os import environ
 from os.path import realpath, expanduser

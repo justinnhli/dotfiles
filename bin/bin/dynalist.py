@@ -76,12 +76,11 @@ def get_file_nodes(filename):
     return {node['id']: node for node in data['nodes']}
 
 
-TreeLine = namedtuple('TreeLine', 'line_num, id, text, indent, sibling_index')
+TreeLine = namedtuple('TreeLine', 'id, text, indent, sibling_index')
 
 
 def dynalist_to_treelines(filename):
     nodes = get_file_nodes(filename)
-    line_num = 1
     if 'children' not in nodes['root']:
         return
     for root_sibling_num, root_id in enumerate(nodes['root']['children'], start=1):
@@ -89,8 +88,7 @@ def dynalist_to_treelines(filename):
         while stack:
             node, indent, sibling_index = stack.pop()
             node['content'] = re.sub(r'!\(([0-9]{4}-[0-9]{2}-[0-9]{2})\)', r'(\1)', node['content'])
-            yield TreeLine(line_num, node['id'], node['content'], indent, sibling_index)
-            line_num += 1
+            yield TreeLine(node['id'], node['content'], indent, sibling_index)
             if 'children' in node:
                 stack.extend(
                     (nodes[child], indent + 1, child_sibling_num)
@@ -111,7 +109,7 @@ def text_to_treelines(text):
         elif indent > prv_indent + 1:
             raise ValueError('invalid indentation')
         sibling_count[indent] += 1
-        yield TreeLine(line_num, (line_num, 'line'), line.lstrip(), indent, sibling_count[indent])
+        yield TreeLine((line_num, 'line'), line.lstrip(), indent, sibling_count[indent])
         prv_indent = indent
 
 

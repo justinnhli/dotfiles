@@ -220,13 +220,11 @@ def _sync_phase_1(file_id, old_treelines, new_treelines):
     ancestry = ['root']
     for old_treeline, new_treeline in treeline_diff(old_treelines, new_treelines):
         if new_treeline.id is None:
-            #print('- ' + old_treeline.indent * 4 * ' ' + old_treeline.text)
             changes.append({
                 'action': 'delete',
                 'node_id': old_treeline.id,
             })
         elif old_treeline.id is None:
-            #print('+ ' + new_treeline.indent * 4 * ' ' + new_treeline.text)
             parent_id = ancestry[new_treeline.indent]
             parent_id = id_map.get(parent_id, parent_id)
             parents.append((new_treeline, parent_id))

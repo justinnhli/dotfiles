@@ -288,17 +288,20 @@ def _sync_phase_2(file_id, old_treelines, parents, id_map):
 
 
 def push(local, remote):
-    file_id = get_file_id(remote)
-    old_treelines = list(dynalist_to_treelines(remote))
+    # read local file
     with local.open() as fd:
         time = datetime.now().isoformat(sep=' ', timespec='seconds')
         text = f'synced {time}\n' + fd.read()
-    new_treelines = list(text_to_treelines(text))
-    # find lines to modify in place
-    parents, id_map = _sync_phase_1(file_id, old_treelines, new_treelines)
+    local_treelines = list(text_to_treelines(text))
+    # read remote file
+    file_id = get_file_id(remote)
     old_treelines = list(dynalist_to_treelines(remote))
+    # do non-structural edits
+    parents, id_map = _sync_phase_1(file_id, old_treelines, local_treelines)
+    # read remote file again
+    mid_treelines = list(dynalist_to_treelines(remote))
     # move new nodes into place
-    _sync_phase_2(file_id, old_treelines, parents, id_map)
+    _sync_phase_2(file_id, mid_treelines, parents, id_map)
 
 
 def main():

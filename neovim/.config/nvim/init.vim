@@ -599,10 +599,16 @@ endfunction
 
 " toggle colorscheme {{{3
 function s:ToggleColorscheme()
-	if g:colors_name ==# 'default'
-		execute 'colorscheme ' .. g:colorscheme
+	if &background ==# 'dark'
+		if g:colors_name ==# g:colorscheme
+			colorscheme default
+		else
+			set background=light
+			execute 'colorscheme ' .. g:colorscheme
+		endif
 	else
-		colorscheme default
+		set background=dark
+		execute 'colorscheme ' .. g:colorscheme
 	endif
 endfunction
 
@@ -613,7 +619,7 @@ nnoremap  <leader><leader>c  :call <SID>ToggleColorcolumn()<cr>:setlocal colorco
 nnoremap  <leader><leader>d  :call <SID>ToggleDiff()<cr>:echo (&diff ? 'diffthis' : 'diffoff')<cr>
 nnoremap  <leader><leader>f  :call <SID>ToggleFoldmethod()<cr>:set foldmethod?<cr>
 nnoremap  <leader><leader>l  :set list!<cr>:set list?<cr>
-nnoremap  <leader><leader>m  :call <SID>ToggleColorscheme()<cr>:colorscheme<cr>
+nnoremap  <leader><leader>m  :call <SID>ToggleColorscheme()<cr>:echo &background g:colors_name<cr>
 nnoremap  <leader><leader>n  :set number!<cr>:set number?<cr>
 nnoremap  <leader><leader>p  :set paste!<cr>:set paste?<cr>
 nnoremap  <leader><leader>s  :set spell!<cr>:set spell?<cr>

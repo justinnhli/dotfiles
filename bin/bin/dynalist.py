@@ -7,6 +7,7 @@ from collections import namedtuple
 from datetime import datetime
 from difflib import Differ
 from os import environ
+from pathlib import Path
 
 try:
     import requests

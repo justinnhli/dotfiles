@@ -238,6 +238,11 @@ class Library:
 
     # remote management
 
+    def url(self, name):
+        if name.endswith('.pdf'):
+            name = name[:-4]
+        print(_get_url(name))
+
     def diff(self):
         """List papers that differ between the local and remote libraries."""
 

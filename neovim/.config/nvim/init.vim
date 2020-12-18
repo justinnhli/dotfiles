@@ -528,6 +528,16 @@ nnoremap  <C-l>  <C-w>l
 " tab movement mappings {{{3
 nnoremap  <S-h>  :tabprev<cr>
 nnoremap  <S-l>  :tabnext<cr>
+nnoremap  <M-1>  :1tabnext<cr>
+nnoremap  <M-2>  :2tabnext<cr>
+nnoremap  <M-3>  :3tabnext<cr>
+nnoremap  <M-4>  :4tabnext<cr>
+nnoremap  <M-5>  :5tabnext<cr>
+nnoremap  <M-6>  :6tabnext<cr>
+nnoremap  <M-7>  :7tabnext<cr>
+nnoremap  <M-8>  :8tabnext<cr>
+nnoremap  <M-9>  :9tabnext<cr>
+nnoremap  <M-0>  :10tabnext<cr>
 
 " file mappings {{{2
 

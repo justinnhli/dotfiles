@@ -152,7 +152,7 @@ class Library:
                     continue
                 if line.startswith('@'):
                     match = re.fullmatch('@(?P<type>[^ ]+) *{(?P<id>[^,]+),', line)
-                    assert match, line
+                    assert match, f'anomalous bibtex entry: {line}'
                     paper = Paper(match.group('id'), library=self)
                     paper.type = match.group('type')
                 elif line.startswith('}'):
@@ -160,7 +160,7 @@ class Library:
                     paper = None
                 else:
                     match = re.fullmatch(' *(?P<attr>[^ =]+) *= *{(?P<val>.+)},', line)
-                    assert match, line
+                    assert match, f'anomalous bibtex field: {line}'
                     setattr(paper, match.group('attr'), match.group('val'))
 
     # individual paper management
@@ -178,7 +178,7 @@ class Library:
         elif new_name.endswith('.pdf'):
             new_name = new_name[:-4]
         new_path = Path(self.directory, new_name[0].lower(), new_name + '.pdf')
-        assert not new_path.exists()
+        assert not new_path.exists(), f'file already exists: {new_path}'
         old_path.replace(new_path)
 
     def open(self, file_path):

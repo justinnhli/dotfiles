@@ -240,10 +240,11 @@ fi
 # PIM related settings
 if [ -d "$HOME/pim" ]; then
 	pim_dir="$HOME/pim/"
-	alias vijd="$VISUAL -c 'normal 1 JD'"
+	alias vijj="$VISUAL $pim_dir/journal/next.journal"
 	alias vijl="$VISUAL $pim_dir/journal/list.journal"
-	alias vijn="$VISUAL $pim_dir/journal/next.journal"
 	alias vijr="$VISUAL $pim_dir/journal/repo.journal"
+	alias vijn="$VISUAL $pim_dir/notes/research-$(date +%Y).journal"
+	alias vijd="$VISUAL -c 'normal 1 JD'"
 	if command -v journal.py >/dev/null 2>&1; then
 		alias jrnl="journal.py $(ls $pim_dir/journal/[a-z-]*.journal 2>/dev/null | grep -v '[ ()]' | sed 's/^/--ignore /' | tr '\n' ' ')"
 	fi

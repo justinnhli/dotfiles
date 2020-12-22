@@ -861,8 +861,8 @@ nnoremap  <leader>]         <C-w><C-]><C-w>T
 xnoremap  <leader>]         <C-w><C-]><C-w>T
 nnoremap  <leader><bar>     ggVG:<C-u>call <SID>FormatColumns()<cr>
 nnoremap  <leader><bslash>  ggVG:<C-u>call <SID>FormatTable()<cr>
-xnoremap  <leader><bar>     :<C-u>call <SID>FormatColumns()<cr>
-xnoremap  <leader><bslash>  :<C-u>call <SID>FormatTable()<cr>
+xnoremap  <leader><bar>     :<C-u>call <SID>FormatColumns()<cr>gv
+xnoremap  <leader><bslash>  :<C-u>call <SID>FormatTable()<cr>gv
 nnoremap  <leader><cr>      :silent lmake<cr>
 xnoremap  <leader><cr>      y<Esc>:!<C-r>"<cr>
 nnoremap  <leader>;         :lcd %:p:h<cr>

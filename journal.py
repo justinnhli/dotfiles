@@ -749,14 +749,17 @@ def log_search(arg_parser, args, journal):
             option_value = getattr(args, option.dest)
             if option_value != option.default:
                 if option.const in (True, False):
-                    options.append(option_string)
+                    options.append((option_string,))
                 else:
-                    options.append(f'{option_string} {option_value}')
-    log_args = ' '.join([
-        op_flag,
-        *sorted(options, key=(lambda x: (len(x) != 1, x.upper())))
-    ])
-    log_args = re.sub('-([a-z]) -([a-z]) ', r'-\1\2', log_args)
+                    options.append((option_string, option_value))
+    log_args = op_flag
+    collapsible = (len(op_flag) == 2)
+    for option in sorted(options, key=(lambda x: (len(x) != 1, x[0].upper()))):
+        arg = ' ' + ' '.join(option)
+        if len(option[0]) == 2 and collapsible:
+            arg = arg.lstrip(' -')
+        log_args += arg
+        collapsible = (len(option) == 1 and len(option[0]) == 2)
     terms = ' '.join(
         '"{}"'.format(term.replace('"', '\\"'))
         for term in sorted(args.terms)

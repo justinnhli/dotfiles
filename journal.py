@@ -739,29 +739,30 @@ def log_search(arg_parser, args, journal):
     if args.operation.__name__ not in logged_functions:
         return
     log_file = journal.directory.joinpath('.log').resolve()
-    if args.log and log_file.exists():
-        options = []
-        for option_string, option in arg_parser._option_string_actions.items():
-            if re.match('^-[a-gi-z]$', option_string):
-                option_value = getattr(args, option.dest)
-                if option_value != option.default:
-                    if option.const in (True, False):
-                        options.append(option_string)
-                    else:
-                        options.append(f'{option_string} {option_value}')
-            elif args.operation is option.const:
-                op_flag = option_string
-        log_args = ' '.join([
-            op_flag,
-            *sorted(options, key=(lambda x: (len(x) != 1, x.upper())))
-        ])
-        log_args = re.sub('-([a-z]) -([a-z]) ', r'-\1\2', log_args)
-        terms = ' '.join(
-            '"{}"'.format(term.replace('"', '\\"'))
-            for term in sorted(args.terms)
-        ).strip()
-        with log_file.open('a') as fd:
-            fd.write(f'{datetime.today().isoformat(" ")}\t{log_args} -- {terms}\n')
+    if not (args.log and log_file.exists()):
+        return
+    options = []
+    for option_string, option in arg_parser._option_string_actions.items():
+        if args.operation is option.const:
+            op_flag = option_string
+        elif re.fullmatch('-[a-gi-z]', option_string):
+            option_value = getattr(args, option.dest)
+            if option_value != option.default:
+                if option.const in (True, False):
+                    options.append(option_string)
+                else:
+                    options.append(f'{option_string} {option_value}')
+    log_args = ' '.join([
+        op_flag,
+        *sorted(options, key=(lambda x: (len(x) != 1, x.upper())))
+    ])
+    log_args = re.sub('-([a-z]) -([a-z]) ', r'-\1\2', log_args)
+    terms = ' '.join(
+        '"{}"'.format(term.replace('"', '\\"'))
+        for term in sorted(args.terms)
+    ).strip()
+    with log_file.open('a') as fd:
+        fd.write(f'{datetime.today().isoformat(" ")}\t{log_args} -- {terms}\n')
 
 
 def main():

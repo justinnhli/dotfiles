@@ -479,13 +479,14 @@ def do_show(journal, args):
 
 @register('list entries that hyphenate the terms differently')
 def do_hyphenation(journal, args):
-    if len(args.terms) < 2:
+    terms = list(chain(*(term.split('-') for term in args.terms)))
+    if len(terms) < 2:
         raise ValueError('argument --hyphenation: two or more terms required')
-    for puncts in product(['', ' ', '-'], repeat=(len(args.terms) - 1)):
+    for puncts in product(['', ' ', '-'], repeat=(len(terms) - 1)):
         possibility = ''.join(
             part + punct for part, punct
-            in zip(args.terms, puncts)
-        ) + args.terms[-1]
+            in zip(terms, puncts)
+        ) + terms[-1]
         entries = filter_entries(journal, args, terms=[possibility])
         print(possibility)
         for date in sorted(entries, reverse=args.reverse):

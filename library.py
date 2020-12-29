@@ -212,22 +212,35 @@ class Library:
         """Lint the library bibtex file."""
         raise NotImplementedError()
 
-    def index(self):
+    def toc(self):
         """Create an index HTML file of the library."""
-        index_path = self.directory.joinpath('index.html')
-        with open(index_path, 'w') as fd:
-            fd.write('<pre>\n')
-            for entry_id, entry in sorted(self.papers.items()):
-                entry_type = entry['type']
-                url = _get_url(entry_id)
-                fd.write(f'@{entry_type} {{<a href="{url}">{entry_id}</a>,\n')
-                for attr, value in sorted(entry.items()):
-                    if attr == 'type':
-                        continue
-                    fd.write(f'    {attr} = {{{value}}},\n')
-                fd.write('}\n')
-                fd.write('\n')
-            fd.write('</pre>\n')
+        lines = ['''
+            <!DOCTYPE html>
+            <html lang="en">
+                <head>
+                    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+                    <title>Paper Archive Contents</title>
+                </head>
+                <body>
+        ''']
+        for paper_id, paper in sorted(self.papers.items()):
+            paper_type = paper.type
+            url = _get_url(paper_id)
+            lines.append(f'<pre id="{paper_id}">')
+            lines.append(f'@{paper_type} {{<a href="{url}">{paper_id}</a>,')
+            for attr in paper.__slots__:
+                if attr in ('library', 'id', 'type') or not hasattr(paper, attr):
+                    continue
+                value = getattr(paper, attr)
+                lines.append(f'    {attr} = {{{value}}},')
+            lines.append('}')
+            lines.append('</pre>')
+            lines.append('')
+        lines.append('''
+                </body>
+            </html>
+        ''')
+        return '\n'.join(lines)
 
     def unify(self):
         raise NotImplementedError()
@@ -317,7 +330,8 @@ class Library:
         Equivalent to a pull, then a push.
         """
         self.pull()
-        #self.index() # FIXME
+        with self.directory.joinpath('index.html').open('w') as fd:
+            fd.write(self.toc())
         self.push()
 
     # as command line

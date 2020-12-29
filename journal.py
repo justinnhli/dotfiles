@@ -34,11 +34,8 @@ DATE_REGEX = re.compile(
     '([0-9]{4}-[0-9]{2}-[0-9]{2})'
     '(, (Mon|Tues|Wednes|Thurs|Fri|Satur|Sun)day)?'
 )
-RANGE_REGEX = re.compile(
-    '([0-9]{4}(-[0-9]{2}(-[0-9]{2})?)?)?'
-    ':?'
-    '([0-9]{4}(-[0-9]{2}(-[0-9]{2})?)?)?'
-)
+RANGE_BOUND_REGEX = re.compile('([0-9]{4}(-[0-9]{2}(-[0-9]{2})?)?)?')
+RANGE_REGEX = re.compile(RANGE_BOUND_REGEX.pattern + ':?' + RANGE_BOUND_REGEX.pattern)
 REF_REGEX = re.compile('[0-9]{4}-[0-9]{2}-[0-9]{2}')
 
 
@@ -201,7 +198,7 @@ class Journal:
                         cur_date = datetime.strptime(entry_date, '%Y-%m-%d')
                         if prev_indent != 0:
                             errors.append(log_error('no empty line between entries'))
-                        if not entry_date.startswith(journal_file.stem):
+                        if RANGE_BOUND_REGEX.fullmatch(journal_file.stem) and not entry_date.startswith(journal_file.stem):
                             errors.append((journal_file, line_number, "filename doesn't match entry"))
                         if long_dates is None:
                             long_dates = (len(line) > DATE_LENGTH)

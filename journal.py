@@ -619,7 +619,7 @@ def build_arg_parser(arg_parser):
         dest='directory',
         action='store',
         type=Path,
-        default=JOURNAL_PATH,
+        default=Path.cwd(),
         help='use journal files in directory',
     )
     group.add_argument(

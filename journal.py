@@ -176,7 +176,7 @@ class Journal:
     def verify(self):
         # pylint: disable = line-too-long, too-many-nested-blocks, too-many-branches
         errors = []
-        dates = set()
+        titles = set()
         long_dates = None
         for journal_file in self.journal_files:
             with journal_file.open() as fd:
@@ -188,38 +188,33 @@ class Journal:
             if lines[-1].strip() == '':
                 errors.append((journal_file, len(lines), 'file ends on blank line'))
             prev_indent = 0
+            prev_line = ''
             for line_number, line in enumerate(lines, start=1):
                 indent = len(re.match('\t*', line)[0])
                 if not re.fullmatch('(\t*([^ \t][ -~]*)?[^ \t])?', line):
                     errors.append(log_error('non-tab indentation, ending blank, or non-ASCII character'))
-                if not line.lstrip().startswith('|') and '  ' in line:
+                line = line.strip()
+                if not line.startswith('|') and '  ' in line:
                     errors.append(log_error('multiple spaces'))
-                if indent == 0:
+                if indent == 0 and line:
+                    if prev_indent != 0 or prev_line != '':
+                        errors.append(log_error('no blank line between entries'))
                     if DATE_REGEX.fullmatch(line):
-                        entry_date = line[:DATE_LENGTH]
-                        cur_date = datetime.strptime(entry_date, '%Y-%m-%d')
-                        if prev_indent != 0:
-                            errors.append(log_error('no empty line between entries'))
-                        if RANGE_BOUND_REGEX.fullmatch(journal_file.stem) and not entry_date.startswith(journal_file.stem):
-                            errors.append((journal_file, line_number, "filename doesn't match entry"))
                         if long_dates is None:
                             long_dates = (len(line) > DATE_LENGTH)
                         elif long_dates != (len(line) > DATE_LENGTH):
                             errors.append(log_error('inconsistent date format'))
-                        if long_dates and line != cur_date.strftime('%Y-%m-%d, %A'):
+                        if long_dates and line != datetime.strptime(line[:DATE_LENGTH], '%Y-%m-%d').strftime('%Y-%m-%d, %A'):
                             errors.append(log_error('date-weekday correctness'))
-                        if cur_date in dates:
-                            errors.append(log_error('duplicate dates'))
-                        dates.add(cur_date)
-                    else:
-                        if line:
-                            if line[0] != '\ufeff':
-                                errors.append(log_error('unindented text'))
-                        if prev_indent == 0:
-                            errors.append(log_error('consecutive unindented lines'))
+                        if RANGE_BOUND_REGEX.fullmatch(journal_file.stem) and not line.startswith(journal_file.stem):
+                            errors.append(log_error("filename doesn't match entry"))
+                    if line in titles:
+                        errors.append(log_error('duplicate titles'))
+                    titles.add(line)
                 elif indent - prev_indent > 1:
                     errors.append(log_error('unexpected indentation'))
                 prev_indent = indent
+                prev_line = line
         if errors:
             result = []
             for error in sorted(errors):

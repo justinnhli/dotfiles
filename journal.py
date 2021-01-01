@@ -182,7 +182,7 @@ class Journal:
             with journal_file.open() as fd:
                 lines = fd.read().splitlines()
             if lines[0].strip() == '':
-                errors.append((journal_file, len(lines), 'file starts on blank line'))
+                errors.append((journal_file, 1, 'file starts on blank line'))
             if lines[-1].strip() == '':
                 errors.append((journal_file, len(lines), 'file ends on blank line'))
             prev_indent = 0

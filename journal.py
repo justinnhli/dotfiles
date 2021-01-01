@@ -8,7 +8,6 @@ from ast import literal_eval
 from collections import namedtuple, defaultdict
 from copy import copy
 from datetime import datetime, timedelta
-from heapq import nlargest, nsmallest
 from inspect import currentframe
 from itertools import chain, groupby, product
 from os import chdir as cd, chmod, environ, execvp, fork, remove as rm, wait
@@ -187,7 +186,7 @@ class Journal:
                 errors.append((journal_file, len(lines), 'file ends on blank line'))
             prev_indent = 0
             prev_line = ''
-            for line_number, line in enumerate(lines, start=1):
+            for line_number, line in enumerate(lines, start=1): # pylint: disable = unused-variable
                 indent = len(re.match('\t*', line)[0])
                 if not re.fullmatch('(\t*([^ \t][ -~]*)?[^ \t])?', line):
                     errors.append(log_error('non-tab indentation, ending blank, or non-ASCII character'))
@@ -213,11 +212,10 @@ class Journal:
                     errors.append(log_error('unexpected indentation'))
                 prev_indent = indent
                 prev_line = line
-        if errors:
-            result = []
-            for error in sorted(errors):
-                result.append('{}:{}: {}'.format(*error))
-            return '\n'.join(result)
+        result = []
+        for error in sorted(errors):
+            result.append('{}:{}: {}'.format(*error))
+        return '\n'.join(result)
 
 
 # utility functions
@@ -424,11 +422,11 @@ def do_graph(journal, args):
 
 
 @register('-I', 're-index and cache')
-def do_index(journal, args):
+def do_index(journal, _):
     error_printout = journal.verify()
     if error_printout:
         print(error_printout)
-        exit(1)
+        sys.exit(1)
     journal.update_metadata()
 
 
@@ -540,7 +538,8 @@ def do_vimgrep(journal, args):
     entries = filter_entries(journal, args)
     if not args.terms:
         args.terms.append('^.')
-    for date, entry in sorted(entries.items(), reverse=args.reverse):
+    # TODO sort results for non-date titles
+    for _, entry in sorted(entries.items(), reverse=args.reverse):
         lines = entry.text.splitlines()
         results = []
         for term in args.terms:

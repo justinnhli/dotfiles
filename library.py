@@ -212,7 +212,7 @@ class Library:
         """Lint the library bibtex file."""
         raise NotImplementedError()
 
-    def toc(self):
+    def toc(self, out_path=None):
         """Create an index HTML file of the library."""
         lines = ['''
             <!DOCTYPE html>
@@ -240,7 +240,13 @@ class Library:
                 </body>
             </html>
         ''')
-        return '\n'.join(lines)
+        output = '\n'.join(lines)
+        if out_path is None:
+            print(output)
+        else:
+            with out_path.open('w') as fd:
+                fd.write(output)
+                fd.write('\n')
 
     def unify(self):
         raise NotImplementedError()
@@ -330,8 +336,7 @@ class Library:
         Equivalent to a pull, then a push.
         """
         self.pull()
-        with self.directory.joinpath('index.html').open('w') as fd:
-            fd.write(self.toc())
+        self.toc(out_path=self.directory.joinpath('index.html'))
         self.push()
 
     # as command line

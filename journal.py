@@ -181,6 +181,8 @@ class Journal:
         for journal_file in self.journal_files:
             with journal_file.open() as fd:
                 lines = fd.read().splitlines()
+            if lines[0].startswith('\ufeff'):
+                errors.append((journal_file, 1, 'byte order mark'))
             if lines[0].strip() == '':
                 errors.append((journal_file, 1, 'file starts on blank line'))
             if lines[-1].strip() == '':
@@ -211,9 +213,7 @@ class Journal:
                         dates.add(cur_date)
                     else:
                         if line:
-                            if line[0] == '\ufeff':
-                                errors.append(log_error('byte order mark'))
-                            else:
+                            if line[0] != '\ufeff':
                                 errors.append(log_error('unindented text'))
                         if prev_indent == 0:
                             errors.append(log_error('consecutive unindented lines'))

@@ -30,13 +30,11 @@ STRING_LENGTHS = {
     'day': 10,
 }
 DATE_LENGTH = STRING_LENGTHS['day']
-DATE_REGEX = re.compile(
-    '([0-9]{4}-[0-9]{2}-[0-9]{2})'
-    '(, (Mon|Tues|Wednes|Thurs|Fri|Satur|Sun)day)?'
-)
+
+REFERENCE_REGEX = re.compile('[0-9]{4}-[0-9]{2}-[0-9]{2}')
+DATE_REGEX = re.compile(REFERENCE_REGEX.pattern + '(, (Mon|Tues|Wednes|Thurs|Fri|Satur|Sun)day)?')
 RANGE_BOUND_REGEX = re.compile('([0-9]{4}(-[0-9]{2}(-[0-9]{2})?)?)?')
 RANGE_REGEX = re.compile(RANGE_BOUND_REGEX.pattern + ':?' + RANGE_BOUND_REGEX.pattern)
-REF_REGEX = re.compile('[0-9]{4}-[0-9]{2}-[0-9]{2}')
 
 
 class Journal:
@@ -382,7 +380,7 @@ def do_graph(journal, args):
     edges = dict((k, set()) for k in entries)
     for src, entry in sorted(entries.items()):
         dests = set(
-            dest for dest in REF_REGEX.findall(entry.text)
+            dest for dest in REFERENCE_REGEX.findall(entry.text)
             if src > dest and dest in entries
         )
         ancestors[src] = set().union(*(ancestors[parent] for parent in dests))

@@ -176,11 +176,12 @@ class Journal:
         titles = set()
         long_dates = None
         for journal_file in self.journal_files:
+            has_date_stem = RANGE_BOUND_REGEX.fullmatch(journal_file.stem)
             with journal_file.open() as fd:
                 lines = fd.read().splitlines()
             if lines[0].startswith('\ufeff'):
                 errors.append((journal_file, 1, 'byte order mark'))
-            if lines[0].strip() == '':
+            elif lines[0].strip() == '':
                 errors.append((journal_file, 1, 'file starts on blank line'))
             if lines[-1].strip() == '':
                 errors.append((journal_file, len(lines), 'file ends on blank line'))
@@ -203,7 +204,7 @@ class Journal:
                             errors.append(log_error('inconsistent date format'))
                         if long_dates and line != datetime.strptime(line[:DATE_LENGTH], '%Y-%m-%d').strftime('%Y-%m-%d, %A'):
                             errors.append(log_error('date-weekday correctness'))
-                        if RANGE_BOUND_REGEX.fullmatch(journal_file.stem) and not line.startswith(journal_file.stem):
+                        if has_date_stem and not line.startswith(journal_file.stem):
                             errors.append(log_error("filename doesn't match entry"))
                     if line in titles:
                         errors.append(log_error('duplicate titles'))
@@ -212,10 +213,7 @@ class Journal:
                     errors.append(log_error('unexpected indentation'))
                 prev_indent = indent
                 prev_line = line
-        result = []
-        for error in sorted(errors):
-            result.append('{}:{}: {}'.format(*error))
-        return '\n'.join(result)
+        return sorted(errors)
 
 
 # utility functions
@@ -423,9 +421,9 @@ def do_graph(journal, args):
 
 @register('-I', 're-index and cache')
 def do_index(journal, _):
-    error_printout = journal.verify()
-    if error_printout:
-        print(error_printout)
+    errors = journal.verify()
+    if errors:
+        print('\n'.join('{}:{}: {}'.format(*error) for error in errors))
         sys.exit(1)
     journal.update_metadata()
 

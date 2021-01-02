@@ -1002,6 +1002,7 @@ function UnicodeToAscii()
 	%s/\%u201C/"/eg " left double quotation mark
 	%s/\%u201D/"/eg " right double quotation mark
 	" single quotes (0x27)
+	%s/\%u02BB/'/eg " modifier letter turned comma
 	%s/\%u2018/'/eg " left single quotation mark
 	%s/\%u2019/'/eg " right single quotation mark
 	%s/\%u2032/'/eg " prime

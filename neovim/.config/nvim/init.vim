@@ -792,7 +792,7 @@ inoremap  <C-s>  <esc>:update<cr>
 xnoremap  <C-s>  <esc>:update<cr>gv
 
 " <C-D> to insert date {{{3
-inoremap  <C-d>  <c-r>=strftime("%Y-%m-%d")<cr>
+inoremap  <C-d>  <C-r>=strftime("%Y-%m-%d")<cr>
 
 " default to very magic search {{{3
 nnoremap  /      /\v
@@ -1035,7 +1035,7 @@ endfunction
 " unclassified {{{2
 augroup justinnhli
 	" keep windows equal in size
-	autocmd  VimResized          *       normal! <c-w>=
+	autocmd  VimResized          *       normal! <C-w>=
 	" restore cursor position
 	autocmd  BufReadPost         *       if line("'\"") > 1 && line("'\"") <= line('$') | execute 'normal! g`"' | endif
 	" disable audio bell in MacVim

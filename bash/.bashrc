@@ -88,7 +88,7 @@ prompt_command_fn() {
 	echo "$(date -u +%Y-%m-%dT%H:%M:%SZ)	$(hostname)	$PWD	$(history 1 | sed 's/^ *[0-9 -]* //; s/ *$//;')" >> "$HOME/Dropbox/personal/logs/$(date -u +%Y).shistory"
 }
 PS1='[\u@\h \W]\$ '
-if [ -f "$HOME/Dropbox/personal/logs" ]; then
+if [ -d "$HOME/Dropbox/personal/logs" ]; then
 	PROMPT_COMMAND=prompt_command_fn
 fi
 

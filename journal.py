@@ -372,19 +372,19 @@ def do_count(journal, args):
 def do_graph(journal, args):
     entries = filter_entries(journal, args)
     disjoint_sets = dict((k, k) for k in entries)
-    ancestors = defaultdict(set)
+    referents = defaultdict(set)
     edges = dict((k, set()) for k in entries)
     for src, entry in sorted(entries.items()):
         dests = set(
             dest for dest in REFERENCE_REGEX.findall(entry.text)
             if src > dest and dest in entries
         )
-        ancestors[src] = set().union(*(ancestors[parent] for parent in dests))
-        for dest in dests - ancestors[src]:
+        referents[src] = set().union(*(referents[dest] for dest in dests))
+        for dest in dests - referents[src]:
             edges[src].add(dest)
             while disjoint_sets[dest] != src:
                 disjoint_sets[dest], dest = src, disjoint_sets[dest]
-        ancestors[src] |= dests
+        referents[src] |= dests
     components = defaultdict(set)
     for rep in disjoint_sets:
         path = set([rep])

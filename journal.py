@@ -18,7 +18,7 @@ from sys import stdout
 from tempfile import mkstemp
 from textwrap import dedent
 
-Entry = namedtuple('Entry', 'date, text, filepath')
+Entry = namedtuple('Entry', 'title, text, filepath, line_num')
 
 JOURNAL_PATH = Path('~/pim/journal').expanduser().resolve()
 
@@ -82,22 +82,26 @@ class Journal:
 
     def _read_file(self, filepath):
         with filepath.open() as fd:
+            line_num = 1
             for raw_entry in fd.read().strip().split('\n\n'):
-                if DATE_REGEX.match(raw_entry):
-                    entry = Entry(
-                        raw_entry[:DATE_LENGTH],
-                        raw_entry,
-                        filepath,
-                    )
-                    self.entries[entry.date] = entry
+                lines = raw_entry.splitlines()
+                title = lines[0]
+                self.entries[title] = Entry(
+                    title,
+                    raw_entry,
+                    filepath,
+                    line_num,
+                )
+                line_num += len(lines) + 1
 
     def _read_cache(self):
         with self.cache_file.open() as fd:
-            for date, entry_dict in literal_eval(fd.read()).items():
-                self.entries[date] = Entry(
-                    date,
+            for title, entry_dict in literal_eval(fd.read()).items():
+                self.entries[title] = Entry(
+                    title,
                     entry_dict['text'],
                     Path(entry_dict['filepath']),
+                    entry_dict['line_num'],
                 )
 
     def _filter_by_terms(self, selected, terms, icase):
@@ -157,9 +161,10 @@ class Journal:
             fd.write('{\n')
             for entry in sorted(self.entries.values()):
                 fd.write(dedent(f'''
-                    '{entry.date}': {{
-                        'date': '{entry.date}',
+                    '{entry.title}': {{
+                        'title': '{entry.title}',
                         'filepath': '{entry.filepath.relative_to(self.directory)}',
+                        'line_num': {entry.line_num},
                         'text': {repr(entry.text)},
                     }},
                 ''').strip())
@@ -566,7 +571,7 @@ def do_vimgrep(journal, args):
                 snippet = match_line[start_index:end_index]
                 results.append((line_num, col_num, f'{prefix}{snippet}{suffix}'))
         for line_num, col_num, preview in sorted(results):
-            print(f'{entry.filepath}:{line_num}:{col_num}: {preview}')
+            print(f'{entry.filepath}:{entry.line_num + line_num - 1}:{col_num}: {preview}')
 
 
 # CLI

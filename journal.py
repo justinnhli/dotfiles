@@ -121,9 +121,7 @@ class Journal:
     def _filter_by_date(self, selected, *date_ranges):
         # pylint: disable = no-self-use
         first_date = min(selected)
-        last_date = (
-            datetime.strptime(max(selected), '%Y-%m-%d') + timedelta(days=1)
-        ).strftime('%Y-%m-%d')
+        last_date = (title_to_date(max(selected)) + timedelta(days=1)).strftime('%Y-%m-%d')
         candidates = copy(selected)
         selected = set()
         for date_range in date_ranges:
@@ -138,7 +136,13 @@ class Journal:
     def filter(self, terms=None, date_ranges=None, icase=True):
         selected = set(self.entries.keys())
         if date_ranges:
-            selected = self._filter_by_date(selected, *date_ranges)
+            selected = self._filter_by_date(
+                set(
+                    title for title in selected
+                    if REFERENCE_REGEX.match(title)
+                ),
+                *date_ranges,
+            )
         if terms:
             selected = self._filter_by_terms(selected, terms, icase)
         return {title: self.entries[title] for title in selected}
@@ -207,7 +211,7 @@ class Journal:
                             long_dates = (len(line) > DATE_LENGTH)
                         elif long_dates != (len(line) > DATE_LENGTH):
                             errors.append(log_error('inconsistent date format'))
-                        if long_dates and line != datetime.strptime(line[:DATE_LENGTH], '%Y-%m-%d').strftime('%Y-%m-%d, %A'):
+                        if not title_to_date(line).strftime('%Y-%m-%d, %A').startswith(line):
                             errors.append(log_error('date-weekday correctness'))
                         if has_date_stem and not line.startswith(journal_file.stem):
                             errors.append(log_error("filename doesn't match entry"))
@@ -222,6 +226,10 @@ class Journal:
 
 
 # utility functions
+
+
+def title_to_date(title):
+    return datetime.strptime(title[:DATE_LENGTH], '%Y-%m-%d')
 
 
 def filter_entries(journal, args, **kwargs):
@@ -310,10 +318,7 @@ def do_count(journal, args):
 
     def _count_fn_freq(journal, unit, dates, num_words):
         # pylint: disable = unused-argument
-        num_days = (
-            datetime.strptime(max(dates), '%Y-%m-%d')
-            - datetime.strptime(min(dates), '%Y-%m-%d')
-        ).days
+        num_days = (title_to_date(max(dates)) - title_to_date(min(dates))).days
         return f'{(num_days + 1) / len(dates):.2f}'
 
     def _count_fn_size(journal, unit, dates, num_words):
@@ -356,7 +361,13 @@ def do_count(journal, args):
     length_map = {date: len(entry.text.split()) for date, entry in entries.items()}
     grouped_timespans = chain(
         groupby(
-            sorted(entries.keys(), reverse=args.reverse),
+            sorted(
+                (
+                    title for title in entries.keys()
+                    if REFERENCE_REGEX.match(title)
+                ),
+                reverse=args.reverse,
+            ),
             (lambda k: k[:unit_length]),
         ),
         [('all', tuple(entries.keys()))],

@@ -367,7 +367,7 @@ nnoremap  <leader>wln  :rightbelow vnew<cr>
 nnoremap  <leader>tn   :tabnew<space>
 
 " open remote file {{{3
-nnoremap  <leader>wer  :enew<cr>scp://user@server.tld//absolute/path/to/file
+nnoremap  <leader>wer  :e scp://user@server.tld//absolute/path/to/file
 nnoremap  <leader>whr  :leftabove vsplit scp://user@server.tld//absolute/path/to/file
 nnoremap  <leader>wjr  :rightbelow split scp://user@server.tld//absolute/path/to/file
 nnoremap  <leader>wkr  :leftabove split scp://user@server.tld//absolute/path/to/file

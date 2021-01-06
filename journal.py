@@ -112,7 +112,7 @@ class Journal:
             if icase:
                 term = term.lower()
             matches = set(
-                date for date, entry in self.entries.items()
+                title for title, entry in self.entries.items()
                 if re.search(term, entry.text, flags=flags)
             )
             selected &= matches
@@ -141,7 +141,7 @@ class Journal:
             selected = self._filter_by_date(selected, *date_ranges)
         if terms:
             selected = self._filter_by_terms(selected, terms, icase)
-        return {date: self.entries[date] for date in selected}
+        return {title: self.entries[title] for title in selected}
 
     def _write_tags_file(self):
         tags = {}
@@ -433,7 +433,7 @@ def do_index(journal, _):
     journal.update_metadata()
 
 
-@register('-L', 'list entry dates')
+@register('-L', 'list entry titles')
 def do_list(journal, args):
     entries = filter_entries(journal, args)
     print('\n'.join(sorted(entries.keys(), reverse=args.reverse)))
@@ -482,15 +482,15 @@ def do_hyphenation(journal, args):
         ) + terms[-1]
         entries = filter_entries(journal, args, terms=[possibility])
         print(possibility)
-        for date in sorted(entries, reverse=args.reverse):
-            print('    ' + date)
+        for title in sorted(entries, reverse=args.reverse):
+            print('    ' + title)
 
 
 @register('list the length of the longest line of each entry')
 def do_lengths(journal, args):
     entries = filter_entries(journal, args)
-    for date, entry in sorted(entries.items()):
-        print(date, max(len(line) for line in entry.text.splitlines()))
+    for title, entry in sorted(entries.items()):
+        print(title, max(len(line) for line in entry.text.splitlines()))
 
 
 @register('list the Kincaid reading grade level of each entry')
@@ -530,8 +530,8 @@ def do_readability(journal, args):
         )
 
     entries = filter_entries(journal, args)
-    for date, entry in sorted(entries.items()):
-        print(date, f'{kincaid(entry.text): >6.3f}')
+    for title, entry in sorted(entries.items()):
+        print(title, f'{kincaid(entry.text): >6.3f}')
 
 
 @register('list search results in vim :grep format')

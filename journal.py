@@ -45,7 +45,7 @@ class Journal:
         self.ignores = ignores
         self.entries = {}
         if use_cache:
-            self._check_cache_files()
+            self._check_metadata()
             self._read_cache()
         else:
             for journal_file in self.journal_files:
@@ -72,12 +72,12 @@ class Journal:
     def cache_file(self) -> Path:
         return self.directory.joinpath('.cache').resolve()
 
-    def _check_cache_files(self):
-        cache_files = (
+    def _check_metadata(self):
+        metadata_files = (
             self.tags_file,
             self.cache_file,
         )
-        if not all(cache_file.exists() for cache_file in cache_files):
+        if not all(metadata_file.exists() for metadata_file in metadata_files):
             self.update_metadata()
 
     def _read_file(self, filepath):
@@ -179,11 +179,7 @@ class Journal:
                 fd.write('\n')
             fd.write('}\n')
 
-    def update_metadata(self):
-        self._write_tags_file()
-        self._write_cache()
-
-    def verify(self):
+    def lint(self):
         # pylint: disable = line-too-long, too-many-nested-blocks, too-many-branches
         errors = []
         titles = set()
@@ -227,6 +223,13 @@ class Journal:
                 prev_indent = indent
                 prev_line = line
         return sorted(errors)
+
+    def update_metadata(self):
+        errors = self.lint()
+        if not errors:
+            self._write_tags_file()
+            self._write_cache()
+        return errors
 
 
 # utility functions
@@ -441,11 +444,10 @@ def do_graph(journal, args):
 
 @register('-I', 're-index and cache')
 def do_index(journal, _):
-    errors = journal.verify()
+    errors = journal.update_metadata()
     if errors:
         print('\n'.join('{}:{}: {}'.format(*error) for error in errors))
         sys.exit(1)
-    journal.update_metadata()
 
 
 @register('-L', 'list entry titles')

@@ -8,16 +8,13 @@ chromium
 cmark
 conky
 cronie
-deluge
 dmenu
 feh
 filezilla
 firefox
-flashplugin
 gimp
 git
 graphviz
-gthumb
 htop
 i3-wm
 i3status
@@ -31,10 +28,6 @@ nvidia
 openssh
 parted
 python
-python-coverage
-python-pycodestyle
-python-pylint
-python-pytest
 rsync
 shellcheck
 sqlitebrowser

@@ -6,6 +6,5 @@ latex-mk
 neovim-git
 pdftk-bin
 pikaur
-pydocstyle
 universal-ctags-git
 yed

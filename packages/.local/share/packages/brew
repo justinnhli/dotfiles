@@ -1,12 +1,16 @@
+automake
 checkbashisms
 cmake
 cmark
 ffmpeg
 gcc
+git
 graphviz
 htop
 imagemagick
+lftp
 neovim
+openjdk
 python
 shellcheck
 stow

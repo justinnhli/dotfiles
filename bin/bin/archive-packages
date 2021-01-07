@@ -39,13 +39,13 @@ case "$1" in
 		echo 'cannot find `npm` command'
 		exit 1
 	fi;;
-"pacaur")
-	if which pacaur >/dev/null 2>&1; then
+"pikaur")
+	if which pikaur >/dev/null 2>&1; then
 		comm \
-			"$PACKAGES_PATH/pacaur" \
+			"$PACKAGES_PATH/pikaur" \
 			<(pacman -Qemq)
 	else
-		echo 'cannot find `pacaur` command'
+		echo 'cannot find `pikaur` command'
 		exit 1
 	fi;;
 "pacman")

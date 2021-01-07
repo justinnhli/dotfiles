@@ -1,10 +1,12 @@
 #!/bin/bash
 
+PACKAGES_PATH="$HOME/git/dotfiles/packages/.local/share/packages/"
+
 case "$1" in
 "brew")
 	if which brew >/dev/null 2>&1; then
 		comm \
-			"$HOME/git/dotfiles/packages-meta/.config/packages-meta/brew" \
+			"$PACKAGES_PATH/brew" \
 			<(set-difference <(brew leaves) <(brew cask list))
 	else
 		echo 'cannot find `brew` command'
@@ -13,7 +15,7 @@ case "$1" in
 "brew-cask")
 	if which brew >/dev/null 2>&1; then
 		comm \
-			"$HOME/git/dotfiles/packages-meta/.config/packages-meta/brew-cask" \
+			"$PACKAGES_PATH/brew-cask" \
 			<(brew cask list)
 	else
 		echo 'cannot find `brew` command'
@@ -22,7 +24,7 @@ case "$1" in
 "brew-taps")
 	if which brew >/dev/null 2>&1; then
 		comm \
-			"/Users/justinnhli/git/dotfiles/packages-meta/.config/packages-meta/brew-tap" \
+			"$PACKAGES_PATH/brew-tap" \
 			<(brew tap)
 	else
 		echo 'cannot find `brew` command'
@@ -31,7 +33,7 @@ case "$1" in
 "npm")
 	if which npm >/dev/null 2>&1; then
 		comm \
-			"/Users/justinnhli/git/dotfiles/packages-meta/.config/packages-meta/npm" \
+			"$PACKAGES_PATH/npm" \
 			<(npm list --global --parseable --depth=0 | grep node_modules | while read module; do basename "$module"; done | sort | uniq)
 	else
 		echo 'cannot find `npm` command'
@@ -40,7 +42,7 @@ case "$1" in
 "pacaur")
 	if which pacaur >/dev/null 2>&1; then
 		comm \
-			"$HOME/git/dotfiles/packages-meta/.config/packages-meta/pacaur" \
+			"$PACKAGES_PATH/pacaur" \
 			<(pacman -Qemq)
 	else
 		echo 'cannot find `pacaur` command'
@@ -49,7 +51,7 @@ case "$1" in
 "pacman")
 	if which pacman >/dev/null 2>&1; then
 		comm \
-			<(sort $HOME/git/dotfiles/packages-meta/.config/packages-meta/pacman) \
+			<(sort $PACKAGES_PATH/pacman) \
 			<( \
 				( \
 					set-difference <(pacman -Qenq) <(pacman -Qgq base base-devel texlive-most | sort | uniq) && \
@@ -63,7 +65,7 @@ case "$1" in
 	fi;;
 "pip")
 	comm \
-		"$HOME/git/dotfiles/packages-meta/.config/packages-meta/pip" \
+		"$PACKAGES_PATH/pip" \
 		<(python3 -m pip list --not-required --format=freeze | sed 's/=.*//' | sort);;
 
 *)

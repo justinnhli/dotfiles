@@ -54,7 +54,7 @@ case "$1" in
 			<(sort $PACKAGES_PATH/pacman) \
 			<( \
 				( \
-					set-difference <(pacman -Qenq) <(pacman -Qgq base base-devel texlive-most | sort | uniq) && \
+					set-difference <(pacman -Qenq) <( (pacman -Qgq base-devel texlive-most && pacman -Slq core ) | sort | uniq) && \
 					echo base-devel && \
 					echo texlive-most \
 				) | sort

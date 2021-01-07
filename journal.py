@@ -154,6 +154,10 @@ class Journal:
             rel_path = journal_file.relative_to(self.directory)
             with journal_file.open() as fd:
                 for line_number, line in enumerate(fd, start=1):
+                    if not line or line.startswith('\t'):
+                        continue
+                    line = line.strip()
+                    tags[line] = (rel_path, line_number)
                     if DATE_REGEX.fullmatch(line.rstrip()):
                         tags[line[:DATE_LENGTH]] = (rel_path, line_number)
         with self.tags_file.open('w') as fd:

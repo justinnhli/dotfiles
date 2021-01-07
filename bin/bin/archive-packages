@@ -7,7 +7,7 @@ case "$1" in
 	if which brew >/dev/null 2>&1; then
 		comm \
 			"$PACKAGES_PATH/brew" \
-			<(set-difference <(brew leaves) <(brew cask list))
+			<(set-difference <(brew leaves) <(brew list --cask))
 	else
 		echo 'cannot find `brew` command'
 		exit 1
@@ -16,7 +16,7 @@ case "$1" in
 	if which brew >/dev/null 2>&1; then
 		comm \
 			"$PACKAGES_PATH/brew-cask" \
-			<(brew cask list)
+			<(brew list --cask)
 	else
 		echo 'cannot find `brew` command'
 		exit 1

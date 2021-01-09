@@ -700,7 +700,7 @@ def process_args(arg_parser, args):
     if args.operation.__name__ == 'do_hyphenation':
         args.terms = list(chain(*(term.split('-') for term in args.terms)))
         if len(args.terms) < 2:
-            raise ValueError('argument --hyphenation: two or more terms required')
+            arg_parser.error('argument --hyphenation: two or more terms required')
     if args.date_spec is None:
         args.date_ranges = None
     else:

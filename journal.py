@@ -394,6 +394,10 @@ def do_count(journal, args):
 @register('-G', 'graph entry references in DOT')
 def do_graph(journal, args):
     entries = filter_entries(journal, args)
+    entries = {
+        title[:DATE_LENGTH]:entry for title, entry
+        in entries.items() if DATE_REGEX.fullmatch(title)
+    }
     disjoint_sets = dict((k, k) for k in entries)
     referents = defaultdict(set)
     edges = dict((k, set()) for k in entries)

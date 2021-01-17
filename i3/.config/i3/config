@@ -93,6 +93,6 @@ bar {
         status_command i3status
 }
 
-exec --no-startup-id feh --bg-scale $HOME/wallpaper.png
+exec --no-startup-id feh --bg-scale $HOME/Dropbox/wallpaper.png
 exec dropbox
 exec conky

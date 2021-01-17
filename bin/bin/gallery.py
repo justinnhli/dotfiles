@@ -23,7 +23,7 @@ print('</style>')
 print('</head>')
 print('<body>')
 for imagefile in args.imagefiles:
-    if imagefile.suffix[1:] in IMAGE_SUFFIXES:
+    if imagefile.suffix[1:].lower() in IMAGE_SUFFIXES:
         print(f'<a href="{imagefile}"><img src="{imagefile}" title="{imagefile}"></a>')
 print('</body>')
 print('</html>')

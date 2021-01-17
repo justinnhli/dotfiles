@@ -22,7 +22,7 @@ print('img {max-width:400px; max-height:400px;')
 print('</style>')
 print('</head>')
 print('<body>')
-for imagefile in args.imagefiles:
+for imagefile in sorted(args.imagefiles):
     if imagefile.suffix[1:].lower() in IMAGE_SUFFIXES:
         print(f'<a href="{imagefile}"><img src="{imagefile}" title="{imagefile}"></a>')
 print('</body>')

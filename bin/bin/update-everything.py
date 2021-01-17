@@ -145,17 +145,29 @@ def delete_orphans(path=None):
 @register()
 def delete_os_metadata(path=None):
     # type: (Path) -> None
-    """Delete OS metadata files (Icon, .DS_Store, __MACOXS).
+    """Delete OS metadata files (Icon, .DS_Store, __MACOSX).
 
     Parameters:
         path (Path): The directory to clear of OS metadata.
     """
+
+    def rm_tree(path):
+        for child in path.glob('*'):
+            if child.is_file():
+                child.unlink()
+            else:
+                rm_tree(child)
+        path.rmdir()
+
     if path is None:
         path = Path.cwd()
     print('deleting OS metadata files')
     for filename in ('Icon\r', '.DS_Store', '__MACOSX'):
         for filepath in path.glob(f'**/{filename}'):
-            filepath.unlink()
+            if filepath.is_dir():
+                rm_tree(filepath)
+            else:
+                filepath.unlink()
             print(f'    deleted {filepath}')
 
 

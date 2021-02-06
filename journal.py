@@ -39,7 +39,7 @@ RANGE_REGEX = re.compile(RANGE_BOUND_REGEX.pattern + ':?' + RANGE_BOUND_REGEX.pa
 class Journal:
 
     def __init__(self, directory, use_cache=True, ignores=None):
-        self.directory = directory
+        self.directory = directory.expanduser().resolve()
         if ignores is None:
             ignores = set()
         self.ignores = ignores
@@ -65,11 +65,11 @@ class Journal:
             yield journal_file
 
     @property
-    def tags_file(self) -> Path:
+    def tags_file(self):
         return self.directory.joinpath('.tags').resolve()
 
     @property
-    def cache_file(self) -> Path:
+    def cache_file(self):
         return self.directory.joinpath('.cache').resolve()
 
     def _check_metadata(self):
@@ -100,7 +100,7 @@ class Journal:
                 self.entries[title] = Entry(
                     title,
                     entry_dict['text'],
-                    Path(entry_dict['filepath']),
+                    Path(entry_dict['filepath']).expanduser().resolve(),
                     entry_dict['line_num'],
                 )
 
@@ -467,7 +467,7 @@ def do_show(journal, args):
     if not text:
         return
     if stdout.isatty():
-        temp_file = Path(mkstemp(FILE_EXTENSION)[1])
+        temp_file = Path(mkstemp(FILE_EXTENSION)[1]).expanduser().resolve()
         with temp_file.open('w') as fd:
             fd.write(text)
         chmod(temp_file, S_IRUSR)
@@ -729,8 +729,8 @@ def process_args(arg_parser, args):
             else:
                 date_ranges.append(date_range)
         args.date_ranges = date_ranges
-    args.directory = args.directory.resolve()
-    args.ignores = set(path.resolve() for path in args.ignores)
+    args.directory = args.directory.expanduser().resolve()
+    args.ignores = set(path.expanduser().resolve() for path in args.ignores)
     return args
 
 

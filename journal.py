@@ -41,8 +41,9 @@ class Journal:
     def __init__(self, directory, use_cache=True, ignores=None):
         self.directory = directory.expanduser().resolve()
         if ignores is None:
-            ignores = set()
-        self.ignores = ignores
+            self.ignores = set()
+        else:
+            self.ignores = set(ignores)
         self.entries = {}
         if use_cache:
             self._check_metadata()
@@ -153,16 +154,16 @@ class Journal:
             self._read_file(journal_file)
             rel_path = journal_file.relative_to(self.directory)
             with journal_file.open() as fd:
-                for line_number, line in enumerate(fd, start=1):
+                for line_num, line in enumerate(fd, start=1):
                     if not line or line.startswith('\t'):
                         continue
                     line = line.strip()
-                    tags[line] = (rel_path, line_number)
+                    tags[line] = (rel_path, line_num)
                     if DATE_REGEX.fullmatch(line.rstrip()):
-                        tags[line[:DATE_LENGTH]] = (rel_path, line_number)
+                        tags[line[:DATE_LENGTH]] = (rel_path, line_num)
         with self.tags_file.open('w') as fd:
-            for tag, (filepath, line) in sorted(tags.items()):
-                fd.write(f'{tag}\t{filepath}\t{line}\n')
+            for tag, (filepath, line_num) in sorted(tags.items()):
+                fd.write(f'{tag}\t{filepath}\t{line_num}\n')
 
     def _write_cache(self):
         with self.cache_file.open('w') as fd:
@@ -196,7 +197,7 @@ class Journal:
                 errors.append((journal_file, len(lines), 'file ends on blank line'))
             prev_indent = 0
             prev_line = ''
-            for line_number, line in enumerate(lines, start=1): # pylint: disable = unused-variable
+            for line_num, line in enumerate(lines, start=1): # pylint: disable = unused-variable
                 indent = len(re.match('\t*', line)[0])
                 if not re.fullmatch('(\t*([^ \t][ -~]*)?[^ \t])?', line):
                     errors.append(log_error('non-tab indentation, ending blank, or non-ASCII character'))
@@ -266,7 +267,7 @@ def log_error(message):
     local_vars = currentframe().f_back.f_locals
     return (
         local_vars['journal_file'],
-        local_vars['line_number'],
+        local_vars['line_num'],
         message,
     )
 

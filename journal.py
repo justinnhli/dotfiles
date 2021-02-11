@@ -761,7 +761,7 @@ def log_search(arg_parser, args, journal):
             option_value = getattr(args, option.dest)
             if option_value != option.default:
                 if option.const in (True, False):
-                    options.append((option_string,))
+                    options.append((option_string, ))
                 else:
                     options.append((option_string, option_value))
     log_args = op_flag

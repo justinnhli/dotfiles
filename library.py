@@ -17,6 +17,20 @@ REMOTE_HOST = 'justinnhli.com'
 REMOTE_PATH = Path('/home/justinnhli/justinnhli.com/papers')
 
 
+WEIRD_NAMES = {
+    'Computing Research Association': 'CRA',
+    'Liberal Arts Computer Science Consortium': 'LACS',
+    'The College Board': 'CB',
+    'The Join Task Force on Computing Curricula': 'JTFCC',
+    'Open Science Collaboration': 'OSC',
+    'others': '',
+    '{Google Inc.}': 'Google',
+    '{Gallup Inc.}': 'Gallup',
+    '{National Academies of Sciences, Engineering, and Medicine}': 'NASEM',
+    '{UMBEL Project}': 'UMBEL',
+    '{the ABC Research Group}': 'ABC',
+}
+
 class Paper:
     """A research paper."""
 
@@ -210,6 +224,48 @@ class Library:
 
     def lint(self):
         """Lint the library bibtex file."""
+        for key, paper in sorted(self.papers.items()):
+            # check for non "last, first" authors and editors
+            for attr in ['editor', 'author']:
+                if not hasattr(paper, attr):
+                    continue
+                value = getattr(paper, attr)
+                if value in WEIRD_NAMES:
+                    continue
+                people = value.split(' and ')
+                if any((',' not in person) for person in people if person not in WEIRD_NAMES):
+                    print(f'non-conforming {attr}s in {key}:')
+                    print(f'    current:')
+                    print(f'        {attr} = {{{value}}},')
+                    pattern = '(?P<first>[A-Z][^ ]*( [A-Z][^ ]*)*) (?P<last>.*)'
+                    suggestion = ' and '.join([
+                        person if person in WEIRD_NAMES
+                        else re.sub(
+                            pattern,
+                            (lambda match: match.group('last') + ', ' + match.group('first')),
+                            person)
+                        for person in people
+                    ])
+                    print(f'    suggested:')
+                    print(f'        {attr} = {{{suggestion}}},')
+            # check for incorrectly-formed IDs
+            # TODO
+            # check for unquoted capitalizations
+            title = paper.title
+            changed = True
+            while changed:
+                changed = False
+                if re.search('{[^{}]*}', title):
+                    title = re.sub('{[^{}]*}', '', title)
+                    changed = True
+            for word in title.split():
+                if '{' in word:
+                    continue
+                word = re.sub('[-/][A-Z]', '', word)
+                # TODO this check fails for (eg.) {Response to {Adams and McDonnell}}
+                if len(re.findall('[A-Za-z][A-Z]', word)) > 1:
+                    print('unquoted title for {}: {}'.format(entry_id, paper.title))
+                    break
         raise NotImplementedError()
 
     def toc(self, out_path=None):

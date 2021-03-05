@@ -16,7 +16,7 @@ highlight default link fixme Todo
 syntax match name '\h\w*' contained
 highlight default link name Title
 
-syntax match upper '\h\u\+\h'
+syntax match upper '\h\u\+\w*\h'
 highlight default link upper Special
 
 syntax spell notoplevel

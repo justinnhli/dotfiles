@@ -5,6 +5,8 @@ if [ $# -ne 2 ]; then
     exit 1
 fi
 
+set -e
+
 realpath() {
     # $1 : relative filename
     echo "$(cd "$(dirname "$1")" && pwd)/$(basename "$1")"
@@ -12,8 +14,8 @@ realpath() {
 
 # unzip and move into directory
 zipfile="$(realpath "$1")"
-dest="$(realpath "$2")"
-mkdir "$dest"
+dest="$2"
+mkdir -p "$dest"
 cd "$dest"
 unzip -q "$zipfile"
 find . -maxdepth 1 -type d -name '*_*' | while read f; do

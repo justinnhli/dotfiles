@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 
 import re
-import sys
-import tarfile
 from argparse import ArgumentParser
 from ast import literal_eval
 from collections import namedtuple, defaultdict
@@ -14,7 +12,8 @@ from os import chdir as cd, chmod, environ, execvp, fork, remove as rm, wait
 from pathlib import Path
 from stat import S_IRUSR
 from statistics import mean, median, stdev
-from sys import stdout
+from sys import stdout, exit as sys_exit
+from tarfile import open as open_tar_file
 from tempfile import mkstemp
 from textwrap import dedent
 
@@ -306,9 +305,8 @@ def do_archive(_, args):
         else:
             return tarinfo
 
-
     archive_name = 'jrnl' + datetime.now().strftime('%Y%m%d%H%M%S')
-    with tarfile.open(archive_name + '.txz', 'w:xz') as tar:
+    with open_tar_file(archive_name + '.txz', 'w:xz') as tar:
         tar.add(args.directory, arcname=archive_name, filter=tarinfo_filter)
         tar.add(__file__, arcname=join_path(archive_name, basename(__file__)))
 
@@ -452,7 +450,7 @@ def do_index(journal, _):
     errors = journal.update_metadata()
     if errors:
         print('\n'.join('{}:{}: {}'.format(*error) for error in errors))
-        sys.exit(1)
+        sys_exit(1)
 
 
 @register('-L', 'list entry titles')

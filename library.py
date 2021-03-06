@@ -266,7 +266,6 @@ class Library:
                 if len(re.findall('[A-Za-z][A-Z]', word)) > 1:
                     print('unquoted title for {}: {}'.format(entry_id, paper.title))
                     break
-        raise NotImplementedError()
 
     def toc(self, out_path=None):
         """Create an index HTML file of the library."""

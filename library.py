@@ -28,7 +28,8 @@ WEIRD_NAMES = {
     '{Gallup Inc.}': 'Gallup',
     '{National Academies of Sciences, Engineering, and Medicine}': 'NASEM',
     '{UMBEL Project}': 'UMBEL',
-    '{the ABC Research Group}': 'ABC',
+    '{The ABC Research Group}': 'ABC',
+    '{The Economist}': 'Economist',
 }
 
 class Paper:

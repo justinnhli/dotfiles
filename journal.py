@@ -445,7 +445,7 @@ def do_graph(journal, args):
     print('}')
 
 
-@register('-I', 're-index and cache')
+@register('-I', 're-index and update cache')
 def do_index(journal, _):
     errors = journal.update_metadata()
     if errors:
@@ -654,7 +654,7 @@ def build_arg_parser(arg_parser):
         '-d',
         dest='date_spec',
         action='store',
-        help='only use entries in range',
+        help='only use entries in date range',
     )
     group.add_argument(
         '-i',
@@ -664,12 +664,12 @@ def build_arg_parser(arg_parser):
         help='ignore case-insensitivity',
     )
 
-    group = arg_parser.add_argument_group('OUTPUT OPTIONS')
+    group = arg_parser.add_argument_group('OUTPUT OPTIONS (IGNORED BY -[AI])')
     group.add_argument(
         '-c',
         dest='reverse',
         action='store_false',
-        help='chronological order',
+        help='list entries in chronological order',
     )
 
     group = arg_parser.add_argument_group('OPERATION-SPECIFIC OPTIONS')

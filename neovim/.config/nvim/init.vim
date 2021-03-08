@@ -561,6 +561,9 @@ function s:OpenExternal(arg)
 	elseif l:target =~ '[a-zA-Z]\+[0-9]\{4\}\([A-Z][a-zA-Z]*\)'
 		" research paper
 		let l:target = expand(system('find ' .. g:justinnhli_library_path .. ' -name ' .. l:target .. '.pdf'))
+	else
+		normal gx
+		return
 	endif
 	if g:os == 'Linux'
 		let l:program = 'xdg-open'

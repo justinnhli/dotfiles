@@ -91,7 +91,6 @@ def update_pip(venv=None):
     Parameters:
         venv (str): The name of the virtual environment to update
     """
-    # FIXME deal with PIP_REQUIRE_VIRTUALENV
     if venv is None:
         if not which('pip'):
             return
@@ -109,7 +108,9 @@ def update_pip(venv=None):
         json_from_str(process.stdout.decode('utf-8'))
     ]
     if packages:
-        run([pip, 'install', '--upgrade', *packages], check=True)
+        env = environ.copy()
+        env['PIP_REQUIRE_VIRTUALENV'] = 'false'
+        run([pip, 'install', '--upgrade', *packages], env=env, check=True)
 
 
 # file cleanup actions

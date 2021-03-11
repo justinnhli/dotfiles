@@ -570,11 +570,11 @@ function s:OpenExternal(arg)
 	else
 		let l:program = 'open'
 	endif
-	call jobstart(l:program .. ' ' .. l:target .. ' &')
+	call jobstart([l:program, l:target])
 endfunction
 
 " open external mappings{{{3
-nnoremap  <leader>O  :call <SID>OpenExternal('<C-r>=expand('<cword>')<cr>')<cr>
+nnoremap  <leader>O  :call <SID>OpenExternal('<C-r>=expand('<cWORD>')<cr>')<cr>
 xnoremap  <leader>O  "zy:call <SID>OpenExternal('<C-r>z')<cr>
 
 " other file mappings {{{3

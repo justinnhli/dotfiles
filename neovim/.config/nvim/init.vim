@@ -555,6 +555,8 @@ endif
 " open external functions {{{3
 function s:OpenExternal(arg)
 	let l:target = trim(a:arg)
+	let l:target = substitute(l:target, '^[^~/0-9A-Za-z]*', '', '')
+	let l:target = substitute(l:target, '[^~/0-9A-Za-z]*$', '', '')
 	if isdirectory(expand(l:target)) || filereadable(expand(l:target))
 		" file or directory
 		let l:target = expand(l:target)
@@ -567,10 +569,11 @@ function s:OpenExternal(arg)
 	endif
 	if g:os == 'Linux'
 		let l:program = 'xdg-open'
+		call jobstart([l:program, l:target])
 	else
 		let l:program = 'open'
+		call jobstart(l:program .. " " .. shellescape(l:target))
 	endif
-	call jobstart([l:program, l:target])
 endfunction
 
 " open external mappings{{{3

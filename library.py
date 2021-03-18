@@ -419,7 +419,7 @@ class Library:
                     description = None
                 subparser = subparsers.add_parser(attr, help=description)
                 for name, parameter in signature(func).parameters.items():
-                    arg_name = name.replace('_', '-')
+                    arg_name = name
                     if parameter.kind == Parameter.VAR_POSITIONAL:
                         var_positionals[attr] = name
                         subparser.add_argument(arg_name, nargs='*')

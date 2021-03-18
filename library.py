@@ -212,7 +212,9 @@ class Library:
             file_paths (Iterable[str]): The file paths to remove.
         """
         for file_path in file_paths:
-            Path(file_path).expanduser().resolve().unlink()
+            if file_path.endswith('.pdf'):
+                file_path = file_path[:-4]
+            Path(self.directory, file_path[0].lower(), file_path + '.pdf').expanduser().resolve().unlink()
 
     # individual paper pass through
 

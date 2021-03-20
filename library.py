@@ -163,7 +163,7 @@ class Library:
             paper = None
             for line in fd:
                 line = line.rstrip()
-                if not line:
+                if not line or re.fullmatch(r'\s*%.*', line):
                     continue
                 if line.startswith('@'):
                     match = re.fullmatch('@(?P<type>[^ ]+) *{(?P<id>[^,]+),', line)

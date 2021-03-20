@@ -359,7 +359,11 @@ def do_count(journal, args):
         else:
             return 0
 
-    entries = filter_entries(journal, args)
+    entries = {
+        title: entry for title, entry
+        in filter_entries(journal, args).items()
+        if re.fullmatch(DATE_REGEX, title)
+    }
     if len(entries) == 0:
         return
     columns = ['DATE', 'POSTS', 'FREQ', 'SIZE', 'WORDS', 'MIN', 'MED', 'MAX', 'MEAN', 'STDEV']

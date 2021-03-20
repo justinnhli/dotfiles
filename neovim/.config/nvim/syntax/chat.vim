@@ -1,6 +1,10 @@
+
+syntax match date '^[0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}$'
+highlight default link date Title
+
 " highlight other people first
 syntax match other '^\([^) ][^)]\{-\}[^:]\{-\}\)\?[[:alnum:])]:\( \|$\)'
-highlight other ctermfg=DarkCyan guifg=DarkRed
+highlight default link other Identifier
 
 " overwrite that highlighting with myself
 syntax match me '^\([^) ][^)]\{-\}[^:]\{-\}\)\?Justin (Ning Hui) Li:\( \|$\)'
@@ -13,4 +17,4 @@ syntax match me '^\([^) ][^)]\{-\}[^:]\{-\}\)\?justinnhli@chat.facebook.com[^:]\
 syntax match me '^\([^) ][^)]\{-\}[^:]\{-\}\)\?justinnhli@gmail.com/.\{-\}:\( \|$\)'
 syntax match me '^\([^) ][^)]\{-\}[^:]\{-\}\)\?ninghui48@gmail.com:\( \|$\)'
 syntax match me '^\([^) ][^)]\{-\}[^:]\{-\}\)\?ninghui96:\( \|$\)'
-highlight me ctermfg=DarkGreen guifg=DarkGreen
+highlight default link me Constant

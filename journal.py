@@ -314,84 +314,50 @@ def do_archive(_, args):
 @register('-C', 'count words and entries')
 def do_count(journal, args):
 
-    def _count_fn_date(journal, unit, dates, num_words):
-        # pylint: disable = unused-argument
-        return unit
-
-    def _count_fn_posts(journal, unit, dates, num_words):
-        # pylint: disable = unused-argument
-        return len(dates)
-
-    def _count_fn_freq(journal, unit, dates, num_words):
-        # pylint: disable = unused-argument
-        num_days = (title_to_date(max(dates)) - title_to_date(min(dates))).days
-        return f'{(num_days + 1) / len(dates):.2f}'
-
-    def _count_fn_size(journal, unit, dates, num_words):
-        # pylint: disable = unused-argument
-        size = sum(len(journal[date].text) for date in dates)
-        return f'{size:,d}'
-
-    def _count_fn_words(journal, unit, dates, num_words):
-        # pylint: disable = unused-argument
-        return f'{sum(num_words):,d}'
-
-    def _count_fn_min(journal, unit, dates, num_words):
-        # pylint: disable = unused-argument
-        return min(num_words)
-
-    def _count_fn_med(journal, unit, dates, num_words):
-        # pylint: disable = unused-argument
-        return round(median(num_words))
-
-    def _count_fn_max(journal, unit, dates, num_words):
-        # pylint: disable = unused-argument
-        return max(num_words)
-
-    def _count_fn_mean(journal, unit, dates, num_words):
-        # pylint: disable = unused-argument
-        return round(mean(num_words))
-
-    def _count_fn_stdev(journal, unit, dates, num_words):
-        # pylint: disable = unused-argument
-        if len(num_words) > 1:
-            return round(stdev(num_words))
-        else:
-            return 0
+    COLUMNS = { # pylint: disable = invalid-name
+        'DATE': (lambda journal, unit, dates, num_words: unit),
+        'POSTS': (lambda journal, unit, dates, num_words: len(dates)),
+        'FREQ': (lambda journal, unit, dates, num_words:
+            f'{((title_to_date(max(dates)) - title_to_date(min(dates))).days + 1) / len(dates):.2f}'
+        ),
+        'SIZE': (lambda journal, unit, dates, num_words:
+            f'{sum(len(journal[date].text) for date in dates):,d}'
+        ),
+        'WORDS': (lambda journal, unit, dates, num_words: f'{sum(num_words):,d}'),
+        'MIN': (lambda journal, unit, dates, num_words: min(num_words)),
+        'MED': (lambda journal, unit, dates, num_words: round(median(num_words))),
+        'MAX': (lambda journal, unit, dates, num_words: max(num_words)),
+        'MEAN': (lambda journal, unit, dates, num_words: round(mean(num_words))),
+        'STDEV': (lambda journal, unit, dates, num_words:
+            0 if len(num_words) <= 1 else round(stdev(num_words))
+        ),
+    }
 
     entries = {
         title: entry for title, entry
         in filter_entries(journal, args).items()
-        if re.fullmatch(DATE_REGEX, title)
+        if DATE_REGEX.fullmatch(title)
     }
     if len(entries) == 0:
         return
-    columns = ['DATE', 'POSTS', 'FREQ', 'SIZE', 'WORDS', 'MIN', 'MED', 'MAX', 'MEAN', 'STDEV']
     unit_length = STRING_LENGTHS[args.unit]
-    length_map = {date: len(entry.text.split()) for date, entry in entries.items()}
     grouped_timespans = chain(
         groupby(
-            sorted(
-                (
-                    title for title in entries.keys()
-                    if REFERENCE_REGEX.match(title)
-                ),
-                reverse=args.reverse,
-            ),
+            sorted(entries.keys(), reverse=args.reverse),
             (lambda k: k[:unit_length]),
         ),
         [('all', tuple(entries.keys()))],
     )
+    length_map = {date: len(entry.text.split()) for date, entry in entries.items()}
     table = []
     for timespan, selected_dates in grouped_timespans:
         selected_dates = tuple(selected_dates)
         lengths = tuple(length_map[date] for date in selected_dates)
-        row = []
-        for column in columns:
-            func = vars()[f'_count_fn_{column.lower()}']
-            row.append(str(func(journal, timespan, selected_dates, lengths)))
-        table.append(row)
-    print_table(table, headers=columns)
+        table.append([
+            str(func(journal, timespan, selected_dates, lengths))
+            for column, func in COLUMNS.items()
+        ])
+    print_table(table, headers=tuple(COLUMNS.keys()))
 
 
 @register('-G', 'graph entry references in DOT')

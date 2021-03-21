@@ -565,9 +565,13 @@ function s:OpenExternal(arg)
 		let l:paper_id = substitute(l:target, '^.\{-}\([a-zA-Z]\+[0-9]\{4\}[A-Z][a-zA-Z]*\).*$', '\1', '')
 		let l:target = expand(system('find ' .. g:justinnhli_library_path .. ' -name ' .. l:paper_id .. '.pdf'))
 	else
+		let l:target = ''
+	endif
+	if l:target == ''
 		normal gx
 		return
 	endif
+	let l:target = trim(l:target)
 	if g:os == 'Linux'
 		let l:program = 'xdg-open'
 		call jobstart([l:program, l:target])

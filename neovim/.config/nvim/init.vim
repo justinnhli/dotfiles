@@ -560,9 +560,10 @@ function s:OpenExternal(arg)
 	if isdirectory(expand(l:target)) || filereadable(expand(l:target))
 		" file or directory
 		let l:target = expand(l:target)
-	elseif l:target =~ '[a-zA-Z]\+[0-9]\{4\}\([A-Z][a-zA-Z]*\)'
+	elseif l:target =~ '[a-zA-Z]\+[0-9]\{4\}[A-Z][a-zA-Z]*'
 		" research paper
-		let l:target = expand(system('find ' .. g:justinnhli_library_path .. ' -name ' .. l:target .. '.pdf'))
+		let l:paper_id = substitute(l:target, '^.\{-}\([a-zA-Z]\+[0-9]\{4\}[A-Z][a-zA-Z]*\).*$', '\1', '')
+		let l:target = expand(system('find ' .. g:justinnhli_library_path .. ' -name ' .. l:paper_id .. '.pdf'))
 	else
 		normal gx
 		return

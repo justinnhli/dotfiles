@@ -367,14 +367,14 @@ nnoremap  <leader>wln  :rightbelow vnew<cr>
 nnoremap  <leader>tn   :tabnew<space>
 
 " open remote file {{{3
-nnoremap  <leader>wer  :e scp://user@server.tld//absolute/path/to/file
-nnoremap  <leader>whr  :leftabove vsplit scp://user@server.tld//absolute/path/to/file
-nnoremap  <leader>wjr  :rightbelow split scp://user@server.tld//absolute/path/to/file
-nnoremap  <leader>wkr  :leftabove split scp://user@server.tld//absolute/path/to/file
-nnoremap  <leader>wlr  :rightbelow vsplit scp://user@server.tld//absolute/path/to/file
-nnoremap  <leader>tr   :tabnew scp://user@server.tld//absolute/path/to/file
+nnoremap  <leader>wer  q:iedit scp://user@server.tld//absolute/path/to/file<esc>F:w
+nnoremap  <leader>whr  q:ileftabove vsplit scp://user@server.tld//absolute/path/to/file<esc>F:w
+nnoremap  <leader>wjr  q:irightbelow split scp://user@server.tld//absolute/path/to/file<esc>F:w
+nnoremap  <leader>wkr  q:ileftabove split scp://user@server.tld//absolute/path/to/file<esc>F:w
+nnoremap  <leader>wlr  q:irightbelow vsplit scp://user@server.tld//absolute/path/to/file<esc>F:w
+nnoremap  <leader>tr   q:itabnew scp://user@server.tld//absolute/path/to/file<esc>F:w
 
-" open terminal at ($HOME if new tab, current directory otherwise) {{{3
+" open terminal (at $HOME if new tab, at current directory otherwise) {{{3
 if exists(':terminal')
 	nnoremap  <leader>wet  :call <SID>StartTerminal(['silent! lcd ' .. expand('%:p:h')], '')<cr>
 	nnoremap  <leader>wht  :call <SID>StartTerminal(['leftabove vnew', 'silent! lcd ' .. expand('%:p:h')], '')<cr>
@@ -392,6 +392,12 @@ nnoremap  <leader>wj.  :rightbelow wincmd f<cr>
 nnoremap  <leader>wk.  :leftabove wincmd f<cr>
 nnoremap  <leader>wl.  :rightbelow vertical wincmd f<cr>
 nnoremap  <leader>t.   <C-w>gf
+xnoremap  <leader>we.  gf
+xnoremap  <leader>wh.  :<C-u>leftabove vertical wincmd f<cr>
+xnoremap  <leader>wj.  :<C-u>rightbelow wincmd f<cr>
+xnoremap  <leader>wk.  :<C-u>leftabove wincmd f<cr>
+xnoremap  <leader>wl.  :<C-u>rightbelow vertical wincmd f<cr>
+xnoremap  <leader>t.   <C-w>gf
 
 " open tag {{{3
 nnoremap  <leader>weg  :execute 'tjump ' .. expand('<cword>')<cr>
@@ -400,11 +406,11 @@ nnoremap  <leader>wjg  :execute 'rightbelow stjump ' .. expand('<cword>')<cr>
 nnoremap  <leader>wkg  :execute 'leftabove stjump ' .. expand('<cword>')<cr>
 nnoremap  <leader>wlg  :execute 'rightbelow vertical stjump ' .. expand('<cword>')<cr>
 nnoremap  <leader>tg   <C-w><C-]><C-w>T
-xnoremap  <leader>weg  "zy:tjump <C-r>z<cr>
-xnoremap  <leader>whg  "zy:leftabove vertical stjump <C-r>z<cr>
-xnoremap  <leader>wjg  "zy:rightbelow stjump <C-r>z<cr>
-xnoremap  <leader>wkg  "zy:leftabove stjump <C-r>z<cr>
-xnoremap  <leader>wlg  "zy:rightbelow vertical stjump <C-r>z<cr>
+xnoremap  <leader>weg  "zy:<C-u>tjump <C-r>z<cr>
+xnoremap  <leader>whg  "zy:<C-u>leftabove vertical stjump <C-r>z<cr>
+xnoremap  <leader>wjg  "zy:<C-u>rightbelow stjump <C-r>z<cr>
+xnoremap  <leader>wkg  "zy:<C-u>leftabove stjump <C-r>z<cr>
+xnoremap  <leader>wlg  "zy:<C-u>rightbelow vertical stjump <C-r>z<cr>
 xnoremap  <leader>tg   <C-w><C-]><C-w>T
 
 " open grep {{{3
@@ -414,12 +420,12 @@ nnoremap  <leader>wjf  :rightbelow new<cr>q:ilvimgrep /\m\c/g **/*<esc>Fca
 nnoremap  <leader>wkf  :leftabove new<cr>q:ilvimgrep /\m\c/g **/*<esc>Fca
 nnoremap  <leader>wlf  :rightbelow vnew<cr>q:ilvimgrep /\m\c/g **/*<esc>Fca
 nnoremap  <leader>tf   :tabnew<cr>q:ilvimgrep /\m\c/g **/*<esc>Fca
-xnoremap  <leader>wef  "zy:lvimgrep /<C-r>z/g **/*<cr>
-xnoremap  <leader>whf  "zy:leftabove vnew<cr>:lvimgrep /<C-r>z/g **/*<cr>
-xnoremap  <leader>wjf  "zy:rightbelow new<cr>:lvimgrep /<C-r>z/g **/*<cr>
-xnoremap  <leader>wkf  "zy:leftabove new<cr>:lvimgrep /<C-r>z/g **/*<cr>
-xnoremap  <leader>wlf  "zy:rightbelow vnew<cr>:lvimgrep /<C-r>z/g **/*<cr>
-xnoremap  <leader>tf   "zy:tabnew<cr>:lvimgrep /<C-r>z/g **/*<cr>
+xnoremap  <leader>wef  "zy:<C-u>lvimgrep /<C-r>z/g **/*<cr>
+xnoremap  <leader>whf  "zy:<C-u>leftabove vnew<cr>:lvimgrep /<C-r>z/g **/*<cr>
+xnoremap  <leader>wjf  "zy:<C-u>rightbelow new<cr>:lvimgrep /<C-r>z/g **/*<cr>
+xnoremap  <leader>wkf  "zy:<C-u>leftabove new<cr>:lvimgrep /<C-r>z/g **/*<cr>
+xnoremap  <leader>wlf  "zy:<C-u>rightbelow vnew<cr>:lvimgrep /<C-r>z/g **/*<cr>
+xnoremap  <leader>tf   "zy:<C-u>tabnew<cr>:lvimgrep /<C-r>z/g **/*<cr>
 
 " window manipulation functions {{{3
 function s:DuplicateBuffer()

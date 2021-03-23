@@ -24,7 +24,7 @@ def read_all_inputs(files):
 def determine_indent(text):
     indent = ''
     for line in text.splitlines():
-        match = re.match(r'\s*', text).group()
+        match = re.match(r'\s*', line).group()
         if '\t' in match and ' ' in match:
             raise ValueError(f'both tabs and spaces in: {line.strip()}')
         if not indent:
@@ -34,7 +34,7 @@ def determine_indent(text):
                 raise ValueError(f'mixed indentation in: {line.strip()}')
             indent = '\t'
         elif len(match) % len(indent) != 0:
-            indent = len(match) % len(indent)
+            indent = (len(match) % len(indent)) * ' '
     return indent
 
 
@@ -55,6 +55,7 @@ def sort_indented(text, depth):
             result.extend(item)
 
     indent = determine_indent(text)
+    assert indent != ''
     result = []
     items = []
     item = []

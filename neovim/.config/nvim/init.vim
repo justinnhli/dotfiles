@@ -822,8 +822,8 @@ xnoremap  ?      y<Esc>?\V<C-r>"<cr>
 " rebind n/N to always go forwards/backwards (and turns on highlighting) {{{3
 nnoremap  n      :set hlsearch<cr>/<cr>zz
 nnoremap  <S-n>  :set hlsearch<cr>?<cr>zz
-xnoremap  n      :set hlsearch<cr>/<cr>zz
-xnoremap  <S-n>  :set hlsearch<cr>?<cr>zz
+xnoremap  n      :<C-u>set hlsearch<cr>/<cr>zz
+xnoremap  <S-n>  :<C-u>set hlsearch<cr>?<cr>zz
 
 " force the use of the command line window {{{3
 nnoremap  :      :<C-f>i

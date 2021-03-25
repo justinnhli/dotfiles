@@ -38,6 +38,16 @@ def determine_indent(text):
     return indent
 
 
+def min_indent(text, indent):
+    return min(
+        (
+            len(re.findall(indent, line[:re.search(r'[^\s]', line).start()]))
+            for line in text.splitlines() if line.strip()
+        ),
+        default=0,
+    )
+
+
 def get_indent(line, indent):
     count = 0
     while line.startswith(indent):
@@ -46,7 +56,7 @@ def get_indent(line, indent):
     return count
 
 
-def sort_indented(text, depth):
+def sort_indented(text, depth=None):
 
     def add_items(result, items, item):
         if item:
@@ -55,6 +65,8 @@ def sort_indented(text, depth):
             result.extend(item)
 
     indent = determine_indent(text)
+    if depth is None:
+        depth = min_indent(text, indent)
     assert indent != ''
     result = []
     items = []
@@ -79,7 +91,7 @@ def sort_indented(text, depth):
 def main():
     arg_parser = ArgumentParser()
     arg_parser.add_argument('files', nargs='*')
-    arg_parser.add_argument('-d', '--depth', type=int, default=0)
+    arg_parser.add_argument('-d', '--depth', type=int)
     args = arg_parser.parse_args()
     print(sort_indented(
         read_all_inputs(args.files),

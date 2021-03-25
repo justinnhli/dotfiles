@@ -14,7 +14,7 @@ with open(sys.argv[1], encoding='utf-8-sig') as fd:
         advisors = ', '.join([row['Pri. Adviser'], row['Sec. Advisor']])
         advisors = advisors.strip().strip(',')
         students.append('\n'.join([
-            f'{row["Student Pref First Name"]} {row["Student Last Name"]} (advisor(s): {advisors})',
+            f'{row["Student Name"]} (advisor(s): {advisors})',
             f'    PIN: {row["PIN"]}',
             f'    1st registration time: {row["1st Date"]} {row["1st Time"]} PT',
             f'    2nd registration time: {row["2nd Date"]} {row["2nd Time"]} PT',

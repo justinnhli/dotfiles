@@ -1,24 +1,16 @@
 #!/usr/bin/env python3
 
 import re
-import sys
-from argparse import ArgumentParser
+from argparse import ArgumentParser, FileType
+from itertools import chain
 
 
 def read_all_inputs(files):
-    if files:
-        result = []
-        for input_file in files:
-            with open(input_file) as fd:
-                result.append(fd.read())
-        return '\n'.join(
-            line for line in '\n'.join(result).splitlines()
-            if line.strip()
-        )
-    elif not sys.stdin.isatty():
-        return sys.stdin.read()
-    else:
-        return ''
+    contents = [fd.read() for fd in files]
+    return '\n'.join(
+        line for line in '\n'.join(contents).splitlines()
+        if line.strip()
+    )
 
 
 def determine_indent(text):
@@ -90,7 +82,7 @@ def sort_indented(text, depth=None, reverse=False):
 
 def main():
     arg_parser = ArgumentParser()
-    arg_parser.add_argument('files', nargs='*')
+    arg_parser.add_argument('files', nargs='*', type=FileType(), default=[FileType()('-')], help='')
     arg_parser.add_argument('-d', dest='depth', type=int, help='the depth of the indent to sort by')
     arg_parser.add_argument('-r', dest='reverse', action='store_true', help='sort in reverse order')
     args = arg_parser.parse_args()

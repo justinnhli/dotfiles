@@ -56,12 +56,12 @@ def get_indent(line, indent):
     return count
 
 
-def sort_indented(text, depth=None):
+def sort_indented(text, depth=None, reverse=False):
 
     def add_items(result, items, item):
         if item:
             items.append(item)
-        for item in sorted(items, key='\n'.join):
+        for item in sorted(items, key='\n'.join, reverse=reverse):
             result.extend(item)
 
     indent = determine_indent(text)
@@ -92,10 +92,12 @@ def main():
     arg_parser = ArgumentParser()
     arg_parser.add_argument('files', nargs='*')
     arg_parser.add_argument('-d', '--depth', type=int)
+    arg_parser.add_argument('-r', dest='reverse', action='store_true', help='sort in reverse order')
     args = arg_parser.parse_args()
     print(sort_indented(
         read_all_inputs(args.files),
         args.depth,
+        reverse=args.reverse,
     ))
 
 

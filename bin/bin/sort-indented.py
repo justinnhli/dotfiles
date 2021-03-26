@@ -91,12 +91,12 @@ def sort_indented(text, depth=None, reverse=False):
 def main():
     arg_parser = ArgumentParser()
     arg_parser.add_argument('files', nargs='*')
-    arg_parser.add_argument('-d', '--depth', type=int)
+    arg_parser.add_argument('-d', dest='depth', type=int, help='the depth of the indent to sort by')
     arg_parser.add_argument('-r', dest='reverse', action='store_true', help='sort in reverse order')
     args = arg_parser.parse_args()
     print(sort_indented(
         read_all_inputs(args.files),
-        args.depth,
+        depth=args.depth,
         reverse=args.reverse,
     ))
 

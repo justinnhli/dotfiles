@@ -347,11 +347,8 @@ def do_count(journal, args):
         ),
     }
 
-    entries = {
-        title: entry for title, entry
-        in filter_entries(journal, args).items()
-    }
-    if len(entries) == 0:
+    entries = filter_entries(journal, args)
+    if not entries:
         return
     grouped_entries = group_entries(entries, args)
     length_map = {date: len(entry.text.split()) for date, entry in entries.items()}
@@ -438,9 +435,9 @@ def do_list(journal, args):
 @register('-S', 'show entry contents')
 def do_show(journal, args):
     entries = filter_entries(journal, args)
-    text = '\n\n'.join(entry.text for _, entry in sorted(entries.items(), reverse=args.reverse))
-    if not text:
+    if not entries:
         return
+    text = '\n\n'.join(entry.text for _, entry in sorted(entries.items(), reverse=args.reverse))
     if stdout.isatty():
         temp_file = Path(mkstemp(FILE_EXTENSION)[1]).expanduser().resolve()
         with temp_file.open('w') as fd:
@@ -520,6 +517,8 @@ def do_readability(journal, args):
         )
 
     entries = filter_entries(journal, args)
+    if not entries:
+        return
     table = []
     for timespan, titles in group_entries(entries, args):
         text = '\n'.join(journal[title].text for title in titles)

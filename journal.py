@@ -497,16 +497,13 @@ def do_readability(journal, args):
             sentences = paragraph.split('. ')
             sentences = chain(*(sentence.split('! ') for sentence in sentences))
             sentences = chain(*(sentence.split('? ') for sentence in sentences))
-            for sentence in sentences:
-                if len(sentence.split()) > 2:
-                    yield sentence
+            yield from sentences
 
     def strip_punct(text):
-        text = text.replace(' - ', ' ')
         text = text.replace("'", '')
-        text = re.sub('([0-9A-Za-z])-([0-9A-Za-z])', r'\1 \2', text)
-        text = re.sub('[^ 0-9A-Za-z]', '', text)
-        return text
+        text = re.sub('[^ 0-9A-Za-z]', ' ', text)
+        text = re.sub(' +', ' ', text)
+        return text.strip()
 
     def letters_to_syllables(letters, rate):
         return letters / rate

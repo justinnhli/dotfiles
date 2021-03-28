@@ -315,20 +315,20 @@ def do_archive(_, args):
 def do_count(journal, args):
 
     COLUMNS = { # pylint: disable = invalid-name
-        'DATE': (lambda journal, unit, dates, num_words: unit),
-        'POSTS': (lambda journal, unit, dates, num_words: len(dates)),
-        'FREQ': (lambda journal, unit, dates, num_words:
-            f'{((title_to_date(max(dates)) - title_to_date(min(dates))).days + 1) / len(dates):.2f}'
+        'DATE': (lambda journal, unit, titles, num_words: unit),
+        'POSTS': (lambda journal, unit, titles, num_words: len(titles)),
+        'FREQ': (lambda journal, unit, titles, num_words:
+            f'{((title_to_date(max(titles)) - title_to_date(min(titles))).days + 1) / len(titles):.2f}'
         ),
-        'SIZE': (lambda journal, unit, dates, num_words:
-            f'{sum(len(journal[date].text) for date in dates):,d}'
+        'SIZE': (lambda journal, unit, titles, num_words:
+            f'{sum(len(journal[date].text) for date in titles):,d}'
         ),
-        'WORDS': (lambda journal, unit, dates, num_words: f'{sum(num_words):,d}'),
-        'MIN': (lambda journal, unit, dates, num_words: min(num_words)),
-        'MED': (lambda journal, unit, dates, num_words: round(median(num_words))),
-        'MAX': (lambda journal, unit, dates, num_words: max(num_words)),
-        'MEAN': (lambda journal, unit, dates, num_words: round(mean(num_words))),
-        'STDEV': (lambda journal, unit, dates, num_words:
+        'WORDS': (lambda journal, unit, titles, num_words: f'{sum(num_words):,d}'),
+        'MIN': (lambda journal, unit, titles, num_words: min(num_words)),
+        'MED': (lambda journal, unit, titles, num_words: round(median(num_words))),
+        'MAX': (lambda journal, unit, titles, num_words: max(num_words)),
+        'MEAN': (lambda journal, unit, titles, num_words: round(mean(num_words))),
+        'STDEV': (lambda journal, unit, titles, num_words:
             0 if len(num_words) <= 1 else round(stdev(num_words))
         ),
     }
@@ -341,7 +341,7 @@ def do_count(journal, args):
     if len(entries) == 0:
         return
     unit_length = STRING_LENGTHS[args.unit]
-    grouped_timespans = chain(
+    grouped_entries = chain(
         groupby(
             sorted(entries.keys(), reverse=args.reverse),
             (lambda k: k[:unit_length]),
@@ -350,11 +350,11 @@ def do_count(journal, args):
     )
     length_map = {date: len(entry.text.split()) for date, entry in entries.items()}
     table = []
-    for timespan, selected_dates in grouped_timespans:
-        selected_dates = tuple(selected_dates)
-        lengths = tuple(length_map[date] for date in selected_dates)
+    for timespan, titles in grouped_entries:
+        titles = tuple(titles)
+        lengths = tuple(length_map[title] for title in titles)
         table.append([
-            str(func(journal, timespan, selected_dates, lengths))
+            str(func(journal, timespan, titles, lengths))
             for column, func in COLUMNS.items()
         ])
     print_table(table, headers=tuple(COLUMNS.keys()))

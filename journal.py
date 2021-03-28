@@ -520,8 +520,11 @@ def do_readability(journal, args):
         )
 
     entries = filter_entries(journal, args)
-    for title, entry in sorted(entries.items()):
-        print(title, f'{kincaid(entry.text): >6.3f}')
+    table = []
+    for timespan, titles in group_entries(entries, args):
+        text = '\n'.join(journal[title].text for title in titles)
+        table.append((timespan, f'{kincaid(text): >6.3f}'))
+    print_table(table, headers=['ENTRY', 'KINCAID'])
 
 
 @register('list search results in vim :grep format')

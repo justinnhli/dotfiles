@@ -247,6 +247,17 @@ def filter_entries(journal, args, **kwargs):
     )
 
 
+def group_entries(entries, args):
+    unit_length = STRING_LENGTHS[args.unit]
+    return chain(
+        groupby(
+            sorted(entries.keys(), reverse=args.reverse),
+            (lambda k: k[:unit_length]),
+        ),
+        [('all', tuple(entries.keys()))],
+    )
+
+
 def print_table(data, headers=None, gap_size=2):
     if headers is None:
         rows = data
@@ -340,14 +351,7 @@ def do_count(journal, args):
     }
     if len(entries) == 0:
         return
-    unit_length = STRING_LENGTHS[args.unit]
-    grouped_entries = chain(
-        groupby(
-            sorted(entries.keys(), reverse=args.reverse),
-            (lambda k: k[:unit_length]),
-        ),
-        [('all', tuple(entries.keys()))],
-    )
+    grouped_entries = group_entries(entries, args)
     length_map = {date: len(entry.text.split()) for date, entry in entries.items()}
     table = []
     for timespan, titles in grouped_entries:

@@ -236,7 +236,10 @@ class Journal:
 
 
 def title_to_date(title):
-    return datetime.strptime(title[:DATE_LENGTH], '%Y-%m-%d')
+    if DATE_REGEX.fullmatch(title):
+        return datetime.strptime(title[:DATE_LENGTH], '%Y-%m-%d')
+    else:
+        return datetime.today()
 
 
 def filter_entries(journal, args, **kwargs):
@@ -252,7 +255,7 @@ def group_entries(entries, args):
     return chain(
         groupby(
             sorted(entries.keys(), reverse=args.reverse),
-            (lambda k: k[:unit_length]),
+            (lambda k: k[:unit_length] if DATE_REGEX.fullmatch(k) else 'other'),
         ),
         [('all', tuple(entries.keys()))],
     )
@@ -347,7 +350,6 @@ def do_count(journal, args):
     entries = {
         title: entry for title, entry
         in filter_entries(journal, args).items()
-        if DATE_REGEX.fullmatch(title)
     }
     if len(entries) == 0:
         return

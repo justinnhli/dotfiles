@@ -288,7 +288,7 @@ def log_error(message):
 # operations
 
 OPERATIONS = []
-Option = namedtuple('Option', 'flag, desc, function')
+Option = namedtuple('Option', 'priority, flag, desc, function')
 
 
 def register(*args):
@@ -297,11 +297,13 @@ def register(*args):
         assert 1 <= len(args) <= 2
         assert function.__name__.startswith('do_')
         if len(args) == 1:
-            flag = ''
+            priority = 2
+            flag = '--' + function.__name__[3:].replace("_", "-")
             desc = args[0]
         elif len(args) == 2:
+            priority = 1
             flag, desc = args
-        OPERATIONS.append(Option(flag, desc, function))
+        OPERATIONS.append(Option(priority, flag, desc, function))
         return function
 
     return wrapped
@@ -580,25 +582,14 @@ def build_arg_parser(arg_parser):
     )
 
     group = arg_parser.add_argument_group('OPERATIONS').add_mutually_exclusive_group(required=True)
-    for flag, desc, function in sorted(OPERATIONS):
-        if flag:
-            group.add_argument(
-                flag,
-                dest='operation',
-                action='store_const',
-                const=function,
-                help=desc,
-            )
-    for flag, desc, function in sorted(OPERATIONS, key=(lambda option: option.function.__name__)):
-        if not flag:
-            flag = '--' + function.__name__[3:].replace("_", "-")
-            group.add_argument(
-                flag,
-                dest='operation',
-                action='store_const',
-                const=function,
-                help=desc,
-            )
+    for _, flag, desc, function in sorted(OPERATIONS, key=(lambda option: (option.priority, option.flag))):
+        group.add_argument(
+            flag,
+            dest='operation',
+            action='store_const',
+            const=function,
+            help=desc,
+        )
 
     group = arg_parser.add_argument_group('INPUT OPTIONS')
     group.add_argument(

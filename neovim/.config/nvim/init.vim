@@ -1053,25 +1053,27 @@ endfunction
 
 " unclassified {{{2
 augroup justinnhli
+	" automatically reload init.vim
+	autocmd  BufWritePost   init.vim  source $MYVIMRC
 	" keep windows equal in size
-	autocmd  VimResized          *       normal! <C-w>=
+	autocmd  VimResized     *         normal! <C-w>=
 	" restore cursor position
-	autocmd  BufReadPost         *       if line("'\"") > 1 && line("'\"") <= line('$') | execute 'normal! g`"' | endif
+	autocmd  BufReadPost    *         if line("'\"") > 1 && line("'\"") <= line('$') | execute 'normal! g`"' | endif
 	" disable audio bell in MacVim
-	autocmd  GUIEnter            *       set visualbell t_vb=
+	autocmd  GUIEnter       *         set visualbell t_vb=
 	" automatically leave insert mode after 'updatetime' milliseconds
-	autocmd  CursorHoldI         *       stopinsert
-	autocmd  InsertEnter         *       let g:updaterestore=&updatetime | set updatetime=5000
-	autocmd  InsertLeave         *       let &updatetime=g:updaterestore
+	autocmd  CursorHoldI    *         stopinsert
+	autocmd  InsertEnter    *         let g:updaterestore=&updatetime | set updatetime=5000
+	autocmd  InsertLeave    *         let &updatetime=g:updaterestore
 	" easily cancel the command line window
-	autocmd  CmdwinEnter         *       nnoremap <buffer> <C-c> :quit<cr>
-	autocmd  CmdwinEnter         *       inoremap <buffer> <C-c> <Esc>
+	autocmd  CmdwinEnter    *         nnoremap <buffer> <C-c> :quit<cr>
+	autocmd  CmdwinEnter    *         inoremap <buffer> <C-c> <Esc>
 	" bound scope of search to the original window
-	autocmd  WinLeave            *       let w:search_on = &hlsearch | let w:last_search = @/
-	autocmd  WinEnter            *       if exists('w:search_on') && w:search_on | let @/ = w:last_search | else | set nohlsearch | endif
+	autocmd  WinLeave       *         let w:search_on = &hlsearch | let w:last_search = @/
+	autocmd  WinEnter       *         if exists('w:search_on') && w:search_on | let @/ = w:last_search | else | set nohlsearch | endif
 	" disable spellcheck in virtual terminal
 	if exists('##TermOpen')
-		autocmd  TermOpen        *       setlocal nonumber nospell scrollback=-1
-		autocmd  TermClose       *       call feedkeys("i")
+		autocmd  TermOpen   *         setlocal nonumber nospell scrollback=-1
+		autocmd  TermClose  *         call feedkeys("i")
 	endif
 augroup END

@@ -975,7 +975,7 @@ if exists(':terminal')
 	augroup END
 endif
 
-" protect large files (>10M) from sourcing and other overhead.
+" reduce large files overhead {{{2
 function s:HandleLargeFiles()
 	" define large as > 10MB
 	let g:LargeFile = 1024 * 1024 * 10
@@ -995,6 +995,36 @@ endfunction
 augroup justinnhli_large_files
 	autocmd!
 	autocmd  BufReadPre  *  call <SID>HandleLargeFiles()
+augroup END
+
+" automatically leave insert mode {{{2
+augroup justinnhli_autoleave_insert
+	autocmd  CursorHoldI    *         stopinsert
+	autocmd  InsertEnter    *         let g:updaterestore=&updatetime | set updatetime=5000
+	autocmd  InsertLeave    *         let &updatetime=g:updaterestore
+augroup END
+
+" miscellaneous {{{2
+augroup justinnhli_miscellaneous
+	" automatically reload init.vim
+	autocmd  BufWritePost   init.vim  source $MYVIMRC
+	" keep windows equal in size
+	autocmd  VimResized     *         normal! <C-w>=
+	" restore cursor position
+	autocmd  BufReadPost    *         if line("'\"") > 1 && line("'\"") <= line('$') | execute 'normal! g`"' | endif
+	" disable audio bell in MacVim
+	autocmd  GUIEnter       *         set visualbell t_vb=
+	" easily cancel the command line window
+	autocmd  CmdwinEnter    *         nnoremap <buffer> <C-c> :quit<cr>
+	autocmd  CmdwinEnter    *         inoremap <buffer> <C-c> <Esc>
+	" bound scope of search to the original window
+	autocmd  WinLeave       *         let w:search_on = &hlsearch | let w:last_search = @/
+	autocmd  WinEnter       *         if exists('w:search_on') && w:search_on | let @/ = w:last_search | else | set nohlsearch | endif
+	" disable spellcheck in virtual terminal
+	if exists('##TermOpen')
+		autocmd  TermOpen   *         setlocal nonumber nospell scrollback=-1
+		autocmd  TermClose  *         call feedkeys("i")
+	endif
 augroup END
 
 " user functions {{{1
@@ -1048,32 +1078,3 @@ function UnicodeToAscii()
 	" specials
 	%s/\%uFFFC//eg " object replacement character
 endfunction
-
-" unclassified {{{1
-
-" unclassified {{{2
-augroup justinnhli
-	" automatically reload init.vim
-	autocmd  BufWritePost   init.vim  source $MYVIMRC
-	" keep windows equal in size
-	autocmd  VimResized     *         normal! <C-w>=
-	" restore cursor position
-	autocmd  BufReadPost    *         if line("'\"") > 1 && line("'\"") <= line('$') | execute 'normal! g`"' | endif
-	" disable audio bell in MacVim
-	autocmd  GUIEnter       *         set visualbell t_vb=
-	" automatically leave insert mode after 'updatetime' milliseconds
-	autocmd  CursorHoldI    *         stopinsert
-	autocmd  InsertEnter    *         let g:updaterestore=&updatetime | set updatetime=5000
-	autocmd  InsertLeave    *         let &updatetime=g:updaterestore
-	" easily cancel the command line window
-	autocmd  CmdwinEnter    *         nnoremap <buffer> <C-c> :quit<cr>
-	autocmd  CmdwinEnter    *         inoremap <buffer> <C-c> <Esc>
-	" bound scope of search to the original window
-	autocmd  WinLeave       *         let w:search_on = &hlsearch | let w:last_search = @/
-	autocmd  WinEnter       *         if exists('w:search_on') && w:search_on | let @/ = w:last_search | else | set nohlsearch | endif
-	" disable spellcheck in virtual terminal
-	if exists('##TermOpen')
-		autocmd  TermOpen   *         setlocal nonumber nospell scrollback=-1
-		autocmd  TermClose  *         call feedkeys("i")
-	endif
-augroup END

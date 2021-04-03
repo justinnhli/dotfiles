@@ -3,8 +3,8 @@ syntax match literal '\<[0-9]\+\>'
 syntax match literal '"[^"]*"'
 highlight default link literal Number
 
-syntax keyword keyword class func if else while ret print str int bool true false
-syntax keyword keyword var nextgroup=name,upper skipwhite
+syntax keyword keyword if else while ret print
+syntax keyword keyword var int func class obj nextgroup=name,upper skipwhite
 highlight default link keyword Keyword
 
 syntax match comment '#.*' contains=fixme

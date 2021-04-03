@@ -170,7 +170,7 @@ def treeline_diff(old_treelines, new_treelines):
         new_treeline = new_treelines[new_index]
         if symbol == '?':
             continue
-        elif symbol == ' ':
+        if symbol == ' ':
             if section_start:
                 ignore_min = -1
                 ignore_max = -1

@@ -42,7 +42,7 @@ def str_to_date(string, start=True):
             f'argument "{string}" should be in format YYYY[-MM[-DD]]'
         )
     except ValueError as err:
-        raise ArgumentTypeError(err)
+        raise ArgumentTypeError from err
 
 
 def parse_args(args):

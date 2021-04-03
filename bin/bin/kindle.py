@@ -23,7 +23,7 @@ def _extract_text(soup):
 def extract_highlights(soup):
     metadata = soup.select('.kp-notebook-metadata')[0]
     location = re.search(
-        'Location:\s*([0-9, ]*)',
+        r'Location:\s*([0-9, ]*)',
         _extract_text(metadata),
     )
     if not location:

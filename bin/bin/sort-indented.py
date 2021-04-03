@@ -2,7 +2,6 @@
 
 import re
 from argparse import ArgumentParser, FileType
-from itertools import chain
 
 
 def read_all_inputs(files):

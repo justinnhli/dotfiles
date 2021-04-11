@@ -898,6 +898,7 @@ command  -nargs=1 -complete=file  OpenExternal  :call <SID>OpenExternal(<f-args>
 
 " quickfix and location windows {{{2
 augroup justinnhli_autoset_grep_mappings
+	autocmd!
 	" open the location window after a quickfix command
 	autocmd  QuickFixCmdPost  l*  nested lwindow
 	" close the location window if it's the only window in a tab
@@ -926,6 +927,7 @@ function s:AutosetGrepMappings()
 	endif
 endfunction
 augroup justinnhli_autoset_grep_mappings
+	autocmd!
 	autocmd  FileType  *  call <SID>AutosetGrepMappings()
 augroup END
 
@@ -939,6 +941,7 @@ function s:CreateIntermediateDirectories(file, buf)
 	endif
 endfunction
 augroup justinnhli_create_directories
+	autocmd!
 	autocmd  BufWritePre  *  :call <SID>CreateIntermediateDirectories(expand('<afile>'), +expand('<abuf>'))
 augroup END
 
@@ -961,6 +964,7 @@ function s:LoadFiletypeTemplate()
 	endif
 endfunction
 augroup justinnhli_create_directories
+	autocmd!
 	autocmd  BufNewFile  *  call <SID>LoadFiletypeTemplate()
 augroup END
 
@@ -970,6 +974,7 @@ if exists(':terminal')
 		return !empty(a:dir) && isdirectory(a:dir)
 	endfunction
 	augroup justinnhli_open_directories
+	    autocmd!
 		autocmd  VimEnter  *  silent! autocmd! FileExplorer *
 		autocmd  BufEnter  *  if s:IsDir(expand('%')) | call <SID>StartTerminal(['silent! lcd ' .. expand('%:p:h')], '') | endif
 	augroup END
@@ -999,6 +1004,7 @@ augroup END
 
 " automatically leave insert mode {{{2
 augroup justinnhli_autoleave_insert
+	autocmd!
 	autocmd  CursorHoldI    *         stopinsert
 	autocmd  InsertEnter    *         let g:updaterestore=&updatetime | set updatetime=5000
 	autocmd  InsertLeave    *         let &updatetime=g:updaterestore
@@ -1006,6 +1012,7 @@ augroup END
 
 " miscellaneous {{{2
 augroup justinnhli_miscellaneous
+	autocmd!
 	" automatically reload init.vim
 	autocmd  BufWritePost   init.vim  source $MYVIMRC
 	" keep windows equal in size

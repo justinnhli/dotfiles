@@ -386,12 +386,12 @@ if exists(':terminal')
 endif
 
 " open file under cursor {{{3
-nnoremap  <leader>we.  gf
-nnoremap  <leader>wh.  :leftabove vertical wincmd f<cr>
-nnoremap  <leader>wj.  :rightbelow wincmd f<cr>
-nnoremap  <leader>wk.  :leftabove wincmd f<cr>
-nnoremap  <leader>wl.  :rightbelow vertical wincmd f<cr>
-nnoremap  <leader>t.   <C-w>gf
+nnoremap  <leader>we.  :execute 'edit ' .. expand('<cWORD>')<cr>
+nnoremap  <leader>wh.  :execute 'leftabove vertical ' .. expand('<cWORD>')<cr>
+nnoremap  <leader>wj.  :execute 'rightbelow ' .. expand('<cWORD>')<cr>
+nnoremap  <leader>wk.  :execute 'leftabove ' .. expand('<cWORD>')<cr>
+nnoremap  <leader>wl.  :execute 'rightbelow vertical ' .. expand('<cWORD>')<cr>
+nnoremap  <leader>t.   :execute 'tabnew ' .. expand('<cWORD>')<cr>
 xnoremap  <leader>we.  gf
 xnoremap  <leader>wh.  :<C-u>leftabove vertical wincmd f<cr>
 xnoremap  <leader>wj.  :<C-u>rightbelow wincmd f<cr>

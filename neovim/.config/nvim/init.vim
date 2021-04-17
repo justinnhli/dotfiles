@@ -570,7 +570,7 @@ function s:OpenExternal(arg)
 		let l:target = expand(l:target)
 	elseif l:target =~ '[a-zA-Z]\+[0-9]\{4\}[A-Z][a-zA-Z]*'
 		" research paper
-		let l:paper_id = substitute(l:target, '^.\{-}\([a-zA-Z]\+[0-9]\{4\}[A-Z][a-zA-Z]*\).*$', '\1', '')
+		let l:paper_id = substitute(l:target, '^.\{-}\([a-zA-Z]\+[0-9]\{4\}[A-Z][0-9A-Za-z]*\).*$', '\1', '')
 		let l:target = expand(system('find ' .. g:justinnhli_library_path .. ' -name ' .. l:paper_id .. '.pdf'))
 	else
 		let l:target = ''

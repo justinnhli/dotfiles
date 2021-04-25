@@ -897,7 +897,7 @@ command!  -nargs=1 -complete=file  OpenExternal  :call <SID>OpenExternal(<f-args
 " autocmds {{{1
 
 " quickfix and location windows {{{2
-augroup justinnhli_autoset_grep_mappings
+augroup justinnhli_quickfix
 	autocmd!
 	" open the location window after a quickfix command
 	autocmd  QuickFixCmdPost  l*  nested lwindow

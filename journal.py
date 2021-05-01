@@ -262,18 +262,16 @@ def group_entries(entries, args):
 
 
 def print_table(data, headers=None, gap_size=2):
-    if headers is None:
-        rows = data
-    else:
-        rows = [headers] + data
-    widths = []
-    for col in range(len(data[0])):
-        widths.append(max(len(row[col]) for row in rows))
+    rows = data
+    if headers is not None:
+        rows = [headers] + rows
+    widths = [max(len(row[col]) for row in rows) for col in range(len(data[0]))]
     gap = gap_size * ' '
     if headers:
-        print(gap.join(col.center(widths[i]) for i, col in enumerate(headers)))
+        print(gap.join(col.center(width) for width, col in zip(widths, headers)))
         print(gap.join(width * '-' for width in widths))
-    print('\n'.join(gap.join(col.rjust(widths[i]) for i, col in enumerate(row)) for row in data))
+    for row in data:
+        print(gap.join(col.rjust(width) for width, col in zip(widths, row)))
 
 
 def log_error(message):

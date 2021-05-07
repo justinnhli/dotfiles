@@ -74,8 +74,8 @@ fi
 # sqlite
 export SQLITE_HISTORY="$XDG_DATA_HOME/sqlite_history"
 
-if [ -f "$HOME/.dot_secrets/bashrc" ]; then
-	source "$HOME/.dot_secrets/bashrc"
+if [ -f "$HOME/.secrets/.bashrc" ]; then
+	source "$HOME/.secrets/.bashrc"
 fi
 
 # clean up the paths

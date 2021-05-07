@@ -1,5 +1,4 @@
 .etc/etc/wpa_supplicant/
-dot_secrets
 filezilla/.config/filezilla/*
 !filezilla/.config/filezilla/sitemanager.xml
 ipython/.config/ipython/*

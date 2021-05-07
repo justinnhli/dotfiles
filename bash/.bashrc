@@ -47,6 +47,9 @@ export IPYTHONDIR="$XDG_CONFIG_HOME/ipython"
 export NLTK_DATA="$HOME/.local/share/nltk"
 # npm
 export NPM_CONFIG_USERCONFIG="$XDG_CONFIG_HOME/npm/npmrc"
+# pass
+export PASSWORD_STORE_DIR="$HOME/.secrets/.password-store"
+export PASSWORD_STORE_CLIP_TIME=20
 # python
 export PYTHONIOENCODING='utf-8'
 if command -v python3 >/dev/null 2>&1 && python3 -c 'import readline' >/dev/null 2>&1; then

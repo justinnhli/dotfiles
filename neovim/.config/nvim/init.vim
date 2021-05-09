@@ -1094,3 +1094,38 @@ function UnicodeToAscii()
 	" specials
 	%s/\%uFFFC//eg " object replacement character
 endfunction
+
+" FloatOutput {{{3
+if exists('*nvim_create_buf')
+    function FloatOutput(cmd)
+        " get the output to display
+        let output = [''] + systemlist(a:cmd)
+        let output = map(output, '" " .. v:val')
+        " compute window properties
+        let col = wincol() - (winwidth(0) / 2)
+        let row = winline() - (winheight(0) / 2)
+        if row < 0
+            let row_offset = 1
+            let col_offset = (col < 0 ? 0 : 1)
+            let anchor = (col < 0 ? 'NW' : 'NE')
+        else
+            let row_offset = 0
+            let col_offset = (col < 0 ? 0 : 1)
+            let anchor = (col < 0 ? 'SW' : 'SE')
+        endif
+        " create the window
+        let buf = nvim_create_buf(v:false, v:true)
+        call nvim_buf_set_lines(buf, 0, -1, v:true, output)
+        let opts = {
+            \ 'relative': 'cursor',
+            \ 'width': max(map(output, 'len(v:val)')) + 2,
+            \ 'height': len(output) + 1,
+            \ 'col': col_offset, 'row': row_offset,
+            \ 'anchor': anchor,
+            \ 'style': 'minimal',
+        \}
+        let win = nvim_open_win(buf, 0, opts)
+        " create a remap to close the window
+        execute 'nnoremap  <buffer>  <cr>  :call nvim_win_close(' .. win .. ', v:false) \| nunmap <buffer> <lt>cr><cr>'
+    endfunction
+endif

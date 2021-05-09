@@ -7,10 +7,10 @@ update_dot_files() {
 }
 
 # paths
-export PATH="/usr/local/bin:/usr/local/opt/sqlite/bin:$PATH"
-export PATH="$HOME/Dropbox/bin:$HOME/bin:$PATH"
-export PATH="$(find "$HOME/git" -maxdepth 2 -type f -perm -100 -exec dirname {} ';' 2>/dev/null | sort -f | uniq | tr '\n' ':' | sed 's/:$//'):$PATH"
-export PATH="$(find "$HOME/Dropbox/projects" -maxdepth 2 -type f -perm -100 -exec dirname {} ';' 2>/dev/null | sort -f | uniq | tr '\n' ':' | sed 's/:$//'):$PATH"
+PATH="/usr/local/bin:/usr/local/opt/sqlite/bin:$PATH"
+PATH="$HOME/Dropbox/bin:$HOME/bin:$PATH"
+PATH="$(find "$HOME/git" -maxdepth 2 -type f -perm -100 -exec dirname {} ';' 2>/dev/null | sort -f | uniq | tr '\n' ':' | sed 's/:$//'):$PATH"
+PATH="$(find "$HOME/Dropbox/projects" -maxdepth 2 -type f -perm -100 -exec dirname {} ';' 2>/dev/null | sort -f | uniq | tr '\n' ':' | sed 's/:$//'):$PATH"
 export PYTHONPATH="$HOME/Dropbox/projects:$HOME/git"
 
 # basic environment
@@ -82,8 +82,8 @@ if [ -f "$HOME/.secrets/.bashrc" ]; then
 fi
 
 # clean up the paths
-export PATH="$(echo "$PATH" | sed 's#//#/#g')"
-export PYTHONPATH="$(echo "$PYTHONPATH" | sed 's#//#/#g')"
+PATH="${PATH//\/\//\/}"
+export PYTHONPATH="${PYTHONPATH//\/\//\/}"
 
 # prompt
 prompt_command_fn() {
@@ -114,7 +114,7 @@ if command -v scons >/dev/null 2>&1 && command -v python3 >/dev/null 2>&1; then
 	alias scons="scons --python=\$(command -v python3)"
 fi
 if [ -d "$HOME/git/Soar" ]; then
-	alias soar="$HOME/git/Soar/out/testcli"
+	alias soar='$HOME/git/Soar/out/testcli'
 fi
 if command -v tmux >/dev/null 2>&1; then
 	alias tmux='tmux -f $XDG_CONFIG_HOME/tmux/tmux.conf'
@@ -126,14 +126,14 @@ if command -v valgrind >/dev/null 2>&1; then
 	alias valgrind='valgrind --dsymutil=yes --leak-check=yes --track-origins=yes'
 fi
 if command -v wget >/dev/null 2>&1; then
-	alias wget="wget --hsts-file='$XDG_CACHE_HOME/wget-hsts'"
+	alias wget='wget --hsts-file="$XDG_CACHE_HOME/wget-hsts"'
 fi
 if command -v yapf >/dev/null 2>&1; then
-	alias yapf="yapf --style=$HOME/.config/yapf/style"
+	alias yapf='yapf --style="$HOME/.config/yapf/style"'
 fi
 
-alias vi="$VISUAL"
-alias vim="$VISUAL"
+alias vi='$VISUAL'
+alias vim='$VISUAL'
 
 case "$(uname)" in
 	'Linux')
@@ -182,8 +182,6 @@ if command -v python3 >/dev/null 2>&1; then
 			# if the link is relative, prepend the original
 			if [[ "$newpy" == .* ]]; then
 				py="$(dirname "$py")/$newpy"
-			else
-				py="$py"
 			fi
 		fi
 		$py -m venv "$PYTHON_VENV_HOME/$1"
@@ -202,7 +200,7 @@ if command -v python3 >/dev/null 2>&1; then
 		if [ -f "$PYTHON_VENV_HOME/$1/bin/activate" ]; then
 			source "$PYTHON_VENV_HOME/$1/bin/activate"
 		else
-			read -p "venv '$1' not found; do you want to create it (Y/n)? " response
+			read -rp "venv '$1' not found; do you want to create it (Y/n)? " response
 			if [[ ! $response =~ ^[Nn]$ ]]; then
 				mkvenv "$@"
 			fi
@@ -222,7 +220,7 @@ if command -v python3 >/dev/null 2>&1; then
 	}
 	rmvenv() {
 		for venv in "$@"; do
-			rm -rf "$PYTHON_VENV_HOME/$venv"
+			rm -rf "${PYTHON_VENV_HOME:?}/$venv"
 		done
 	}
 	lsvenv() {
@@ -233,25 +231,25 @@ fi
 # nvim terminal
 if [ "$NVIM_LISTEN_ADDRESS" != '' ]; then
 	unset MANPAGER
-	alias :="\$(command -v nvimcmd)"
-	alias vi="\$(command -v nvimcmd) tabnew"
-	alias vim="\$(command -v nvimcmd) tabnew"
-	alias nvim="\$(command -v nvimcmd) tabnew"
+	alias :='$(command -v nvimcmd)'
+	alias vi='$(command -v nvimcmd) tabnew'
+	alias vim='$(command -v nvimcmd) tabnew'
+	alias nvim='$(command -v nvimcmd) tabnew'
 	workon neovim
 fi
 
 # PIM related settings
 if [ -d "$HOME/pim" ]; then
-	pim_dir="$HOME/pim/"
-	alias vijj="$VISUAL -c 'normal 1 JJ' -c 'tabonly'"
-	alias vijl="$VISUAL -c 'normal 1 JL' -c 'tabonly'"
-	alias vijr="$VISUAL -c 'normal 1 JR' -c 'tabonly'"
-	alias vijn="$VISUAL -c 'normal 1 JN' -c 'tabonly'"
-	alias vijd="$VISUAL -c 'normal 1 JD' -c 'tabonly'"
-	alias vijc="$VISUAL -c 'normal 1 JC' -c 'tabonly'"
-	alias vijp="$VISUAL -c 'normal 1 JP' -c 'tabonly'"
+	pim_dir="$HOME/pim"
+	alias vijj='$VISUAL -c "normal 1 JJ" -c tabonly'
+	alias vijl='$VISUAL -c "normal 1 JL" -c tabonly'
+	alias vijr='$VISUAL -c "normal 1 JR" -c tabonly'
+	alias vijn='$VISUAL -c "normal 1 JN" -c tabonly'
+	alias vijd='$VISUAL -c "normal 1 JD" -c tabonly'
+	alias vijc='$VISUAL -c "normal 1 JC" -c tabonly'
+	alias vijp='$VISUAL -c "normal 1 JP" -c tabonly'
 	if command -v journal.py >/dev/null 2>&1; then
-		alias jrnl="journal.py $(ls $pim_dir/journal/[a-z-]*.journal 2>/dev/null | grep -v '[ ()]' | sed 's/^/--ignore /' | tr '\n' ' ')"
+		alias jrnl="journal.py \$(find $pim_dir/journal/ -maxdepth 1 -name '[a-z]*.journal' | sed 's/^/--ignore /' | tr '\n' ' ')"
 	fi
 fi
 
@@ -259,17 +257,17 @@ fi
 _generic_completion() {
 	# build up the context
 	local context="${COMP_WORDS[0]}"
-	if [ $COMP_CWORD -gt 0 ]; then
+	if [ "$COMP_CWORD" -gt 0 ]; then
 		for i in $(seq "$COMP_CWORD"); do
 			context="$context ${COMP_WORDS[i]}"
 		done
 	fi
 	# call script
-	COMPREPLY=( $($HOME/.bash_completion.d/shellscrape.py "$(pwd)" "$context") )
+	COMPREPLY=( $("$HOME"/.bash_completion.d/shellscrape.py "$(pwd)" "$context") )
 }
 
 if command -v python3 >/dev/null 2>&1 && [ -f "$HOME/.bash_completion.d/shellscrape.py" ]; then
-	for program in $($HOME/.bash_completion.d/shellscrape.py); do
+	for program in $("$HOME"/.bash_completion.d/shellscrape.py); do
 		if type "$program" >/dev/null 2>&1; then
 			complete -o default -F _generic_completion "$program"
 		fi

@@ -103,7 +103,7 @@ function! s:get_git_branch(path)
 	let l:cmd .= ' && '
 	let l:cmd .= 'git symbolic-ref --quiet --short HEAD'
 	let l:cmd .= ' ) 2>/dev/null'
-	let l:gitoutput = trim(system(l:cmd))
+	let l:gitoutput = substitute(system(l:cmd), '\n\+$', '', '')
 	if len(l:gitoutput) == 0
 		return ''
 	else

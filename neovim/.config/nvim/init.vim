@@ -2,7 +2,7 @@
 
 " preamble {{{1
 
-" preamble {{{2
+" preamble {{{3
 set nocompatible " neovim default
 
 let g:python3_host_prog = $PYTHON_VENV_HOME .. '/neovim/bin/python3'
@@ -15,7 +15,7 @@ let g:justinnhli_library_path=expand('~/papers')
 
 " vimplug {{{1
 
-" vimplug {{{2
+" vimplug {{{3
 if has('nvim')
 	"auto-install vim-plug
 	let s:plug_path = fnamemodify($MYVIMRC, ':p:h') .. '/autoload/plug.vim'
@@ -53,7 +53,7 @@ endif
 
 " settings {{{1
 
-" setting functions {{{2
+" setting functions {{{3
 function BuildTabLine()
 	let l:tabline = ''
 	let s:cur_tab = tabpagenr()
@@ -129,7 +129,7 @@ function GetStatusLineFile()
 	return l:branch .. ' ' .. l:pwd .. ' ' .. l:filepath
 endfunction
 
-" settings {{{2
+" settings {{{3
 filetype plugin on
 filetype indent on
 if has('syntax')
@@ -271,53 +271,53 @@ endif
 
 " map leader {{{1
 
-" map leader {{{2
+" map leader {{{3
 mapclear
 mapclear!
 let g:mapleader = ' '
 
 " plugin settings {{{1
 
-" clever f {{{2
+" clever f {{{3
 let g:clever_f_fix_key_direction = 1
 let g:clever_f_timeout_ms = 5000
 
-" fugitive {{{2
+" fugitive {{{3
 nnoremap  <leader>gg  :Git<space>
 nnoremap  <leader>gb  :Git blame<cr>
 nnoremap  <leader>gc  :Git commit -m "
 nnoremap  <leader>gd  :Gdiffsplit<cr>
 nnoremap  <leader>gp  :Git push<cr>
 
-" goyo {{{2
+" goyo {{{3
 nnoremap  <leader><leader>g  :Goyo<cr>
 
-" gutentags {{{2
+" gutentags {{{3
 let g:gutentags_ctags_tagfile = '.tags'
 function! ShouldEnableGutentags(path) abort
 	return fnamemodify(a:path, ':e') != 'journal'
 endfunction
 let g:gutentags_enabled_user_func = 'ShouldEnableGutentags'
 
-" journal {{{2
+" journal {{{3
 let g:jrnl_ignore_files = split(globpath('~/journal', '*.journal'), '\n')
 augroup justinnhli_journal
 	autocmd  FileType  journal  nnoremap  <buffer>  <leader>j  q:iJournal -S
 	autocmd  FileType  journal  xnoremap  <buffer>  <leader>j  "zyq:iJournal -S "<C-r>z"
 augroup END
 
-" netrw {{{2
+" netrw {{{3
 let g:netrw_browse_split = 3
 let g:netrw_liststyle = 3
 let g:netrw_list_hide = '\.swp$,\.un\~$'
 let g:netrw_winsize = 50
 
-" undotree {{{2
+" undotree {{{3
 nnoremap  <leader><leader>u  :UndotreeToggle<cr>
 
 " colorscheme {{{1
 
-" colorscheme {{{2
+" colorscheme {{{3
 let g:colorscheme = 'iceberg'
 try
 	execute 'colorscheme ' .. g:colorscheme
@@ -427,12 +427,16 @@ xnoremap  <leader>wkf  "zy:<C-u>leftabove new<cr>:lvimgrep /<C-r>z/g **/*<cr>
 xnoremap  <leader>wlf  "zy:<C-u>rightbelow vnew<cr>:lvimgrep /<C-r>z/g **/*<cr>
 xnoremap  <leader>tf   "zy:<C-u>tabnew<cr>:lvimgrep /<C-r>z/g **/*<cr>
 
-" window manipulation functions {{{3
+" window manipulation functions {{{2
+
+" duplicate buffer {{{3
 function s:DuplicateBuffer()
 	let l:bufnum = bufnr('%')
 	tabnew
 	execute 'buffer ' .. l:bufnum
 endfunction
+
+" maximize window {{{3
 function s:MaximizeWindow()
 	if !exists('w:maximized') || w:maximized == 0
 		let w:maximized = 1
@@ -448,12 +452,16 @@ function s:MaximizeWindow()
 		autocmd! justinnhli_maximize_window
 	endif
 endfunction
+
+" close right tabs {{{3
 function s:CloseRightTabs()
 	let l:cur = tabpagenr()
 	while l:cur < tabpagenr('$')
 		execute 'tabclose ' .. (l:cur + 1)
 	endwhile
 endfunction
+
+" move to relative tab {{{3
 function s:MoveToRelativeTab(n)
 	let l:num_tabs = tabpagenr('$')
 	let l:cur_tab = tabpagenr()
@@ -726,16 +734,21 @@ nnoremap  <expr>  }  foldclosed(search('^$', 'Wn')) == -1 ? "}" : "}j}"
 nnoremap  <expr>  {  foldclosed(search('^$', 'Wnb')) == -1 ? "{" : "{k{"
 
 " quickfix/location functions {{{2
+
+" next quickfix/location {{{3
 function s:NextQuickFixOrLocation()
 	lopen
 	lnext
 endfunction
+" prev quickfix/location {{{3
 function s:PrevQuickFixOrLocation()
 	lopen
 	lprev
 endfunction
 
 " quickfix/location mappings {{{2
+
+" move to next quickfix/location {{{3
 " TODO turn into autocmd that automatically maps to quickfix and location
 " the event is QuickFixCmdPost
 " check if location list is open with if get(getloclist(0, {'winid':0}), 'winid', 0)
@@ -892,11 +905,12 @@ endif
 
 " commands {{{1
 
+" open external {{{3
 command!  -nargs=1 -complete=file  OpenExternal  :call <SID>OpenExternal(<f-args>)
 
 " autocmds {{{1
 
-" quickfix and location windows {{{2
+" quickfix and location windows {{{3
 augroup justinnhli_quickfix
 	autocmd!
 	" open the location window after a quickfix command
@@ -909,7 +923,7 @@ augroup justinnhli_quickfix
 	autocmd  TextChanged      *   silent! lclose | silent! cclose
 augroup END
 
-" change grep {{{2
+" change grep {{{3
 function s:AutosetGrepMappings()
 	if &grepprg !~# '^grep -n '
 		nnoremap  <buffer>  <leader>wef  q:isilent lgrep<space>
@@ -931,7 +945,7 @@ augroup justinnhli_autoset_grep_mappings
 	autocmd  FileType  *  call <SID>AutosetGrepMappings()
 augroup END
 
-" create intermediate directories {{{2
+" create intermediate directories {{{3
 function s:CreateIntermediateDirectories(file, buf)
 	if empty(getbufvar(a:buf, '&buftype')) && a:file!~#'\v^\w+\:\/'
 		let l:dir=fnamemodify(a:file, ':h')
@@ -945,7 +959,7 @@ augroup justinnhli_create_directories
 	autocmd  BufWritePre  *  :call <SID>CreateIntermediateDirectories(expand('<afile>'), +expand('<abuf>'))
 augroup END
 
-" load filetype templates {{{2
+" load filetype templates {{{3
 function s:LoadFiletypeTemplate()
 	let l:templates_file = fnamemodify($MYVIMRC, ':p:h') .. '/templates/' .. &filetype
 	if filereadable(l:templates_file)
@@ -963,7 +977,7 @@ augroup justinnhli_create_directories
 	autocmd  BufNewFile  *  call <SID>LoadFiletypeTemplate()
 augroup END
 
-" open directories in terminal {{{2
+" open directories in terminal {{{3
 if exists(':terminal')
 	function s:IsDir(dir) abort
 		return !empty(a:dir) && isdirectory(a:dir)
@@ -975,7 +989,7 @@ if exists(':terminal')
 	augroup END
 endif
 
-" reduce large files overhead {{{2
+" reduce large files overhead {{{3
 function s:HandleLargeFiles()
 	" define large as > 10MB
 	let g:LargeFile = 1024 * 1024 * 10
@@ -997,7 +1011,7 @@ augroup justinnhli_large_files
 	autocmd  BufReadPre  *  call <SID>HandleLargeFiles()
 augroup END
 
-" automatically leave insert mode {{{2
+" automatically leave insert mode {{{3
 augroup justinnhli_autoleave_insert
 	autocmd!
 	autocmd  CursorHoldI    *         stopinsert
@@ -1005,7 +1019,7 @@ augroup justinnhli_autoleave_insert
 	autocmd  InsertLeave    *         let &updatetime=g:updaterestore
 augroup END
 
-" miscellaneous {{{2
+" miscellaneous {{{3
 augroup justinnhli_miscellaneous
 	autocmd!
 	" automatically reload init.vim
@@ -1031,7 +1045,7 @@ augroup END
 
 " user functions {{{1
 
-" UnicodeToAscii {{{2
+" UnicodeToAscii {{{3
 function UnicodeToAscii()
 	set fileformat=unix
 	" newline (0x13)

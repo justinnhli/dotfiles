@@ -566,6 +566,48 @@ if isdirectory(g:justinnhli_pim_path)
 	nnoremap  <leader>JP  :tabnew <C-r>=g:justinnhli_pim_path<cr>/library.bib<cr>
 endif
 
+" float output functions {{{3
+if exists('*nvim_create_buf')
+	function FloatOutput(cmd)
+		" get the output to display
+		let output = [''] + systemlist(a:cmd)
+		let output = map(output, '" " .. v:val')
+		" compute window properties
+		let col = wincol() - (winwidth(0) / 2)
+		let row = winline() - (winheight(0) / 2)
+		if row < 0
+			let row_offset = 1
+			let col_offset = (col < 0 ? 0 : 1)
+			let anchor = (col < 0 ? 'NW' : 'NE')
+		else
+			let row_offset = 0
+			let col_offset = (col < 0 ? 0 : 1)
+			let anchor = (col < 0 ? 'SW' : 'SE')
+		endif
+		" create the window
+		let buf = nvim_create_buf(v:false, v:true)
+		call nvim_buf_set_lines(buf, 0, -1, v:true, output)
+		let opts = {
+			\ 'relative': 'cursor',
+			\ 'width': max(map(output, 'len(v:val)')) + 2,
+			\ 'height': len(output) + 1,
+			\ 'col': col_offset, 'row': row_offset,
+			\ 'anchor': anchor,
+			\ 'style': 'minimal',
+		\}
+		let win = nvim_open_win(buf, 0, opts)
+		" create a remap to close the window
+		execute 'nnoremap  <buffer>  <cr>  :call nvim_win_close(' .. win .. ', v:false) \| nunmap <buffer> <lt>cr><cr>'
+	endfunction
+endif
+
+" float output mappings {{{3
+if exists('*FloatOutput')
+	nnoremap  <leader>cc  :call FloatOutput('')<left><left>
+	xnoremap  <leader>cc  "zy:call FloatOutput('<C-r>z')<cr>
+	nnoremap  <leader>ca  :call FloatOutput('ccal.py')<cr>
+endif
+
 " open external functions {{{3
 function s:OpenExternal(arg)
 	let l:target = trim(a:arg)
@@ -905,6 +947,11 @@ endif
 
 " commands {{{1
 
+" float output {{{3
+if exists('*FloatOutput')
+    command!  -nargs=1 -complete=file  FloatOutput  :call FloatOutput(<f-args>)
+endif
+
 " open external {{{3
 command!  -nargs=1 -complete=file  OpenExternal  :call <SID>OpenExternal(<f-args>)
 
@@ -1094,38 +1141,3 @@ function UnicodeToAscii()
 	" specials
 	%s/\%uFFFC//eg " object replacement character
 endfunction
-
-" FloatOutput {{{3
-if exists('*nvim_create_buf')
-    function FloatOutput(cmd)
-        " get the output to display
-        let output = [''] + systemlist(a:cmd)
-        let output = map(output, '" " .. v:val')
-        " compute window properties
-        let col = wincol() - (winwidth(0) / 2)
-        let row = winline() - (winheight(0) / 2)
-        if row < 0
-            let row_offset = 1
-            let col_offset = (col < 0 ? 0 : 1)
-            let anchor = (col < 0 ? 'NW' : 'NE')
-        else
-            let row_offset = 0
-            let col_offset = (col < 0 ? 0 : 1)
-            let anchor = (col < 0 ? 'SW' : 'SE')
-        endif
-        " create the window
-        let buf = nvim_create_buf(v:false, v:true)
-        call nvim_buf_set_lines(buf, 0, -1, v:true, output)
-        let opts = {
-            \ 'relative': 'cursor',
-            \ 'width': max(map(output, 'len(v:val)')) + 2,
-            \ 'height': len(output) + 1,
-            \ 'col': col_offset, 'row': row_offset,
-            \ 'anchor': anchor,
-            \ 'style': 'minimal',
-        \}
-        let win = nvim_open_win(buf, 0, opts)
-        " create a remap to close the window
-        execute 'nnoremap  <buffer>  <cr>  :call nvim_win_close(' .. win .. ', v:false) \| nunmap <buffer> <lt>cr><cr>'
-    endfunction
-endif

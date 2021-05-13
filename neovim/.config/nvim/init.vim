@@ -622,6 +622,9 @@ function s:OpenExternal(arg)
 		" research paper
 		let l:paper_id = substitute(l:target, '^.\{-}\([a-zA-Z]\+[0-9]\{4\}[A-Z][0-9A-Za-z]*\).*$', '\1', '')
 		let l:target = expand(system('find ' .. g:justinnhli_library_path .. ' -name ' .. l:paper_id .. '.pdf'))
+	elseif l:target =~ '[A-Za-z]\+[0-9A-Za-z.]\+@[0-9A-Za-z.]\+\.[0-9A-Za-z.]\+'
+		" email
+		let l:target = 'https://mail.google.com/mail/u/0/?tf=cm&to=' .. l:target
 	else
 		let l:target = ''
 	endif

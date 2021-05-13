@@ -949,7 +949,7 @@ endif
 
 " float output {{{3
 if exists('*FloatOutput')
-    command!  -nargs=1 -complete=file  FloatOutput  :call FloatOutput(<f-args>)
+	command!  -nargs=1 -complete=file  FloatOutput  :call FloatOutput(<f-args>)
 endif
 
 " open external {{{3

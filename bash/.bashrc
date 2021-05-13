@@ -40,6 +40,8 @@ export HISTSIZE=10000
 export HISTCONTROL=ignoredups
 
 # environment variables
+# gpg
+export GNUPGHOME="$SECRETS_HOME/.gnupg"
 # ipython
 export IPYTHONDIR="$XDG_CONFIG_HOME/ipython"
 # jupyter

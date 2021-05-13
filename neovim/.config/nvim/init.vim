@@ -285,7 +285,7 @@ let g:clever_f_timeout_ms = 5000
 " fugitive {{{3
 nnoremap  <leader>gg  :Git<space>
 nnoremap  <leader>gb  :Git blame<cr>
-nnoremap  <leader>gc  :Git commit -m "
+nnoremap  <leader>gc  :Git commit -m ""<left>
 nnoremap  <leader>gd  :Gdiffsplit<cr>
 nnoremap  <leader>gp  :Git push<cr>
 

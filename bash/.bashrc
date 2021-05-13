@@ -17,6 +17,7 @@ export PYTHONPATH="$HOME/Dropbox/projects:$HOME/git"
 export XDG_CONFIG_HOME=$HOME/.config
 export XDG_CACHE_HOME=$HOME/.cache
 export XDG_DATA_HOME=$HOME/.local/share
+export SECRETS_HOME=$HOME/.secrets
 if command -v nvim >/dev/null 2>&1; then
 	export EDITOR=nvim
 	export MANPAGER='nvim +Man!'
@@ -48,7 +49,7 @@ export NLTK_DATA="$HOME/.local/share/nltk"
 # npm
 export NPM_CONFIG_USERCONFIG="$XDG_CONFIG_HOME/npm/npmrc"
 # pass
-export PASSWORD_STORE_DIR="$HOME/.secrets/.password-store"
+export PASSWORD_STORE_DIR="$SECRETS_HOME/.password-store"
 export PASSWORD_STORE_CLIP_TIME=20
 # python
 export PYTHONIOENCODING='utf-8'
@@ -77,8 +78,8 @@ fi
 # sqlite
 export SQLITE_HISTORY="$XDG_DATA_HOME/sqlite_history"
 
-if [ -f "$HOME/.secrets/.bashrc" ]; then
-	source "$HOME/.secrets/.bashrc"
+if [ -f "$SECRETS_HOME/.bashrc" ]; then
+	source "$SECRETS_HOME/.bashrc"
 fi
 
 # clean up the paths

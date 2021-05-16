@@ -183,16 +183,21 @@ def merge_history():
         if not filepath.name.startswith('.'):
             years.add(filepath.name[:4])
     for year in sorted(years):
-        filepaths = list(history_path.glob(f'{year}*.shistory'))
-        if len(filepaths) == 1:
-            continue
         shistory = set() # type: Set[str]
-        for filepath in filepaths:
-            shistory |= set(filepath.open().read().splitlines())
+        for filepath in history_path.glob(f'{year}*.shistory'):
+            with filepath.open() as fd:
+                for line in fd:
+                    components = line.strip().split('\t', maxsplit=3)
+                    if len(components) == 4:
+                        shistory.add((*components[:3], components[3].strip()))
             filepath.unlink()
+        prev_line = ('', '', '')
         with Path(history_path).joinpath(f'{year}.shistory').open('w') as fd:
             for history in sorted(shistory):
-                fd.write(history.strip())
+                if history[1:] == prev_line:
+                    continue
+                prev_line = history[1:]
+                fd.write('\t'.join(history))
                 fd.write('\n')
 
 

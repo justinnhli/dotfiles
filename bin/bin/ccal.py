@@ -38,11 +38,11 @@ def str_to_date(string, start=True):
             return result
         if len(string) == 10:
             return datetime.strptime(string, '%Y-%m-%d').date()
-        raise ArgumentTypeError(
-            f'argument "{string}" should be in format YYYY[-MM[-DD]]'
-        )
-    except ValueError as err:
-        raise ArgumentTypeError from err
+    except ValueError:
+        pass
+    raise ArgumentTypeError(
+        f'argument "{string}" should be in format YYYY[-MM[-DD]]'
+    )
 
 
 def parse_args(args):
@@ -63,26 +63,24 @@ def parse_args(args):
         mark_date = None
     else:
         mark_date = today
-    if end is None:
-        if start is None:
-            start_date = today - 28 * ONE_DAY
-            end_date = today + 28 * ONE_DAY
-        elif len(start) == 10:
-            anchor = str_to_date(start)
-            end_date = anchor + 28 * ONE_DAY
-            start_date = anchor - 28 * ONE_DAY
-            mark_date = anchor
-        else:
-            start_date = str_to_date(start)
-            end_date = str_to_date(start, start=False)
-    else:
+    if end is not None:
         start_date = str_to_date(start, start=True)
         end_date = str_to_date(end, start=False)
+    elif start is None:
+        start_date = today - 28 * ONE_DAY
+        end_date = today + 28 * ONE_DAY
+    elif len(start) == 10:
+        anchor = str_to_date(start)
+        end_date = anchor + 28 * ONE_DAY
+        start_date = anchor - 28 * ONE_DAY
+        mark_date = anchor
+    else:
+        start_date = str_to_date(start)
+        end_date = str_to_date(start, start=False)
     if end_date < start_date:
-        raise ArgumentTypeError(' '.join([
-            f'start date must be before end date,',
-            f'but got {start_date} and {end_date}',
-        ]))
+        raise ArgumentTypeError(
+            f'start date must be before end date, but got {start_date} and {end_date}'
+        )
     return start_date, end_date, mark_date
 
 

@@ -1,5 +1,6 @@
 # COMPILED PRODUCTS
 *.com
+!*.com/
 *.class
 *.dll
 *.exe

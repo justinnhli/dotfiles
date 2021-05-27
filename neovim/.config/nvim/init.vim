@@ -629,6 +629,7 @@ function s:OpenExternal(arg)
 		let l:target = ''
 	endif
 	if l:target == ''
+		echo 'executing `gx`'
 		normal gx
 		return
 	endif
@@ -640,6 +641,7 @@ function s:OpenExternal(arg)
 		let l:program = 'open'
 		call jobstart(l:program .. " " .. shellescape(l:target))
 	endif
+	echo 'executing ' .. l:program .. l:target
 endfunction
 
 " open external mappings{{{3

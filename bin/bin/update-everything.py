@@ -9,7 +9,7 @@ from os import environ
 from pathlib import Path
 from shutil import which
 from subprocess import run
-from typing import Any, Callable, List, Set
+from typing import Any, Callable
 
 
 # registry
@@ -183,7 +183,7 @@ def merge_history():
         if not filepath.name.startswith('.'):
             years.add(filepath.name[:4])
     for year in sorted(years):
-        shistory = set() # type: Set[str]
+        shistory = set() # type: set[tuple[str, str, str]]
         for filepath in history_path.glob(f'{year}*.shistory'):
             with filepath.open() as fd:
                 for line in fd:
@@ -283,11 +283,11 @@ def update_everything():
 
 
 def generate_description():
-    # type: () -> List[str]
+    # type: () -> list[str]
     """Generate descriptions of command line arguments.
 
     Returns:
-        List[str]: A list of arguments and their descriptions.
+        list[str]: A list of arguments and their descriptions.
     """
     description = ['Available Actions:']
     callables = {k: v for k, v in REGISTRY.items() if not v.hidden}

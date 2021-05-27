@@ -4,12 +4,14 @@
 
 from calendar import monthrange
 from datetime import date, datetime, timedelta
-from argparse import ArgumentParser, ArgumentTypeError
+from argparse import ArgumentParser, ArgumentTypeError, Namespace
+from typing import Optional
 
 ONE_DAY = timedelta(days=1)
 
 
 def str_to_date(string, start=True):
+    # type: (str, bool) -> date
     """Parse an ISO-like string to a datetime.date object.
 
     Arguments:
@@ -46,6 +48,7 @@ def str_to_date(string, start=True):
 
 
 def parse_args(args):
+    # type: (Namespace) -> tuple[date, date, Optional[date]]
     """Parse the start and end date CLI arguments to datetime.date objects.
 
     Arguments:
@@ -85,6 +88,7 @@ def parse_args(args):
 
 
 def print_calendar(start_date, end_date, mark_date=None):
+    # type: (date, date, Optional[date]) -> None
     """Print a compact calendar.
 
     Arguments:
@@ -109,6 +113,7 @@ def print_calendar(start_date, end_date, mark_date=None):
 
 
 def main():
+    # type: () -> None
     """Run the CLI program."""
     arg_parser = ArgumentParser()
     arg_parser.add_argument('start', nargs='?', help='start date')

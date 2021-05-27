@@ -192,13 +192,13 @@ def merge_history():
                         shistory.add((*components[:3], components[3].strip()))
             filepath.unlink()
         prev_line = ('', '', '')
-        with Path(history_path).joinpath(f'{year}.shistory').open('w') as fd:
+        with history_path.joinpath(f'{year}.shistory').open('w') as fd:
             for history in sorted(shistory):
                 if history[1:] == prev_line:
                     continue
-                prev_line = history[1:]
                 fd.write('\t'.join(history))
                 fd.write('\n')
+                prev_line = history[1:]
 
 
 @register()

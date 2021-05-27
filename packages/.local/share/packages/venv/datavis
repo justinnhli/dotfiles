@@ -2,3 +2,4 @@ bokeh
 jupyter
 pandas
 xlrd
+openpyxl

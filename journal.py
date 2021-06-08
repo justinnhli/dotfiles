@@ -188,7 +188,10 @@ class Journal:
             has_date_stem = RANGE_BOUND_REGEX.fullmatch(journal_file.stem)
             with journal_file.open() as fd:
                 lines = fd.read().splitlines()
-            if lines[0].startswith('\ufeff'):
+            if not lines:
+                journal_file.unlink()
+                continue
+            elif lines[0].startswith('\ufeff'):
                 errors.append((journal_file, 1, 'byte order mark'))
             elif lines[0].strip() == '':
                 errors.append((journal_file, 1, 'file starts on blank line'))

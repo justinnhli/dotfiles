@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
+"""Command line tool for viewing and maintaining a journal."""
 
 import re
-from argparse import ArgumentParser
+from argparse import ArgumentParser, Namespace, _ArgumentGroup
 from ast import literal_eval
 from collections import namedtuple, defaultdict
 from copy import copy
@@ -13,9 +14,10 @@ from pathlib import Path
 from stat import S_IRUSR
 from statistics import mean, median, stdev
 from sys import stdout, exit as sys_exit
-from tarfile import open as open_tar_file
+from tarfile import open as open_tar_file, TarInfo
 from tempfile import mkstemp
 from textwrap import dedent
+from typing import Any, Optional, Callable, Generator, Iterable, Sequence, Mapping
 
 Entry = namedtuple('Entry', 'title, text, filepath, line_num')
 
@@ -36,14 +38,23 @@ RANGE_REGEX = re.compile(RANGE_BOUND_REGEX.pattern + ':?' + RANGE_BOUND_REGEX.pa
 
 
 class Journal:
+    """A journal."""
 
     def __init__(self, directory, use_cache=True, ignores=None):
+        # type: (Path, bool, Optional[set[Path]]) -> None
+        """Initialize the journal.
+
+        Parameters:
+            directory (Path): The directory of the journal.
+            use_cache (bool): Whether to use the cache file. Defaults to True.
+            ignores (Iterable[Path]): Paths to ignore. Optional.
+        """
         self.directory = directory.expanduser().resolve()
         if ignores is None:
             self.ignores = set()
         else:
             self.ignores = set(ignores)
-        self.entries = {}
+        self.entries = {} # type: dict[str, Entry]
         if use_cache:
             self._check_metadata()
             self._read_cache()
@@ -52,13 +63,21 @@ class Journal:
                 self._read_file(journal_file)
 
     def __len__(self):
+        # type: () -> int
         return len(self.entries)
 
     def __getitem__(self, key):
+        # type: (str) -> Entry
         return self.entries[key]
 
     @property
     def journal_files(self):
+        # type: () -> Generator[Path, None, None]
+        """Get files associated with this Journal.
+
+        Yields:
+            Path: Journal files.
+        """
         for journal_file in self.directory.glob('**/*.journal'):
             if journal_file in self.ignores:
                 continue
@@ -66,13 +85,26 @@ class Journal:
 
     @property
     def tags_file(self):
+        # type: () -> Path
+        """Get the tag file associated with this Journal.
+
+        Returns:
+            Path: The tag file.
+        """
         return self.directory.joinpath('.tags').resolve()
 
     @property
     def cache_file(self):
+        # type: () -> Path
+        """Get the cache file associated with this Journal.
+
+        Returns:
+            Path: The cache file.
+        """
         return self.directory.joinpath('.cache').resolve()
 
     def _check_metadata(self):
+        # type: () -> None
         metadata_files = (
             self.tags_file,
             self.cache_file,
@@ -81,6 +113,7 @@ class Journal:
             self.update_metadata()
 
     def _read_file(self, filepath):
+        # type: (Path) -> None
         with filepath.open() as fd:
             line_num = 1
             for raw_entry in fd.read().strip().split('\n\n'):
@@ -95,6 +128,7 @@ class Journal:
                 line_num += len(lines) + 1
 
     def _read_cache(self):
+        # type: () -> None
         with self.cache_file.open() as fd:
             for title, entry_dict in literal_eval(fd.read()).items():
                 self.entries[title] = Entry(
@@ -105,6 +139,7 @@ class Journal:
                 )
 
     def _filter_by_terms(self, selected, terms, icase):
+        # type: (set[str], Iterable[str], bool) -> set[str]
         flags = re.MULTILINE
         if icase:
             flags |= re.IGNORECASE
@@ -119,21 +154,34 @@ class Journal:
         return selected
 
     def _filter_by_date(self, selected, *date_ranges):
+        # type: (set[str], tuple[str, Optional[str]]) -> set[str]
         # pylint: disable = no-self-use
         first_date = min(selected)
         last_date = (title_to_date(max(selected)) + timedelta(days=1)).strftime('%Y-%m-%d')
         candidates = copy(selected)
         selected = set()
         for date_range in date_ranges:
-            if len(date_range) == 2:
+            if date_range[1] is None:
+                selected |= set(k for k in candidates if k.startswith(date_range[0]))
+            else:
                 start_date, end_date = date_range
                 start_date, end_date = (start_date or first_date, end_date or last_date)
                 selected |= set(k for k in candidates if start_date <= k < end_date)
-            else:
-                selected |= set(k for k in candidates if k.startswith(date_range))
         return selected
 
     def filter(self, terms=None, date_ranges=None, icase=True):
+        # type: (Iterable[str], Sequence[tuple[str, Optional[str]]], bool) -> dict[str, Entry]
+        """Filter the entries.
+
+        Parameters:
+            terms (Iterable[str]): Search terms for the entries.
+            date_ranges (Sequence[tuple[str, Optional[str]]]):
+                Date ranges for the entries. Optional.
+            icase (bool): Ignore case. Defaults to True.
+
+        Returns:
+            Dict[str, Entry]: The entries.
+        """
         selected = set(self.entries.keys())
         if date_ranges:
             selected = self._filter_by_date(
@@ -148,6 +196,7 @@ class Journal:
         return {title: self.entries[title] for title in selected}
 
     def _write_tags_file(self):
+        # type: () -> None
         tags = {}
         for journal_file in self.journal_files:
             self._read_file(journal_file)
@@ -165,6 +214,7 @@ class Journal:
                 fd.write(f'{tag}\t{filepath}\t{line_num}\n')
 
     def _write_cache(self):
+        # type: () -> None
         with self.cache_file.open('w') as fd:
             fd.write('{\n')
             for entry in sorted(self.entries.values()):
@@ -180,6 +230,8 @@ class Journal:
             fd.write('}\n')
 
     def lint(self):
+        # type: () -> list[tuple[Path, int, str]]
+        """Check the journal for errors."""
         # pylint: disable = line-too-long, too-many-nested-blocks, too-many-branches
         errors = []
         titles = set()
@@ -191,7 +243,7 @@ class Journal:
             if not lines:
                 journal_file.unlink()
                 continue
-            elif lines[0].startswith('\ufeff'):
+            if lines[0].startswith('\ufeff'):
                 errors.append((journal_file, 1, 'byte order mark'))
             elif lines[0].strip() == '':
                 errors.append((journal_file, 1, 'file starts on blank line'))
@@ -228,6 +280,8 @@ class Journal:
         return sorted(errors)
 
     def update_metadata(self):
+        # type: () -> list[tuple[Path, int, str]]
+        """Update the tags file and the cache."""
         errors = self.lint()
         if not errors:
             self._write_tags_file()
@@ -239,6 +293,15 @@ class Journal:
 
 
 def title_to_date(title):
+    # type: (str) -> datetime
+    """Convert an entry title to a datetime.
+
+    Parameters:
+        title (str): The entry title.
+
+    Returns:
+        datetime: The datetime.
+    """
     if DATE_REGEX.fullmatch(title):
         return datetime.strptime(title[:DATE_LENGTH], '%Y-%m-%d')
     else:
@@ -246,6 +309,17 @@ def title_to_date(title):
 
 
 def filter_entries(journal, args, **kwargs):
+    # type: (Journal, Namespace, Any) -> dict[str, Entry]
+    """Filter entries by the CLI arguments.
+
+    Parameters:
+        journal (Journal): The journal.
+        args (Namespace): The CLI arguments.
+        **kwargs: Override values for the CLI arguments.
+
+    Returns:
+        Dict[str, Entry]: The entries.
+    """
     return journal.filter(
         terms=kwargs.get('terms', args.terms),
         date_ranges=kwargs.get('date_ranges', args.date_ranges),
@@ -254,6 +328,16 @@ def filter_entries(journal, args, **kwargs):
 
 
 def group_entries(entries, args):
+    # type: (Mapping[str, Entry], Namespace) -> chain[tuple[str, Iterable[str]]]
+    """Group entries by date.
+
+    Parameters:
+        entries (Mapping[str, Entry]): The entries.
+        args (Namespace): The CLI arguments.
+
+    Returns:
+        Iterator[tuple[str, Iterable[str]]]: The grouped entries.
+    """
     unit_length = STRING_LENGTHS[args.unit]
     return chain(
         groupby(
@@ -265,6 +349,14 @@ def group_entries(entries, args):
 
 
 def print_table(data, headers=None, gap_size=2):
+    # type: (list[Sequence[str]], Sequence[str], int) -> None
+    """Print a table of data.
+
+    Parameters:
+        data (List[Sequence[str]]): The rows of data.
+        headers (Sequence[str]): The headers. Optional.
+        gap_size (int): The number of spaces between columns. Defaults to 2.
+    """
     rows = data
     if headers is not None:
         rows = [headers] + rows
@@ -278,6 +370,17 @@ def print_table(data, headers=None, gap_size=2):
 
 
 def log_error(message):
+    # type: (str) -> tuple[Path, int, str]
+    """Create the log error message.
+
+    Parameters:
+        message (str): The error message.
+
+    Returns:
+        Path: The journal file where the error occurred.
+        int: The line where the error occurred.
+        str: The error message.
+    """
     local_vars = currentframe().f_back.f_locals
     return (
         local_vars['journal_file'],
@@ -293,8 +396,18 @@ Option = namedtuple('Option', 'priority, flag, desc, function')
 
 
 def register(*args):
+    # type: (str) -> Callable[[Callable[[Journal, Namespace], None]], Callable[[Journal, Namespace], None]]
+    """Register a function for the CLI.
 
+    Parameters:
+        *args (str): The option and the description.
+
+    Returns:
+        Callable[[Callable[[Journal, Namespace], None]], Callable[[Journal, Namespace], None]]:
+            The argument function.
+    """
     def wrapped(function):
+        # type: (Callable[[Journal, Namespace], None]) -> Callable[[Journal, Namespace], None]
         assert 1 <= len(args) <= 2
         assert function.__name__.startswith('do_')
         if len(args) == 1:
@@ -312,9 +425,16 @@ def register(*args):
 
 @register('-A', 'archive to datetimed tarball')
 def do_archive(_, args):
+    # type: (Journal, Namespace) -> None
+    """Archive to datetimed tarball.
+
+    Parameters:
+        args (Namespace): The CLI arguments.
+    """
     from os.path import basename, join as join_path # pylint: disable = import-outside-toplevel
 
     def tarinfo_filter(tarinfo):
+        # type: (TarInfo) -> Optional[TarInfo]
         if basename(tarinfo.name)[0] in '._':
             return None
         elif tarinfo.size > 1048576:
@@ -330,7 +450,13 @@ def do_archive(_, args):
 
 @register('-C', 'count words and entries')
 def do_count(journal, args):
+    # type: (Journal, Namespace) -> None
+    """Count words and entries.
 
+    Parameters:
+        journal (Journal): The journal.
+        args (Namespace): The CLI arguments.
+    """
     COLUMNS = { # pylint: disable = invalid-name
         'DATE': (lambda journal, unit, titles, num_words: unit),
         'POSTS': (lambda journal, unit, titles, num_words: len(titles)),
@@ -348,14 +474,14 @@ def do_count(journal, args):
         'STDEV': (lambda journal, unit, titles, num_words:
             0 if len(num_words) <= 1 else round(stdev(num_words))
         ),
-    }
+    } # type: dict[str, Callable[[Mapping[str, Entry], str, Sequence[str], Sequence[int]], Any]]
 
     entries = filter_entries(journal, args)
     if not entries:
         return
-    grouped_entries = group_entries(entries, args)
     length_map = {date: len(entry.text.split()) for date, entry in entries.items()}
-    table = []
+    grouped_entries = group_entries(entries, args)
+    table = [] # type: list[Sequence[str]]
     for timespan, titles in grouped_entries:
         titles = tuple(titles)
         lengths = tuple(length_map[title] for title in titles)
@@ -363,31 +489,42 @@ def do_count(journal, args):
             str(func(journal, timespan, titles, lengths))
             for column, func in COLUMNS.items()
         ])
-    print_table(table, headers=tuple(COLUMNS.keys()))
+    if args.headers:
+        headers = tuple(COLUMNS.keys())
+    else:
+        headers = None
+    print_table(table, headers=headers)
 
 
 @register('-G', 'graph entry references in DOT')
 def do_graph(journal, args):
+    # type: (Journal, Namespace) -> None
+    """Graph entry references in DOT.
+
+    Parameters:
+        journal (Journal): The journal.
+        args (Namespace): The CLI arguments.
+    """
     entries = filter_entries(journal, args)
     entries = {
         title[:DATE_LENGTH]:entry for title, entry
         in entries.items() if DATE_REGEX.fullmatch(title)
     }
     disjoint_sets = dict((k, k) for k in entries)
-    referents = defaultdict(set)
-    edges = dict((k, set()) for k in entries)
+    referents = defaultdict(set) # type: dict[str, set[str]]
+    edges = defaultdict(set) # type: dict[str, set[str]]
     for src, entry in sorted(entries.items()):
         dests = set(
             dest for dest in REFERENCE_REGEX.findall(entry.text)
             if src > dest and dest in entries
         )
-        referents[src] = set().union(*(referents[dest] for dest in dests))
+        referents[src].update(*(referents[dest] for dest in dests))
         for dest in dests - referents[src]:
             edges[src].add(dest)
             while disjoint_sets[dest] != src:
                 disjoint_sets[dest], dest = src, disjoint_sets[dest]
         referents[src] |= dests
-    components = defaultdict(set)
+    components = defaultdict(set) # type: dict[str, set[str]]
     for rep in disjoint_sets:
         path = set([rep])
         while disjoint_sets[rep] != rep:
@@ -423,6 +560,12 @@ def do_graph(journal, args):
 
 @register('-I', 're-index and update cache')
 def do_index(journal, _):
+    # type: (Journal, Namespace) -> None
+    """Re-index and update cache.
+
+    Parameters:
+        journal (Journal): The journal.
+    """
     errors = journal.update_metadata()
     if errors:
         print('\n'.join('{}:{}: {}'.format(*error) for error in errors))
@@ -431,12 +574,26 @@ def do_index(journal, _):
 
 @register('-L', 'list entry titles')
 def do_list(journal, args):
+    # type: (Journal, Namespace) -> None
+    """List entry titles.
+
+    Parameters:
+        journal (Journal): The journal.
+        args (Namespace): The CLI arguments.
+    """
     entries = filter_entries(journal, args)
     print('\n'.join(sorted(entries.keys(), reverse=args.reverse)))
 
 
 @register('-S', 'show entry contents')
 def do_show(journal, args):
+    # type: (Journal, Namespace) -> None
+    """Show entry contents.
+
+    Parameters:
+        journal (Journal): The journal.
+        args (Namespace): The CLI arguments.
+    """
     entries = filter_entries(journal, args)
     if not entries:
         return
@@ -468,6 +625,13 @@ def do_show(journal, args):
 
 @register('list entries that hyphenate the terms differently')
 def do_hyphenation(journal, args):
+    # type: (Journal, Namespace) -> None
+    """List entries that hyphenate the terms differently.
+
+    Parameters:
+        journal (Journal): The journal.
+        args (Namespace): The CLI arguments.
+    """
     for puncts in product(['', ' ', '-'], repeat=(len(args.terms) - 1)):
         possibility = ''.join(
             part + punct for part, punct
@@ -481,6 +645,13 @@ def do_hyphenation(journal, args):
 
 @register('list the length of the longest line of each entry')
 def do_lengths(journal, args):
+    # type: (Journal, Namespace) -> None
+    """List the length of the longest line of each entry.
+
+    Parameters:
+        journal (Journal): The journal.
+        args (Namespace): The CLI arguments.
+    """
     entries = filter_entries(journal, args)
     for title, entry in sorted(entries.items()):
         print(title, max(len(line) for line in entry.text.splitlines()))
@@ -488,27 +659,37 @@ def do_lengths(journal, args):
 
 @register('list the Kincaid reading grade level of each entry')
 def do_readability(journal, args):
+    # type: (Journal, Namespace) -> None
+    """List the Kincaid reading grade level of each entry.
+
+    Parameters:
+        journal (Journal): The journal.
+        args (Namespace): The CLI arguments.
+    """
 
     def to_sentences(text):
+        # type: (str) -> chain[str]
         for paragraph in text.splitlines():
             paragraph = paragraph.strip()
             if not paragraph:
                 continue
-            sentences = paragraph.split('. ')
-            sentences = chain(*(sentence.split('! ') for sentence in sentences))
+            sentences = chain(*(sentence.split('! ') for sentence in paragraph.split('. ')))
             sentences = chain(*(sentence.split('? ') for sentence in sentences))
             yield from sentences
 
     def strip_punct(text):
+        # type: (str) -> str
         text = text.replace("'", '')
         text = re.sub('[^ 0-9A-Za-z]', ' ', text)
         text = re.sub(' +', ' ', text)
         return text.strip()
 
     def letters_to_syllables(letters, rate):
+        # type: (int, float) -> float
         return letters / rate
 
     def kincaid(text):
+        # type: (str) -> float
         sentences = [strip_punct(sentence) for sentence in to_sentences(text)]
         num_letters = sum(len(word) for sentence in sentences for word in sentence)
         num_words = sum(len(sentence.split()) for sentence in sentences)
@@ -522,7 +703,7 @@ def do_readability(journal, args):
     entries = filter_entries(journal, args)
     if not entries:
         return
-    table = []
+    table = [] # type: list[Sequence[str]]
     for timespan, titles in group_entries(entries, args):
         text = '\n'.join(journal[title].text for title in titles)
         table.append((timespan, f'{kincaid(text): >6.3f}'))
@@ -531,6 +712,13 @@ def do_readability(journal, args):
 
 @register('list search results in vim :grep format')
 def do_vimgrep(journal, args):
+    # type: (Journal, Namespace) -> None
+    """List search results in vim :grep format.
+
+    Parameters:
+        journal (Journal): The journal.
+        args (Namespace): The CLI arguments.
+    """
     prefix_len = 20
     suffix_len = 40
     entries = filter_entries(journal, args)
@@ -573,6 +761,16 @@ def do_vimgrep(journal, args):
 
 
 def build_arg_parser(arg_parser):
+    # type: (ArgumentParser) -> ArgumentParser
+    """Add arguments to the ArgumentParser.
+
+    Parameters:
+        arg_parser (ArgumentParser): The argument parser.
+
+    Returns:
+        ArgumentParser: The argument parser.
+
+    """
     arg_parser.usage = '%(prog)s <operation> [options] [TERM ...]'
     arg_parser.description = 'A command line tool for viewing and maintaining a journal.'
     arg_parser.add_argument(
@@ -582,6 +780,7 @@ def build_arg_parser(arg_parser):
         help='pattern which must exist in entries',
     )
 
+    group = None # type: Optional[_ArgumentGroup]
     group = arg_parser.add_argument_group('OPERATIONS').add_mutually_exclusive_group(required=True)
     for _, flag, desc, function in sorted(OPERATIONS, key=(lambda option: (option.priority, option.flag))):
         group.add_argument(
@@ -667,6 +866,16 @@ def build_arg_parser(arg_parser):
 
 
 def process_args(arg_parser, args):
+    # type: (ArgumentParser, Namespace) -> Namespace
+    """Process and check CLI arguments.
+
+    Parameters:
+        arg_parser (ArgumentParser): The CLI argument parser.
+        args (Namespace): The CLI arguments.
+
+    Returns:
+        Namespace: The CLI arguments, augmented.
+    """
     if args.operation.__name__ == 'do_hyphenation':
         args.terms = list(chain(*(term.split('-') for term in args.terms)))
         if len(args.terms) < 2:
@@ -693,7 +902,7 @@ def process_args(arg_parser, args):
                     end_date = None
                 date_ranges.append((start_date, end_date))
             else:
-                date_ranges.append(date_range)
+                date_ranges.append((date_range, None))
         args.date_ranges = date_ranges
     args.directory = args.directory.expanduser().resolve()
     args.ignores = set(path.expanduser().resolve() for path in args.ignores)
@@ -701,6 +910,13 @@ def process_args(arg_parser, args):
 
 
 def parse_args(arg_parser, args):
+    # type: (ArgumentParser, Namespace) -> None
+    """Parser the CLI arguments.
+
+    Parameters:
+        arg_parser (ArgumentParser): The CLI argument parser.
+        args (Namespace): The CLI arguments.
+    """
     if arg_parser is None:
         arg_parser = build_arg_parser(ArgumentParser())
     args = process_args(arg_parser, args)
@@ -713,6 +929,14 @@ def parse_args(arg_parser, args):
 
 
 def log_search(arg_parser, args, journal):
+    # type: (ArgumentParser, Namespace, Journal) -> None
+    """Log a Journal search.
+
+    Parameters:
+        arg_parser (ArgumentParser): The CLI argument parser.
+        args (Namespace): The CLI arguments.
+        journal (Journal): The journal.
+    """
     # pylint: disable = protected-access
     logged_functions = ('do_show', 'do_list', 'do_vimgrep')
     if args.operation.__name__ not in logged_functions:
@@ -720,7 +944,7 @@ def log_search(arg_parser, args, journal):
     log_file = journal.directory.joinpath('.log').resolve()
     if not (args.log and log_file.exists()):
         return
-    options = []
+    options = [] # type: list[tuple[str, Optional[str]]]
     for option_string, option in arg_parser._option_string_actions.items():
         if args.operation is option.const:
             op_flag = option_string
@@ -728,17 +952,16 @@ def log_search(arg_parser, args, journal):
             option_value = getattr(args, option.dest)
             if option_value != option.default:
                 if option.const in (True, False):
-                    options.append((option_string, ))
+                    options.append((option_string, None))
                 else:
                     options.append((option_string, option_value))
     log_args = op_flag
     collapsible = (len(op_flag) == 2)
-    for option in sorted(options, key=(lambda x: (len(x) != 1, x[0].upper()))):
-        arg = ' ' + ' '.join(option)
-        if len(option[0]) == 2 and collapsible:
-            arg = arg.lstrip(' -')
-        log_args += arg
-        collapsible = (len(option) == 1 and len(option[0]) == 2)
+    for opt_str, opt_val in sorted(options, key=(lambda x: (len(x) != 1, x[0].upper()))):
+        log_args += f' {opt_str} {opt_val}'
+        if opt_val is None and collapsible:
+            log_args = log_args.lstrip(' -')
+        collapsible = (len(opt_str) == 2 and opt_val is None)
     terms = ' '.join(
         '"{}"'.format(term.replace('"', '\\"'))
         for term in sorted(args.terms)
@@ -748,6 +971,8 @@ def log_search(arg_parser, args, journal):
 
 
 def main():
+    # type: () -> None
+    """Provide CLI entry point."""
     arg_parser = build_arg_parser(ArgumentParser())
     args = arg_parser.parse_args()
     parse_args(arg_parser, args)

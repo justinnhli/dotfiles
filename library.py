@@ -267,7 +267,7 @@ class Library:
                 word = re.sub('[-/][A-Z]', '', word)
                 # TODO this check fails for (eg.) {Response to {Adams and McDonnell}}
                 if len(re.findall('[A-Za-z][A-Z]', word)) > 1:
-                    print('unquoted title for {}: {}'.format(entry_id, paper.title))
+                    print('unquoted title for {}: {}'.format(key, paper.title))
                     break
 
     def toc(self, out_path=None):

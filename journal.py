@@ -21,6 +21,7 @@ from textwrap import dedent
 from typing import Any, Optional, Union, Callable, Generator, Iterable, Sequence, Mapping
 
 Entry = namedtuple('Entry', 'title, text, filepath, line_num')
+DateRange = tuple[Optional[str], Optional[str]]
 
 FILE_EXTENSION = '.journal'
 STRING_LENGTHS = {
@@ -36,7 +37,7 @@ RANGE_BOUND_REGEX = re.compile('([0-9]{4}(-[0-9]{2}(-[0-9]{2})?)?)?')
 RANGE_REGEX = re.compile(RANGE_BOUND_REGEX.pattern + ':?' + RANGE_BOUND_REGEX.pattern)
 
 
-class Journal:
+class Journal(Mapping[str, Entry]):
     """A journal."""
 
     def __init__(self, directory, use_cache=True, ignores=None):
@@ -64,6 +65,10 @@ class Journal:
     def __len__(self):
         # type: () -> int
         return len(self.entries)
+
+    def __iter__(self):
+        # type: () -> Generator[str, None, None]
+        yield from sorted(self.entries)
 
     def __getitem__(self, key):
         # type: (str) -> Entry
@@ -166,7 +171,7 @@ class Journal:
         return selected
 
     def filter(self, terms=None, date_ranges=None, icase=True):
-        # type: (Iterable[str], Sequence[tuple[str, Optional[str]]], bool) -> dict[str, Entry]
+        # type: (Iterable[str], Sequence[DateRange], bool) -> dict[str, Entry]
         """Filter the entries.
 
         Parameters:
@@ -884,7 +889,7 @@ def build_arg_parser(arg_parser):
 
 
 def fill_date_range(date_range):
-    # type: (str) -> tuple[Optional[str], Optional[str]]
+    # type: (str) -> DateRange
     """Expand date ranges to start and end dates.
 
     Parameters:

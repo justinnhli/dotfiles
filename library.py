@@ -307,7 +307,23 @@ class Library:
                 fd.write('\n')
 
     def unify(self):
-        raise NotImplementedError()
+        coauthors = defaultdict(set)
+        for key, paper in self.papers.items():
+            authors = paper.author.split(' and ')
+            for author1 in authors:
+                for author2 in authors:
+                    author2 = re.sub('[^A-Za-z, ]', '', author2)
+                    coauthors[author1].add((author2, key))
+        for author, coauth in sorted(coauthors.items()):
+            coauth = sorted(coauth)
+            printed = False
+            for author1, author2 in zip(coauth[:-1], coauth[1:]):
+                if author1[0] != author2[0] and author2[0].startswith(author1[0].strip('.')):
+                    if not printed:
+                        print(author)
+                        printed = True
+                    print('   ', author1)
+                    print('   ', author2)
 
     def search(self, *terms):
         """Search for a paper."""

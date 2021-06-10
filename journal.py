@@ -22,8 +22,6 @@ from typing import Any, Optional, Union, Callable, Generator, Iterable, Sequence
 
 Entry = namedtuple('Entry', 'title, text, filepath, line_num')
 
-JOURNAL_PATH = Path('~/pim/journal').expanduser().resolve()
-
 FILE_EXTENSION = '.journal'
 STRING_LENGTHS = {
     'year': 4,
@@ -79,7 +77,7 @@ class Journal:
         Yields:
             Path: Journal files.
         """
-        for journal_file in self.directory.glob('**/*.journal'):
+        for journal_file in self.directory.glob(f'**/*{FILE_EXTENSION}'):
             if journal_file in self.ignores:
                 continue
             yield journal_file

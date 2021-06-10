@@ -4,6 +4,7 @@
 import re
 from argparse import ArgumentParser, Namespace, _ArgumentGroup
 from ast import literal_eval
+from calendar import monthrange
 from collections import namedtuple, defaultdict
 from copy import copy
 from datetime import datetime, timedelta
@@ -17,7 +18,7 @@ from sys import stdout, exit as sys_exit
 from tarfile import open as open_tar_file, TarInfo
 from tempfile import mkstemp
 from textwrap import dedent
-from typing import Any, Optional, Callable, Generator, Iterable, Sequence, Mapping
+from typing import Any, Optional, Union, Callable, Generator, Iterable, Sequence, Mapping
 
 Entry = namedtuple('Entry', 'title, text, filepath, line_num')
 
@@ -157,16 +158,13 @@ class Journal:
         # type: (set[str], tuple[str, Optional[str]]) -> set[str]
         # pylint: disable = no-self-use
         first_date = min(selected)
-        last_date = (title_to_date(max(selected)) + timedelta(days=1)).strftime('%Y-%m-%d')
+        last_date = next_date(max(selected))
         candidates = copy(selected)
         selected = set()
         for date_range in date_ranges:
-            if date_range[1] is None:
-                selected |= set(k for k in candidates if k.startswith(date_range[0]))
-            else:
-                start_date, end_date = date_range
-                start_date, end_date = (start_date or first_date, end_date or last_date)
-                selected |= set(k for k in candidates if start_date <= k < end_date)
+            start_date, end_date = date_range
+            start_date, end_date = (start_date or first_date, end_date or last_date)
+            selected |= set(k for k in candidates if start_date <= k < end_date)
         return selected
 
     def filter(self, terms=None, date_ranges=None, icase=True):
@@ -306,6 +304,23 @@ def title_to_date(title):
         return datetime.strptime(title[:DATE_LENGTH], '%Y-%m-%d')
     else:
         return datetime.today()
+
+
+def next_date(date_or_str):
+    # type: (Union[datetime, str]) -> str
+    """Calculate the next date.
+
+    Parameters:
+        date_or_str (Union[datetime, str]): The previous date.
+
+    Returns:
+        str: The next date.
+    """
+    if isinstance(date_or_str, str):
+        date = title_to_date(date_or_str)
+    else:
+        date = date_or_str
+    return (date + timedelta(days=1)).strftime('%Y-%m-%d')
 
 
 def filter_entries(journal, args, **kwargs):
@@ -865,6 +880,39 @@ def build_arg_parser(arg_parser):
     return arg_parser
 
 
+def fill_date_range(date_range):
+    # type: (str) -> tuple[Optional[str], Optional[str]]
+    """Expand date ranges to start and end dates.
+
+    Parameters:
+        date_range (str): The CLI date range.
+
+    Returns:
+        str: The start date.
+        str: The end date.
+    """
+    if ':' in date_range:
+        start_date, end_date = date_range.split(':')
+    else:
+        start_date = date_range
+        if len(date_range) == 4:
+            end_date = str(int(date_range) + 1)
+        else:
+            units = [int(unit) for unit in date_range.split('-')]
+            if len(units) == 2:
+                units.append(monthrange(*units)[1])
+            end_date = next_date(datetime(*units))
+    if start_date:
+        start_date = start_date + '-01' * int((DATE_LENGTH - len(start_date)) / len('-01'))
+    else:
+        start_date = None
+    if end_date:
+        end_date = end_date + '-01' * int((DATE_LENGTH - len(end_date)) / len('-01'))
+    else:
+        end_date = None
+    return (start_date, end_date)
+
+
 def process_args(arg_parser, args):
     # type: (ArgumentParser, Namespace) -> Namespace
     """Process and check CLI arguments.
@@ -890,19 +938,7 @@ def process_args(arg_parser, args):
                     f'argument -d: "{date_range}" should be in format '
                     '[YYYY[-MM[-DD]]][:][YYYY[-MM[-DD]]][,...]'
                 )
-            if ':' in date_range:
-                start_date, end_date = date_range.split(':')
-                if start_date:
-                    start_date = start_date + '-01' * int((DATE_LENGTH - len(start_date)) / len('-01'))
-                else:
-                    start_date = None
-                if end_date:
-                    end_date = end_date + '-01' * int((DATE_LENGTH - len(end_date)) / len('-01'))
-                else:
-                    end_date = None
-                date_ranges.append((start_date, end_date))
-            else:
-                date_ranges.append((date_range, None))
+            date_ranges.append(fill_date_range(date_range))
         args.date_ranges = date_ranges
     args.directory = args.directory.expanduser().resolve()
     args.ignores = set(path.expanduser().resolve() for path in args.ignores)

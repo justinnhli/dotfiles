@@ -502,7 +502,7 @@ def do_count(journal, args):
     entries = filter_entries(journal, args)
     if not entries:
         return
-    length_map = {date: len(entry.text.split()) for date, entry in entries.items()}
+    length_map = {title: len(entry.text.split()) for title, entry in entries.items()}
     grouped_entries = group_entries(entries, args)
     table = [] # type: list[Sequence[str]]
     for timespan, titles in grouped_entries:

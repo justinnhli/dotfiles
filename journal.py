@@ -252,7 +252,7 @@ class Journal:
             for line_num, line in enumerate(lines, start=1): # pylint: disable = unused-variable
                 indent = len(re.match('\t*', line)[0])
                 if not re.fullmatch('(\t*([^ \t][ -~]*)?[^ \t])?', line):
-                    errors.append(log_error('non-tab indentation, ending blank, or non-ASCII character'))
+                    errors.append(log_error('non-tab indentation, trailing whitespace, or non-ASCII character'))
                 line = line.strip()
                 if not line.startswith('|') and '  ' in line:
                     errors.append(log_error('multiple spaces'))

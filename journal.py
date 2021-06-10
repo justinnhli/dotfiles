@@ -358,10 +358,11 @@ def group_entries(entries, args):
         Iterator[tuple[str, Iterable[str]]]: The grouped entries.
     """
     unit_length = STRING_LENGTHS[args.unit]
+    key_func = (lambda k: k[:unit_length] if DATE_REGEX.fullmatch(k) else 'other')
     return chain(
         groupby(
-            sorted(entries.keys(), reverse=args.reverse),
-            (lambda k: k[:unit_length] if DATE_REGEX.fullmatch(k) else 'other'),
+            sorted(entries.keys(), reverse=args.reverse, key=key_func),
+            key_func,
         ),
         [('all', tuple(entries.keys()))],
     )

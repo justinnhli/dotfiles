@@ -256,21 +256,25 @@ class Journal:
                 line = line.strip()
                 if not line.startswith('|') and '  ' in line:
                     errors.append(log_error('multiple spaces'))
-                if indent == 0 and line:
-                    if prev_indent != 0 or prev_line != '':
-                        errors.append(log_error('no blank line between entries'))
-                    if DATE_REGEX.fullmatch(line):
-                        if long_dates is None:
-                            long_dates = (len(line) > DATE_LENGTH)
-                        elif long_dates != (len(line) > DATE_LENGTH):
-                            errors.append(log_error('inconsistent date format'))
-                        if not title_to_date(line).strftime('%Y-%m-%d, %A').startswith(line):
-                            errors.append(log_error('date-weekday correctness'))
-                        if has_date_stem and not line.startswith(journal_file.stem):
-                            errors.append(log_error("filename doesn't match entry"))
-                    if line in titles:
-                        errors.append(log_error('duplicate titles'))
-                    titles.add(line)
+                if indent == 0:
+                    if line:
+                        if prev_indent != 0 or prev_line != '':
+                            errors.append(log_error('no blank line between entries'))
+                        if DATE_REGEX.fullmatch(line):
+                            if long_dates is None:
+                                long_dates = (len(line) > DATE_LENGTH)
+                            elif long_dates != (len(line) > DATE_LENGTH):
+                                errors.append(log_error('inconsistent date format'))
+                            if not title_to_date(line).strftime('%Y-%m-%d, %A').startswith(line):
+                                errors.append(log_error('date-weekday correctness'))
+                            if has_date_stem and not line.startswith(journal_file.stem):
+                                errors.append(log_error("filename doesn't match entry"))
+                        if line in titles:
+                            errors.append(log_error('duplicate titles'))
+                        titles.add(line)
+                    elif prev_indent == 0:
+                        errors.append(log_error('consecutive unindented lines'))
+                        print('here')
                 elif indent - prev_indent > 1:
                     errors.append(log_error('unexpected indentation'))
                 prev_indent = indent

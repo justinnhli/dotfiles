@@ -148,13 +148,10 @@ class Journal(Mapping[str, Entry]):
         if icase:
             flags |= re.IGNORECASE
         for term in terms:
-            if icase:
-                term = term.lower()
-            matches = set(
-                title for title, entry in self.entries.items()
-                if re.search(term, entry.text, flags=flags)
+            selected = set(
+                title for title in selected
+                if re.search(term, self.entries[title].text, flags=flags)
             )
-            selected &= matches
         return selected
 
     def _filter_by_date(self, selected, *date_ranges):

@@ -8,7 +8,7 @@ def main():
 
     def get_only(mapping, key):
         value = mapping[key]
-        if len(value) == 0:
+        if len(value) == 1:
             return value[0]
         else:
             return value

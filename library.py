@@ -240,9 +240,9 @@ class Library:
                     print(f'non-conforming {attr}s in {key}:')
                     print(f'    current:')
                     print(f'        {attr} = {{{value}}},')
-                    pattern = '(?P<first>[A-Z][^ ]*( [A-Z][^ ]*)*) (?P<last>.*)'
+                    pattern = ' *(?P<first>[A-Z][^ ]*( +[A-Z][^ ]*)*) +(?P<last>.*) *'
                     suggestion = ' and '.join([
-                        person if person in WEIRD_NAMES
+                        person.strip() if person in WEIRD_NAMES
                         else re.sub(
                             pattern,
                             (lambda match: match.group('last') + ', ' + match.group('first')),

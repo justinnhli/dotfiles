@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import re
 import sys
 from collections import defaultdict
 
@@ -27,11 +28,11 @@ def main():
     bib_props['doi'] = get_only(props, 'DO')
     bib_props['pages'] = get_only(props, 'SP') + '--' + get_only(props, 'EP')
     bib_props['journal'] = get_only(props, 'JO')
-    bib_id = ''.join([
+    bib_id = re.sub('[^0-9A-Za-z]', '', ''.join([
         bib_props['author'].split()[0].strip(','),
         bib_props['year'],
         *(word.title() for word in bib_props['title'].split()[:3]),
-    ])
+    ]))
     print(f'@article {{{bib_id},')
     for key, value in bib_props.items():
         print(f'    {key} = {{{value}}},')

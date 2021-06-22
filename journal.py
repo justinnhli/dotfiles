@@ -346,39 +346,43 @@ def filter_entries(journal, args, **kwargs):
     )
 
 
-def group_entries(entries, args):
-    # type: (Mapping[str, Entry], Namespace) -> chain[tuple[str, Iterable[str]]]
+def group_entries(entries, unit, summary=True, reverse=True):
+    # type: (Mapping[str, Entry], str, bool, bool) -> chain[tuple[str, Iterable[str]]]
     """Group entries by date.
 
     Parameters:
         entries (Mapping[str, Entry]): The entries.
-        args (Namespace): The CLI arguments.
+        unit (str): The tabulation unit. One of 'year', 'month', or 'day'.
+        summary (bool): Whether to show a summary. Defaults to True.
+        reverse (bool): Whether to show entries in chronological order.
+            Defaults to True.
 
     Returns:
         Iterator[tuple[str, Iterable[str]]]: The grouped entries.
     """
-    unit_length = STRING_LENGTHS[args.unit]
+    unit_length = STRING_LENGTHS[unit]
     key_func = (lambda k: k[:unit_length] if DATE_REGEX.fullmatch(k) else 'other')
-    return chain(
-        groupby(
-            sorted(entries.keys(), reverse=args.reverse, key=key_func),
-            key_func,
-        ),
-        [('all', tuple(entries.keys()))],
+    result = groupby(
+        sorted(entries.keys(), reverse=reverse, key=key_func),
+        key_func,
     )
+    summary_stats = []
+    if summary:
+        summary_stats = [('all', tuple(entries.keys()))]
+    return chain(result, summary_stats)
 
 
-def print_table(data, headers=None, gap_size=2):
+def print_table(data, headers, gap_size=2):
     # type: (list[Sequence[str]], Sequence[str], int) -> None
     """Print a table of data.
 
     Parameters:
         data (List[Sequence[str]]): The rows of data.
-        headers (Sequence[str]): The headers. Optional.
+        headers (Sequence[str]): The headers.
         gap_size (int): The number of spaces between columns. Defaults to 2.
     """
-    rows = data
-    if headers is not None:
+    rows = data # type: list[Sequence[str]]
+    if headers:
         rows = [headers] + rows
     widths = [max(len(row[col]) for row in rows) for col in range(len(data[0]))]
     gap = gap_size * ' '
@@ -500,7 +504,7 @@ def do_count(journal, args):
     if not entries:
         return
     length_map = {title: len(entry.text.split()) for title, entry in entries.items()}
-    grouped_entries = group_entries(entries, args)
+    grouped_entries = group_entries(entries, args.unit, args.reverse, args.summary)
     table = [] # type: list[Sequence[str]]
     for timespan, titles in grouped_entries:
         titles = tuple(titles)
@@ -509,11 +513,7 @@ def do_count(journal, args):
             str(func(journal, timespan, titles, lengths))
             for column, func in COLUMNS.items()
         ])
-    if args.headers:
-        headers = tuple(COLUMNS.keys())
-    else:
-        headers = None
-    print_table(table, headers=headers)
+    print_table(table, (list(COLUMNS.keys()) if args.headers else []))
 
 
 @register('-G', 'graph entry references in DOT')
@@ -724,10 +724,11 @@ def do_readability(journal, args):
     if not entries:
         return
     table = [] # type: list[Sequence[str]]
-    for timespan, titles in group_entries(entries, args):
+    grouped_entries = group_entries(entries, args.unit, args.reverse, args.summary)
+    for timespan, titles in group_entries:
         text = '\n'.join(journal[title].text for title in titles)
         table.append((timespan, f'{kincaid(text): >6.3f}'))
-    print_table(table, headers=['ENTRY', 'KINCAID'])
+    print_table(table, (['ENTRY', 'KINCAID'] if args.headers else []))
 
 
 @register('list search results in vim :grep format')
@@ -863,7 +864,13 @@ def build_arg_parser(arg_parser):
         '--no-headers',
         dest='headers',
         action='store_false',
-        help='[C] do not print headers',
+        help='[C,readability] do not print headers',
+    )
+    group.add_argument(
+        '--no-summary',
+        dest='summary',
+        action='store_false',
+        help='[C,readability] do not print summary statistics',
     )
     group.add_argument(
         '--unit',

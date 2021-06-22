@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Command line tool for viewing and maintaining a journal."""
 
+# pylint: disable = too-many-lines
+
 import re
 from argparse import ArgumentParser, Namespace, _ArgumentGroup
 from ast import literal_eval
@@ -393,6 +395,75 @@ def print_table(data, headers, gap_size=2):
         print(gap.join(col.rjust(width) for width, col in zip(widths, row)))
 
 
+def summarize_line_lengths(journal, unit, titles, num_words):
+    # type: (Mapping[str, Entry], str, Sequence[str], Sequence[int]) -> str
+    # pylint: disable = unused-argument
+    """Get the length of the longest line of a group of entries.
+
+    Parameters:
+        journal (Journal): The journal.
+        unit (str): The grouping unit.
+        titles (Sequence[str]): The entry titles in the group.
+        num_words (Sequence[int]): The number of words in each entry in the group.
+
+    Returns:
+        str: The length of longest line.
+    """
+    text = '\n'.join(journal[title].text for title in titles)
+    return str(max(len(line) for line in text.splitlines()))
+
+
+def summarize_readability(journal, unit, titles, num_words):
+    # type: (Mapping[str, Entry], str, Sequence[str], Sequence[int]) -> str
+    # pylint: disable = unused-argument
+    """Calculate the Kincaid reading grade level of a group of entries.
+
+    Parameters:
+        journal (Journal): The journal.
+        unit (str): The grouping unit.
+        titles (Sequence[str]): The entry titles in the group.
+        num_words (Sequence[int]): The number of words in each entry in the group.
+
+    Returns:
+        str: The reading grade level.
+    """
+    def to_sentences(text):
+        # type: (str) -> chain[str]
+        for paragraph in text.splitlines():
+            paragraph = paragraph.strip()
+            if not paragraph:
+                continue
+            sentences = chain(*(sentence.split('! ') for sentence in paragraph.split('. ')))
+            sentences = chain(*(sentence.split('? ') for sentence in sentences))
+            yield from sentences
+
+    def strip_punct(text):
+        # type: (str) -> str
+        text = text.replace("'", '')
+        text = re.sub('[^ 0-9A-Za-z]', ' ', text)
+        text = re.sub(' +', ' ', text)
+        return text.strip()
+
+    def letters_to_syllables(letters, rate):
+        # type: (int, float) -> float
+        return letters / rate
+
+    def kincaid(text):
+        # type: (str) -> float
+        sentences = [strip_punct(sentence) for sentence in to_sentences(text)]
+        num_letters = sum(len(word) for sentence in sentences for word in sentence)
+        num_words = sum(len(sentence.split()) for sentence in sentences)
+        num_sentences = len(sentences)
+        return (
+            0.39 * (num_words / num_sentences)
+            + 11.8 * (letters_to_syllables(num_letters, 4.10) / num_words)
+            - 15.59
+        )
+
+    text = '\n'.join(journal[title].text for title in titles)
+    return f'{kincaid(text): >6.3f}'
+
+
 def log_error(message):
     # type: (str) -> tuple[Path, int, str]
     """Create the log error message.
@@ -500,13 +571,17 @@ def do_count(journal, args):
         ),
     } # type: dict[str, Callable[[Mapping[str, Entry], str, Sequence[str], Sequence[int]], Any]]
 
+    if 'length' in args.columns:
+        COLUMNS['LINE LEN'] = summarize_line_lengths
+    if 'readability' in args.columns:
+        COLUMNS['READABILITY'] = summarize_readability
+
     entries = filter_entries(journal, args)
     if not entries:
         return
     length_map = {title: len(entry.text.split()) for title, entry in entries.items()}
-    grouped_entries = group_entries(entries, args.unit, args.reverse, args.summary)
     table = [] # type: list[Sequence[str]]
-    for timespan, titles in grouped_entries:
+    for timespan, titles in group_entries(entries, args.unit, args.reverse, args.summary):
         titles = tuple(titles)
         lengths = tuple(length_map[title] for title in titles)
         table.append([
@@ -663,74 +738,6 @@ def do_hyphenation(journal, args):
             print('    ' + title)
 
 
-@register('list the length of the longest line of each entry')
-def do_lengths(journal, args):
-    # type: (Journal, Namespace) -> None
-    """List the length of the longest line of each entry.
-
-    Parameters:
-        journal (Journal): The journal.
-        args (Namespace): The CLI arguments.
-    """
-    entries = filter_entries(journal, args)
-    for title, entry in sorted(entries.items()):
-        print(title, max(len(line) for line in entry.text.splitlines()))
-
-
-@register('list the Kincaid reading grade level of each entry')
-def do_readability(journal, args):
-    # type: (Journal, Namespace) -> None
-    """List the Kincaid reading grade level of each entry.
-
-    Parameters:
-        journal (Journal): The journal.
-        args (Namespace): The CLI arguments.
-    """
-
-    def to_sentences(text):
-        # type: (str) -> chain[str]
-        for paragraph in text.splitlines():
-            paragraph = paragraph.strip()
-            if not paragraph:
-                continue
-            sentences = chain(*(sentence.split('! ') for sentence in paragraph.split('. ')))
-            sentences = chain(*(sentence.split('? ') for sentence in sentences))
-            yield from sentences
-
-    def strip_punct(text):
-        # type: (str) -> str
-        text = text.replace("'", '')
-        text = re.sub('[^ 0-9A-Za-z]', ' ', text)
-        text = re.sub(' +', ' ', text)
-        return text.strip()
-
-    def letters_to_syllables(letters, rate):
-        # type: (int, float) -> float
-        return letters / rate
-
-    def kincaid(text):
-        # type: (str) -> float
-        sentences = [strip_punct(sentence) for sentence in to_sentences(text)]
-        num_letters = sum(len(word) for sentence in sentences for word in sentence)
-        num_words = sum(len(sentence.split()) for sentence in sentences)
-        num_sentences = len(sentences)
-        return (
-            0.39 * (num_words / num_sentences)
-            + 11.8 * (letters_to_syllables(num_letters, 4.10) / num_words)
-            - 15.59
-        )
-
-    entries = filter_entries(journal, args)
-    if not entries:
-        return
-    table = [] # type: list[Sequence[str]]
-    grouped_entries = group_entries(entries, args.unit, args.reverse, args.summary)
-    for timespan, titles in group_entries:
-        text = '\n'.join(journal[title].text for title in titles)
-        table.append((timespan, f'{kincaid(text): >6.3f}'))
-    print_table(table, (['ENTRY', 'KINCAID'] if args.headers else []))
-
-
 @register('list search results in vim :grep format')
 def do_vimgrep(journal, args):
     # type: (Journal, Namespace) -> None
@@ -864,13 +871,13 @@ def build_arg_parser(arg_parser):
         '--no-headers',
         dest='headers',
         action='store_false',
-        help='[C,readability] do not print headers',
+        help='[C] do not print headers',
     )
     group.add_argument(
         '--no-summary',
         dest='summary',
         action='store_false',
-        help='[C,readability] do not print summary statistics',
+        help='[C] do not print summary statistics',
     )
     group.add_argument(
         '--unit',
@@ -879,6 +886,14 @@ def build_arg_parser(arg_parser):
         choices=('year', 'month', 'day'),
         default='year',
         help='[C] set tabulation unit (default: year)',
+    )
+    group.add_argument(
+        '--column',
+        dest='columns',
+        action='append',
+        default=[],
+        choices=('length', 'readability'),
+        help='[C] include additional statistics',
     )
 
     group = arg_parser.add_argument_group('MISCELLANEOUS OPTIONS')

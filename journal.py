@@ -185,10 +185,7 @@ class Journal(Mapping[str, Entry]):
         selected = set(self.entries.keys())
         if date_ranges:
             selected = self._filter_by_date(
-                set(
-                    title for title in selected
-                    if REFERENCE_REGEX.match(title)
-                ),
+                set(title for title in selected if REFERENCE_REGEX.match(title)),
                 *date_ranges,
             )
         if terms:
@@ -729,8 +726,7 @@ def do_hyphenation(journal, args):
     """
     for puncts in product(['', ' ', '-'], repeat=(len(args.terms) - 1)):
         possibility = ''.join(
-            part + punct for part, punct
-            in zip(args.terms, puncts)
+            part + punct for part, punct in zip(args.terms, puncts)
         ) + args.terms[-1]
         entries = filter_entries(journal, args, terms=[possibility])
         print(possibility)
@@ -882,7 +878,6 @@ def build_arg_parser(arg_parser):
     group.add_argument(
         '--unit',
         dest='unit',
-        action='store',
         choices=('year', 'month', 'day'),
         default='year',
         help='[C] set tabulation unit (default: year)',
@@ -928,7 +923,7 @@ def fill_date_range(date_range):
             units = [int(unit) for unit in date_range.split('-')]
             if len(units) == 2:
                 units.append(monthrange(*units)[1])
-            end_date = next_date(datetime(*units))
+            end_date = next_date(datetime(*units)) # type: ignore[arg-type]
     if start_date:
         start_date = start_date + '-01' * int((DATE_LENGTH - len(start_date)) / len('-01'))
     else:

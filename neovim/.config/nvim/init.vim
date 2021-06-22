@@ -639,7 +639,7 @@ function s:OpenExternal(arg)
 		call jobstart([l:program, l:target])
 	else
 		let l:program = 'open'
-		call jobstart(l:program .. " " .. shellescape(l:target))
+		call jobstart(l:program .. ' ' .. shellescape(l:target))
 	endif
 	echo 'executing ' .. l:program .. ' ' .. l:target
 endfunction
@@ -871,7 +871,7 @@ inoremap  <C-s>  <esc>:update<cr>
 xnoremap  <C-s>  <esc>:update<cr>gv
 
 " <C-D> to insert date {{{3
-inoremap  <C-d>  <C-r>=strftime("%Y-%m-%d")<cr>
+inoremap  <C-d>  <C-r>=strftime('%Y-%m-%d')<cr>
 
 " default to very magic search {{{3
 nnoremap  /      /\v
@@ -1091,7 +1091,7 @@ augroup justinnhli_miscellaneous
 	" disable spellcheck in virtual terminal
 	if exists('##TermOpen')
 		autocmd  TermOpen   *         setlocal nonumber nospell scrollback=-1
-		autocmd  TermClose  *         call feedkeys("i")
+		autocmd  TermClose  *         call feedkeys('i')
 	endif
 augroup END
 

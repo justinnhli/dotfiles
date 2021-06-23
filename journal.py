@@ -23,6 +23,7 @@ from textwrap import dedent
 from typing import Any, Optional, Union, Callable, Generator, Iterable, Sequence, Mapping
 
 Entry = namedtuple('Entry', 'title, text, filepath, line_num')
+Entries = Mapping[str, Entry]
 DateRange = tuple[Optional[str], Optional[str]]
 
 FILE_EXTENSION = '.journal'
@@ -39,7 +40,7 @@ RANGE_BOUND_REGEX = re.compile('([0-9]{4}(-[0-9]{2}(-[0-9]{2})?)?)?')
 RANGE_REGEX = re.compile(RANGE_BOUND_REGEX.pattern + ':?' + RANGE_BOUND_REGEX.pattern)
 
 
-class Journal(Mapping[str, Entry]):
+class Journal(Entries):
     """A journal."""
 
     def __init__(self, directory, use_cache=True, ignores=None):
@@ -180,7 +181,7 @@ class Journal(Mapping[str, Entry]):
             icase (bool): Ignore case. Defaults to True.
 
         Returns:
-            Dict[str, Entry]: The entries.
+            dict[str, Entry]: The entries.
         """
         selected = set(self.entries.keys())
         if date_ranges:
@@ -336,7 +337,7 @@ def filter_entries(journal, args, **kwargs):
         **kwargs: Override values for the CLI arguments.
 
     Returns:
-        Dict[str, Entry]: The entries.
+        dict[str, Entry]: The entries.
     """
     return journal.filter(
         terms=kwargs.get('terms', args.terms),
@@ -346,29 +347,33 @@ def filter_entries(journal, args, **kwargs):
 
 
 def group_entries(entries, unit, summary=True, reverse=True):
-    # type: (Mapping[str, Entry], str, bool, bool) -> chain[tuple[str, Iterable[str]]]
+    # type: (Entries, str, bool, bool) -> dict[str, Entries]
     """Group entries by date.
 
     Parameters:
-        entries (Mapping[str, Entry]): The entries.
+        entries (Entries): The entries.
         unit (str): The tabulation unit. One of 'year', 'month', or 'day'.
         summary (bool): Whether to show a summary. Defaults to True.
         reverse (bool): Whether to show entries in chronological order.
             Defaults to True.
 
     Returns:
-        Iterator[tuple[str, Iterable[str]]]: The grouped entries.
+        dict[str, Entries]: The grouped entries.
     """
     unit_length = STRING_LENGTHS[unit]
-    key_func = (lambda k: k[:unit_length] if DATE_REGEX.fullmatch(k) else 'other')
-    result = groupby(
-        sorted(entries.keys(), reverse=reverse, key=key_func),
+    key_func = (lambda entry:
+        entry[1].title[:unit_length]
+        if DATE_REGEX.fullmatch(entry[1].title)
+        else 'other'
+    )
+    grouped = groupby(
+        sorted(entries.items(), reverse=reverse, key=key_func),
         key_func,
     )
-    summary_stats = []
+    result = {group: dict(entries) for group, entries in grouped} # type: dict[str, Entries]
     if summary:
-        summary_stats = [('all', tuple(entries.keys()))]
-    return chain(result, summary_stats)
+        result['all'] = entries
+    return result
 
 
 def print_table(data, headers, gap_size=2):
@@ -376,7 +381,7 @@ def print_table(data, headers, gap_size=2):
     """Print a table of data.
 
     Parameters:
-        data (List[Sequence[str]]): The rows of data.
+        data (list[Sequence[str]]): The rows of data.
         headers (Sequence[str]): The headers.
         gap_size (int): The number of spaces between columns. Defaults to 2.
     """
@@ -392,33 +397,31 @@ def print_table(data, headers, gap_size=2):
         print(gap.join(col.rjust(width) for width, col in zip(widths, row)))
 
 
-def summarize_line_lengths(journal, unit, titles, num_words):
-    # type: (Mapping[str, Entry], str, Sequence[str], Sequence[int]) -> str
+def summarize_line_lengths(entries, unit, num_words):
+    # type: (Entries, str, Sequence[int]) -> str
     # pylint: disable = unused-argument
     """Get the length of the longest line of a group of entries.
 
     Parameters:
-        journal (Journal): The journal.
+        entries (Entries): The entries.
         unit (str): The grouping unit.
-        titles (Sequence[str]): The entry titles in the group.
         num_words (Sequence[int]): The number of words in each entry in the group.
 
     Returns:
         str: The length of longest line.
     """
-    text = '\n'.join(journal[title].text for title in titles)
+    text = '\n'.join(entry.text for entry in entries.values())
     return str(max(len(line) for line in text.splitlines()))
 
 
-def summarize_readability(journal, unit, titles, num_words):
-    # type: (Mapping[str, Entry], str, Sequence[str], Sequence[int]) -> str
+def summarize_readability(entries, unit, num_words):
+    # type: (Entries, str, Sequence[int]) -> str
     # pylint: disable = unused-argument
     """Calculate the Kincaid reading grade level of a group of entries.
 
     Parameters:
-        journal (Journal): The journal.
+        entries (Entries): The entries.
         unit (str): The grouping unit.
-        titles (Sequence[str]): The entry titles in the group.
         num_words (Sequence[int]): The number of words in each entry in the group.
 
     Returns:
@@ -457,7 +460,7 @@ def summarize_readability(journal, unit, titles, num_words):
             - 15.59
         )
 
-    text = '\n'.join(journal[title].text for title in titles)
+    text = '\n'.join(entry.text for entry in entries.values())
     return f'{kincaid(text): >6.3f}'
 
 
@@ -473,7 +476,9 @@ def log_error(message):
         int: The line where the error occurred.
         str: The error message.
     """
-    local_vars = currentframe().f_back.f_locals
+    frame = currentframe()
+    assert frame, 'Python does not support frame introspection'
+    local_vars = frame.f_back.f_locals
     return (
         local_vars['journal_file'],
         local_vars['line_num'],
@@ -550,23 +555,23 @@ def do_count(journal, args):
         args (Namespace): The CLI arguments.
     """
     COLUMNS = { # pylint: disable = invalid-name
-        'DATE': (lambda journal, unit, titles, num_words: unit),
-        'POSTS': (lambda journal, unit, titles, num_words: len(titles)),
-        'FREQ': (lambda journal, unit, titles, num_words:
-            f'{((title_to_date(max(titles)) - title_to_date(min(titles))).days + 1) / len(titles):.2f}'
+        'DATE': (lambda entries, unit, num_words: unit),
+        'POSTS': (lambda entries, unit, num_words: len(entries)),
+        'FREQ': (lambda entries, unit, num_words:
+            f'{((title_to_date(max(entries)) - title_to_date(min(entries))).days + 1) / len(entries):.2f}'
         ),
-        'SIZE': (lambda journal, unit, titles, num_words:
-            f'{sum(len(journal[date].text) for date in titles):,d}'
+        'SIZE': (lambda entries, unit, num_words:
+            f'{sum(len(entries[date].text) for date in entries):,d}'
         ),
-        'WORDS': (lambda journal, unit, titles, num_words: f'{sum(num_words):,d}'),
-        'MIN': (lambda journal, unit, titles, num_words: min(num_words)),
-        'MED': (lambda journal, unit, titles, num_words: round(median(num_words))),
-        'MAX': (lambda journal, unit, titles, num_words: max(num_words)),
-        'MEAN': (lambda journal, unit, titles, num_words: round(mean(num_words))),
-        'STDEV': (lambda journal, unit, titles, num_words:
+        'WORDS': (lambda entries, unit, num_words: f'{sum(num_words):,d}'),
+        'MIN': (lambda entries, unit, num_words: min(num_words)),
+        'MED': (lambda entries, unit, num_words: round(median(num_words))),
+        'MAX': (lambda entries, unit, num_words: max(num_words)),
+        'MEAN': (lambda entries, unit, num_words: round(mean(num_words))),
+        'STDEV': (lambda entries, unit, num_words:
             0 if len(num_words) <= 1 else round(stdev(num_words))
         ),
-    } # type: dict[str, Callable[[Mapping[str, Entry], str, Sequence[str], Sequence[int]], Any]]
+    } # type: dict[str, Callable[[Entries, str, Sequence[int]], Any]]
 
     if 'length' in args.columns:
         COLUMNS['LINE LEN'] = summarize_line_lengths
@@ -578,11 +583,10 @@ def do_count(journal, args):
         return
     length_map = {title: len(entry.text.split()) for title, entry in entries.items()}
     table = [] # type: list[Sequence[str]]
-    for timespan, titles in group_entries(entries, args.unit, args.reverse, args.summary):
-        titles = tuple(titles)
-        lengths = tuple(length_map[title] for title in titles)
+    for timespan, group in group_entries(entries, args.unit, args.reverse, args.summary).items():
+        lengths = tuple(length_map[title] for title in group)
         table.append([
-            str(func(journal, timespan, titles, lengths))
+            str(func(group, timespan, lengths))
             for column, func in COLUMNS.items()
         ])
     print_table(table, (list(COLUMNS.keys()) if args.headers else []))

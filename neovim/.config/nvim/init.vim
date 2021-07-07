@@ -1035,7 +1035,7 @@ if exists(':terminal')
 		return !empty(a:dir) && isdirectory(a:dir)
 	endfunction
 	augroup justinnhli_open_directories
-	    autocmd!
+		autocmd!
 		autocmd  VimEnter  *  silent! autocmd! FileExplorer *
 		autocmd  BufEnter  *  if s:IsDir(expand('%')) | call <SID>StartTerminal(['silent! lcd ' .. expand('%:p:h')], '') | endif
 	augroup END

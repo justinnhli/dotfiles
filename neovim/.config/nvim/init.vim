@@ -614,6 +614,8 @@ function s:OpenExternal(arg)
 	if l:target != '.' && l:target != '..' && l:target != '~'
 		let l:target = substitute(l:target, '^[^~/0-9A-Za-z.]*', '', '')
 		let l:target = substitute(l:target, '[^/0-9A-Za-z]*$', '', '')
+		" HACK: to deal with markdown links in the form of [text](URL)
+		let l:target = substitute(l:target, '^.*\](', '', '')
 	endif
 	if isdirectory(expand(l:target)) || filereadable(expand(l:target))
 		" file or directory

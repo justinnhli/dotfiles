@@ -1071,6 +1071,24 @@ augroup justinnhli_autoleave_insert
 	autocmd  InsertLeave    *         let &updatetime=g:updaterestore
 augroup END
 
+" disallow opening other files in quickfix windows {{{3
+function s:LockQuickfixRead()
+	if exists('w:was_quickfix') && w:was_quickfix
+		let l:cur_buf = bufnr()
+		close
+		exec 'buffer ' .. l:cur_buf
+	endif
+endfunction
+function s:LockQuickfixWinLeave()
+	if &buftype == 'quickfix'
+		let w:was_quickfix = 1
+	endif
+endfunction
+augroup justinnhli_lock_quickfix
+	autocmd BufRead	     *  call <sid>LockQuickfixRead()
+	autocmd BufWinLeave  *  call <sid>LockQuickfixWinLeave()
+augroup END
+
 " miscellaneous {{{3
 augroup justinnhli_miscellaneous
 	autocmd!

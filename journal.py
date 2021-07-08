@@ -274,7 +274,6 @@ class Journal(Entries):
                         titles.add(line)
                     elif prev_indent == 0:
                         errors.append(log_error('consecutive unindented lines'))
-                        print('here')
                 elif indent - prev_indent > 1:
                     errors.append(log_error('unexpected indentation'))
                 prev_indent = indent

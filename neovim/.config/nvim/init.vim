@@ -614,8 +614,6 @@ function s:OpenExternal(arg)
 	if l:target != '.' && l:target != '..' && l:target != '~'
 		let l:target = substitute(l:target, '^[^~/0-9A-Za-z.]*', '', '')
 		let l:target = substitute(l:target, '[^/0-9A-Za-z]*$', '', '')
-		" HACK: to deal with markdown links in the form of [text](URL)
-		let l:target = substitute(l:target, '^.*\](', '', '')
 	endif
 	if isdirectory(expand(l:target)) || filereadable(expand(l:target))
 		" file or directory
@@ -627,6 +625,9 @@ function s:OpenExternal(arg)
 	elseif l:target =~ '[A-Za-z]\+[0-9A-Za-z.]\+@[0-9A-Za-z.]\+\.[0-9A-Za-z.]\+'
 		" email
 		let l:target = 'https://mail.google.com/mail/u/0/?tf=cm&to=' .. l:target
+	elseif l:target =~ 'https\?://'
+		" URL; further process to delete everything up to the first 'http'
+		let l:target = substitute(l:target, '^.\{-\}\(https\?://\)', '\1', '')
 	else
 		let l:target = ''
 	endif

@@ -987,6 +987,10 @@ def parse_args(arg_parser, args):
     if args.log:
         log_search(arg_parser, args, journal)
     args.operation(journal, args)
+    try:
+        stdout.flush()
+    except BrokenPipeError:
+        pass
 
 
 def log_search(arg_parser, args, journal):

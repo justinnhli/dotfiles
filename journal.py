@@ -1006,6 +1006,7 @@ def log_search(arg_parser, args, journal):
     log_file = journal.directory.joinpath('.log').resolve()
     if not (args.log and log_file.exists()):
         return
+    op_flag = None
     options = [] # type: list[tuple[str, Optional[str]]]
     for option_string, option in arg_parser._option_string_actions.items():
         if args.operation is option.const:
@@ -1019,10 +1020,14 @@ def log_search(arg_parser, args, journal):
                     options.append((option_string, option_value))
     log_args = op_flag
     collapsible = (len(op_flag) == 2)
-    for opt_str, opt_val in sorted(options, key=(lambda x: (len(x) != 1, x[0].upper()))):
-        log_args += f' {opt_str} {opt_val}'
-        if opt_val is None and collapsible:
-            log_args = log_args.lstrip(' -')
+    sort_key = (lambda pair: (pair[1] is not None, pair[0].upper()))
+    for opt_str, opt_val in sorted(options, key=sort_key):
+        if collapsible and len(opt_str) == 2:
+            log_args += opt_str[1]
+        else:
+            log_args += f' {opt_str}'
+        if opt_val is not None:
+            log_args += f' {opt_val}'
         collapsible = (len(opt_str) == 2 and opt_val is None)
     terms = ' '.join(
         '"{}"'.format(term.replace('"', '\\"'))

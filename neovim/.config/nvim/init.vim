@@ -966,7 +966,7 @@ command!  -nargs=1 -complete=file  OpenExternal  :call <SID>OpenExternal(<f-args
 augroup justinnhli_quickfix
 	autocmd!
 	" open the location window after a quickfix command
-	autocmd  QuickFixCmdPost  l*  nested lwindow
+	autocmd  QuickFixCmdPost  l*  lwindow
 	" close the location window if it's the only window in a tab
 	autocmd  WinEnter         *   if winnr('$') == 1 && getbufvar(winbufnr(winnr()), '&buftype') == 'quickfix' | quit | endif
 	" hide quickfix and location windows when typing

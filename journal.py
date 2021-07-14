@@ -585,7 +585,7 @@ def do_count(journal, args):
         return
     length_map = {title: len(entry.text.split()) for title, entry in entries.items()}
     table = [] # type: list[Sequence[str]]
-    for timespan, group in group_entries(entries, args.unit, args.reverse, args.summary).items():
+    for timespan, group in group_entries(entries, args.unit, args.summary, args.reverse).items():
         lengths = tuple(length_map[title] for title in group)
         table.append([
             str(func(group, timespan, lengths))

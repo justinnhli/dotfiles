@@ -19,7 +19,6 @@ from statistics import mean, median, stdev
 from sys import stdout, exit as sys_exit
 from tarfile import open as open_tar_file, TarInfo
 from tempfile import mkstemp
-from textwrap import dedent
 from typing import Any, Optional, Union, Callable, Generator, Iterable, Sequence, Mapping
 
 Entry = namedtuple('Entry', 'title, text, filepath, line_num')
@@ -37,7 +36,6 @@ DATE_LENGTH = STRING_LENGTHS['day']
 REFERENCE_REGEX = re.compile('[0-9]{4}-[0-9]{2}-[0-9]{2}')
 DATE_REGEX = re.compile(REFERENCE_REGEX.pattern + '(, (Mon|Tues|Wednes|Thurs|Fri|Satur|Sun)day)?')
 RANGE_BOUND_REGEX = re.compile('([0-9]{4}(-[0-9]{2}(-[0-9]{2})?)?)?')
-RANGE_REGEX = re.compile(RANGE_BOUND_REGEX.pattern + ':?' + RANGE_BOUND_REGEX.pattern)
 
 
 class Journal(Entries):
@@ -141,7 +139,8 @@ class Journal(Entries):
                 self.entries[title] = Entry(
                     title,
                     entry_dict['text'],
-                    Path(entry_dict['filepath']).expanduser().resolve(),
+                    entry_dict['filepath'],
+                    #Path(entry_dict['filepath']).expanduser().resolve(),
                     entry_dict['line_num'],
                 )
 
@@ -213,24 +212,25 @@ class Journal(Entries):
 
     def _write_cache(self):
         # type: () -> None
+        lines = []
+        lines.append('{')
+        for entry in sorted(self.entries.values()):
+            relative_path = Path(entry.filepath).expanduser().resolve().relative_to(self.directory)
+            lines.append(f"'{entry.title}': {{")
+            lines.append(f"    'title': '{entry.title}',")
+            lines.append(f"    'filepath': '{relative_path}',")
+            lines.append(f"    'line_num': {entry.line_num},")
+            lines.append(f"    'text': {repr(entry.text)},")
+            lines.append('},')
+        lines.append('}')
         with self.cache_file.open('w') as fd:
-            fd.write('{\n')
-            for entry in sorted(self.entries.values()):
-                fd.write(dedent(f'''
-                    '{entry.title}': {{
-                        'title': '{entry.title}',
-                        'filepath': '{entry.filepath.relative_to(self.directory)}',
-                        'line_num': {entry.line_num},
-                        'text': {repr(entry.text)},
-                    }},
-                ''').strip())
-                fd.write('\n')
-            fd.write('}\n')
+            fd.write('\n'.join(lines))
 
     def lint(self):
         # type: () -> list[tuple[Path, int, str]]
         """Check the journal for errors."""
         # pylint: disable = line-too-long, too-many-nested-blocks, too-many-branches
+        ascii_regex = re.compile('(\t*([^ \t][ -~]*)?[^ \t])?')
         errors = []
         titles = set()
         long_dates = None
@@ -251,7 +251,7 @@ class Journal(Entries):
             prev_line = ''
             for line_num, line in enumerate(lines, start=1): # pylint: disable = unused-variable
                 indent = len(re.match('\t*', line)[0])
-                if not re.fullmatch('(\t*([^ \t][ -~]*)?[^ \t])?', line):
+                if not ascii_regex.fullmatch(line):
                     errors.append(log_error('non-tab indentation, trailing whitespace, or non-ASCII character'))
                 line = line.strip()
                 if not line.startswith('|') and '  ' in line:
@@ -426,6 +426,9 @@ def summarize_readability(entries, unit, num_words):
     Returns:
         str: The reading grade level.
     """
+    non_alnum_regex = re.compile('[^ 0-9A-Za-z]')
+    multispace_regex = re.compile(' +')
+
     def to_sentences(text):
         # type: (str) -> chain[str]
         for paragraph in text.splitlines():
@@ -439,8 +442,8 @@ def summarize_readability(entries, unit, num_words):
     def strip_punct(text):
         # type: (str) -> str
         text = text.replace("'", '')
-        text = re.sub('[^ 0-9A-Za-z]', ' ', text)
-        text = re.sub(' +', ' ', text)
+        text = non_alnum_regex.sub(' ', text)
+        text = multispace_regex.sub(' ', text)
         return text.strip()
 
     def letters_to_syllables(letters, rate):
@@ -450,7 +453,7 @@ def summarize_readability(entries, unit, num_words):
     def kincaid(text):
         # type: (str) -> float
         sentences = [strip_punct(sentence) for sentence in to_sentences(text)]
-        num_letters = sum(len(word) for sentence in sentences for word in sentence)
+        num_letters = sum(len(sentence) for sentence in sentences)
         num_words = sum(len(sentence.split()) for sentence in sentences)
         num_sentences = len(sentences)
         return (
@@ -781,7 +784,7 @@ def do_vimgrep(journal, args):
                 snippet = match_line[start_index:end_index]
                 results.append((line_num, col_num, f'{prefix}{snippet}{suffix}'))
         for line_num, col_num, preview in sorted(results):
-            print(f'{entry.filepath}:{entry.line_num + line_num - 1}:{col_num}: {preview}')
+            print(f'{Path(entry.filepath).expanduser().resolve()}:{entry.line_num + line_num - 1}:{col_num}: {preview}')
 
 
 # CLI
@@ -956,9 +959,10 @@ def process_args(arg_parser, args):
     if args.date_spec is None:
         args.date_ranges = None
     else:
+        range_regex = re.compile(RANGE_BOUND_REGEX.pattern + ':?' + RANGE_BOUND_REGEX.pattern)
         date_ranges = []
         for date_range in args.date_spec.split(','):
-            if not (date_range and RANGE_REGEX.fullmatch(date_range)):
+            if not (date_range and range_regex.fullmatch(date_range)):
                 arg_parser.error(
                     f'argument -d: "{date_range}" should be in format '
                     '[YYYY[-MM[-DD]]][:][YYYY[-MM[-DD]]][,...]'

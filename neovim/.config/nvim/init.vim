@@ -542,6 +542,8 @@ nnoremap  <C-l>  <C-w>l
 " tab movement mappings {{{3
 nnoremap  <S-h>  :tabprev<cr>
 nnoremap  <S-l>  :tabnext<cr>
+xnoremap  <S-h>  <esc>:tabprev<cr>
+xnoremap  <S-l>  <esc>:tabnext<cr>
 nnoremap  <M-1>  :1tabnext<cr>
 nnoremap  <M-2>  :2tabnext<cr>
 nnoremap  <M-3>  :3tabnext<cr>

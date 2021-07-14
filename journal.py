@@ -427,7 +427,7 @@ def summarize_readability(entries, unit, num_words):
         str: The reading grade level.
     """
     non_alnum_regex = re.compile('[^ 0-9A-Za-z]')
-    multispace_regex = re.compile(' +')
+    multispace_regex = re.compile('  +')
 
     def to_sentences(text):
         # type: (str) -> chain[str]
@@ -454,7 +454,7 @@ def summarize_readability(entries, unit, num_words):
         # type: (str) -> float
         sentences = [strip_punct(sentence) for sentence in to_sentences(text)]
         num_letters = sum(len(sentence) for sentence in sentences)
-        num_words = sum(len(sentence.split()) for sentence in sentences)
+        num_words = len(strip_punct(text).split())
         num_sentences = len(sentences)
         return (
             0.39 * (num_words / num_sentences)
@@ -463,7 +463,7 @@ def summarize_readability(entries, unit, num_words):
         )
 
     text = '\n'.join(entry.text for entry in entries.values())
-    return f'{kincaid(text): >6.3f}'
+    return f'{kincaid(text):.3f}'
 
 
 def log_error(message):

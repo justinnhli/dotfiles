@@ -446,19 +446,20 @@ def summarize_readability(entries, unit, num_words):
         text = multispace_regex.sub(' ', text)
         return text.strip()
 
-    def letters_to_syllables(letters, rate):
-        # type: (int, float) -> float
-        return letters / rate
+    def letters_to_syllables(letters):
+        # type: (int) -> float
+        return letters / 3.26 # constant updated 2021-07-14
 
     def kincaid(text):
         # type: (str) -> float
         sentences = [strip_punct(sentence) for sentence in to_sentences(text)]
-        num_letters = sum(len(sentence) for sentence in sentences)
-        num_words = len(strip_punct(text).split())
+        words = strip_punct(text).split()
+        num_letters = sum(len(word) for word in words)
+        num_words = len(words)
         num_sentences = len(sentences)
         return (
             0.39 * (num_words / num_sentences)
-            + 11.8 * (letters_to_syllables(num_letters, 4.10) / num_words)
+            + 11.8 * (letters_to_syllables(num_letters) / num_words)
             - 15.59
         )
 

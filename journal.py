@@ -630,6 +630,18 @@ def do_graph(journal, args):
             path.add(rep)
             rep = disjoint_sets[rep]
         components[rep] |= path
+    node_fns = {
+        'uniform': (lambda entries, node: 48),
+        'length': (lambda entries, node: len(entries[node].text.split()) / 100),
+        'cites': (lambda entries, node:
+            5 * (1 + sum(
+                1 for entry in entries.values()
+                if entry.text > node and node in entry.text
+            ))
+        ),
+        'refs': (lambda entries, node: 5 * len(REFERENCE_REGEX.findall(entries[node].text))),
+    } # type: dict[str, Callable[[Entries, str], float]]
+    node_fn = node_fns[args.node_fn]
     print('digraph {')
     print('\tgraph [size="48", model="subset", rankdir="BT"];')
     print('\tnode [fontcolor="#4E9A06", shape="none"];')
@@ -641,7 +653,7 @@ def do_graph(journal, args):
         edge_lines = set()
         for src in srcs:
             node_lines[src[:STRING_LENGTHS['month']]].add(
-                f'"{src}" [fontsize="{len(entries[src].text.split()) / 100}"];'
+                f'"{src}" [fontsize="{node_fn(entries, src)}"];'
             )
             for dest in edges[src]:
                 edge_lines.add(f'"{src}" -> "{dest}";')
@@ -896,6 +908,12 @@ def build_arg_parser(arg_parser):
         default=[],
         choices=('length', 'readability'),
         help='[C] include additional statistics',
+    )
+    group.add_argument(
+        '--node-size',
+        choices=('uniform', 'length', 'cites', 'refs'),
+        default='length',
+        help='[G] the attribute that affects node size (default: length)',
     )
 
     group = arg_parser.add_argument_group('MISCELLANEOUS OPTIONS')

@@ -157,7 +157,7 @@ class Journal(Entries):
         return selected
 
     def _filter_by_date(self, selected, *date_ranges):
-        # type: (set[str], tuple[str, Optional[str]]) -> set[str]
+        # type: (set[str], DateRange) -> set[str]
         # pylint: disable = no-self-use
         first_date = min(selected)
         last_date = next_date(max(selected))
@@ -175,7 +175,7 @@ class Journal(Entries):
 
         Parameters:
             terms (Iterable[str]): Search terms for the entries.
-            date_ranges (Sequence[tuple[str, Optional[str]]]):
+            date_ranges (Sequence[DateRange]):
                 Date ranges for the entries. Optional.
             icase (bool): Ignore case. Defaults to True.
 

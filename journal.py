@@ -905,8 +905,8 @@ def build_arg_parser(arg_parser):
         '--column',
         dest='columns',
         action='append',
-        default=[],
         choices=('length', 'readability'),
+        default=[],
         help='[C] include additional statistics',
     )
     group.add_argument(

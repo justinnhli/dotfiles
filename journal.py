@@ -618,7 +618,10 @@ def do_graph(journal, args):
             if src > dest and dest in entries
         )
         referents[src].update(*(referents[dest] for dest in dests))
-        for dest in dests - referents[src]:
+        outgoing_edges = dests
+        if args.simplify_edges:
+            outgoing_edges -= referents[src]
+        for dest in outgoing_edges:
             edges[src].add(dest)
             while disjoint_sets[dest] != src:
                 disjoint_sets[dest], dest = src, disjoint_sets[dest]
@@ -908,6 +911,12 @@ def build_arg_parser(arg_parser):
         choices=('length', 'readability'),
         default=[],
         help='[C] include additional statistics',
+    )
+    group.add_argument(
+        '--no-simplify-edges',
+        dest='simplify_edges',
+        action='store_false',
+        help='[G] keep all edges',
     )
     group.add_argument(
         '--node-size',

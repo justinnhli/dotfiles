@@ -981,7 +981,9 @@ augroup justinnhli_quickfix
 	" hide quickfix and location windows when typing
 	autocmd  InsertEnter      *   silent! lclose | silent! cclose
 	" hide quickfix and location windows when the file has changed
-	autocmd  TextChanged      *   silent! lclose | silent! cclose
+	if exists('#TextChanged')
+	    autocmd  TextChanged      *   silent! lclose | silent! cclose
+	endif
 augroup END
 
 " change grep {{{3

@@ -164,7 +164,6 @@ set   smarttab " neovim default
 set nostartofline
 set   tabpagemax=50 " neovim default
 set   tabstop=4
-set   tagcase=followscs
 set   tags+=./.tags,.tags
 set   timeoutlen=500
 set   title
@@ -267,6 +266,9 @@ if exists('&shada')
 	set   shada='50,h
 else
 	set   viminfo='50,<100,h,n~/.viminfo
+endif
+if exists('&tagcase')
+	set   tagcase=followscs
 endif
 
 " map leader {{{1

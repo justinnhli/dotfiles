@@ -205,11 +205,6 @@ if has('persistent_undo')
 	set   undodir=.
 	set   undofile
 endif
-if exists('&shada')
-	set   shada='50,h
-else
-	set   viminfo='50,<100,h,n~/.viminfo
-endif
 if has('statusline')
 	set   statusline=
 	" buffer number
@@ -266,7 +261,12 @@ if exists('&esckeys')
 	set noesckeys
 endif
 if exists('&inccommand')
-	set inccommand=nosplit
+	set   inccommand=nosplit
+endif
+if exists('&shada')
+	set   shada='50,h
+else
+	set   viminfo='50,<100,h,n~/.viminfo
 endif
 
 " map leader {{{1

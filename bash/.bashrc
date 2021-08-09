@@ -229,6 +229,7 @@ if command -v python3 >/dev/null 2>&1; then
 	lsvenv() {
 		find "$PYTHON_VENV_HOME/" -mindepth 1 -maxdepth 1 -type d -exec basename {} ';' | sort
 	}
+	alias jupyter='venvrun datavis jupyter notebook'
 fi
 
 # nvim terminal

@@ -180,7 +180,7 @@ class Page:
         if in_metadata and line_index == len(lines) - 1:
             self.contents = ''
         else:
-            self.contents = '\n'.join(lines[line_index - 1:])
+            self.contents = '\n'.join(lines[line_index:])
 
     def write(self, filepath=None):
         # type: (Optional[Path]) -> None

@@ -11,7 +11,7 @@ from collections import namedtuple, defaultdict
 from copy import copy
 from datetime import datetime, timedelta
 from inspect import currentframe
-from itertools import chain, groupby, product
+from itertools import chain, groupby
 from os import chdir as cd, chmod, environ, execvp, fork, remove as rm, wait
 from pathlib import Path
 from stat import S_IRUSR
@@ -746,14 +746,31 @@ def do_hyphenation(journal, args):
         journal (Journal): The journal.
         args (Namespace): The CLI arguments.
     """
-    for puncts in product(['', ' ', '-'], repeat=(len(args.terms) - 1)):
-        possibility = ''.join(
-            part + punct for part, punct in zip(args.terms, puncts)
-        ) + args.terms[-1]
-        entries = filter_entries(journal, args, terms=[possibility])
-        print(possibility)
-        for title in sorted(entries, reverse=args.reverse):
-            print('    ' + title)
+    journal_text = '\n'.join(entry.text for entry in journal.entries.values())
+    alpha_regex = re.compile("[a-z']", flags=re.IGNORECASE)
+    if args.terms:
+        phrases = set(['-'.join(args.terms),])
+    else:
+        hyphen_regex = re.compile("([a-z']+(-[a-z']+)+)", flags=re.IGNORECASE)
+        phrases = set(matches[0] for matches in hyphen_regex.finditer(journal_text))
+    for phrase in sorted(phrases):
+        matches = set(re.finditer(r'[ -]?'.join(phrase.split('-')), journal_text))
+        counts = {}
+        for match in matches:
+            if args.whole_words:
+                if alpha_regex.match(journal_text[match.start() - 1]):
+                    continue
+                if alpha_regex.match(journal_text[match.end()]):
+                    continue
+            counts[match.group()] = filter_entries(journal, args, terms=[match.group()])
+        for possibility, entries in counts.items():
+            minimum = min(entries)
+            if DATE_REGEX.fullmatch(minimum):
+                minimum = minimum[:DATE_LENGTH]
+            maximum = min(entries)
+            if DATE_REGEX.fullmatch(maximum):
+                maximum = maximum[:DATE_LENGTH]
+            print(f'{possibility}: {len(entries)} ({minimum} to {maximum})')
 
 
 @register('list search results in vim :grep format')
@@ -924,6 +941,12 @@ def build_arg_parser(arg_parser):
         default='length',
         help='[G] the attribute that affects node size (default: length)',
     )
+    group.add_argument(
+        '--whole-words',
+        dest='whole_words',
+        action='store_true',
+        help='[hyphenation] only match whole words',
+    )
 
     group = arg_parser.add_argument_group('MISCELLANEOUS OPTIONS')
     group.add_argument(
@@ -982,8 +1005,6 @@ def process_args(arg_parser, args):
     """
     if args.operation.__name__ == 'do_hyphenation':
         args.terms = list(chain(*(term.split('-') for term in args.terms)))
-        if len(args.terms) < 2:
-            arg_parser.error('argument --hyphenation: two or more terms required')
     if args.date_spec is None:
         args.date_ranges = None
     else:

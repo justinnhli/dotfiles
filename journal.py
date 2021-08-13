@@ -767,7 +767,7 @@ def do_hyphenation(journal, args):
             minimum = min(entries)
             if DATE_REGEX.fullmatch(minimum):
                 minimum = minimum[:DATE_LENGTH]
-            maximum = min(entries)
+            maximum = max(entries)
             if DATE_REGEX.fullmatch(maximum):
                 maximum = maximum[:DATE_LENGTH]
             print(f'{possibility}: {len(entries)} ({minimum} to {maximum})')

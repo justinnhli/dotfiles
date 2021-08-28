@@ -43,11 +43,11 @@
     # remotes
     remotes = remote --verbose
     # pushing
-    unpushed = log --branches --not --remotes --no-walk --oneline --format=format:'%s (%D)'
+    unpushed = log --branches --not --remotes --no-walk --oneline --format=format:'%s (%D)%n'
     prepush = log origin..HEAD
     # other
     discards = ! \
-        git unpushed | sed 's/^/branch: /' | sed '$a\\' && \
+        git unpushed | sed 's/^/branch: /' && \
         git staged | sed 's/^/staged: /' && \
         git stashes | sed 's/^[^:]*: /stashed: /' && \
         git modified | sed 's/^/modified: /' && \

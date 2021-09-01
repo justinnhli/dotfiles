@@ -227,19 +227,18 @@ class Library:
 
     def lint(self):
         """Lint the library bibtex file."""
-        for key, paper in sorted(self.papers.items()):
-            # check for non "last, first" authors and editors
-            for attr in ['editor', 'author']:
+
+        def check_names(key, paper):
+            """Check for non "last, first" authors and editors."""
+
+            def check_name(attr):
                 if not hasattr(paper, attr):
-                    continue
+                    return
                 value = getattr(paper, attr)
                 if value in WEIRD_NAMES:
-                    continue
+                    return
                 people = value.split(' and ')
                 if any((',' not in person) for person in people if person not in WEIRD_NAMES):
-                    print(f'non-conforming {attr}s in {key}:')
-                    print(f'    current:')
-                    print(f'        {attr} = {{{value}}},')
                     pattern = ' *(?P<first>[A-Z][^ ]*( +[A-Z][^ ]*)*) +(?P<last>.*) *'
                     suggestion = ' and '.join([
                         person.strip() if person in WEIRD_NAMES
@@ -249,11 +248,21 @@ class Library:
                             person)
                         for person in people
                     ])
+                    print(f'non-conforming {attr}s in {key}:')
+                    print(f'    current:')
+                    print(f'        {attr} = {{{value}}},')
                     print(f'    suggested:')
                     print(f'        {attr} = {{{suggestion}}},')
-            # check for incorrectly-formed IDs
-            # TODO
-            # check for unquoted capitalizations
+
+            for attr in ['editor', 'author']:
+                check_name(attr)
+
+        def check_id(key, paper):
+            """Check for incorrectly-formed IDs."""
+            pass # TODO
+
+        def check_capitalization(key, paper):
+            """Check for unquoted capitalizations."""
             title = paper.title
             changed = True
             while changed:
@@ -269,6 +278,11 @@ class Library:
                 if len(re.findall('[A-Za-z][A-Z]', word)) > 1:
                     print('unquoted title for {}: {}'.format(key, paper.title))
                     break
+
+        for key, paper in sorted(self.papers.items()):
+            check_names(key, paper)
+            check_id(key, paper)
+            check_capitalization(key, paper)
 
     def toc(self, out_path=None):
         """Create an index HTML file of the library."""

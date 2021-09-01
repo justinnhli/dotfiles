@@ -279,10 +279,24 @@ class Library:
                     print('unquoted title for {}: {}'.format(key, paper.title))
                     break
 
+        def check_doi(key, paper):
+            """Check for DOIs not in URL format."""
+            if not hasattr(paper, 'doi'):
+                return
+            doi = getattr(paper, 'doi')
+            if not doi.startswith('https://doi.org/'):
+                suggestion = re.sub('.*?(10.*)', r'\1', doi)
+                print(f'DOI in non-URL format for {key}:')
+                print(f'    current:')
+                print(f'        doi = {{{doi}}},')
+                print(f'    suggestion:')
+                print(f'        doi = {{https://doi.org/{suggestion}}},')
+
         for key, paper in sorted(self.papers.items()):
             check_names(key, paper)
             check_id(key, paper)
             check_capitalization(key, paper)
+            check_doi(key, paper)
 
     def toc(self, out_path=None):
         """Create an index HTML file of the library."""

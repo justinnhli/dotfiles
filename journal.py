@@ -808,7 +808,7 @@ def do_vimgrep(journal, args):
                 else:
                     start_index = match_line.rfind(' ', 0, col_num - prefix_len) + 1
                     prefix = '[...] '
-                if col_num > len(match_line) - suffix_len:
+                if col_num >= len(match_line) - suffix_len:
                     end_index = len(match_line)
                     suffix = ''
                 else:

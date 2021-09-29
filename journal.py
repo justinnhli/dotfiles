@@ -811,12 +811,16 @@ def do_vimgrep(journal, args):
                 else:
                     start_index = match_line.rfind(' ', 0, col_num - prefix_len) + 1
                     prefix = '[...] '
-                if col_num >= len(match_line) - suffix_len:
+                suffix_index = col_num + len(match.group()) + suffix_len
+                suffix = ''
+                if suffix_index >= len(match_line):
                     end_index = len(match_line)
-                    suffix = ''
                 else:
-                    end_index = match_line.find(' ', col_num + len(match.group()) + suffix_len)
-                    suffix = ' [...]'
+                    end_index = match_line.find(' ', suffix_index)
+                    if end_index == -1:
+                        end_index = len(match_line)
+                    else:
+                        suffix = ' [...]'
                 snippet = match_line[start_index:end_index]
                 results.append((line_num, col_num, f'{prefix}{snippet}{suffix}'))
         for line_num, col_num, preview in sorted(results):

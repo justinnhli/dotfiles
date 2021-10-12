@@ -762,7 +762,10 @@ def do_hyphenation(journal, args):
                     continue
                 if alpha_regex.match(journal_text[match.end()]):
                     continue
-            counts[match.group()] = filter_entries(journal, args, terms=[match.group()])
+                term = r'\b' + match.group() + r'\b'
+            else:
+                term = match.group()
+            counts[match.group()] = filter_entries(journal, args, terms=[term])
         for possibility, entries in counts.items():
             minimum = min(entries)
             if DATE_REGEX.fullmatch(minimum):

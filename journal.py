@@ -644,7 +644,7 @@ def do_graph(journal, args):
         ),
         'refs': (lambda entries, node: 5 * len(REFERENCE_REGEX.findall(entries[node].text))),
     } # type: dict[str, Callable[[Entries, str], float]]
-    node_fn = node_fns[args.node_fn]
+    node_fn = node_fns[args.node_size]
     print('digraph {')
     print('\tgraph [size="48", model="subset", rankdir="BT"];')
     print('\tnode [fontcolor="#4E9A06", shape="none"];')

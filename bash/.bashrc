@@ -257,27 +257,6 @@ if [ -d "$HOME/pim" ]; then
 	fi
 fi
 
-# completion
-_generic_completion() {
-	# build up the context
-	local context="${COMP_WORDS[0]}"
-	if [ "$COMP_CWORD" -gt 0 ]; then
-		for i in $(seq "$COMP_CWORD"); do
-			context="$context ${COMP_WORDS[i]}"
-		done
-	fi
-	# call script
-	COMPREPLY=( $("$HOME"/.bash_completion.d/shellscrape.py "$(pwd)" "$context") )
-}
-
-if command -v python3 >/dev/null 2>&1 && [ -f "$HOME/.bash_completion.d/shellscrape.py" ]; then
-	for program in $("$HOME"/.bash_completion.d/shellscrape.py); do
-		if type "$program" >/dev/null 2>&1; then
-			complete -o default -F _generic_completion "$program"
-		fi
-	done
-fi
-
 # automatically correct minor spelling errors with `cd`
 shopt -s cdspell
 # redraw on window size change

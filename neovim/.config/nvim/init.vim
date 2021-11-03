@@ -1031,7 +1031,7 @@ function s:LoadFiletypeTemplate()
 		" delete the blank last line
 		execute "normal! :$\<cr>dd"
 		" place cursor at the marker and delete it
-		call search('TODO')
+		call search(' *TODO')
 		execute 'normal! de'
 	endif
 endfunction

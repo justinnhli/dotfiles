@@ -708,6 +708,26 @@ function s:ToggleColorscheme()
 	endif
 endfunction
 
+function s:ToggleSpellCheck()
+	let l:spellgroups = ['SpellBad', 'SpellCap', 'SpellRare', 'SpellLocal']
+	if &spell == 0
+		set spell
+		for group in l:spellgroups
+			execute 'highlight clear ' .. group
+		endfor
+		execute 'colorscheme ' .. g:colorscheme
+		execute 'set ft=' .. &ft
+	elseif execute('highlight SpellBad') !~? 'links to Error'
+		set spell
+		for group in l:spellgroups
+			execute 'highlight clear ' .. group
+			execute 'highlight link ' .. group .. ' Error'
+		endfor
+	else
+		set nospell
+	endif
+endfunction
+
 " setting toggle mappings {{{2
 
 " setting toggle mappings {{{3
@@ -718,7 +738,7 @@ nnoremap  <leader><leader>l  :set list!<cr>:set list?<cr>
 nnoremap  <leader><leader>m  :call <SID>ToggleColorscheme()<cr>:echo &background g:colors_name<cr>
 nnoremap  <leader><leader>n  :set number!<cr>:set number?<cr>
 nnoremap  <leader><leader>p  :set paste!<cr>:set paste?<cr>
-nnoremap  <leader><leader>s  :set spell!<cr>:set spell?<cr>
+nnoremap  <leader><leader>s  :call <SID>ToggleSpellCheck()<cr>:set spell?<cr>
 nnoremap  <leader><leader>w  :set wrap!<cr>:set wrap?<cr>
 nnoremap  <leader><leader>/  :set hlsearch!<cr>:set hlsearch?<cr>
 

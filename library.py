@@ -174,7 +174,7 @@ class Library:
                     self.papers[paper.id] = paper
                     paper = None
                 else:
-                    match = re.fullmatch(' *(?P<attr>[^ =]+) *= *{(?P<val>.+)},', line)
+                    match = re.fullmatch(r'\s*(?P<attr>[^ =]+) *= *{(?P<val>.+)},', line)
                     assert match, f'anomalous bibtex field: {line}'
                     setattr(paper, match.group('attr'), match.group('val'))
 

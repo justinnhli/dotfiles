@@ -1195,3 +1195,48 @@ function UnicodeToAscii()
 	" specials
 	%s/\%uFFFC//eg " object replacement character
 endfunction
+
+" EmojiToShortcode {{{3
+function EmojiToShortcode()
+    " smile/laugh
+    "😀
+    "😁
+    "😃
+    "😄
+    "😆
+    " blush
+    " sweat/tears
+    "😅
+    "😓
+    "😢
+    "🥲
+    " heart
+    "😍
+    "😘
+    "🥰
+    " anger
+    "😡
+    "😠
+    " other
+    "😲
+    %s/😀/:grinning:/eg
+    %s/😁/:grinning:/eg
+    %s/😂/:laughing_crying_face:/eg
+    %s/😃/:grinning:/eg
+    %s/😄/:grinning:/eg
+    %s/😆/:grinning:/eg
+    %s/😇/:halo:/eg
+    %s/😈/:horns:/eg
+    %s/😊/:blushing_smile:/eg
+    %s/😎/:sunglasses:/eg
+    %s/😏/:smirk:/eg
+    %s/😬/:grimace:/eg
+    %s/😭/:streaming_tears:/eg
+    %s/😮/:open_mouth_face:/eg
+    %s/🙃/:upside_down_smile:/eg
+    %s/🙄/:eye_roll:/eg
+    %s/🤔/:thinking_face:/eg
+    %s/🤣/:rofl:/eg
+    %s/🤯/:mind_blown:/eg
+    %s/🥺/:glossy_eyes:/eg
+endfunction

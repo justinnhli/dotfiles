@@ -753,27 +753,38 @@ def do_hyphenation(journal, args):
     else:
         hyphen_regex = re.compile("([a-z']+(-[a-z']+)+)", flags=re.IGNORECASE)
         phrases = set(matches[0] for matches in hyphen_regex.finditer(journal_text))
-    for phrase in sorted(phrases):
-        matches = set(re.finditer(r'[ -]?'.join(phrase.split('-')), journal_text))
-        counts = {}
-        for match in matches:
-            if args.whole_words:
-                if alpha_regex.match(journal_text[match.start() - 1]):
-                    continue
-                if alpha_regex.match(journal_text[match.end()]):
-                    continue
-                term = r'\b' + match.group() + r'\b'
-            else:
-                term = match.group()
-            counts[match.group()] = filter_entries(journal, args, terms=[term])
-        for possibility, entries in counts.items():
-            minimum = min(entries)
-            if DATE_REGEX.fullmatch(minimum):
-                minimum = minimum[:DATE_LENGTH]
-            maximum = max(entries)
-            if DATE_REGEX.fullmatch(maximum):
-                maximum = maximum[:DATE_LENGTH]
-            print(f'{possibility}: {len(entries)} ({minimum} to {maximum})')
+    matches = set(*(
+        re.finditer(r'[ -]?'.join(phrase.split('-')), journal_text, flags=re.IGNORECASE)
+        for phrase in sorted(phrases)
+    ))
+    counts = {}
+    for match in matches:
+        variant = match.group().lower()
+        if variant in counts:
+            continue
+        if args.whole_words:
+            if alpha_regex.match(journal_text[match.start() - 1]):
+                continue
+            if alpha_regex.match(journal_text[match.end()]):
+                continue
+            term = r'\b' + match.group() + r'\b'
+        else:
+            term = match.group()
+        counts[variant] = filter_entries(journal, args, terms=[term], icase=re.IGNORECASE)
+    rows = []
+    if args.terms:
+        key_fn = (lambda pair: len(pair[1]))
+    else:
+        key_fn = None
+    for variant, entries in sorted(counts.items(), key=key_fn):
+        minimum = min(entries)
+        if DATE_REGEX.fullmatch(minimum):
+            minimum = minimum[:DATE_LENGTH]
+        maximum = max(entries)
+        if DATE_REGEX.fullmatch(maximum):
+            maximum = maximum[:DATE_LENGTH]
+        rows.append((variant, str(len(entries)), minimum, maximum))
+    print_table(rows, ['VARIANT', 'COUNT', 'FIRST', 'LAST'])
 
 
 @register('list search results in vim :grep format')

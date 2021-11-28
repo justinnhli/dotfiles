@@ -18,18 +18,19 @@ REMOTE_PATH = Path('/home/justinnhli/justinnhli.com/papers')
 
 
 WEIRD_NAMES = {
-    'Computing Research Association': 'CRA',
-    'Liberal Arts Computer Science Consortium': 'LACS',
-    'The College Board': 'CB',
-    'The Join Task Force on Computing Curricula': 'JTFCC',
-    'Open Science Collaboration': 'OSC',
     'others': '',
-    '{Google Inc.}': 'Google',
+    '{Association of Computing Machinery}': 'ACM',
+    '{Computing Research Association}': 'CRA',
     '{Gallup Inc.}': 'Gallup',
+    '{Google Inc.}': 'Google',
+    '{Liberal Arts Computer Science Consortium}': 'LACS',
     '{National Academies of Sciences, Engineering, and Medicine}': 'NASEM',
-    '{UMBEL Project}': 'UMBEL',
+    '{Open Science Collaboration}': 'OSC',
     '{The ABC Research Group}': 'ABC',
+    '{The College Board}': 'CB',
     '{The Economist}': 'Economist',
+    '{The Joint Task Force on Computing Curricula}': 'JTFCC',
+    '{UMBEL Project}': 'UMBEL',
 }
 
 class Paper:

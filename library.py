@@ -293,11 +293,28 @@ class Library:
                 print(f'    suggestion:')
                 print(f'        doi = {{https://doi.org/{suggestion}}},')
 
+        def check_pages(key, paper):
+            """Check for improper pages."""
+            if not hasattr(paper, 'pages'):
+                return
+            pages = getattr(paper, 'pages')
+            if ' ' in pages or '--' not in pages:
+                print(f'pages not in <start>--<end> format for {key}')
+                print(f'    current:')
+                print(f'        pages = {{{pages}}},')
+                if '-' in pages:
+                    start, end = pages.split('-')
+                    start = start.strip()
+                    end = end.strip()
+                    print(f'    suggestion:')
+                    print(f'        pages = {{{start}--{end}}},')
+
         for key, paper in self.papers.items():
             check_names(key, paper)
             check_id(key, paper)
             check_capitalization(key, paper)
             check_doi(key, paper)
+            check_pages(key, paper)
 
     def toc(self, out_path=None):
         """Create an index HTML file of the library."""

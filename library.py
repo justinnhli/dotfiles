@@ -293,7 +293,7 @@ class Library:
                 print(f'    suggestion:')
                 print(f'        doi = {{https://doi.org/{suggestion}}},')
 
-        for key, paper in sorted(self.papers.items()):
+        for key, paper in self.papers.items():
             check_names(key, paper)
             check_id(key, paper)
             check_capitalization(key, paper)

@@ -1219,6 +1219,8 @@ function EmojiToShortcode()
 	"😠
 	" other
 	"😲
+	"😧
+	"😣
 	%s/😀/:grinning:/eg
 	%s/😁/:grinning:/eg
 	%s/😂/:laughing_crying_face:/eg

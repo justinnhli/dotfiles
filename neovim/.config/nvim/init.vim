@@ -148,6 +148,7 @@ set   expandtab
 set   guioptions-=L
 set   guioptions-=T
 set   guioptions-=r
+set nohidden
 set   history=10000 " neovim default
 set   ignorecase
 set   laststatus=2 " neovim default

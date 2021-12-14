@@ -562,13 +562,13 @@ nnoremap  <M-0>  :10tabnext<cr>
 
 " pim file mappings {{{3
 if isdirectory(g:justinnhli_pim_path)
-	nnoremap  <leader>JJ  :tabnew <C-r>=g:justinnhli_pim_path<cr>/journal/next.journal<cr>
-	nnoremap  <leader>JL  :tabnew <C-r>=g:justinnhli_pim_path<cr>/journal/list.journal<cr>
-	nnoremap  <leader>JR  :tabnew <C-r>=g:justinnhli_pim_path<cr>/journal/repo.journal<cr>
-	nnoremap  <leader>JN  :tabnew <C-r>=g:justinnhli_pim_path<cr>/notes/<C-r>=strftime('%Y')<cr>.journal<cr>:$<cr>
-	nnoremap  <leader>JD  :tabnew<cr>:r!dynalist.py mobile<cr>:0d<cr>:setlocal buftype=nowrite filetype=journal nomodifiable<cr>zM
-	nnoremap  <leader>JC  :tabnew <C-r>=g:justinnhli_pim_path<cr>/contacts/contacts.vcf<cr>
-	nnoremap  <leader>JP  :tabnew <C-r>=g:justinnhli_pim_path<cr>/library.bib<cr>
+	nnoremap  <silent>  <leader>JJ  :tabnew <C-r>=g:justinnhli_pim_path<cr>/journal/next.journal<cr>
+	nnoremap  <silent>  <leader>JL  :tabnew <C-r>=g:justinnhli_pim_path<cr>/journal/list.journal<cr>
+	nnoremap  <silent>  <leader>JR  :tabnew <C-r>=g:justinnhli_pim_path<cr>/journal/repo.journal<cr>
+	nnoremap  <silent>  <leader>JN  :tabnew <C-r>=g:justinnhli_pim_path<cr>/notes/<C-r>=strftime('%Y')<cr>.journal<cr>:$<cr>
+	nnoremap  <silent>  <leader>JD  :tabnew<cr>:r!dynalist.py mobile<cr>:0d<cr>:setlocal buftype=nowrite filetype=journal nomodifiable<cr>zM
+	nnoremap  <silent>  <leader>JC  :tabnew <C-r>=g:justinnhli_pim_path<cr>/contacts/contacts.vcf<cr>
+	nnoremap  <silent>  <leader>JP  :tabnew <C-r>=g:justinnhli_pim_path<cr>/library.bib<cr>
 endif
 
 " float output functions {{{3

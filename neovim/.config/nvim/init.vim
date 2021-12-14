@@ -957,6 +957,17 @@ nnoremap  Y        y$
 nnoremap  u        g-
 nnoremap  <C-r>    g+
 
+" get fold level of line {{{3
+function s:SetFoldLevelToLine()
+	if &shiftwidth == 0
+		let l:fold_level = indent('.') / &tabstop
+	else
+		let l:fold_level = indent('.') / &shiftwidth
+	endif
+	execute 'set foldenable foldlevel=' .. l:fold_level
+	echo l:fold_level
+endfunction
+
 " miscellaneous editing mappings {{{3
 nnoremap  <leader>a         ggVG
 nnoremap  <leader>o         :OpenExternal<space>
@@ -975,7 +986,7 @@ xnoremap  <leader><bslash>  :<C-u>call <SID>FormatTable()<cr>gv
 nnoremap  <leader><cr>      :silent lmake<cr>
 xnoremap  <leader><cr>      y<Esc>:!<C-r>"<cr>
 nnoremap  <leader>;         :lcd %:p:h<cr>
-nnoremap  <silent>  <leader>.          :execute 'set foldenable foldlevel=' .. (indent('.') / &shiftwidth)<cr>
+nnoremap  <silent>  <leader>.          :<C-u>call <SID>SetFoldLevelToLine()<cr>
 if exists(':tnoremap')
 	tnoremap  <Esc><Esc>  <C-\><C-n>
 endif

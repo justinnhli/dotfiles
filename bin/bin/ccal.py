@@ -107,7 +107,7 @@ def print_calendar(start_date, end_date, mark_date=None):
         if mark_date and 0 <= (mark_date - curr_date).days <= 7:
             output = output.replace(f' {mark_date.day: >2d} ', f'[{mark_date.day: >2d}]')
         curr_date += 7 * ONE_DAY
-        if (curr_date - start_date).days <= 7 or curr_date.day <= 7:
+        if (curr_date - start_date).days <= 7 or 1 < curr_date.day <= 8:
             output += curr_date.strftime('%b %Y')
         print(output)
 

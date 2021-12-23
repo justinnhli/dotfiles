@@ -977,8 +977,6 @@ xnoremap  <leader>y         "+y
 nnoremap  <leader>z         1z=
 nnoremap  <leader>/         :2match IncSearch ''<left>
 nnoremap  <leader>@         :<C-f>ilet @=<C-r><C-r>
-nnoremap  <leader>]         <C-w><C-]><C-w>T
-xnoremap  <leader>]         <C-w><C-]><C-w>T
 nnoremap  <leader><bar>     ggVG:<C-u>call <SID>FormatColumns()<cr>
 nnoremap  <leader><bslash>  ggVG:<C-u>call <SID>FormatTable()<cr>
 xnoremap  <leader><bar>     :<C-u>call <SID>FormatColumns()<cr>gv

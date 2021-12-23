@@ -4,7 +4,7 @@
 import re
 from argparse import ArgumentParser
 from collections import defaultdict
-from distutils.spawn import find_executable
+from shutil import which
 from inspect import signature, Parameter
 from pathlib import Path
 from subprocess import run
@@ -386,10 +386,10 @@ class Library:
         """List papers that differ between the local and remote libraries."""
 
         def _which_md5():
-            md5_path = find_executable('md5sum')
+            md5_path = which('md5sum')
             if md5_path:
                 return [md5_path]
-            md5_path = find_executable('md5')
+            md5_path = which('md5')
             if md5_path:
                 return [md5_path, '-r']
             raise FileNotFoundError('cannot locate md5sum or md5')

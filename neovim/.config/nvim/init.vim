@@ -1208,13 +1208,6 @@ endfunction
 
 " EmojiToShortcode {{{3
 function EmojiToShortcode()
-	" smile/laugh
-	"😀
-	"😁
-	"😃
-	"😄
-	"😆
-	" blush
 	" sweat/tears
 	"😅
 	"😓
@@ -1245,6 +1238,7 @@ function EmojiToShortcode()
 	%s/😬/:grimace:/eg
 	%s/😭/:streaming_tears:/eg
 	%s/😮/:open_mouth_face:/eg
+	%s/🙂/:grinning:/eg
 	%s/🙃/:upside_down_smile:/eg
 	%s/🙄/:eye_roll:/eg
 	%s/🤔/:thinking_face:/eg

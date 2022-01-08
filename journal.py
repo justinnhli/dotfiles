@@ -682,7 +682,7 @@ def do_index(journal, _):
     """
     errors = journal.update_metadata()
     if errors:
-        print('\n'.join('{}:{}: {}'.format(*error) for error in errors))
+        print('\n'.join(f'{path}:{line}: {message}' for path, line, message in errors))
         sys_exit(1)
 
 
@@ -700,7 +700,7 @@ def do_list(journal, args):
 
 
 @register('-S', 'show entry contents')
-def do_show(journal, args):
+def do_show(journal, args): # pylint: disable = too-many-branches
     # type: (Journal, Namespace) -> None
     """Show entry contents.
 
@@ -714,7 +714,7 @@ def do_show(journal, args):
     text = '\n\n'.join(entry.text for _, entry in sorted(entries.items(), reverse=args.reverse))
     if stdout.isatty():
         temp_file = Path(mkstemp(FILE_EXTENSION)[1]).expanduser().resolve()
-        with temp_file.open('w') as fd:
+        with temp_file.open('w', encoding='utf-8') as fd:
             fd.write(text)
         chmod(temp_file, S_IRUSR)
         if fork():
@@ -738,7 +738,7 @@ def do_show(journal, args):
 
 
 @register('list entries that hyphenate the terms differently')
-def do_hyphenation(journal, args):
+def do_hyphenation(journal, args): # pylint: disable = too-many-branches
     # type: (Journal, Namespace) -> None
     """List entries that hyphenate the terms differently.
 
@@ -771,7 +771,7 @@ def do_hyphenation(journal, args):
         else:
             term = match.group()
         counts[variant] = filter_entries(journal, args, terms=[term], icase=re.IGNORECASE)
-    rows = []
+    rows = [] # type: list[Sequence[str]]
     if args.terms:
         key_fn = (lambda pair: len(pair[1]))
     else:
@@ -788,7 +788,7 @@ def do_hyphenation(journal, args):
 
 
 @register('list search results in vim :grep format')
-def do_vimgrep(journal, args):
+def do_vimgrep(journal, args): # pylint: disable = too-many-branches
     # type: (Journal, Namespace) -> None
     """List search results in vim :grep format.
 

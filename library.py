@@ -260,7 +260,30 @@ class Library:
 
         def check_id(key, paper):
             """Check for incorrectly-formed IDs."""
-            pass # TODO
+            assert hasattr(paper, 'author')
+            assert hasattr(paper, 'year')
+            assert hasattr(paper, 'title')
+            if paper.author.startswith('{'):
+                first_author = re.sub('({[^}]*}).*', r'\1', paper.author)
+                first_author = WEIRD_NAMES.get(first_author, first_author)
+            else:
+                first_author = paper.author.split(',')[0]
+                first_author = re.sub(r'\\.{(.)}', r'\1', first_author)
+            year = paper.year
+            suggestion = f'{first_author}{year}{paper.title}'
+            suggestion = re.sub('[^0-9A-Za-z]', '', suggestion)
+            suffices = ('', '1', '2', 'thesis')
+            matches = False
+            for suffix in suffices:
+                if key.lower().endswith(suffix):
+                    temp_key = key[:-len(suffix)]
+                else:
+                    temp_key = key
+                if suggestion.lower().startswith(temp_key.lower()):
+                    matches = True
+                    break
+            if not matches:
+                print(key, suggestion)
 
         def check_capitalization(key, paper):
             """Check for unquoted capitalizations."""

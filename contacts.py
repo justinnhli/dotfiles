@@ -2,21 +2,26 @@
 
 from collections import defaultdict
 from pathlib import Path
+from typing import Mapping
 
 CONTACTS_PATH = Path('~/pim/contacts/contacts.vcf').expanduser()
 
 class Contact:
 
     def __init__(self, attrs):
+        # type: (Mapping[str, set[str]]) -> None
         self.attrs = attrs
 
     def __getitem__(self, key):
+        # type: (str) -> set[str]
         return self.attrs[key]
 
     def get_only(self, key):
+        # type: (str) -> str
         return list(self.attrs[key])[0]
 
     def to_vcf(self):
+        # type: () -> str
         result = []
         result.append('BEGIN:VCARD')
         result.append(f'FN:{list(self.attrs["FN"])[0]}')
@@ -33,6 +38,7 @@ class Contact:
 
 
 def read_contacts(path):
+    # type: (Path) -> list[Contact]
     with path.open() as fd:
         contents = fd.read()
     contacts = []
@@ -48,7 +54,8 @@ def read_contacts(path):
 
 
 def lint(contacts):
-    existing = defaultdict(set)
+    # type: (list[Contact]) -> None
+    existing = defaultdict(set) # type: dict[str, set[str]]
     for contact in contacts:
         # check that exactly one FN and N exist
         names_okay = True
@@ -80,6 +87,7 @@ def lint(contacts):
 
 
 def main():
+    # type: () -> None
     contacts = read_contacts(CONTACTS_PATH)
     lint(contacts)
 

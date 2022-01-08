@@ -166,6 +166,7 @@ class Archive:
 
 
 def main():
+    # type: () -> None
     arg_parser = ArgumentParser()
     arg_parser.add_argument('urls', nargs='+', help='URLs of articles to archive')
     args = arg_parser.parse_args()

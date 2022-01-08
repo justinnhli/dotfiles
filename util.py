@@ -1,9 +1,6 @@
 """Utility functions for PIM."""
 
 import re
-import sys
-from os import environ, execv
-from pathlib import Path
 
 DATE_REGEX = re.compile('[0-9]{4}-[0-9]{2}-[0-9]{2}')
 

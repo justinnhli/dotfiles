@@ -8,6 +8,7 @@ from shutil import which
 from inspect import signature, Parameter
 from pathlib import Path
 from subprocess import run
+from textwrap import dedent
 from typing import Any, Dict
 
 
@@ -249,11 +250,13 @@ class Library:
                             person)
                         for person in people
                     ])
-                    print(f'non-conforming {attr}s in {key}:')
-                    print(f'    current:')
-                    print(f'        {attr} = {{{value}}},')
-                    print(f'    suggested:')
-                    print(f'        {attr} = {{{suggestion}}},')
+                    print(dedent(f'''
+                        non-conforming {attr}s in {key}:
+                            current:
+                                {attr} = {{{value}}},
+                            suggested:
+                                {attr} = {{{suggestion}}},
+                    ''').strip())
 
             for attr in ['editor', 'author']:
                 check_name(attr)
@@ -310,11 +313,13 @@ class Library:
             doi = getattr(paper, 'doi')
             if not doi.startswith('https://doi.org/'):
                 suggestion = re.sub('.*?(10.*)', r'\1', doi)
-                print(f'DOI in non-URL format for {key}:')
-                print(f'    current:')
-                print(f'        doi = {{{doi}}},')
-                print(f'    suggestion:')
-                print(f'        doi = {{https://doi.org/{suggestion}}},')
+                print(dedent(f'''
+                    DOI in non-URL format for {key}:
+                        current:
+                            doi = {{{doi}}},
+                        suggestion:
+                            doi = {{https://doi.org/{suggestion}}},
+                ''').strip())
 
         def check_pages(key, paper):
             """Check for improper pages."""
@@ -322,15 +327,20 @@ class Library:
                 return
             pages = getattr(paper, 'pages')
             if ' ' in pages or '--' not in pages:
-                print(f'pages not in <start>--<end> format for {key}')
-                print(f'    current:')
-                print(f'        pages = {{{pages}}},')
+                print(dedent(f'''
+                    pages not in <start>--<end> format for {key}
+                        current:
+                            pages = {{{pages}}},
+                ''').strip())
                 if '-' in pages:
                     start, end = pages.split('-')
                     start = start.strip()
                     end = end.strip()
-                    print(f'    suggestion:')
-                    print(f'        pages = {{{start}--{end}}},')
+                    print(dedent(f'''
+                        pages not in <start>--<end> format for {key}
+                            suggestion:
+                                pages = {{{start}--{end}}},
+                    ''').strip())
 
         for key, paper in self.papers.items():
             check_names(key, paper)

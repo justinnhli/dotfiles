@@ -4,12 +4,12 @@
 import re
 from argparse import ArgumentParser
 from collections import defaultdict
-from shutil import which
 from inspect import signature, Parameter
 from pathlib import Path
+from shutil import which
 from subprocess import run
 from textwrap import dedent
-from typing import Any, Dict
+from typing import Any, Optional
 
 
 BIBTEX_PATH = Path('~/pim/library.bib').expanduser().resolve()
@@ -37,7 +37,7 @@ WEIRD_NAMES = {
 class Paper:
     """A research paper."""
 
-    __slots__ = [
+    __slots__ = (
         # library fields
         'library',
         # bibtex fields
@@ -66,10 +66,10 @@ class Paper:
         'venue',
         'volume',
         'year',
-    ]
+    )
 
     def __init__(self, paper_id, library=None):
-        # type: (str) -> None
+        # type: (str, Optional[Library]) -> None
         """Initialize the Paper."""
         self.library = library
         self.id = paper_id # pylint: disable = invalid-name
@@ -77,6 +77,7 @@ class Paper:
 
     @property
     def directory(self):
+        # type: () -> Path
         if self.library:
             return self.library.directory
         else:
@@ -84,6 +85,7 @@ class Paper:
 
     @property
     def remote_host(self):
+        # type: () -> str
         if self.library:
             return self.library.remote_host
         else:
@@ -91,6 +93,7 @@ class Paper:
 
     @property
     def remote_path(self):
+        # type: () -> Path
         if self.library:
             return self.library.remote_path
         else:
@@ -130,6 +133,7 @@ class Paper:
 
     @property
     def pdfinfo(self):
+        # type: () -> None
         if not self.local.exists():
             raise FileNotFoundError(self.local)
         process = run(['pdfinfo', str(self.local)], capture_output=True, check=True)
@@ -141,14 +145,20 @@ class Paper:
 class Library:
     """A Library of research Papers."""
 
-    def __init__(self, directory=PAPERS_PATH, bibtex_path=BIBTEX_PATH, remote_host=REMOTE_HOST, remote_path=REMOTE_PATH):
-        # type: (Path, Path) -> None
+    def __init__(
+        self,
+        directory=PAPERS_PATH,
+        bibtex_path=BIBTEX_PATH,
+        remote_host=REMOTE_HOST,
+        remote_path=REMOTE_PATH,
+    ):
+        # type: (Path, Path, str, Path) -> None
         """Initialize the Library."""
         self.directory = directory
         self.bibtex_path = bibtex_path
         self.remote_host = remote_host
         self.remote_path = remote_path
-        self.papers = {} # type: Dict[str, Paper]
+        self.papers = {} # type: dict[str, Paper]
         self._read_bibtex()
 
     def __contains__(self, key):
@@ -161,7 +171,7 @@ class Library:
 
     def _read_bibtex(self):
         # type: () -> None
-        with self.bibtex_path.open() as fd:
+        with self.bibtex_path.open(encoding='utf-8') as fd:
             paper = None
             for line in fd:
                 line = line.rstrip()
@@ -183,6 +193,7 @@ class Library:
     # individual paper management
 
     def add(self, file_path, new_name=None):
+        # type: (Path, Optional[str]) -> None
         """Add paper to library.
 
         Parameters:
@@ -199,6 +210,7 @@ class Library:
         old_path.replace(new_path)
 
     def open(self, file_path):
+        # type: (Path) -> None
         """Open the paper in a PDF reader.
 
         Parameters:
@@ -208,10 +220,11 @@ class Library:
         run(['open', str(Path(file_path).expanduser().resolve())], check=True)
 
     def remove(self, *file_paths):
+        # type: (*str) -> None
         """Remove the paper from the library.
 
         Parameters:
-            file_paths (Iterable[str]): The file paths to remove.
+            *file_paths (Path): The file paths to remove.
         """
         for file_path in file_paths:
             if file_path.endswith('.pdf'):
@@ -221,19 +234,23 @@ class Library:
     # individual paper pass through
 
     def passthrough(self, name, operation='default'):
+        # type: (str, str) -> None
         # pylint: disable = no-self-use
         print(name, operation)
         raise NotImplementedError()
 
     # library management
 
-    def lint(self):
+    def lint(self): # pylint: disable = too-many-statements
+        # type: () -> None
         """Lint the library bibtex file."""
 
         def check_names(key, paper):
+            # type: (str, Paper) -> None
             """Check for non "last, first" authors and editors."""
 
             def check_name(attr):
+                # type: (str) -> None
                 if not hasattr(paper, attr):
                     return
                 value = getattr(paper, attr)
@@ -262,6 +279,7 @@ class Library:
                 check_name(attr)
 
         def check_id(key, paper):
+            # type: (str, Paper) -> None
             """Check for incorrectly-formed IDs."""
             assert hasattr(paper, 'author')
             assert hasattr(paper, 'year')
@@ -289,7 +307,9 @@ class Library:
                 print(key, suggestion)
 
         def check_capitalization(key, paper):
+            # type: (str, Paper) -> None
             """Check for unquoted capitalizations."""
+            assert hasattr(paper, 'title')
             title = paper.title
             changed = True
             while changed:
@@ -303,10 +323,11 @@ class Library:
                 word = re.sub('[-/][A-Z]', '', word)
                 # TODO this check fails for (eg.) {Response to {Adams and McDonnell}}
                 if len(re.findall('[A-Za-z][A-Z]', word)) > 1:
-                    print('unquoted title for {}: {}'.format(key, paper.title))
+                    print(f'unquoted title for {key}: {paper.title}')
                     break
 
         def check_doi(key, paper):
+            # type: (str, Paper) -> None
             """Check for DOIs not in URL format."""
             if not hasattr(paper, 'doi'):
                 return
@@ -322,10 +343,13 @@ class Library:
                 ''').strip())
 
         def check_pages(key, paper):
+            # type: (str, Paper) -> None
             """Check for improper pages."""
             if not hasattr(paper, 'pages'):
                 return
             pages = getattr(paper, 'pages')
+            if pages.isdigit():
+                return
             if ' ' in pages or '--' not in pages:
                 print(dedent(f'''
                     pages not in <start>--<end> format for {key}
@@ -350,6 +374,7 @@ class Library:
             check_pages(key, paper)
 
     def toc(self, out_path=None):
+        # type: (Optional[Path]) -> None
         """Create an index HTML file of the library."""
         lines = ['''
             <!DOCTYPE html>
@@ -386,6 +411,7 @@ class Library:
                 fd.write('\n')
 
     def unify(self):
+        # type: () -> None
         coauthors = defaultdict(set)
         for key, paper in self.papers.items():
             authors = paper.author.split(' and ')
@@ -405,20 +431,24 @@ class Library:
                     print('   ', author2)
 
     def search(self, *terms):
+        # type: (*str) -> None
         """Search for a paper."""
         raise NotImplementedError()
 
     # remote management
 
-    def url(self, name):
+    def url(self, name): # pylint: disable = no-self-use
+        # type: (str) -> None
         if name.endswith('.pdf'):
             name = name[:-4]
         print(_get_url(name))
 
     def diff(self):
+        # type: () -> None
         """List papers that differ between the local and remote libraries."""
 
         def _which_md5():
+            # type: () -> list[str]
             md5_path = which('md5sum')
             if md5_path:
                 return [md5_path]
@@ -443,7 +473,7 @@ class Library:
             capture_output=True,
             verbose=False,
         )
-        hashes = defaultdict(dict)
+        hashes = defaultdict(dict) # type: dict[str, dict[str, str]]
         for location, output in zip(('local', 'remote'), (local_output, remote_output)):
             for line in output.stdout.decode('utf-8').splitlines():
                 md5_hash, path = line.split()
@@ -460,6 +490,7 @@ class Library:
             print(f'{symbol} {stem}')
 
     def pull(self):
+        # type: () -> None
         """Download remote papers to the local library."""
         _run_shell_command(
             'rsync',
@@ -472,6 +503,7 @@ class Library:
         )
 
     def push(self):
+        # type: () -> None
         """Upload local papers to the remote library."""
         _run_shell_command(
             'rsync',
@@ -484,6 +516,7 @@ class Library:
         )
 
     def sync(self):
+        # type: () -> None
         """Sync the remote and local libraries.
 
         Equivalent to a pull, then a push.
@@ -495,6 +528,7 @@ class Library:
     # as command line
 
     def __call__(self):
+        # type: () -> None
         # create the top-level parser
         parser = ArgumentParser()
         subparsers = parser.add_subparsers()
@@ -536,8 +570,9 @@ class Library:
         )
 
 
-def _get_url(filepath):
-    filepath = Path(filepath)
+def _get_url(filepath_str):
+    # type: (str) -> str
+    filepath = Path(filepath_str)
     return 'https://' + str(Path(REMOTE_HOST, 'papers', filepath.name[0].lower(), filepath.stem + '.pdf'))
 
 
@@ -551,6 +586,7 @@ def _run_shell_command(command, *args, capture_output=False, check=True, verbose
 
 
 def main():
+    # type: () -> None
     Library()()
 
 

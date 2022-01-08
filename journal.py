@@ -1113,7 +1113,7 @@ def log_search(arg_parser, args, journal):
 
 def main():
     # type: () -> None
-    """Provide CLI entry point."""
+    """Provide a CLI entry point."""
     arg_parser = build_arg_parser(ArgumentParser())
     args = arg_parser.parse_args()
     parse_args(arg_parser, args)

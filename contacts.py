@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""Command line tool for maintaining VCF contacts."""
 
 from collections import defaultdict
 from pathlib import Path
@@ -7,9 +8,15 @@ from typing import Mapping
 CONTACTS_PATH = Path('~/pim/contacts/contacts.vcf').expanduser()
 
 class Contact:
+    """A contact."""
 
     def __init__(self, attrs):
         # type: (Mapping[str, set[str]]) -> None
+        """Initialize a contact.
+
+        Parameters:
+            attrs: Attributes of the contact.
+        """
         self.attrs = attrs
 
     def __getitem__(self, key):
@@ -18,10 +25,23 @@ class Contact:
 
     def get_only(self, key):
         # type: (str) -> str
+        """Get the only value of an attribute.
+
+        Parameters:
+            key (str): The attribute.
+
+        Returns:
+            str: The value.
+        """
         return list(self.attrs[key])[0]
 
     def to_vcf(self):
         # type: () -> str
+        """Convert the contact to a VCF string.
+
+        Returns:
+            str: The VCF string.
+        """
         result = []
         result.append('BEGIN:VCARD')
         result.append(f'FN:{list(self.attrs["FN"])[0]}')
@@ -39,6 +59,14 @@ class Contact:
 
 def read_contacts(path):
     # type: (Path) -> list[Contact]
+    """Read contacts.
+
+    Parameters:
+        path (Path): The path to the contacts file.
+
+    Returns:
+        list[Contact]: A list of contacts.
+    """
     with path.open() as fd:
         contents = fd.read()
     contacts = []
@@ -55,6 +83,11 @@ def read_contacts(path):
 
 def lint(contacts):
     # type: (list[Contact]) -> None
+    """Check the contacts for errors.
+
+    Parameters:
+        contacts (list[Contact]): The list of contacts
+    """
     existing = defaultdict(set) # type: dict[str, set[str]]
     for contact in contacts:
         # check that exactly one FN and N exist
@@ -88,6 +121,7 @@ def lint(contacts):
 
 def main():
     # type: () -> None
+    """Provide a CLI entry point."""
     contacts = read_contacts(CONTACTS_PATH)
     lint(contacts)
 

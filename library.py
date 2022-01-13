@@ -281,17 +281,14 @@ class Library:
         def check_id(key, paper):
             # type: (str, Paper) -> None
             """Check for incorrectly-formed IDs."""
-            assert hasattr(paper, 'author')
-            assert hasattr(paper, 'year')
-            assert hasattr(paper, 'title')
-            if paper.author.startswith('{'):
-                first_author = re.sub('({[^}]*}).*', r'\1', paper.author)
+            author = getattr(paper, 'author')
+            if author.startswith('{'):
+                first_author = re.sub('({[^}]*}).*', r'\1', author)
                 first_author = WEIRD_NAMES.get(first_author, first_author)
             else:
-                first_author = paper.author.split(',')[0]
+                first_author = author.split(',')[0]
                 first_author = re.sub(r'\\.{(.)}', r'\1', first_author)
-            year = paper.year
-            suggestion = f'{first_author}{year}{paper.title}'
+            suggestion = f'{first_author}{getattr(paper, "year")}{getattr(paper, "title")}'
             suggestion = re.sub('[^0-9A-Za-z]', '', suggestion)
             suffices = ('', '1', '2', 'thesis')
             matches = False
@@ -309,8 +306,7 @@ class Library:
         def check_capitalization(key, paper):
             # type: (str, Paper) -> None
             """Check for unquoted capitalizations."""
-            assert hasattr(paper, 'title')
-            title = paper.title
+            title = getattr(paper, 'title')
             changed = True
             while changed:
                 changed = False
@@ -323,7 +319,7 @@ class Library:
                 word = re.sub('[-/][A-Z]', '', word)
                 # TODO this check fails for (eg.) {Response to {Adams and McDonnell}}
                 if len(re.findall('[A-Za-z][A-Z]', word)) > 1:
-                    print(f'unquoted title for {key}: {paper.title}')
+                    print(f'unquoted title for {key}: {title}')
                     break
 
         def check_doi(key, paper):
@@ -414,7 +410,7 @@ class Library:
         # type: () -> None
         coauthors = defaultdict(set)
         for key, paper in self.papers.items():
-            authors = paper.author.split(' and ')
+            authors = getattr(paper, 'author').split(' and ')
             for author1 in authors:
                 for author2 in authors:
                     author2 = re.sub('[^A-Za-z, ]', '', author2)

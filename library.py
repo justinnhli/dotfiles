@@ -209,27 +209,29 @@ class Library:
         assert not new_path.exists(), f'file already exists: {new_path}'
         old_path.replace(new_path)
 
-    def open(self, file_path):
-        # type: (Path) -> None
+    def open(self, *file_path_strs):
+        # type: (*str) -> None
         """Open the paper in a PDF reader.
 
         Parameters:
-            file_path (str): The file path to open
+            *file_path_strs (str): The file path to open
         """
         # pylint: disable = no-self-use
-        run(['open', str(Path(file_path).expanduser().resolve())], check=True)
+        for file_path_str in file_path_strs:
+            _run_shell_command('open', str(Path(file_path_str).expanduser().resolve()), check=True)
 
-    def remove(self, *file_paths):
+    def remove(self, *file_path_strs):
         # type: (*str) -> None
         """Remove the paper from the library.
 
         Parameters:
-            *file_paths (Path): The file paths to remove.
+            *file_path_strs (Path): The file paths to remove.
         """
-        for file_path in file_paths:
-            if file_path.endswith('.pdf'):
-                file_path = file_path[:-4]
-            Path(self.directory, file_path[0].lower(), file_path + '.pdf').expanduser().resolve().unlink()
+        for file_path_str in file_path_strs:
+            if not file_path_str.endswith('.pdf'):
+                file_path_str += '.pdf'
+            file_path = Path(self.directory, file_path_str[0].lower(), file_path_str)
+            file_path.expanduser().resolve().unlink(missing_ok=True)
 
     # individual paper pass through
 
@@ -408,18 +410,18 @@ class Library:
 
     def unify(self):
         # type: () -> None
-        coauthors = defaultdict(set)
+        coauthors = defaultdict(list) # type: dict[str, list[tuple[str, str]]]
         for key, paper in self.papers.items():
             authors = getattr(paper, 'author').split(' and ')
             for author1 in authors:
                 for author2 in authors:
                     author2 = re.sub('[^A-Za-z, ]', '', author2)
-                    coauthors[author1].add((author2, key))
-        for author, coauth in sorted(coauthors.items()):
-            coauth = sorted(coauth)
+                    coauthors[author1].append((author2, key))
+        for author, coauthor_info in sorted(coauthors.items()):
+            coauthor_info = sorted(coauthor_info)
             printed = False
-            for author1, author2 in zip(coauth[:-1], coauth[1:]):
-                if author1[0] != author2[0] and author2[0].startswith(author1[0].strip('.')):
+            for (author1, _), (author2, _) in zip(coauthor_info[:-1], coauthor_info[1:]):
+                if author1 != author2 and author2.startswith(author1.strip('.')):
                     if not printed:
                         print(author)
                         printed = True
@@ -433,11 +435,12 @@ class Library:
 
     # remote management
 
-    def url(self, name): # pylint: disable = no-self-use
+    def url(self, *names): # pylint: disable = no-self-use
         # type: (str) -> None
-        if name.endswith('.pdf'):
-            name = name[:-4]
-        print(_get_url(name))
+        for name in names:
+            if name.endswith('.pdf'):
+                name = name[:-4]
+            print(_get_url(name))
 
     def diff(self):
         # type: () -> None

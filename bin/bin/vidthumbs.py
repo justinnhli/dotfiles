@@ -27,16 +27,20 @@ def video_length(path):
     raise ValueError()
 
 
-def create_thumbnail_grid(path):
-    # type: (Path) -> None
+def create_thumbnail_grid(path, overwrite=False):
+    # type: (Path, bool) -> None
     """Create a thumbnail grid of a video.
 
     Parameters:
         path (Path): The path of the video file.
+        overwrite (bool): Whether to overwrite an existing image.
+            Defaults to False.
     """
     length = video_length(path)
     frequency = int(length) // 16
     img_path = path.parent.joinpath(path.stem + '.png')
+    if img_path.exists() and not overwrite:
+        return
     run(
         [
             'ffmpeg',
@@ -44,7 +48,7 @@ def create_thumbnail_grid(path):
             '-vf', f'fps=1/{frequency},scale=-1:120,tile=4x4',
             str(img_path),
         ],
-        check=True,
+        check=False,
     )
 
 
@@ -53,6 +57,7 @@ def main():
     """Provide a CLI entry point."""
     arg_parser = ArgumentParser(description='create a thumbnail grid of videos')
     arg_parser.add_argument('paths', type=Path, nargs='+', help='video file(s) to process')
+    arg_parser.add_argument('--overwrite', action='store_true', help='regenerate thumbnails')
     args = arg_parser.parse_args()
     processed = set()
     for path in args.paths:
@@ -60,7 +65,7 @@ def main():
         if path in processed:
             continue
         processed.add(path)
-        create_thumbnail_grid(path)
+        create_thumbnail_grid(path, overwrite=args.overwrite)
 
 
 if __name__ == '__main__':

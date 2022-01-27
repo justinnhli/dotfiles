@@ -136,7 +136,7 @@ class Paper:
         # type: () -> None
         if not self.local.exists():
             raise FileNotFoundError(self.local)
-        process = run(['pdfinfo', str(self.local)], capture_output=True, check=True)
+        process = run(['pdfinfo', str(self.local)], check=True)
         stdout = process.stdout.decode('utf-8')
         print(stdout)
         # TODO parse pdfinfo
@@ -462,14 +462,12 @@ class Library:
             str(self.directory),
             '-name', '*.pdf',
             '-exec', *md5_args, '{}', ';',
-            capture_output=True,
             verbose=False,
         )
         remote_output = _run_shell_command(
             'ssh',
             self.remote_host,
             f"find {self.remote_path} -name '*.pdf' -exec md5sum '{{}}' ';'",
-            capture_output=True,
             verbose=False,
         )
         hashes = defaultdict(dict) # type: dict[str, dict[str, str]]
@@ -575,13 +573,13 @@ def _get_url(filepath_str):
     return 'https://' + str(Path(REMOTE_HOST, 'papers', filepath.name[0].lower(), filepath.stem + '.pdf'))
 
 
-def _run_shell_command(command, *args, capture_output=False, check=True, verbose=True):
+def _run_shell_command(command, *args, check=True, verbose=True):
     if verbose:
         print(command + ' ' + ' '.join(
             (arg if arg.startswith('-') else f'"{arg}"')
             for arg in args
         ))
-    return run([command, *args], capture_output=capture_output, check=check)
+    return run([command, *args], capture_output=True, check=check)
 
 
 def main():

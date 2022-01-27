@@ -1,5 +1,0 @@
-beautifulsoup4
-newspaper3k
-requests
-git+https://github.com/justinnhli/pdfocr.git#egg=pdfocr
-git+https://github.com/justinnhli/pegparse.git#egg=pegparse

@@ -96,3 +96,5 @@ bar {
 exec --no-startup-id feh --bg-scale $HOME/Dropbox/wallpaper.png
 exec dropbox
 exec conky
+exec discord
+exec slack

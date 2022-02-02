@@ -290,12 +290,16 @@ class Library:
             else:
                 first_author = author.split(',')[0]
                 first_author = re.sub(r'\\.{(.)}', r'\1', first_author)
-            suggestion = f'{first_author}{getattr(paper, "year")}{getattr(paper, "title")}'
+            title = getattr(paper, 'title').title()
+            year = getattr(paper, 'year')
+            suggestion = f'{first_author}{year}{title}'
             suggestion = re.sub('[^0-9A-Za-z]', '', suggestion)
+            short_suggestion = f'{first_author}{year}{"".join(title.split()[:3])}'
+            short_suggestion = re.sub('[^0-9A-Za-z]', '', short_suggestion)
             suffices = ('', '1', '2', 'thesis')
             matches = False
             for suffix in suffices:
-                if key.lower().endswith(suffix):
+                if suffix and key.lower().endswith(suffix):
                     temp_key = key[:-len(suffix)]
                 else:
                     temp_key = key
@@ -303,7 +307,14 @@ class Library:
                     matches = True
                     break
             if not matches:
-                print(key, suggestion)
+                print(dedent(f'''
+                    non-conforming ID for {key}:
+                        current:
+                            @{paper.type} {{{key},
+                        suggestions:
+                            @{paper.type} {{{short_suggestion},
+                            @{paper.type} {{{suggestion},
+                ''').strip())
 
         def check_capitalization(key, paper):
             # type: (str, Paper) -> None

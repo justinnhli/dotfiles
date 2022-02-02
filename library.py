@@ -136,9 +136,7 @@ class Paper:
         # type: () -> None
         if not self.local.exists():
             raise FileNotFoundError(self.local)
-        process = run(['pdfinfo', str(self.local)], check=True)
-        stdout = process.stdout.decode('utf-8')
-        print(stdout)
+        print(_run_shell_command('pdfinfo', str(self.local)))
         # TODO parse pdfinfo
 
 
@@ -483,7 +481,7 @@ class Library:
         )
         hashes = defaultdict(dict) # type: dict[str, dict[str, str]]
         for location, output in zip(('local', 'remote'), (local_output, remote_output)):
-            for line in output.stdout.decode('utf-8').splitlines():
+            for line in output.splitlines():
                 md5_hash, path = line.split()
                 hashes[Path(path).stem][location] = md5_hash
         lines = {}
@@ -584,13 +582,13 @@ def _get_url(filepath_str):
     return 'https://' + str(Path(REMOTE_HOST, 'papers', filepath.name[0].lower(), filepath.stem + '.pdf'))
 
 
-def _run_shell_command(command, *args, check=True, verbose=True):
+def _run_shell_command(command, *args, verbose=True):
     if verbose:
         print(command + ' ' + ' '.join(
             (arg if arg.startswith('-') else f'"{arg}"')
             for arg in args
         ))
-    return run([command, *args], capture_output=True, check=check)
+    return run([command, *args], capture_output=True, check=True).stdout.decode('utf-8')
 
 
 def main():

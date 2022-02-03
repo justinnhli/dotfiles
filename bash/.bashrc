@@ -233,13 +233,16 @@ if command -v python3 >/dev/null 2>&1; then
 fi
 
 # nvim terminal
-if [ "$NVIM_LISTEN_ADDRESS" != '' ]; then
-	unset MANPAGER
-	alias :='$(command -v nvimcmd)'
-	alias vi='$(command -v nvimcmd) tabnew'
-	alias vim='$(command -v nvimcmd) tabnew'
-	alias nvim='$(command -v nvimcmd) tabnew'
-	workon neovim
+# need to check if #NVIM_LISTEN_ADDRESS is set
+if [ ! -z "${NVIM_LISTEN_ADDRESS:-}" ]; then
+	if [ "$NVIM_LISTEN_ADDRESS" != '' ]; then
+		unset MANPAGER
+		alias :='$(command -v nvimcmd)'
+		alias vi='$(command -v nvimcmd) tabnew'
+		alias vim='$(command -v nvimcmd) tabnew'
+		alias nvim='$(command -v nvimcmd) tabnew'
+		workon neovim
+	fi
 fi
 
 # PIM related settings

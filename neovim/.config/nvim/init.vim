@@ -1211,8 +1211,6 @@ function EmojiToShortcode()
 	" sweat/tears
 	"😅
 	"😓
-	"😢
-	"🥲
 	" heart
 	"😍
 	"😘
@@ -1235,6 +1233,7 @@ function EmojiToShortcode()
 	%s/😊/:blushing_smile:/eg
 	%s/😎/:sunglasses:/eg
 	%s/😏/:smirk:/eg
+	%s/😢/:tear:/eg
 	%s/😬/:grimace:/eg
 	%s/😭/:streaming_tears:/eg
 	%s/😮/:open_mouth_face:/eg
@@ -1244,5 +1243,7 @@ function EmojiToShortcode()
 	%s/🤔/:thinking_face:/eg
 	%s/🤣/:rofl:/eg
 	%s/🤯/:mind_blown:/eg
+	%s/🥲/:tear:/eg
 	%s/🥺/:glossy_eyes:/eg
+	%s/\%u2764\%uFE0F/:heart:/eg
 endfunction

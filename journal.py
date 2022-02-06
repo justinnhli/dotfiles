@@ -767,9 +767,9 @@ def do_hyphenation(journal, args): # pylint: disable = too-many-branches
                 continue
             if alpha_regex.match(journal_text[match.end()]):
                 continue
-            term = r'\b' + match.group() + r'\b'
+            term = r'\b' + re.escape(match.group()) + r'\b'
         else:
-            term = match.group()
+            term = re.escape(match.group())
         counts[variant] = filter_entries(journal, args, terms=[term], icase=re.IGNORECASE)
     rows = [] # type: list[Sequence[str]]
     if args.terms:

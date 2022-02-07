@@ -252,7 +252,9 @@ class Journal(Entries):
             for line_num, line in enumerate(lines, start=1): # pylint: disable = unused-variable
                 indent = len(re.match('\t*', line)[0])
                 if not ascii_regex.fullmatch(line):
-                    errors.append(log_error('non-tab indentation, trailing whitespace, or non-ASCII character'))
+                    errors.append(log_error(
+                        'non-tab indentation, trailing whitespace, or non-ASCII character'
+                    ))
                 line = line.strip()
                 if not line.startswith('|') and '  ' in line:
                     errors.append(log_error('multiple spaces'))
@@ -588,10 +590,7 @@ def do_count(journal, args):
     table = [] # type: list[Sequence[str]]
     for timespan, group in group_entries(entries, args.unit, args.summary, args.reverse).items():
         lengths = tuple(length_map[title] for title in group)
-        table.append([
-            str(func(group, timespan, lengths))
-            for column, func in COLUMNS.items()
-        ])
+        table.append([str(func(group, timespan, lengths)) for column, func in COLUMNS.items()])
     print_table(table, (list(COLUMNS.keys()) if args.headers else []))
 
 
@@ -606,8 +605,8 @@ def do_graph(journal, args):
     """
     entries = filter_entries(journal, args)
     entries = {
-        title[:DATE_LENGTH]:entry for title, entry
-        in entries.items() if DATE_REGEX.fullmatch(title)
+        title[:DATE_LENGTH]: entry for title, entry in entries.items()
+        if DATE_REGEX.fullmatch(title)
     }
     disjoint_sets = dict((k, k) for k in entries)
     referents = defaultdict(set) # type: dict[str, set[str]]
@@ -723,7 +722,12 @@ def do_show(journal, args): # pylint: disable = too-many-branches
         else:
             cd(args.directory)
             editor = environ.get('VISUAL', environ.get('EDITOR', 'nvim'))
-            vim_args = [editor, str(temp_file), '-c', f'cd {args.directory}', '-c', 'set hlsearch nospell']
+            vim_args = [
+                editor,
+                str(temp_file),
+                '-c', f'cd {args.directory}',
+                '-c', 'set hlsearch nospell',
+            ]
             if args.terms:
                 vim_args[-1] += ' ' + ('nosmartcase' if args.icase else 'noignorecase')
                 vim_args.extend((
@@ -835,7 +839,12 @@ def do_vimgrep(journal, args): # pylint: disable = too-many-branches
                 snippet = match_line[start_index:end_index]
                 results.append((line_num, col_num, f'{prefix}{snippet}{suffix}'))
         for line_num, col_num, preview in sorted(results):
-            print(f'{Path(entry.filepath).expanduser().resolve()}:{entry.line_num + line_num - 1}:{col_num}: {preview}')
+            print(':'.join([
+                f'{Path(entry.filepath).expanduser().resolve()}',
+                f'{entry.line_num + line_num - 1}',
+                f'{col_num}',
+                f' {preview}',
+            ]))
 
 
 # CLI
@@ -863,7 +872,7 @@ def build_arg_parser(arg_parser):
 
     group = None # type: Optional[_ArgumentGroup]
     group = arg_parser.add_argument_group('OPERATIONS').add_mutually_exclusive_group(required=True)
-    for _, flag, desc, function in sorted(OPERATIONS, key=(lambda option: (option.priority, option.flag))):
+    for _, flag, desc, function in sorted(OPERATIONS, key=(lambda opt: (opt.priority, opt.flag))):
         group.add_argument(
             flag,
             dest='operation',

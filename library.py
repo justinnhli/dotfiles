@@ -28,6 +28,7 @@ WEIRD_NAMES = {
     '{National Academies of Sciences, Engineering, and Medicine}': 'NASEM',
     '{Open Science Collaboration}': 'OSC',
     '{The ABC Research Group}': 'ABC',
+    '{The Cell Editorial Team}': 'Cell',
     '{The College Board}': 'CB',
     '{The Economist}': 'Economist',
     '{The Joint Task Force on Computing Curricula}': 'JTFCC',

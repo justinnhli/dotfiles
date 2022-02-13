@@ -1038,7 +1038,7 @@ def process_args(arg_parser, args):
         range_regex = re.compile(RANGE_BOUND_REGEX.pattern + ':?' + RANGE_BOUND_REGEX.pattern)
         date_ranges = []
         for date_range in args.date_spec.split(','):
-            if not (date_range and range_regex.fullmatch(date_range)):
+            if not (len(date_range) > 1 and range_regex.fullmatch(date_range)):
                 arg_parser.error(
                     f'argument -d: "{date_range}" should be in format '
                     '[YYYY[-MM[-DD]]][:][YYYY[-MM[-DD]]][,...]'

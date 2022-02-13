@@ -1016,6 +1016,8 @@ def fill_date_range(date_range):
         end_date = end_date + '-01' * int((DATE_LENGTH - len(end_date)) / len('-01'))
     else:
         end_date = None
+    if start_date is not None and end_date is not None and start_date > end_date:
+        return (None, None)
     return (start_date, end_date)
 
 
@@ -1043,7 +1045,12 @@ def process_args(arg_parser, args):
                     f'argument -d: "{date_range}" should be in format '
                     '[YYYY[-MM[-DD]]][:][YYYY[-MM[-DD]]][,...]'
                 )
-            date_ranges.append(fill_date_range(date_range))
+            start_date, end_date = fill_date_range(date_range)
+            if start_date is end_date is None:
+                arg_parser.error(
+                    f'argument -d: "{date_range}" has a start date after the end date'
+                )
+            date_ranges.append((start_date, end_date))
         args.date_ranges = date_ranges
     args.directory = args.directory.expanduser().resolve()
     args.ignores = set(path.expanduser().resolve() for path in args.ignores)

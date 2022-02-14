@@ -455,46 +455,15 @@ class Library:
     def diff(self):
         # type: () -> None
         """List papers that differ between the local and remote libraries."""
-
-        def _which_md5():
-            # type: () -> list[str]
-            md5_path = which('md5sum')
-            if md5_path:
-                return [md5_path]
-            md5_path = which('md5')
-            if md5_path:
-                return [md5_path, '-r']
-            raise FileNotFoundError('cannot locate md5sum or md5')
-
-        md5_args = _which_md5()
-        local_output = _run_shell_command(
-            'find',
+        print(_run_shell_command(
+            'rsync',
+            '--archive',
+            '--verbose',
+            '--dry-run',
+            '--delete',
+            f'{self.remote_host}:{self.remote_path}/',
             str(self.directory),
-            '-name', '*.pdf',
-            '-exec', *md5_args, '{}', ';',
-            verbose=False,
-        )
-        remote_output = _run_shell_command(
-            'ssh',
-            self.remote_host,
-            f"find {self.remote_path} -name '*.pdf' -exec md5sum '{{}}' ';'",
-            verbose=False,
-        )
-        hashes = defaultdict(dict) # type: dict[str, dict[str, str]]
-        for location, output in zip(('local', 'remote'), (local_output, remote_output)):
-            for line in output.splitlines():
-                md5_hash, path = line.split()
-                hashes[Path(path).stem][location] = md5_hash
-        lines = {}
-        for stem, file_hashes in hashes.items():
-            if 'local' not in file_hashes:
-                lines[stem] = '>'
-            elif 'remote' not in file_hashes:
-                lines[stem] = '<'
-            elif file_hashes['local'] != file_hashes['remote']:
-                lines[stem] = '!'
-        for stem, symbol in sorted(lines.items()):
-            print(f'{symbol} {stem}')
+        ))
 
     def pull(self):
         # type: () -> None

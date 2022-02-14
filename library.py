@@ -217,7 +217,7 @@ class Library:
         """
         # pylint: disable = no-self-use
         for file_path_str in file_path_strs:
-            _run_shell_command('open', str(Path(file_path_str).expanduser().resolve()), check=True)
+            _run_shell_command('open', str(Path(file_path_str).expanduser().resolve()))
 
     def remove(self, *file_path_strs):
         # type: (*str) -> None

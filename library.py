@@ -468,7 +468,7 @@ class Library:
     def pull(self):
         # type: () -> None
         """Download remote papers to the local library."""
-        _run_shell_command(
+        print(_run_shell_command(
             'rsync',
             '--archive',
             '--progress',
@@ -476,12 +476,12 @@ class Library:
             '--exclude', '.*',
             f'{self.remote_host}:{self.remote_path}/',
             str(self.directory),
-        )
+        ))
 
     def push(self):
         # type: () -> None
         """Upload local papers to the remote library."""
-        _run_shell_command(
+        print(_run_shell_command(
             'rsync',
             '--archive',
             '--progress',
@@ -489,7 +489,7 @@ class Library:
             '--exclude', '.*',
             f'{self.directory}/',
             f'{self.remote_host}:{self.remote_path}',
-        )
+        ))
 
     def sync(self):
         # type: () -> None

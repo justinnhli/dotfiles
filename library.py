@@ -455,7 +455,7 @@ class Library:
     def diff(self):
         # type: () -> None
         """List papers that differ between the local and remote libraries."""
-        print(_run_shell_command(
+        output = _run_shell_command(
             'rsync',
             '--archive',
             '--verbose',
@@ -463,7 +463,24 @@ class Library:
             '--delete',
             f'{self.remote_host}:{self.remote_path}/',
             str(self.directory),
-        ))
+        )
+        remote = set()
+        local = set()
+        for line in output.splitlines()[1:-3]:
+            line = line.strip()
+            if not line or line.endswith('/'):
+                continue
+            if line.startswith('deleting'):
+                local.add(line[9:])
+            else:
+                remote.add(line)
+        for line in sorted(remote.union(local)):
+            if line in local and line in remote:
+                print(f'! {line}')
+            elif line in local:
+                print(f'< {line}')
+            else:
+                print(f'> {line}')
 
     def pull(self):
         # type: () -> None

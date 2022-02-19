@@ -377,7 +377,7 @@ nnoremap  <leader>wkr  q:ileftabove split scp://user@server.tld//absolute/path/t
 nnoremap  <leader>wlr  q:irightbelow vsplit scp://user@server.tld//absolute/path/to/file<esc>F:w
 nnoremap  <leader>tr   q:itabnew scp://user@server.tld//absolute/path/to/file<esc>F:w
 
-" open terminal (at $HOME if new tab, at current directory otherwise) {{{3
+" open terminal (at $HOME if new tab, at the directory of the current file otherwise) {{{3
 if exists(':terminal')
 	nnoremap  <leader>wet  :call <SID>StartTerminal(['silent! lcd ' .. expand('%:p:h')], '')<cr>
 	nnoremap  <leader>wht  :call <SID>StartTerminal(['leftabove vnew', 'silent! lcd ' .. expand('%:p:h')], '')<cr>

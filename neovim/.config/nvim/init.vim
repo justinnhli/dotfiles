@@ -361,6 +361,14 @@ nnoremap  <leader>wke  :leftabove split<space>
 nnoremap  <leader>wle  :rightbelow vsplit<space>
 nnoremap  <leader>te   :tabnew<space>
 
+" open buffer {{{3
+nnoremap  <leader>web  :buffer<space>
+nnoremap  <leader>whb  :leftabove vertical sbuffer<space>
+nnoremap  <leader>wjb  :rightbelow sbuffer<space>
+nnoremap  <leader>wkb  :leftabove sbuffer<space>
+nnoremap  <leader>wlb  :rightbelow vertical sbuffer<space>
+nnoremap  <leader>tb   :tabnew<cr>:buffer<space>
+
 " open new file {{{3
 nnoremap  <leader>wen  :enew<cr>
 nnoremap  <leader>whn  :leftabove vnew<cr>

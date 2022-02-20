@@ -20,7 +20,7 @@ REMOTE_PATH = Path('/home/justinnhli/justinnhli.com/papers')
 
 
 WEIRD_NAMES = {}
-with open('entities.csv') as fd:
+with Path(__file__).parent.joinpath('entities.csv').open() as fd:
     for row in DictReader(fd, delimiter='\t'):
         WEIRD_NAMES[row['author']] = row['short-name']
 

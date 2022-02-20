@@ -252,8 +252,8 @@ if [ $nvim_terminal -eq 1 ]; then
 fi
 
 # PIM related settings
-if [ -d "$HOME/pim" ]; then
-	pim_dir="$HOME/pim"
+pim_path="$HOME/pim"
+if [ -d "$pim_path" ]; then
 	alias vijj='$VISUAL -c "normal 1 JJ" -c tabonly'
 	alias vijl='$VISUAL -c "normal 1 JL" -c tabonly'
 	alias vijr='$VISUAL -c "normal 1 JR" -c tabonly'
@@ -262,7 +262,7 @@ if [ -d "$HOME/pim" ]; then
 	alias vijc='$VISUAL -c "normal 1 JC" -c tabonly'
 	alias vijp='$VISUAL -c "normal 1 JP" -c tabonly'
 	if command -v journal.py >/dev/null 2>&1; then
-		alias jrnl="journal.py \$(find $pim_dir/journal/ -maxdepth 1 -name '[a-z]*.journal' | sed 's/^/--ignore /' | tr '\n' ' ')"
+		alias jrnl="journal.py \$(find $pim_path/journal/ -maxdepth 1 -name '[a-z]*.journal' | sed 's/^/--ignore /' | tr '\n' ' ')"
 	fi
 fi
 

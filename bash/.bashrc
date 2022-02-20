@@ -232,17 +232,23 @@ if command -v python3 >/dev/null 2>&1; then
 	alias jupyter='venvrun datavis jupyter notebook'
 fi
 
-# nvim terminal
-# need to check if #NVIM_LISTEN_ADDRESS is set
+# set variable for whether we are in an nvim terminal
+# need to separately check if #NVIM_LISTEN_ADDRESS is set
+nvim_terminal=0
 if [ ! -z "${NVIM_LISTEN_ADDRESS:-}" ]; then
 	if [ "$NVIM_LISTEN_ADDRESS" != '' ]; then
-		unset MANPAGER
-		alias :='$(command -v nvimcmd)'
-		alias vi='$(command -v nvimcmd) tabnew'
-		alias vim='$(command -v nvimcmd) tabnew'
-		alias nvim='$(command -v nvimcmd) tabnew'
-		workon neovim
+		nvim_terminal=1
 	fi
+fi
+
+# nvim terminal
+if [ $nvim_terminal -eq 1 ]; then
+	unset MANPAGER
+	alias :='$(command -v nvimcmd)'
+	alias vi='$(command -v nvimcmd) tabnew'
+	alias vim='$(command -v nvimcmd) tabnew'
+	alias nvim='$(command -v nvimcmd) tabnew'
+	workon neovim
 fi
 
 # PIM related settings

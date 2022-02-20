@@ -254,15 +254,25 @@ fi
 # PIM related settings
 pim_path="$HOME/pim"
 if [ -d "$pim_path" ]; then
-	alias vijj='$VISUAL -c "normal 1 JJ" -c tabonly'
-	alias vijl='$VISUAL -c "normal 1 JL" -c tabonly'
-	alias vijr='$VISUAL -c "normal 1 JR" -c tabonly'
-	alias vijn='$VISUAL -c "normal 1 JN" -c tabonly'
-	alias vijd='$VISUAL -c "normal 1 JD" -c tabonly'
-	alias vijc='$VISUAL -c "normal 1 JC" -c tabonly'
-	alias vijp='$VISUAL -c "normal 1 JP" -c tabonly'
 	if command -v journal.py >/dev/null 2>&1; then
 		alias jrnl="journal.py \$(find $pim_path/journal/ -maxdepth 1 -name '[a-z]*.journal' | sed 's/^/--ignore /' | tr '\n' ' ')"
+	fi
+	if [ $nvim_terminal -eq 1 ]; then
+		alias vijj='$(command -v nvimcmd) "tabnew | execute(\"normal 1 JJ\") | tabclose -1"'
+		alias vijl='$(command -v nvimcmd) "tabnew | execute(\"normal 1 JL\") | tabclose -1"'
+		alias vijr='$(command -v nvimcmd) "tabnew | execute(\"normal 1 JR\") | tabclose -1"'
+		alias vijn='$(command -v nvimcmd) "tabnew | execute(\"normal 1 JN\") | tabclose -1"'
+		alias vijd='$(command -v nvimcmd) "tabnew | execute(\"normal 1 JD\") | tabclose -1"'
+		alias vijc='$(command -v nvimcmd) "tabnew | execute(\"normal 1 JC\") | tabclose -1"'
+		alias vijp='$(command -v nvimcmd) "tabnew | execute(\"normal 1 JP\") | tabclose -1"'
+	else
+		alias vijj='$VISUAL -c "normal 1 JJ" -c tabonly'
+		alias vijl='$VISUAL -c "normal 1 JL" -c tabonly'
+		alias vijr='$VISUAL -c "normal 1 JR" -c tabonly'
+		alias vijn='$VISUAL -c "normal 1 JN" -c tabonly'
+		alias vijd='$VISUAL -c "normal 1 JD" -c tabonly'
+		alias vijc='$VISUAL -c "normal 1 JC" -c tabonly'
+		alias vijp='$VISUAL -c "normal 1 JP" -c tabonly'
 	fi
 fi
 

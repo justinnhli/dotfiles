@@ -7,7 +7,6 @@ from argparse import ArgumentParser
 from collections import defaultdict
 from inspect import signature, Parameter
 from pathlib import Path
-from shutil import which
 from subprocess import run
 from textwrap import dedent
 from typing import Any, Optional
@@ -18,11 +17,17 @@ PAPERS_PATH = Path('~/papers').expanduser().resolve()
 REMOTE_HOST = 'justinnhli.com'
 REMOTE_PATH = Path('/home/justinnhli/justinnhli.com/papers')
 
-
 WEIRD_NAMES = {}
-with Path(__file__).parent.joinpath('entities.csv').open() as fd:
-    for row in DictReader(fd, delimiter='\t'):
-        WEIRD_NAMES[row['author']] = row['short-name']
+
+
+def load_weird_names():
+    # type: () -> None
+    with Path(__file__).parent.joinpath('entities.csv').open(encoding='utf-8') as fd:
+        for row in DictReader(fd, delimiter='\t'):
+            WEIRD_NAMES[row['author']] = row['short-name']
+
+
+load_weird_names()
 
 
 class Paper:

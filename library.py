@@ -314,20 +314,32 @@ class Library:
             # type: (str, Paper) -> None
             """Check for unquoted capitalizations."""
             title = getattr(paper, 'title')
-            changed = True
-            while changed:
-                changed = False
-                if re.search('{[^{}]*}', title):
-                    title = re.sub('{[^{}]*}', '', title)
-                    changed = True
-            for word in title.split():
-                if '{' in word:
-                    continue
-                word = re.sub('[-/][A-Z]', '', word)
-                # TODO this check fails for (eg.) {Response to {Adams and McDonnell}}
-                if len(re.findall('[A-Za-z][A-Z]', word)) > 1:
-                    print(f'unquoted title for {key}: {title}')
-                    break
+            unquoted_regex = '[^ ]*[A-Za-z][A-Z][^ ]*'
+            if not re.search(unquoted_regex, title):
+                return
+            depth = 0
+            end_index = 0
+            unnested_title = title
+            for index, char in reversed(list(enumerate(title))):
+                if char == '}':
+                    if depth == 0:
+                        end_index = index
+                    depth += 1
+                elif char == '{':
+                    depth -= 1
+                    if depth == 0:
+                        unnested_title = unnested_title[:index] + unnested_title[end_index+1:]
+            new_title = title
+            for match in set(re.findall(unquoted_regex, unnested_title)):
+                new_title = re.sub(r'\b' + re.escape(match) + r'\b', '{' + match + '}', new_title)
+            if new_title != title:
+                print(dedent(f'''
+                    unquoted title for {key}:
+                        current:
+                            title = {{{title}}},
+                        suggestion:
+                            title = {{{new_title}}},
+                ''').strip())
 
         def check_doi(key, paper):
             # type: (str, Paper) -> None

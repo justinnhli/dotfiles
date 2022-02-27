@@ -107,7 +107,7 @@ def lint(contacts):
             names = name.split(';')
             if len(names) != 5:
                 print(f'invalid N: {name}')
-            recreated_name = ' '.join(names[i] for i in (1, 2, 0)).replace('  ', ' ').strip()
+            recreated_name = f'{names[1]} {names[2]} {names[0]}'.replace('  ', ' ').strip()
             if formatted_name != recreated_name:
                 print(f'mismatched N and FN: {formatted_name} != {recreated_name}')
         # check for duplicate ADR, EMAIL, TEL, or URL

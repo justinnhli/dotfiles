@@ -717,6 +717,7 @@ function s:ToggleColorScheme()
 	endif
 endfunction
 
+" toggle spellcheck {{{3
 function s:ToggleSpellCheck()
 	let l:spellgroups = ['SpellBad', 'SpellCap', 'SpellRare', 'SpellLocal']
 	if &spell == 0

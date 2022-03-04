@@ -673,6 +673,15 @@ nnoremap  <leader>T   :tabnew ~/Dropbox/personal/logs/ifttt/tweets.txt<cr>
 
 " toggle functions {{{2
 
+" toggle scrolloff {{{3
+function s:ToggleScrollOff()
+	if &scrolloff == 0
+		set scrolloff=1
+	elseif &scrolloff == 1
+		set scrolloff=0
+	endif
+endfunction
+
 " toggle colorcolumn {{{3
 function s:ToggleColorColumn()
 	if &colorcolumn == 0
@@ -741,6 +750,7 @@ endfunction
 " setting toggle mappings {{{2
 
 " setting toggle mappings {{{3
+nnoremap  <leader><leader>0  :call <SID>ToggleScrollOff()<cr>:set scrolloff?<cr>
 nnoremap  <leader><leader>c  :call <SID>ToggleColorColumn()<cr>:setlocal colorcolumn?<cr>
 nnoremap  <leader><leader>d  :call <SID>ToggleDiff()<cr>:echo (&diff ? 'diffthis' : 'diffoff')<cr>
 nnoremap  <leader><leader>f  :call <SID>ToggleFoldMethod()<cr>:set foldmethod?<cr>

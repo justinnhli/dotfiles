@@ -674,7 +674,7 @@ nnoremap  <leader>T   :tabnew ~/Dropbox/personal/logs/ifttt/tweets.txt<cr>
 " toggle functions {{{2
 
 " toggle colorcolumn {{{3
-function s:ToggleColorcolumn()
+function s:ToggleColorColumn()
 	if &colorcolumn == 0
 		setlocal colorcolumn=80
 	elseif &colorcolumn == 80
@@ -694,7 +694,7 @@ function s:ToggleDiff()
 endfunction
 
 " toggle foldmethod {{{3
-function s:ToggleFoldmethod()
+function s:ToggleFoldMethod()
 	if &foldmethod ==# 'indent'
 		set foldmethod=syntax
 	elseif &foldmethod ==# 'syntax'
@@ -703,7 +703,7 @@ function s:ToggleFoldmethod()
 endfunction
 
 " toggle colorscheme {{{3
-function s:ToggleColorscheme()
+function s:ToggleColorScheme()
 	if &background ==# 'dark'
 		if g:colors_name ==# g:colorscheme
 			colorscheme default
@@ -740,11 +740,11 @@ endfunction
 " setting toggle mappings {{{2
 
 " setting toggle mappings {{{3
-nnoremap  <leader><leader>c  :call <SID>ToggleColorcolumn()<cr>:setlocal colorcolumn?<cr>
+nnoremap  <leader><leader>c  :call <SID>ToggleColorColumn()<cr>:setlocal colorcolumn?<cr>
 nnoremap  <leader><leader>d  :call <SID>ToggleDiff()<cr>:echo (&diff ? 'diffthis' : 'diffoff')<cr>
-nnoremap  <leader><leader>f  :call <SID>ToggleFoldmethod()<cr>:set foldmethod?<cr>
+nnoremap  <leader><leader>f  :call <SID>ToggleFoldMethod()<cr>:set foldmethod?<cr>
 nnoremap  <leader><leader>l  :set list!<cr>:set list?<cr>
-nnoremap  <leader><leader>m  :call <SID>ToggleColorscheme()<cr>:echo &background g:colors_name<cr>
+nnoremap  <leader><leader>m  :call <SID>ToggleColorScheme()<cr>:echo &background g:colors_name<cr>
 nnoremap  <leader><leader>n  :set number!<cr>:set number?<cr>
 nnoremap  <leader><leader>p  :set paste!<cr>:set paste?<cr>
 nnoremap  <leader><leader>s  :call <SID>ToggleSpellCheck()<cr>:set spell?<cr>

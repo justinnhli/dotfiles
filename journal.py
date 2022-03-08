@@ -391,7 +391,7 @@ def print_table(data, headers, gap_size=2):
     rows = data # type: list[Sequence[str]]
     if headers:
         rows = [headers] + rows
-    widths = [max(len(row[col]) for row in rows) for col in range(len(data[0]))]
+    widths = [max(len(row[col]) for row in rows) for col in range(len(rows[0]))]
     gap = gap_size * ' '
     if headers:
         print(gap.join(col.center(width) for width, col in zip(widths, headers)))

@@ -386,6 +386,8 @@ def print_table(data, headers, gap_size=2):
         headers (Sequence[str]): The headers.
         gap_size (int): The number of spaces between columns. Defaults to 2.
     """
+    if not data:
+        return
     rows = data # type: list[Sequence[str]]
     if headers:
         rows = [headers] + rows

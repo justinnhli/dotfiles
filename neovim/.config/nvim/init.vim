@@ -315,6 +315,9 @@ let g:netrw_liststyle = 3
 let g:netrw_list_hide = '\.swp$,\.un\~$'
 let g:netrw_winsize = 50
 
+" sqlcomplete {{3
+let g:loaded_sql_completion = 0
+
 " undotree {{{3
 nnoremap  <leader><leader>u  :UndotreeToggle<cr>
 

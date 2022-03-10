@@ -19,11 +19,7 @@ from statistics import mean, median, stdev
 from sys import stdout, exit as sys_exit
 from tarfile import open as open_tar_file, TarInfo
 from tempfile import mkstemp
-from typing import Any, Optional, Union, Callable, Generator, Iterable, Sequence, Mapping
-
-Entry = namedtuple('Entry', 'title, text, filepath, line_num')
-Entries = Mapping[str, Entry]
-DateRange = tuple[Optional[str], Optional[str]]
+from typing import Any, Optional, Callable, Generator, Iterable, Sequence, Mapping
 
 FILE_EXTENSION = '.journal'
 STRING_LENGTHS = {
@@ -36,6 +32,62 @@ DATE_LENGTH = STRING_LENGTHS['day']
 REFERENCE_REGEX = re.compile('[0-9]{4}-[0-9]{2}-[0-9]{2}')
 DATE_REGEX = re.compile(REFERENCE_REGEX.pattern + '(, (Mon|Tues|Wednes|Thurs|Fri|Satur|Sun)day)?')
 RANGE_BOUND_REGEX = re.compile('([0-9]{4}(-[0-9]{2}(-[0-9]{2})?)?)?')
+
+class Title:
+
+    def __init__(self, title):
+        # type: (str) -> None
+        self.title = title
+        self._is_date = None # type: Optional[bool]
+        self._date = None # type: Optional[datetime]
+
+    @property
+    def is_date(self):
+        # type: () -> bool
+        if self._is_date is None:
+            if DATE_REGEX.fullmatch(self.title):
+                self._is_date = True
+                self._date = datetime.strptime(self.title[:DATE_LENGTH], '%Y-%m-%d')
+            else:
+                self._is_date = True
+                self._date = None
+        return self._is_date
+
+    @property
+    def date(self):
+        # type: () -> datetime
+        assert self.is_date
+        return self._date
+
+    def iso(self, length=10, default=None):
+        # type: (int, Optional[str]) -> str
+        if self.is_date:
+            return self.date.strftime('%Y-%m-%d')[:length]
+        elif default is not None:
+            return default
+        else:
+            return self.title
+
+    def __lt__(self, other):
+        # type: (Title) -> bool
+        return self.title < other.title
+
+    def __eq__(self, other):
+        # type: (Any) -> bool
+        return self.title == other.title
+
+    def __hash__(self):
+        # type: () -> int
+        return hash(self.title)
+
+    def __str__(self):
+        # type: () -> str
+        return self.title
+
+
+Entry = namedtuple('Entry', 'title, text, filepath, line_num')
+Entries = Mapping[Title, Entry]
+DateRange = tuple[Optional[datetime], Optional[datetime]]
 
 
 class Journal(Entries):
@@ -55,7 +107,7 @@ class Journal(Entries):
             self.ignores = set()
         else:
             self.ignores = set(ignores)
-        self.entries = {} # type: dict[str, Entry]
+        self.entries = {} # type: dict[Title, Entry]
         if use_cache:
             self._check_metadata()
             self._read_cache()
@@ -68,11 +120,11 @@ class Journal(Entries):
         return len(self.entries)
 
     def __iter__(self):
-        # type: () -> Generator[str, None, None]
+        # type: () -> Generator[Title, None, None]
         yield from sorted(self.entries)
 
     def __getitem__(self, key):
-        # type: (str) -> Entry
+        # type: (Title) -> Entry
         return self.entries[key]
 
     @property
@@ -123,7 +175,7 @@ class Journal(Entries):
             line_num = 1
             for raw_entry in fd.read().strip().split('\n\n'):
                 lines = raw_entry.splitlines()
-                title = lines[0]
+                title = Title(lines[0])
                 self.entries[title] = Entry(
                     title,
                     raw_entry,
@@ -136,16 +188,16 @@ class Journal(Entries):
         # type: () -> None
         with self.cache_file.open() as fd:
             for title, entry_dict in literal_eval(fd.read()).items():
+                title = Title(title)
                 self.entries[title] = Entry(
                     title,
                     entry_dict['text'],
                     entry_dict['filepath'],
-                    #Path(entry_dict['filepath']).expanduser().resolve(),
                     entry_dict['line_num'],
                 )
 
     def _filter_by_terms(self, selected, terms, icase):
-        # type: (set[str], Iterable[str], bool) -> set[str]
+        # type: (set[Title], Iterable[str], bool) -> set[Title]
         flags = re.MULTILINE
         if icase:
             flags |= re.IGNORECASE
@@ -157,19 +209,19 @@ class Journal(Entries):
         return selected
 
     def _filter_by_date(self, selected, *date_ranges):
-        # type: (set[str], DateRange) -> set[str]
+        # type: (set[Title], DateRange) -> set[Title]
         # pylint: disable = no-self-use
-        first_date = min(selected)
-        last_date = next_date(max(selected))
+        first_date = min(selected).date
+        last_date = next_date(max(selected).date)
         candidates = set()
         for date_range in date_ranges:
             start_date, end_date = date_range
             start_date, end_date = (start_date or first_date, end_date or last_date)
-            candidates |= set(k for k in selected if start_date <= k < end_date)
+            candidates |= set(k for k in selected if k.is_date and start_date <= k.date < end_date)
         return candidates
 
     def filter(self, terms=None, date_ranges=None, icase=True):
-        # type: (Iterable[str], Sequence[DateRange], bool) -> dict[str, Entry]
+        # type: (Iterable[str], Sequence[DateRange], bool) -> dict[Title, Entry]
         """Filter the entries.
 
         Parameters:
@@ -184,7 +236,7 @@ class Journal(Entries):
         selected = set(self.entries.keys())
         if date_ranges:
             selected = self._filter_by_date(
-                set(title for title in selected if REFERENCE_REGEX.match(title)),
+                set(title for title in selected if title.is_date),
                 *date_ranges,
             )
         if terms:
@@ -310,25 +362,21 @@ def title_to_date(title):
         return datetime.today()
 
 
-def next_date(date_or_str):
-    # type: (Union[datetime, str]) -> str
+def next_date(date):
+    # type: (datetime) -> datetime
     """Calculate the next date.
 
     Parameters:
-        date_or_str (Union[datetime, str]): The previous date.
+        date (datetime): The previous date.
 
     Returns:
-        str: The next date.
+        datetime: The next date.
     """
-    if isinstance(date_or_str, str):
-        date = title_to_date(date_or_str)
-    else:
-        date = date_or_str
-    return (date + timedelta(days=1)).strftime('%Y-%m-%d')
+    return date + timedelta(days=1)
 
 
 def filter_entries(journal, args, **kwargs):
-    # type: (Journal, Namespace, Any) -> dict[str, Entry]
+    # type: (Journal, Namespace, Any) -> dict[Title, Entry]
     """Filter entries by the CLI arguments.
 
     Parameters:
@@ -361,11 +409,7 @@ def group_entries(entries, unit, summary=True, reverse=True):
         dict[str, Entries]: The grouped entries.
     """
     unit_length = STRING_LENGTHS[unit]
-    key_func = (lambda entry:
-        entry[1].title[:unit_length]
-        if DATE_REGEX.fullmatch(entry[1].title)
-        else 'other'
-    )
+    key_func = (lambda entry: entry[0].iso(unit_length, 'other'))
     grouped = groupby(
         sorted(entries.items(), reverse=reverse, key=key_func),
         key_func,
@@ -564,7 +608,7 @@ def do_count(journal, args):
         'DATE': (lambda entries, unit, num_words: unit),
         'POSTS': (lambda entries, unit, num_words: len(entries)),
         'FREQ': (lambda entries, unit, num_words:
-            f'{((title_to_date(max(entries)) - title_to_date(min(entries))).days + 1) / len(entries):.2f}'
+            f'{((max(entries).date - min(entries).date).days + 1) / len(entries):.2f}'
         ),
         'SIZE': (lambda entries, unit, num_words:
             f'{sum(len(entries[date].text) for date in entries):,d}'
@@ -606,12 +650,12 @@ def do_graph(journal, args):
     """
     entries = filter_entries(journal, args)
     entries = {
-        title[:DATE_LENGTH]: entry for title, entry in entries.items()
-        if DATE_REGEX.fullmatch(title)
+        title: entry for title, entry in entries.items()
+        if title.is_date
     }
     disjoint_sets = dict((k, k) for k in entries)
-    referents = defaultdict(set) # type: dict[str, set[str]]
-    edges = defaultdict(set) # type: dict[str, set[str]]
+    referents = defaultdict(set) # type: dict[Title, set[str]]
+    edges = defaultdict(set) # type: dict[Title, set[str]]
     for src, entry in sorted(entries.items()):
         dests = set(
             dest for dest in REFERENCE_REGEX.findall(entry.text)
@@ -626,7 +670,7 @@ def do_graph(journal, args):
             while disjoint_sets[dest] != src:
                 disjoint_sets[dest], dest = src, disjoint_sets[dest]
         referents[src] |= dests
-    components = defaultdict(set) # type: dict[str, set[str]]
+    components = defaultdict(set) # type: dict[Title, set[Title]]
     for rep in disjoint_sets:
         path = set([rep])
         while disjoint_sets[rep] != rep:
@@ -643,7 +687,7 @@ def do_graph(journal, args):
             ))
         ),
         'refs': (lambda entries, node: 5 * len(REFERENCE_REGEX.findall(entries[node].text))),
-    } # type: dict[str, Callable[[Entries, str], float]]
+    } # type: dict[str, Callable[[Entries, Title], float]]
     node_fn = node_fns[args.node_size]
     print('digraph {')
     print('\tgraph [size="48", model="subset", rankdir="BT"];')
@@ -655,7 +699,7 @@ def do_graph(journal, args):
         node_lines = defaultdict(set)
         edge_lines = set()
         for src in srcs:
-            node_lines[src[:STRING_LENGTHS['month']]].add(
+            node_lines[src.title[:STRING_LENGTHS['month']]].add(
                 f'"{src}" [fontsize="{node_fn(entries, src)}"];'
             )
             for dest in edges[src]:
@@ -696,7 +740,10 @@ def do_list(journal, args):
         args (Namespace): The CLI arguments.
     """
     entries = filter_entries(journal, args)
-    print('\n'.join(sorted(entries.keys(), reverse=args.reverse)))
+    print('\n'.join(
+        str(title) for title
+        in sorted(entries.keys(), reverse=args.reverse)
+    ))
 
 
 @register('-S', 'show entry contents')
@@ -781,14 +828,10 @@ def do_hyphenation(journal, args): # pylint: disable = too-many-branches
         key_fn = (lambda pair: len(pair[1]))
     else:
         key_fn = None
-    for variant, entries in sorted(counts.items(), key=key_fn):
-        minimum = min(entries)
-        if DATE_REGEX.fullmatch(minimum):
-            minimum = minimum[:DATE_LENGTH]
-        maximum = max(entries)
-        if DATE_REGEX.fullmatch(maximum):
-            maximum = maximum[:DATE_LENGTH]
-        rows.append((variant, str(len(entries)), minimum, maximum))
+    rows.extend(
+        (variant, str(len(entries)), min(entries).iso(), max(entries).iso())
+        for variant, entries in sorted(counts.items(), key=key_fn)
+    )
     print_table(rows, ['VARIANT', 'COUNT', 'FIRST', 'LAST'])
 
 
@@ -995,26 +1038,28 @@ def fill_date_range(date_range):
         date_range (str): The CLI date range.
 
     Returns:
-        str: The start date.
-        str: The end date.
+        datetime: The start date.
+        datetime: The end date.
     """
     if ':' in date_range:
-        start_date, end_date = date_range.split(':')
+        start, end = date_range.split(':')
     else:
-        start_date = date_range
+        start = date_range
         if len(date_range) == 4:
-            end_date = str(int(date_range) + 1)
+            end = str(int(date_range) + 1)
         else:
             units = [int(unit) for unit in date_range.split('-')]
             if len(units) == 2:
                 units.append(monthrange(*units)[1])
-            end_date = next_date(datetime(*units)) # type: ignore[arg-type]
-    if start_date:
-        start_date = start_date + '-01' * int((DATE_LENGTH - len(start_date)) / len('-01'))
+            end = next_date(datetime(*units)).strftime('%Y-%m-%d') # type: ignore[arg-type]
+    if start:
+        start = start + '-01' * int((DATE_LENGTH - len(start)) / len('-01'))
+        start_date = datetime.strptime(start, '%Y-%m-%d')
     else:
         start_date = None
-    if end_date:
-        end_date = end_date + '-01' * int((DATE_LENGTH - len(end_date)) / len('-01'))
+    if end:
+        end = end + '-01' * int((DATE_LENGTH - len(end)) / len('-01'))
+        end_date = datetime.strptime(end, '%Y-%m-%d')
     else:
         end_date = None
     if start_date is not None and end_date is not None and start_date > end_date:

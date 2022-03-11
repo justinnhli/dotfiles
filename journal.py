@@ -161,13 +161,12 @@ class Journal(Entries):
         # pylint: disable = no-self-use
         first_date = min(selected)
         last_date = next_date(max(selected))
-        candidates = copy(selected)
-        selected = set()
+        candidates = set()
         for date_range in date_ranges:
             start_date, end_date = date_range
             start_date, end_date = (start_date or first_date, end_date or last_date)
-            selected |= set(k for k in candidates if start_date <= k < end_date)
-        return selected
+            candidates |= set(k for k in selected if start_date <= k < end_date)
+        return candidates
 
     def filter(self, terms=None, date_ranges=None, icase=True):
         # type: (Iterable[str], Sequence[DateRange], bool) -> dict[str, Entry]

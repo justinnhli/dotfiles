@@ -36,7 +36,7 @@ def _module_exists(module):
 def _err_print(message):
     # type: (str) -> None
     """Print to stderr.
-    
+
     Parameters:
         message (str): The message to print.
     """
@@ -203,7 +203,7 @@ def main():
     if has_errors:
         sys.exit(1)
     sys.exit(0)
-    
+
 
 if __name__ == '__main__':
     main()

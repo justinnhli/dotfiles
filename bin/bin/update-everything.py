@@ -128,7 +128,7 @@ def delete_orphans(path=None):
     if path is None:
         path = Path.cwd()
     timestamp = datetime.now().timestamp()
-    threshold = 60 * 60 * 24 * 10 # 10 days
+    threshold = 60 * 60 * 24 * 14 # 14 days
     for filepath in path.glob('**/.*.un~'):
         original = filepath.parent.joinpath(filepath.name[1:-4])
         should_delete = (

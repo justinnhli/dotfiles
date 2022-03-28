@@ -811,7 +811,9 @@ def do_hyphenation(journal, args): # pylint: disable = too-many-branches
     ))
     counts = {}
     for match in matches:
-        variant = match.group().lower()
+        variant = match.group()
+        if args.icase:
+            variant = variant.lower()
         if variant in counts:
             continue
         if args.whole_words:
@@ -822,7 +824,7 @@ def do_hyphenation(journal, args): # pylint: disable = too-many-branches
             term = r'\b' + re.escape(match.group()) + r'\b'
         else:
             term = re.escape(match.group())
-        counts[variant] = filter_entries(journal, args, terms=[term], icase=re.IGNORECASE)
+        counts[variant] = filter_entries(journal, args, terms=[term])
     rows = [] # type: list[Sequence[str]]
     if args.terms:
         key_fn = (lambda pair: len(pair[1]))

@@ -381,12 +381,30 @@ class Library:
                                 pages = {{{start}--{end}}},
                     ''').strip())
 
+        def check_latex(key, paper):
+            # type: (str, Paper) -> None
+            for attr in ('booktitle', 'title', 'journal'):
+                if not hasattr(paper, attr):
+                    continue
+                val = getattr(paper, attr)
+                index = val.find('&')
+                if index == -1:
+                    continue
+                if val[index - 1] != '\\':
+                    suggestion = re.sub(r'([^\\])&', r'\1\&', val)
+                    print(dedent(f'''
+                        {attr} field contains unescaped & for {key}
+                            suggestion:
+                                {suggestion}
+                    ''').strip())
+
         for key, paper in self.papers.items():
             check_names(key, paper)
             check_id(key, paper)
             check_capitalization(key, paper)
             check_doi(key, paper)
             check_pages(key, paper)
+            check_latex(key, paper)
 
     def toc(self, out_path=None):
         # type: (Optional[Path]) -> None

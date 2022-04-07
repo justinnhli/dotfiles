@@ -1047,12 +1047,12 @@ function s:AutosetGrepMappings()
 		execute 'nnoremap  <buffer>  <leader>wkf  :leftabove new<cr>:setlocal filetype=' .. &filetype .. '<cr>q:isilent lgrep<space>'
 		execute 'nnoremap  <buffer>  <leader>wlf  :rightbelow vnew<cr>:setlocal filetype=' .. &filetype .. '<cr>q:isilent lgrep<space>'
 		execute 'nnoremap  <buffer>  <leader>tf  :tabnew<cr>:setlocal filetype=' .. &filetype .. '<cr>q:isilent lgrep<space>'
-		xnoremap  <buffer>  <leader>wef  "zy:silent lgrep '<C-r>z'<cr>
-		execute 'xnoremap  <buffer>  <leader>whf  "zy:leftabove vnew<cr>:setlocal filetype=' .. &filetype .. "<cr>q:isilent lgrep '<C-r>z'<cr>"
-		execute 'xnoremap  <buffer>  <leader>wjf  "zy:rightbelow new<cr>:setlocal filetype=' .. &filetype .. "<cr>q:isilent lgrep '<C-r>z'<cr>"
-		execute 'xnoremap  <buffer>  <leader>wkf  "zy:leftabove new<cr>:setlocal filetype=' .. &filetype .. "<cr>q:isilent lgrep '<C-r>z'<cr>"
-		execute 'xnoremap  <buffer>  <leader>wlf  "zy:rightbelow vnew<cr>:setlocal filetype=' .. &filetype .. "<cr>q:isilent lgrep '<C-r>z'<cr>"
-		execute 'xnoremap  <buffer>  <leader>tf  "zy:tabnew<cr>:setlocal filetype=' .. &filetype .. "<cr>q:isilent lgrep '<C-r>z'<cr>"
+		xnoremap  <buffer>  <leader>wef  "zy:silent lgrep <C-r>=shellescape(getreg('z'))<cr><cr>
+		execute 'xnoremap  <buffer>  <leader>whf  "zy:leftabove vnew<cr>:setlocal filetype=' .. &filetype .. "<cr>q:isilent lgrep <C-r>=shellescape(getreg('z'))<cr><cr>"
+		execute 'xnoremap  <buffer>  <leader>wjf  "zy:rightbelow new<cr>:setlocal filetype=' .. &filetype .. "<cr>q:isilent lgrep <C-r>=shellescape(getreg('z'))<cr><cr>"
+		execute 'xnoremap  <buffer>  <leader>wkf  "zy:leftabove new<cr>:setlocal filetype=' .. &filetype .. "<cr>q:isilent lgrep <C-r>=shellescape(getreg('z'))<cr><cr>"
+		execute 'xnoremap  <buffer>  <leader>wlf  "zy:rightbelow vnew<cr>:setlocal filetype=' .. &filetype .. "<cr>q:isilent lgrep <C-r>=shellescape(getreg('z'))<cr><cr>"
+		execute 'xnoremap  <buffer>  <leader>tf  "zy:tabnew<cr>:setlocal filetype=' .. &filetype .. "<cr>q:isilent lgrep <C-r>=shellescape(getreg('z'))<cr><cr>"
 	endif
 endfunction
 augroup justinnhli_autoset_grep_mappings

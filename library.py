@@ -351,8 +351,6 @@ class Library:
                 suggestion = re.sub('.*?(10.*)', r'\1', doi)
                 print(dedent(f'''
                     DOI in non-URL format for {key}:
-                        current:
-                            doi = {{{doi}}},
                         suggestion:
                             doi = {{https://doi.org/{suggestion}}},
                 ''').strip())

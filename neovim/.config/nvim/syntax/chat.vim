@@ -7,14 +7,14 @@ syntax match other '^\([^) ][^)]\{-\}[^:]\{-\}\)\?[[:alnum:])]:\( \|$\)'
 highlight default link other Identifier
 
 " overwrite that highlighting with myself
-syntax match me '^\([^) ][^)]\{-\}[^:]\{-\}\)\?Justin (Ning Hui) Li:\( \|$\)'
-syntax match me '^\([^) ][^)]\{-\}[^:]\{-\}\)\?Justin Li:\( \|$\)'
-syntax match me '^\([^) ][^)]\{-\}[^:]\{-\}\)\?Justin Ning Hui Li:\( \|$\)'
-syntax match me '^\([^) ][^)]\{-\}[^:]\{-\}\)\?Justin:\( \|$\)'
+syntax match me '^\([^) ][^)]\{-\}[^:]\{-\}\)\?Justin (Ning Hui) Li \( (he/him)\)?:\( \|$\)'
+syntax match me '^\([^) ][^)]\{-\}[^:]\{-\}\)\?Justin Li\( (he/him)\)\?:\( \|$\)'
+syntax match me '^\([^) ][^)]\{-\}[^:]\{-\}\)\?Justin Ning Hui Li \( (he/him)\)?:\( \|$\)'
+syntax match me '^\([^) ][^)]\{-\}[^:]\{-\}\)\?Justin \( (he/him)\)?:\( \|$\)'
 syntax match me '^\([^) ][^)]\{-\}[^:]\{-\}\)\?\<[mM]e\>: \( \|$\)'
-syntax match me '^\([^) ][^)]\{-\}[^:]\{-\}\)\?justinnhli:\( \|$\)'
-syntax match me '^\([^) ][^)]\{-\}[^:]\{-\}\)\?justinnhli@chat.facebook.com[^:]\{-\}:\( \|$\)'
-syntax match me '^\([^) ][^)]\{-\}[^:]\{-\}\)\?justinnhli@gmail.com/.\{-\}:\( \|$\)'
-syntax match me '^\([^) ][^)]\{-\}[^:]\{-\}\)\?ninghui48@gmail.com:\( \|$\)'
-syntax match me '^\([^) ][^)]\{-\}[^:]\{-\}\)\?ninghui96:\( \|$\)'
+syntax match me '^\([^) ][^)]\{-\}[^:]\{-\}\)\?justinnhli \( (he/him)\)?:\( \|$\)'
+syntax match me '^\([^) ][^)]\{-\}[^:]\{-\}\)\?justinnhli@chat.facebook.com[^:]\{-\} \( (he/him)\)?:\( \|$\)'
+syntax match me '^\([^) ][^)]\{-\}[^:]\{-\}\)\?justinnhli@gmail.com/.\{-\} \( (he/him)\)?:\( \|$\)'
+syntax match me '^\([^) ][^)]\{-\}[^:]\{-\}\)\?ninghui48@gmail.com \( (he/him)\)?:\( \|$\)'
+syntax match me '^\([^) ][^)]\{-\}[^:]\{-\}\)\?ninghui96 \( (he/him)\)?:\( \|$\)'
 highlight default link me Constant

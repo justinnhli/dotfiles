@@ -281,7 +281,7 @@ class Journal(Entries):
         # type: () -> list[tuple[Path, int, str]]
         """Check the journal for errors."""
         # pylint: disable = line-too-long, too-many-nested-blocks, too-many-branches
-        ascii_regex = re.compile('(\t*([^ \t][ -~]*)?[^ \t])?')
+        ascii_regex = re.compile('(\t*[!-~]([ -~]*[!-~])?)?')
         errors = []
         titles = set()
         long_dates = None

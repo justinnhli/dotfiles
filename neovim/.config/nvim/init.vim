@@ -998,6 +998,7 @@ nnoremap  <leader>y         "+y
 xnoremap  <leader>y         "+y
 nnoremap  <leader>z         1z=
 nnoremap  <leader>/         :2match IncSearch ''<left>
+xnoremap  <leader>/         "zy:2match IncSearch <C-r>=shellescape(getreg('z'))<cr><cr>
 nnoremap  <leader>@         :<C-f>ilet @=<C-r><C-r>
 nnoremap  <leader><bar>     ggVG:<C-u>call <SID>FormatColumns()<cr>
 nnoremap  <leader><bslash>  ggVG:<C-u>call <SID>FormatTable()<cr>

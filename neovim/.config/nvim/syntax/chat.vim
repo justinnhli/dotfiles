@@ -7,10 +7,7 @@ syntax match other '^\([^) ][^)]\{-\}[^:]\{-\}\)\?[[:alnum:])]:\( \|$\)'
 highlight default link other Identifier
 
 " overwrite that highlighting with myself
-syntax match me '^\([^) ][^)]\{-\}[^:]\{-\}\)\?Justin (Ning Hui) Li \( (he/him)\)?:\( \|$\)'
-syntax match me '^\([^) ][^)]\{-\}[^:]\{-\}\)\?Justin Li\( (he/him)\)\?:\( \|$\)'
-syntax match me '^\([^) ][^)]\{-\}[^:]\{-\}\)\?Justin Ning Hui Li \( (he/him)\)?:\( \|$\)'
-syntax match me '^\([^) ][^)]\{-\}[^:]\{-\}\)\?Justin \( (he/him)\)?:\( \|$\)'
+syntax match me '^\([^) ][^)]\{-\}[^:]\{-\}\)\?Justin\( (\?Ning Hui)\?\)\?\( Li\)\?\( (he/him)\)\?:\( \|$\)'
 syntax match me '^\([^) ][^)]\{-\}[^:]\{-\}\)\?\<[mM]e\>: \( \|$\)'
 syntax match me '^\([^) ][^)]\{-\}[^:]\{-\}\)\?justinnhli \( (he/him)\)?:\( \|$\)'
 syntax match me '^\([^) ][^)]\{-\}[^:]\{-\}\)\?justinnhli@chat.facebook.com[^:]\{-\} \( (he/him)\)?:\( \|$\)'

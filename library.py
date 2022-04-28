@@ -237,6 +237,12 @@ class Library:
 
     # library management
 
+    def path(self, *names):
+        for name in names:
+            if name.endswith('.pdf'):
+                name = name[:-4]
+            print(self.papers[name].path)
+
     def lint(self): # pylint: disable = too-many-statements
         # type: () -> None
         """Lint the library bibtex file."""

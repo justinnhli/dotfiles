@@ -319,33 +319,34 @@ class Library:
         def check_capitalization(key, paper):
             # type: (str, Paper) -> None
             """Check for unquoted capitalizations."""
-            title = getattr(paper, 'title')
             unquoted_regex = '[^ ]*[A-Za-z][A-Z][^ ]*'
-            if not re.search(unquoted_regex, title):
-                return
-            depth = 0
-            end_index = 0
-            unnested_title = title
-            for index, char in reversed(list(enumerate(title))):
-                if char == '}':
-                    if depth == 0:
-                        end_index = index
-                    depth += 1
-                elif char == '{':
-                    depth -= 1
-                    if depth == 0:
-                        unnested_title = unnested_title[:index] + unnested_title[end_index+1:]
-            new_title = title
-            for match in set(re.findall(unquoted_regex, unnested_title)):
-                new_title = re.sub(r'\b' + re.escape(match) + r'\b', '{' + match + '}', new_title)
-            if new_title != title:
-                print(dedent(f'''
-                    unquoted title for {key}:
-                        current:
-                            title = {{{title}}},
-                        suggestion:
-                            title = {{{new_title}}},
-                ''').strip())
+            for attr in ['title', 'booktitle']:
+                title = getattr(paper, attr)
+                if not re.search(unquoted_regex, title):
+                    return
+                depth = 0
+                end_index = 0
+                unnested_title = title
+                for index, char in reversed(list(enumerate(title))):
+                    if char == '}':
+                        if depth == 0:
+                            end_index = index
+                        depth += 1
+                    elif char == '{':
+                        depth -= 1
+                        if depth == 0:
+                            unnested_title = unnested_title[:index] + unnested_title[end_index+1:]
+                new_title = title
+                for match in set(re.findall(unquoted_regex, unnested_title)):
+                    new_title = re.sub(r'\b' + re.escape(match) + r'\b', '{' + match + '}', new_title)
+                if new_title != title:
+                    print(dedent(f'''
+                        unquoted title for {key}:
+                            current:
+                                title = {{{title}}},
+                            suggestion:
+                                title = {{{new_title}}},
+                    ''').strip())
 
         def check_doi(key, paper):
             # type: (str, Paper) -> None

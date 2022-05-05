@@ -238,6 +238,7 @@ class Library:
     # library management
 
     def path(self, *names):
+        # type: (*str) -> None
         for name in names:
             if name.endswith('.pdf'):
                 name = name[:-4]

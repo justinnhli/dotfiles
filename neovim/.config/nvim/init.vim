@@ -622,6 +622,7 @@ if exists('*FloatOutput')
 	nnoremap  <leader>cc  :call FloatOutput('')<left><left>
 	xnoremap  <leader>cc  "zy:call FloatOutput('<C-r>z')<cr>
 	nnoremap  <leader>ca  :call FloatOutput('ccal.py')<cr>
+	xnoremap  <leader>ca  "zy:call FloatOutput('ccal.py <C-r>z')<cr>
 endif
 
 " open external functions {{{3

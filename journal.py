@@ -38,25 +38,15 @@ class Title:
     def __init__(self, title):
         # type: (str) -> None
         self.title = title
-        self._is_date = None # type: Optional[bool]
+        self.is_date = bool(DATE_REGEX.fullmatch(self.title))
         self._date = None # type: Optional[datetime]
-
-    @property
-    def is_date(self):
-        # type: () -> bool
-        if self._is_date is None:
-            if DATE_REGEX.fullmatch(self.title):
-                self._is_date = True
-                self._date = datetime.strptime(self.title[:DATE_LENGTH], '%Y-%m-%d')
-            else:
-                self._is_date = False
-                self._date = None
-        return self._is_date
 
     @property
     def date(self):
         # type: () -> datetime
         assert self.is_date
+        if self._date is None:
+            self._date = datetime.strptime(self.title[:DATE_LENGTH], '%Y-%m-%d')
         return self._date
 
     def iso(self, length=10, default=None):

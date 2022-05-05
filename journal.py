@@ -8,7 +8,6 @@ from argparse import ArgumentParser, Namespace, _ArgumentGroup
 from ast import literal_eval
 from calendar import monthrange
 from collections import namedtuple, defaultdict
-from copy import copy
 from datetime import datetime, timedelta
 from inspect import currentframe
 from itertools import chain, groupby
@@ -34,9 +33,11 @@ DATE_REGEX = re.compile(REFERENCE_REGEX.pattern + '(, (Mon|Tues|Wednes|Thurs|Fri
 RANGE_BOUND_REGEX = re.compile('([0-9]{4}(-[0-9]{2}(-[0-9]{2})?)?)?')
 
 class Title:
+    """A utility class for handling date and non-date titles."""
 
     def __init__(self, title):
         # type: (str) -> None
+        """Initialize a new Title."""
         self.title = title
         self.is_date = bool(DATE_REGEX.fullmatch(self.title))
         self._date = None # type: Optional[datetime]
@@ -44,6 +45,7 @@ class Title:
     @property
     def date(self):
         # type: () -> datetime
+        """Get the date represented by the title."""
         assert self.is_date
         if self._date is None:
             self._date = datetime.strptime(self.title[:DATE_LENGTH], '%Y-%m-%d')
@@ -51,6 +53,12 @@ class Title:
 
     def iso(self, unit='day', default=None):
         # type: (str, Optional[str]) -> str
+        """Get a normalized title.
+
+        Parameters:
+            unit (str): The unit of the date. One of 'year', 'month', or 'day'.
+            default (str): The default title, if the title is not a date.
+        """
         if self.is_date:
             return self.date.strftime('%Y-%m-%d')[:STRING_LENGTHS[unit]]
         elif default is not None:

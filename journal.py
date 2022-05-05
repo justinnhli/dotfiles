@@ -49,10 +49,10 @@ class Title:
             self._date = datetime.strptime(self.title[:DATE_LENGTH], '%Y-%m-%d')
         return self._date
 
-    def iso(self, length=10, default=None):
-        # type: (int, Optional[str]) -> str
+    def iso(self, unit='day', default=None):
+        # type: (str, Optional[str]) -> str
         if self.is_date:
-            return self.date.strftime('%Y-%m-%d')[:length]
+            return self.date.strftime('%Y-%m-%d')[:STRING_LENGTHS[unit]]
         elif default is not None:
             return default
         else:
@@ -399,8 +399,7 @@ def group_entries(entries, unit, summary=True, reverse=True):
     Returns:
         dict[str, Entries]: The grouped entries.
     """
-    unit_length = STRING_LENGTHS[unit]
-    key_func = (lambda entry: entry[0].iso(unit_length, 'other'))
+    key_func = (lambda entry: entry[0].iso(unit, 'other'))
     grouped = groupby(
         sorted(entries.items(), reverse=reverse, key=key_func),
         key_func,

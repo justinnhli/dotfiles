@@ -207,28 +207,28 @@ class Journal(Entries):
         for date_range in date_ranges:
             start_date, end_date = date_range
             start_date, end_date = (start_date or first_date, end_date or last_date)
-            candidates |= set(k for k in selected if k.is_date and start_date <= k.date < end_date)
+            candidates |= set(k for k in selected if start_date <= k.date < end_date)
         return candidates
 
-    def filter(self, terms=None, date_ranges=None, icase=True):
-        # type: (Iterable[str], Sequence[DateRange], bool) -> dict[Title, Entry]
+    def filter(self, terms=None, icase=True, date_ranges=None, dates_only=False):
+        # type: (Iterable[str], bool, Sequence[DateRange], bool) -> dict[Title, Entry]
         """Filter the entries.
 
         Parameters:
             terms (Iterable[str]): Search terms for the entries.
+            icase (bool): Ignore case. Defaults to True.
             date_ranges (Sequence[DateRange]):
                 Date ranges for the entries. Optional.
-            icase (bool): Ignore case. Defaults to True.
+            dates_only (bool): Filter out non-date entries.
 
         Returns:
             dict[str, Entry]: The entries.
         """
         selected = set(self.entries.keys())
+        if date_ranges or dates_only:
+            selected = set(title for title in selected if title.is_date)
         if date_ranges:
-            selected = self._filter_by_date(
-                set(title for title in selected if title.is_date),
-                *date_ranges,
-            )
+            selected = self._filter_by_date(selected, *date_ranges)
         if terms:
             selected = self._filter_by_terms(selected, terms, icase)
         return {title: self.entries[title] for title in selected}
@@ -379,8 +379,9 @@ def filter_entries(journal, args, **kwargs):
     """
     return journal.filter(
         terms=kwargs.get('terms', args.terms),
-        date_ranges=kwargs.get('date_ranges', args.date_ranges),
         icase=kwargs.get('icase', args.icase),
+        date_ranges=kwargs.get('date_ranges', args.date_ranges),
+        dates_only=kwargs.get('dates_only', None),
     )
 
 
@@ -618,7 +619,7 @@ def do_count(journal, args):
     if 'readability' in args.columns:
         COLUMNS['READABILITY'] = summarize_readability
 
-    entries = filter_entries(journal, args)
+    entries = filter_entries(journal, args, dates_only=True)
     if not entries:
         return
     length_map = {title: len(entry.text.split()) for title, entry in entries.items()}
@@ -638,11 +639,7 @@ def do_graph(journal, args):
         journal (Journal): The journal.
         args (Namespace): The CLI arguments.
     """
-    entries = filter_entries(journal, args)
-    entries = {
-        title: entry for title, entry in entries.items()
-        if title.is_date
-    }
+    entries = filter_entries(journal, args, dates_only=True)
     disjoint_sets = dict((k, k) for k in entries)
     referents = defaultdict(set) # type: dict[Title, set[str]]
     edges = defaultdict(set) # type: dict[Title, set[str]]

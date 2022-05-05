@@ -3,6 +3,7 @@
 
 import re
 from csv import DictReader
+from itertools import chain
 from argparse import ArgumentParser
 from collections import defaultdict
 from inspect import signature, Parameter
@@ -320,33 +321,35 @@ class Library:
         def check_capitalization(key, paper):
             # type: (str, Paper) -> None
             """Check for unquoted capitalizations."""
-            unquoted_regex = '[^ ]*[A-Za-z][A-Z][^ ]*'
+            unquoted_regexes = [
+                r'(?P<word>[^ ]*[A-Za-z][A-Z][^ ]*)',
+                r'\? (?P<word>\w+)',
+            ]
             for attr in ['title', 'booktitle']:
+                if not hasattr(paper, attr):
+                    continue
                 title = getattr(paper, attr)
-                if not re.search(unquoted_regex, title):
-                    return
-                depth = 0
-                end_index = 0
                 unnested_title = title
-                for index, char in reversed(list(enumerate(title))):
-                    if char == '}':
-                        if depth == 0:
-                            end_index = index
-                        depth += 1
-                    elif char == '{':
-                        depth -= 1
-                        if depth == 0:
-                            unnested_title = unnested_title[:index] + unnested_title[end_index+1:]
+                while '{' in unnested_title:
+                    unnested_title = re.sub('{[^{}]*}', '', unnested_title)
+                matches = list(chain(*(re.finditer(regex, unnested_title) for regex in unquoted_regexes)))
+                if not matches:
+                    continue
+                words = set(
+                    re.sub(r'^\W*(.*?)\W*$', r'\1', match.group('word'))
+                    for match in matches
+                )
                 new_title = title
-                for match in set(re.findall(unquoted_regex, unnested_title)):
-                    new_title = re.sub(r'\b' + re.escape(match) + r'\b', '{' + match + '}', new_title)
+                for word in words:
+                    new_title = re.sub(r'\b' + re.escape(word) + r'\b', '{' + word + '}', new_title)
+                    new_title = new_title.replace('{{' + word + '}}', '{' + word + '}')
                 if new_title != title:
                     print(dedent(f'''
-                        unquoted title for {key}:
+                        unquoted {attr} for {key}:
                             current:
-                                title = {{{title}}},
+                                {attr} = {{{title}}},
                             suggestion:
-                                title = {{{new_title}}},
+                                {attr} = {{{new_title}}},
                     ''').strip())
 
         def check_doi(key, paper):

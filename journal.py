@@ -49,7 +49,7 @@ class Title:
                 self._is_date = True
                 self._date = datetime.strptime(self.title[:DATE_LENGTH], '%Y-%m-%d')
             else:
-                self._is_date = True
+                self._is_date = False
                 self._date = None
         return self._is_date
 

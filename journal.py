@@ -606,7 +606,7 @@ def do_count(journal, args):
         journal (Journal): The journal.
         args (Namespace): The CLI arguments.
     """
-    COLUMNS = { # pylint: disable = invalid-name
+    columns = {
         'DATE': (lambda entries, unit, num_words: unit),
         'POSTS': (lambda entries, unit, num_words: len(entries)),
         'FREQ': (lambda entries, unit, num_words:
@@ -624,12 +624,10 @@ def do_count(journal, args):
             0 if len(num_words) <= 1 else round(stdev(num_words))
         ),
     } # type: dict[str, Callable[[Entries, str, Sequence[int]], Any]]
-
     if 'length' in args.columns:
-        COLUMNS['LINE LEN'] = summarize_line_lengths
+        columns['LINE LEN'] = summarize_line_lengths
     if 'readability' in args.columns:
-        COLUMNS['READABILITY'] = summarize_readability
-
+        columns['READABILITY'] = summarize_readability
     entries = filter_entries(journal, args, dates_only=True)
     if not entries:
         return
@@ -637,8 +635,8 @@ def do_count(journal, args):
     table = [] # type: list[Sequence[str]]
     for timespan, group in group_entries(entries, args.unit, args.summary, args.reverse).items():
         lengths = tuple(length_map[title] for title in group)
-        table.append([str(func(group, timespan, lengths)) for column, func in COLUMNS.items()])
-    print_table(table, (list(COLUMNS.keys()) if args.headers else []))
+        table.append([str(func(group, timespan, lengths)) for column, func in columns.items()])
+    print_table(table, (list(columns.keys()) if args.headers else []))
 
 
 @register('-G', 'graph entry references in DOT')

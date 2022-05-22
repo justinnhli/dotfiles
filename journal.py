@@ -41,6 +41,7 @@ class Title:
         self.title = title
         self.is_date = bool(DATE_REGEX.fullmatch(self.title))
         self._date = None # type: Optional[datetime]
+        self._iso = None # type: Optional[str]
 
     @property
     def date(self):
@@ -59,24 +60,27 @@ class Title:
             unit (str): The unit of the date. One of 'year', 'month', or 'day'.
             default (str): The default title, if the title is not a date.
         """
-        if self.is_date:
-            return self.date.strftime('%Y-%m-%d')[:STRING_LENGTHS[unit]]
-        elif default is not None:
+        if self._iso is None:
+            if self.is_date:
+                self._iso = self.date.strftime('%Y-%m-%d')[:STRING_LENGTHS[unit]]
+            else:
+                self._iso = self.title
+        if not self.is_date:
             return default
         else:
-            return self.title
+            return self._iso
 
     def __lt__(self, other):
         # type: (Title) -> bool
-        return self.title < other.title
+        return self.iso() < other.iso()
 
     def __eq__(self, other):
         # type: (Any) -> bool
-        return self.title == other.title
+        return self.iso() == other.iso()
 
     def __hash__(self):
         # type: () -> int
-        return hash(self.title)
+        return hash(self.iso())
 
     def __str__(self):
         # type: () -> str

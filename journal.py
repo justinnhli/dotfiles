@@ -676,7 +676,7 @@ def do_graph(journal, args):
             path.add(rep)
             rep = disjoint_sets[rep]
         components[rep] |= path
-    node_fns = {
+    node_fn = {
         'uniform': (lambda entries, node: 48),
         'length': (lambda entries, node: len(entries[node].text.split()) / 100),
         'cites': (lambda entries, node:
@@ -686,8 +686,7 @@ def do_graph(journal, args):
             ))
         ),
         'refs': (lambda entries, node: 5 * len(REFERENCE_REGEX.findall(entries[node].text))),
-    } # type: dict[str, Callable[[Entries, Title], float]]
-    node_fn = node_fns[args.node_size]
+    }[args.node_size] # type: Callable[[Entries, Title], float]
     print('digraph {')
     print('\tgraph [size="48", model="subset", rankdir="BT"];')
     print('\tnode [fontcolor="#4E9A06", shape="none"];')
@@ -1008,7 +1007,7 @@ def build_arg_parser(arg_parser):
         help='[G] keep all edges',
     )
     group.add_argument(
-        '--node-size',
+        '--node-size-fn',
         choices=('uniform', 'length', 'cites', 'refs'),
         default='length',
         help='[G] the attribute that affects node size (default: length)',

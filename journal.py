@@ -62,10 +62,12 @@ class Title:
         """
         if self._iso is None:
             if self.is_date:
-                self._iso = self.date.strftime('%Y-%m-%d')[:STRING_LENGTHS[unit]]
+                self._iso = self.date.strftime('%Y-%m-%d')[:STRING_LENGTHS['day']]
             else:
                 self._iso = self.title
-        if not self.is_date:
+        if self.is_date:
+            return self._iso[:STRING_LENGTHS[unit]]
+        elif default is not None:
             return default
         else:
             return self._iso

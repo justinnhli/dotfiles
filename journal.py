@@ -652,11 +652,12 @@ def do_graph(journal, args):
     """
     entries = filter_entries(journal, args, dates_only=True)
     disjoint_sets = dict((k, k) for k in entries)
-    referents = defaultdict(set) # type: dict[Title, set[str]]
-    edges = defaultdict(set) # type: dict[Title, set[str]]
+    referents = defaultdict(set) # type: dict[Title, set[Title]]
+    edges = defaultdict(set) # type: dict[Title, set[Title]]
     for src, entry in sorted(entries.items()):
+        dests = set(Title(dest) for dest in REFERENCE_REGEX.findall(entry.text))
         dests = set(
-            dest for dest in REFERENCE_REGEX.findall(entry.text)
+            dest for dest in dests
             if src > dest and dest in entries
         )
         referents[src].update(*(referents[dest] for dest in dests))
@@ -697,11 +698,11 @@ def do_graph(journal, args):
         node_lines = defaultdict(set)
         edge_lines = set()
         for src in srcs:
-            node_lines[src.title[:STRING_LENGTHS['month']]].add(
-                f'"{src}" [fontsize="{node_fn(entries, src)}"];'
+            node_lines[src.iso()].add(
+                f'"{src.iso()}" [fontsize="{node_fn(entries, src)}"];'
             )
             for dest in edges[src]:
-                edge_lines.add(f'"{src}" -> "{dest}";')
+                edge_lines.add(f'"{src.iso()}" -> "{dest.iso()}";')
         for _, entry_lines in sorted(node_lines.items(), reverse=args.reverse):
             print('\tsubgraph {')
             print('\t\trank="same";')

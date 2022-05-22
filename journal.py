@@ -847,7 +847,6 @@ def do_vimgrep(journal, args): # pylint: disable = too-many-branches
     entries = filter_entries(journal, args)
     if not args.terms:
         args.terms.append('^.')
-    # TODO sort results for non-date titles
     for _, entry in sorted(entries.items(), reverse=args.reverse):
         lines = entry.text.splitlines()
         results = []

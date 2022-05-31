@@ -261,6 +261,7 @@ fi
 # PIM related settings
 pim_path="$HOME/pim"
 if [ -d "$pim_path" ]; then
+	alias cdjj="cd $pim_path/journal"
 	if command -v journal.py >/dev/null 2>&1; then
 		alias jrnl="journal.py \$(find $pim_path/journal/ -maxdepth 1 -name '[a-z]*.journal' | sed 's/^/--ignore /' | tr '\n' ' ')"
 	fi

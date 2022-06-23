@@ -196,7 +196,7 @@ class Journal(Entries):
                 self.entries[title] = Entry(
                     title,
                     entry_dict['text'],
-                    entry_dict['filepath'],
+                    Path(entry_dict['filepath']).expanduser().resolve(),
                     entry_dict['line_num'],
                 )
 
@@ -270,7 +270,7 @@ class Journal(Entries):
         lines = []
         lines.append('{')
         for entry in sorted(self.entries.values()):
-            relative_path = Path(entry.filepath).expanduser().resolve().relative_to(self.directory)
+            relative_path = entry.filepath.relative_to(self.directory)
             lines.append(f"'{entry.title}': {{")
             lines.append(f"    'title': '{entry.title}',")
             lines.append(f"    'filepath': '{relative_path}',")
@@ -883,7 +883,7 @@ def do_vimgrep(journal, args): # pylint: disable = too-many-branches
                 results.append((line_num, col_num, f'{prefix}{snippet}{suffix}'))
         for line_num, col_num, preview in sorted(results):
             print(':'.join([
-                f'{Path(entry.filepath).expanduser().resolve()}',
+                f'{entry.filepath}',
                 f'{entry.line_num + line_num - 1}',
                 f'{col_num}',
                 f' {preview}',

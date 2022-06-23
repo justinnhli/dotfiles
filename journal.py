@@ -18,7 +18,7 @@ from statistics import mean, median, stdev
 from sys import stdout, exit as sys_exit
 from tarfile import open as open_tar_file, TarInfo
 from tempfile import mkstemp
-from typing import Any, Optional, Callable, Generator, Iterable, Sequence, Mapping
+from typing import Any, Optional, Union, Callable, Generator, Iterable, Sequence, Mapping
 
 FILE_EXTENSION = '.journal'
 STRING_LENGTHS = {
@@ -98,14 +98,16 @@ class Journal(Entries):
     """A journal."""
 
     def __init__(self, directory, use_cache=True, ignores=None):
-        # type: (Path, bool, Optional[set[Path]]) -> None
+        # type: (Union[Path, str], bool,  Optional[set[Path]]) -> None
         """Initialize the journal.
 
         Parameters:
-            directory (Path): The directory of the journal.
+            directory (Union[Path, str]): The directory of the journal.
             use_cache (bool): Whether to use the cache file. Defaults to True.
             ignores (Iterable[Path]): Paths to ignore. Optional.
         """
+        if isinstance(directory, str):
+            directory = Path(directory)
         self.directory = directory.expanduser().resolve()
         if ignores is None:
             self.ignores = set()

@@ -1011,6 +1011,7 @@ nnoremap  <leader>;         :lcd %:p:h<cr>
 nnoremap  <silent>  <leader>.          :<C-u>call <SID>SetFoldLevelToLine()<cr>
 if exists(':tnoremap')
 	tnoremap  <Esc><Esc>  <C-\><C-n>
+	tnoremap  <C-[><C-[>  <C-\><C-n>
 endif
 
 " commands {{{1

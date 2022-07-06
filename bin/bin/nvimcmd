@@ -57,9 +57,9 @@ def print_and_exit(message):
 def main():
     if len(sys.argv) == 1:
         print_and_exit('Usage: {} <command> [arguments]'.format(sys.argv[0]))
-    addr = environ.get('NVIM_LISTEN_ADDRESS', None)
+    addr = environ.get('NVIM', None)
     if not addr:
-        print_and_exit('$NVIM_LISTEN_ADDRESS not set; quitting')
+        print_and_exit('$NVIM not set; quitting')
     nvim = attach('socket', path=addr)
     commands = []
     command = sys.argv[1]

@@ -240,10 +240,10 @@ if command -v python3 >/dev/null 2>&1; then
 fi
 
 # set variable for whether we are in an nvim terminal
-# need to separately check if #NVIM_LISTEN_ADDRESS is set
+# need to separately check if #NVIM is set
 nvim_terminal=0
-if [ ! -z "${NVIM_LISTEN_ADDRESS:-}" ]; then
-	if [ "$NVIM_LISTEN_ADDRESS" != '' ]; then
+if [ ! -z "${NVIM:-}" ]; then
+	if [ "$NVIM" != '' ]; then
 		nvim_terminal=1
 	fi
 fi

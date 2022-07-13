@@ -989,7 +989,7 @@ def build_arg_parser(arg_parser):
         dest='unit',
         choices=('year', 'month', 'day'),
         default='year',
-        help='[C] set tabulation unit (default: year)',
+        help='[C] set tabulation unit (default: %(default)s)',
     )
     group.add_argument(
         '--column',
@@ -1009,7 +1009,7 @@ def build_arg_parser(arg_parser):
         '--node-size-fn',
         choices=('uniform', 'length', 'cites', 'refs'),
         default='length',
-        help='[G] the attribute that affects node size (default: length)',
+        help='[G] the attribute that affects node size (default: %(default)s)',
     )
     group.add_argument(
         '--whole-words',

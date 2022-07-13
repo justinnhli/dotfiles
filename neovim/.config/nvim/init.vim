@@ -672,7 +672,7 @@ xnoremap  <leader>O  "zy:call <SID>OpenExternal('<C-r>z')<cr>
 nnoremap  <leader>B   :tabnew ~/.bashrc<cr>
 nnoremap  <leader>V   :tabnew $MYVIMRC<cr>
 nnoremap  <leader>S   :tabnew ~/.config/nvim/spell/en.utf-8.add<cr>
-nnoremap  <leader>H   :tabnew ~/Dropbox/personal/logs/<C-R>=strftime('%Y')<cr>.shistory<cr>
+nnoremap  <leader>H   :tabnew ~/Dropbox/personal/logs/<C-r>=strftime('%Y')<cr>.shistory<cr>
 nnoremap  <leader>T   :tabnew ~/Dropbox/personal/logs/ifttt/tweets.txt<cr>
 
 " toggle functions {{{2
@@ -800,12 +800,12 @@ endfunction
 " within-line movement mappings {{{3
 nnoremap  <C-a>  ^
 nnoremap  <C-e>  $
-cnoremap  <C-a>  <Home>
-cnoremap  <C-e>  <End>
-inoremap  <C-a>  <Home>
-inoremap  <C-e>  <End>
-xnoremap  <C-a>  <Home>
-xnoremap  <C-e>  <End>
+cnoremap  <C-a>  <home>
+cnoremap  <C-e>  <end>
+inoremap  <C-a>  <home>
+inoremap  <C-e>  <end>
+xnoremap  <C-a>  <home>
+xnoremap  <C-e>  <end>
 
 " text indent movement mappings {{{3
 nnoremap  <silent>  [,  :<C-u>call <SID>IndentTextObject(-1, -1, 0)<cr>
@@ -923,7 +923,7 @@ nnoremap  <C-s>  :update<cr>
 inoremap  <C-s>  <esc>:update<cr>
 xnoremap  <C-s>  <esc>:update<cr>gv
 
-" <C-D> to insert date {{{3
+" <C-d> to insert date {{{3
 inoremap  <C-d>  <C-r>=strftime('%Y-%m-%d')<cr>
 
 " default to very magic search {{{3
@@ -931,8 +931,8 @@ nnoremap  /      /\v
 nnoremap  ?      ?\v
 
 " easily search for selected text {{{3
-xnoremap  /      y<Esc>/\V<C-r>"<cr>
-xnoremap  ?      y<Esc>?\V<C-r>"<cr>
+xnoremap  /      y<esc>/\V<C-r>"<cr>
+xnoremap  ?      y<esc>?\V<C-r>"<cr>
 
 " rebind n/N to always go forwards/backwards (and turns on highlighting) {{{3
 nnoremap  n      :set hlsearch<cr>/<cr>zz
@@ -1006,11 +1006,11 @@ nnoremap  <leader><bslash>  ggVG:<C-u>call <SID>FormatTable()<cr>
 xnoremap  <leader><bar>     :<C-u>call <SID>FormatColumns()<cr>gv
 xnoremap  <leader><bslash>  :<C-u>call <SID>FormatTable()<cr>gv
 nnoremap  <leader><cr>      :silent lmake<cr>
-xnoremap  <leader><cr>      y<Esc>:!<C-r>"<cr>
+xnoremap  <leader><cr>      y<esc>:!<C-r>"<cr>
 nnoremap  <leader>;         :lcd %:p:h<cr>
 nnoremap  <silent>  <leader>.          :<C-u>call <SID>SetFoldLevelToLine()<cr>
 if exists(':tnoremap')
-	tnoremap  <Esc><Esc>  <C-\><C-n>
+	tnoremap  <esc><esc>  <C-\><C-n>
 	tnoremap  <C-[><C-[>  <C-\><C-n>
 endif
 
@@ -1169,7 +1169,7 @@ augroup justinnhli_miscellaneous
 	autocmd  GUIEnter       *         set visualbell t_vb=
 	" easily cancel the command line window
 	autocmd  CmdwinEnter    *         nnoremap <buffer> <C-c> :quit<cr>
-	autocmd  CmdwinEnter    *         inoremap <buffer> <C-c> <Esc>
+	autocmd  CmdwinEnter    *         inoremap <buffer> <C-c> <esc>
 	" bound scope of search to the original window
 	autocmd  WinLeave       *         let w:search_on = &hlsearch | let w:last_search = @/
 	autocmd  WinEnter       *         if exists('w:search_on') && w:search_on | let @/ = w:last_search | else | set nohlsearch | endif

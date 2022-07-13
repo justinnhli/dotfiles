@@ -27,26 +27,35 @@ def video_length(path):
     raise ValueError()
 
 
-def create_thumbnail_grid(path, overwrite=False):
-    # type: (Path, bool) -> None
+def image_path(video_path):
+    # type: (Path) -> Path
+    """Create the thumbnail image filepath.
+
+    Parameters:
+        video_path (Path): The path of the video file.
+
+    Returns:
+        Path: The path of the thumbnail image file.
+    """
+    return video_path.parent.joinpath(video_path.stem + '.png')
+
+
+def create_thumbnail_grid(path):
+    # type: (Path) -> None
     """Create a thumbnail grid of a video.
 
     Parameters:
         path (Path): The path of the video file.
-        overwrite (bool): Whether to overwrite an existing image.
-            Defaults to False.
     """
     length = video_length(path)
     frequency = int(length) // 16
-    img_path = path.parent.joinpath(path.stem + '.png')
-    if img_path.exists() and not overwrite:
-        return
     run(
         [
             'ffmpeg',
             '-i', str(path),
+            '-loglevel', 'error',
             '-vf', f'fps=1/{frequency},scale=-1:120,tile=4x4',
-            str(img_path),
+            str(image_path(path)),
         ],
         check=False,
     )
@@ -58,14 +67,19 @@ def main():
     arg_parser = ArgumentParser(description='create a thumbnail grid of videos')
     arg_parser.add_argument('paths', type=Path, nargs='+', help='video file(s) to process')
     arg_parser.add_argument('--overwrite', action='store_true', help='regenerate thumbnails')
+    arg_parser.add_argument('--scale', default=120, help='thumbnail scale (default:120)')
     args = arg_parser.parse_args()
-    processed = set()
+    to_process = set()
     for path in args.paths:
         path = path.expanduser().resolve()
-        if path in processed:
+        if path in to_process:
             continue
-        processed.add(path)
-        create_thumbnail_grid(path, overwrite=args.overwrite)
+        if image_path(path).exists() and not args.overwrite:
+            continue
+        to_process.add(path)
+    for i, path in enumerate(sorted(to_process), start=1):
+        print(f'({i}/{len(to_process)}) {path}')
+        create_thumbnail_grid(path)
 
 
 if __name__ == '__main__':

@@ -1241,10 +1241,8 @@ function EmojiToShortcode()
 	"😍
 	"😘
 	"🥰
-	" anger
-	"😡
-	"😠
 	" other
+	"😊
 	"😲
 	"😧
 	"😣
@@ -1256,9 +1254,12 @@ function EmojiToShortcode()
 	%s/😆/:grinning:/eg
 	%s/😇/:halo:/eg
 	%s/😈/:horns:/eg
+	%s/😉/:wink:/eg
 	%s/😊/:blushing_smile:/eg
 	%s/😎/:sunglasses:/eg
 	%s/😏/:smirk:/eg
+	%s/😠/:anger:/eg
+	%s/😡/:anger:/eg
 	%s/😢/:tear:/eg
 	%s/😬/:grimace:/eg
 	%s/😭/:streaming_tears:/eg
@@ -1267,6 +1268,7 @@ function EmojiToShortcode()
 	%s/🙃/:upside_down_smile:/eg
 	%s/🙄/:eye_roll:/eg
 	%s/🤔/:thinking_face:/eg
+	%s/🤗/:hugging_face:/eg
 	%s/🤣/:rofl:/eg
 	%s/🤯/:mind_blown:/eg
 	%s/🥲/:tear:/eg

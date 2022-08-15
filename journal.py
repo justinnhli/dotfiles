@@ -32,6 +32,7 @@ REFERENCE_REGEX = re.compile('[0-9]{4}-[0-9]{2}-[0-9]{2}')
 DATE_REGEX = re.compile(REFERENCE_REGEX.pattern + '(, (Mon|Tues|Wednes|Thurs|Fri|Satur|Sun)day)?')
 RANGE_BOUND_REGEX = re.compile('([0-9]{4}(-[0-9]{2}(-[0-9]{2})?)?)?')
 
+
 class Title:
     """A utility class for handling date and non-date titles."""
 
@@ -263,7 +264,7 @@ class Journal(Entries):
                     tags[line] = (rel_path, line_num)
                     if DATE_REGEX.fullmatch(line.rstrip()):
                         tags[line[:DATE_LENGTH]] = (rel_path, line_num)
-        with self.tags_file.open('w') as fd:
+        with self.tags_file.open('w', encoding='utf-8') as fd:
             for tag, (filepath, line_num) in sorted(tags.items()):
                 fd.write(f'{tag}\t{filepath}\t{line_num}\n')
 
@@ -280,7 +281,7 @@ class Journal(Entries):
             lines.append(f"    'text': {repr(entry.text)},")
             lines.append('},')
         lines.append('}')
-        with self.cache_file.open('w') as fd:
+        with self.cache_file.open('w', encoding='utf-8') as fd:
             fd.write('\n'.join(lines))
 
     def lint(self):
@@ -559,6 +560,7 @@ def register(*args):
         Callable[[Callable[[Journal, Namespace], None]], Callable[[Journal, Namespace], None]]:
             The argument function.
     """
+
     def wrapped(function):
         # type: (Callable[[Journal, Namespace], None]) -> Callable[[Journal, Namespace], None]
         assert 1 <= len(args) <= 2

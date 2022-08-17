@@ -7,6 +7,7 @@ from typing import Mapping
 
 CONTACTS_PATH = Path('~/pim/contacts/contacts.vcf').expanduser()
 
+
 class Contact:
     """A contact."""
 

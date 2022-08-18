@@ -1234,30 +1234,47 @@ endfunction
 
 " EmojiToShortcode {{{3
 function EmojiToShortcode()
-	" sweat/tears
-	"😅
-	"😓
-	" heart
-	"😍
-	"😘
-	"🥰
 	" other
 	"😊
 	"😲
 	"😧
 	"😣
+    " remove variant selectors
+    %s/\%uFE00//eg
+    %s/\%uFE01//eg
+    %s/\%uFE02//eg
+    %s/\%uFE03//eg
+    %s/\%uFE04//eg
+    %s/\%uFE05//eg
+    %s/\%uFE06//eg
+    %s/\%uFE07//eg
+    %s/\%uFE08//eg
+    %s/\%uFE09//eg
+    %s/\%uFE0A//eg
+    %s/\%uFE0B//eg
+    %s/\%uFE0C//eg
+    %s/\%uFE0D//eg
+    %s/\%uFE0E//eg
+    %s/\%uFE0F//eg
+    " replace emoji with shortcodes
+	%s/☺/:smile:/eg
+	%s/❤/:heart:/eg
 	%s/😀/:grinning:/eg
 	%s/😁/:grinning:/eg
 	%s/😂/:laughing_crying_face:/eg
 	%s/😃/:grinning:/eg
 	%s/😄/:grinning:/eg
+	%s/😅/:smiling_sweat:/eg
 	%s/😆/:grinning:/eg
 	%s/😇/:halo:/eg
 	%s/😈/:horns:/eg
 	%s/😉/:wink:/eg
 	%s/😊/:blushing_smile:/eg
+	%s/😍/:heart_eyes:/eg
 	%s/😎/:sunglasses:/eg
 	%s/😏/:smirk:/eg
+	%s/😓/:defeated_sweat:/eg
+	%s/😘/:kiss_with_hearts:/eg
 	%s/😠/:anger:/eg
 	%s/😡/:anger:/eg
 	%s/😢/:tear:/eg
@@ -1270,8 +1287,10 @@ function EmojiToShortcode()
 	%s/🤔/:thinking_face:/eg
 	%s/🤗/:hugging_face:/eg
 	%s/🤣/:rofl:/eg
+	%s/🤮/:vomit:/eg
 	%s/🤯/:mind_blown:/eg
+	%s/🥰/:smile_with_hearts:/eg
 	%s/🥲/:tear:/eg
 	%s/🥺/:glossy_eyes:/eg
-	%s/\%u2764\%uFE0F/:heart:/eg
+    %s/😞/:disappointed_face:/eg
 endfunction

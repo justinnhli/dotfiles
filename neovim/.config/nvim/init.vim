@@ -1085,10 +1085,10 @@ function s:LoadFiletypeTemplate()
 		" read in the template file
 		execute '0r ' .. l:templates_file
 		" delete the blank last line
-		execute "normal! :$\<cr>dd"
+		execute 'normal! :$\<cr>"_dd'
 		" place cursor at the marker and delete it
 		call search(' *TODO')
-		execute 'normal! de'
+		execute 'normal! "_de'
 	endif
 endfunction
 augroup justinnhli_create_directories

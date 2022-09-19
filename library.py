@@ -30,6 +30,33 @@ def load_weird_names():
 
 load_weird_names()
 
+BIBTEX_FIELDS = [
+    'id',
+    'type',
+    'address',
+    'author',
+    'booktitle',
+    'doi',
+    'editor',
+    'edition',
+    'howpublished',
+    'institution',
+    'journal',
+    'month',
+    'note',
+    'number',
+    'organization',
+    'pages',
+    'publisher',
+    'school',
+    'series',
+    'title',
+    'translator',
+    'url',
+    'venue',
+    'volume',
+    'year',
+]
 
 class Paper:
     """A research paper."""
@@ -38,31 +65,7 @@ class Paper:
         # library fields
         'library',
         # bibtex fields
-        'id',
-        'type',
-        'address',
-        'author',
-        'booktitle',
-        'doi',
-        'editor',
-        'edition',
-        'howpublished',
-        'institution',
-        'journal',
-        'month',
-        'note',
-        'number',
-        'organization',
-        'pages',
-        'publisher',
-        'school',
-        'series',
-        'title',
-        'translator',
-        'url',
-        'venue',
-        'volume',
-        'year',
+        *BIBTEX_FIELDS,
     )
 
     def __init__(self, paper_id, library=None):

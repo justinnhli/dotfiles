@@ -321,6 +321,21 @@ class Library:
                             @{paper.type} {{{suggestion},
                 ''').strip())
 
+        def check_spaces(key, paper):
+            # type: (str, Paper) -> None
+            """Strip leading/trailing spaces and remove multiple spaces."""
+            for attr in BIBTEX_FIELDS:
+                if not hasattr(paper, attr):
+                    continue
+                value = getattr(paper, attr)
+                new_value = re.sub('  +', ' ', value.strip())
+                if value != new_value:
+                    print(dedent(f'''
+                        {attr} for {key} has leading/trailing/multiple spaces:
+                            suggestion:
+                                {attr} = {{{new_value}}},
+                    ''').strip())
+
         def check_capitalization(key, paper):
             # type: (str, Paper) -> None
             """Check for unquoted capitalizations."""
@@ -413,6 +428,7 @@ class Library:
         for key, paper in self.papers.items():
             check_names(key, paper)
             check_id(key, paper)
+            check_spaces(key, paper)
             check_capitalization(key, paper)
             check_doi(key, paper)
             check_pages(key, paper)

@@ -410,6 +410,7 @@ class Library:
 
         def check_latex(key, paper):
             # type: (str, Paper) -> None
+            """Check for LaTeX special characters."""
             for attr in ('booktitle', 'title', 'journal'):
                 if not hasattr(paper, attr):
                     continue

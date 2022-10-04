@@ -427,18 +427,18 @@ def group_entries(entries, unit, summary=True, reverse=True):
     return result
 
 
-def print_table(data, headers, gap_size=2):
-    # type: (list[Sequence[str]], Sequence[str], int) -> None
+def print_table(data, headers=None, gap_size=2):
+    # type: (list[Sequence[Any]], Optional[Sequence[str]], int) -> None
     """Print a table of data.
 
     Parameters:
-        data (list[Sequence[str]]): The rows of data.
-        headers (Sequence[str]): The headers.
+        data (list[Sequence[Any]]): The rows of data.
+        headers (Optional[Sequence[str]]): The headers.
         gap_size (int): The number of spaces between columns. Defaults to 2.
     """
     if not data:
         return
-    rows = data # type: list[Sequence[str]]
+    rows = [[str(datum) for datum in row] for row in data] # type: list[Sequence[str]]
     if headers:
         rows = [headers] + rows
     widths = [max(len(row[col]) for row in rows) for col in range(len(rows[0]))]
@@ -446,7 +446,8 @@ def print_table(data, headers, gap_size=2):
     if headers:
         print(gap.join(col.center(width) for width, col in zip(widths, headers)))
         print(gap.join(width * '-' for width in widths))
-    for row in data:
+        rows = rows[1:]
+    for row in rows:
         print(gap.join(col.rjust(width) for width, col in zip(widths, row)))
 
 
@@ -641,7 +642,7 @@ def do_count(journal, args):
     table = [] # type: list[Sequence[str]]
     for timespan, group in group_entries(entries, args.unit, args.summary, args.reverse).items():
         lengths = tuple(length_map[title] for title in group)
-        table.append([str(func(group, timespan, lengths)) for column, func in columns.items()])
+        table.append([func(group, timespan, lengths) for column, func in columns.items()])
     print_table(table, (list(columns.keys()) if args.headers else []))
 
 
@@ -827,13 +828,13 @@ def do_hyphenation(journal, args): # pylint: disable = too-many-branches
         else:
             term = re.escape(match.group())
         counts[variant] = filter_entries(journal, args, terms=[term])
-    rows = [] # type: list[Sequence[str]]
+    rows = [] # type: list[Sequence[Any]]
     if args.terms:
         key_fn = (lambda pair: len(pair[1]))
     else:
         key_fn = None
     rows.extend(
-        (variant, str(len(entries)), min(entries).iso(), max(entries).iso())
+        (variant, len(entries), min(entries).iso(), max(entries).iso())
         for variant, entries in sorted(counts.items(), key=key_fn)
     )
     print_table(rows, ['VARIANT', 'COUNT', 'FIRST', 'LAST'])

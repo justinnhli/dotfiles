@@ -32,10 +32,13 @@ def ris2bib(ris):
     ris_props = defaultdict(list)
     for line in ris.splitlines():
         key, value = line.split('-', maxsplit=1)
-        ris_props[key.strip()].append(value.strip())
+        value = value.strip()
+        if value:
+            ris_props[key.strip()].append(value)
     bib_props = {}
     for ris_prop, bib_prop in PROP_MAP.items():
         if ris_prop in ris_props:
+            assert bib_prop not in bib_props
             bib_props[bib_prop] = get_only(ris_props, ris_prop)
     bib_props['author'] = ' and '.join(get_only(ris_props, 'AU'))
     if 'ED' in ris_props:

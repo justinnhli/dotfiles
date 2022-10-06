@@ -103,6 +103,53 @@ TESTS = [
             ''',
         ),
     ),
+    (
+        '''
+        TY  - JOUR
+        T1  - Spreading Activation in an Attractor Network With Latching Dynamics: Automatic Semantic Priming Revisited
+        AU  - Lerner, Itamar
+        AU  - Bentin, Shlomo
+        AU  - Shriki, Oren
+        Y1  - 2012/11/01
+        PY  - 2012
+        DA  - 2012/11/01
+        N1  - https://doi.org/10.1111/cogs.12007
+        DO  - https://doi.org/10.1111/cogs.12007
+        T2  - Cognitive Science
+        JF  - Cognitive Science
+        JO  - Cognitive Science
+        SP  - 1339
+        EP  - 1382
+        VL  - 36
+        IS  - 8
+        KW  - Word recognition
+        KW  - Semantic priming
+        KW  - Neural networks
+        KW  - Distributed representations
+        KW  - Latching dynamics
+        PB  - John Wiley & Sons, Ltd
+        SN  - 0364-0213
+        M3  - https://doi.org/10.1111/cogs.12007
+        UR  - https://doi.org/10.1111/cogs.12007
+        Y2  - 2022/10/05
+        ER  - 
+        ''',
+        (
+            'Lerner2012SpreadingActivationIn',
+            '''
+                author = {Lerner, Itamar and Bentin, Shlomo and Shriki, Oren},
+                doi = {https://doi.org/10.1111/cogs.12007},
+                journal = {Cognitive Science},
+                number = {8},
+                pages = {1339--1382},
+                publisher = {John Wiley & Sons, Ltd},
+                title = {Spreading Activation in an Attractor Network With Latching Dynamics: Automatic Semantic Priming Revisited},
+                url = {https://doi.org/10.1111/cogs.12007},
+                volume = {36},
+                year = {2012},
+            ''',
+        ),
+    ),
 ]
 
 
@@ -110,10 +157,9 @@ def test():
     for ris, (bib_id, bib_props) in TESTS:
         bib_id_a, bib_props_a = ris2bib(ris.strip())
         assert bib_id == bib_id_a
-        assert (
-            dedent(bib_props).strip()
-            == '\n'.join(f'{key} = {{{value}}},' for key, value in sorted(bib_props_a.items()))
-        )
+        for (key, value), expected in zip(sorted(bib_props_a.items()), dedent(bib_props).strip().splitlines()):
+            actual = f'{key} = {{{value}}},'
+            assert actual == expected, f"{actual}\n\ndoesn't match\n\n{expected}"
 
 
 if __name__ == '__main__':

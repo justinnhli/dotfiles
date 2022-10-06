@@ -7,13 +7,16 @@ from textwrap import dedent
 
 
 PROP_MAP = {
-    'title': 'TI',
-    'year': 'PY',
-    'volume': 'VL',
-    'number': 'IS',
-    'url': 'UR',
-    'doi': 'DO',
-    'journal': 'JO',
+    # AU, ED, SP, EP is processed separately
+    'TI': 'title',
+    'T1': 'title',
+    'PY': 'year',
+    'VL': 'volume',
+    'IS': 'number',
+    'UR': 'url',
+    'DO': 'doi',
+    'JO': 'journal',
+    'PB': 'publisher',
 }
 
 
@@ -31,7 +34,7 @@ def ris2bib(ris):
         key, value = line.split('-', maxsplit=1)
         ris_props[key.strip()].append(value.strip())
     bib_props = {}
-    for bib_prop, ris_prop in PROP_MAP.items():
+    for ris_prop, bib_prop in PROP_MAP.items():
         if ris_prop in ris_props:
             bib_props[bib_prop] = get_only(ris_props, ris_prop)
     bib_props['author'] = ' and '.join(get_only(ris_props, 'AU'))

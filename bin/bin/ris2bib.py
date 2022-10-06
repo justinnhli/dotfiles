@@ -38,6 +38,8 @@ def ris2bib(ris):
         if ris_prop in ris_props:
             bib_props[bib_prop] = get_only(ris_props, ris_prop)
     bib_props['author'] = ' and '.join(get_only(ris_props, 'AU'))
+    if 'ED' in ris_props:
+        bib_props['editor'] = ' and '.join(get_only(ris_props, 'ED'))
     if 'SP' in ris_props and 'EP' in ris_props:
         bib_props['pages'] = get_only(ris_props, 'SP') + '--' + get_only(ris_props, 'EP')
     bib_id = re.sub('[^0-9A-Za-z]', '', ''.join([

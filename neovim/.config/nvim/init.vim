@@ -1261,6 +1261,7 @@ function EmojiToShortcode()
     " replace emoji with shortcodes
 	%s/☺/:smile:/eg
 	%s/❤/:heart:/eg
+	%s/💯/:100:/eg
 	%s/😀/:grinning:/eg
 	%s/😁/:grinning:/eg
 	%s/😂/:laughing_crying_face:/eg

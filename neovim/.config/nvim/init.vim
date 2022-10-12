@@ -1052,7 +1052,7 @@ function s:GrepTrim(str)
     endif
 endfunction
 function s:AutosetGrepMappings()
-	" we need this guard because normal grep requires specifying the files
+	" we need this guard because normal grep requires specifying the files to search through
 	if &grepprg !~# '^grep -n '
 		nnoremap  <buffer>  <leader>wef  q:isilent lgrep<space>
 		execute 'nnoremap  <buffer>  <leader>whf  :leftabove vnew<cr>:setlocal filetype=' .. &filetype .. '<cr>q:isilent lgrep<space>'

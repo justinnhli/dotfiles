@@ -1044,6 +1044,13 @@ augroup justinnhli_quickfix
 augroup END
 
 " change grep {{{3
+function s:GrepTrim(str)
+	if a:str =~ '^\s*$'
+        return a:str
+    else
+        return trim(a:str)
+    endif
+endfunction
 function s:AutosetGrepMappings()
 	" we need this guard because normal grep requires specifying the files
 	if &grepprg !~# '^grep -n '
@@ -1053,12 +1060,12 @@ function s:AutosetGrepMappings()
 		execute 'nnoremap  <buffer>  <leader>wkf  :leftabove new<cr>:setlocal filetype=' .. &filetype .. '<cr>q:isilent lgrep<space>'
 		execute 'nnoremap  <buffer>  <leader>wlf  :rightbelow vnew<cr>:setlocal filetype=' .. &filetype .. '<cr>q:isilent lgrep<space>'
 		execute 'nnoremap  <buffer>  <leader>tf  :tabnew<cr>:setlocal filetype=' .. &filetype .. '<cr>q:isilent lgrep<space>'
-		xnoremap  <buffer>  <leader>wef  "zy:silent lgrep <C-r>=shellescape(getreg('z'))<cr><cr>
-		execute 'xnoremap  <buffer>  <leader>whf  "zy:leftabove vnew<cr>:setlocal filetype=' .. &filetype .. "<cr>q:isilent lgrep <C-r>=shellescape(getreg('z'))<cr><cr>"
-		execute 'xnoremap  <buffer>  <leader>wjf  "zy:rightbelow new<cr>:setlocal filetype=' .. &filetype .. "<cr>q:isilent lgrep <C-r>=shellescape(getreg('z'))<cr><cr>"
-		execute 'xnoremap  <buffer>  <leader>wkf  "zy:leftabove new<cr>:setlocal filetype=' .. &filetype .. "<cr>q:isilent lgrep <C-r>=shellescape(getreg('z'))<cr><cr>"
-		execute 'xnoremap  <buffer>  <leader>wlf  "zy:rightbelow vnew<cr>:setlocal filetype=' .. &filetype .. "<cr>q:isilent lgrep <C-r>=shellescape(getreg('z'))<cr><cr>"
-		execute 'xnoremap  <buffer>  <leader>tf  "zy:tabnew<cr>:setlocal filetype=' .. &filetype .. "<cr>q:isilent lgrep <C-r>=shellescape(getreg('z'))<cr><cr>"
+		xnoremap  <buffer>  <leader>wef  "zy:silent lgrep <C-r>=shellescape(<SID>GrepTrim(getreg('z')))<cr><cr>
+		execute 'xnoremap  <buffer>  <leader>whf  "zy:leftabove vnew<cr>:setlocal filetype=' .. &filetype .. "<cr>q:isilent lgrep <C-r>=shellescape(<SID>GrepTrim(getreg('z')))<cr><cr>"
+		execute 'xnoremap  <buffer>  <leader>wjf  "zy:rightbelow new<cr>:setlocal filetype=' .. &filetype .. "<cr>q:isilent lgrep <C-r>=shellescape(<SID>GrepTrim(getreg('z')))<cr><cr>"
+		execute 'xnoremap  <buffer>  <leader>wkf  "zy:leftabove new<cr>:setlocal filetype=' .. &filetype .. "<cr>q:isilent lgrep <C-r>=shellescape(<SID>GrepTrim(getreg('z')))<cr><cr>"
+		execute 'xnoremap  <buffer>  <leader>wlf  "zy:rightbelow vnew<cr>:setlocal filetype=' .. &filetype .. "<cr>q:isilent lgrep <C-r>=shellescape(<SID>GrepTrim(getreg('z')))<cr><cr>"
+		execute 'xnoremap  <buffer>  <leader>tf  "zy:tabnew<cr>:setlocal filetype=' .. &filetype .. "<cr>q:isilent lgrep <C-r>=shellescape(<SID>GrepTrim(getreg('z')))<cr><cr>"
 	endif
 endfunction
 augroup justinnhli_autoset_grep_mappings

@@ -807,7 +807,7 @@ def do_hyphenation(journal, args): # pylint: disable = too-many-branches
     else:
         hyphen_regex = re.compile("([a-z']+(-[a-z']+)+)", flags=re.IGNORECASE)
         phrases = set(matches[0] for matches in hyphen_regex.finditer(journal_text))
-    matches = set(*(
+    matches = set(chain(*(
         re.finditer(r'[ -]?'.join(phrase.split('-')), journal_text, flags=re.IGNORECASE)
         for phrase in sorted(phrases)
     ))

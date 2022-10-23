@@ -810,14 +810,16 @@ def do_hyphenation(journal, args): # pylint: disable = too-many-branches
     matches = set(chain(*(
         re.finditer(r'[ -]?'.join(phrase.split('-')), journal_text, flags=re.IGNORECASE)
         for phrase in sorted(phrases)
-    ))
-    counts = {}
+    )))
+    seen = set()
+    rows = []
     for match in matches:
         variant = match.group()
         if args.icase:
             variant = variant.lower()
-        if variant in counts:
+        if variant in seen:
             continue
+        seen.add(variant)
         if args.whole_words:
             if alpha_regex.match(journal_text[match.start() - 1]):
                 continue
@@ -826,17 +828,12 @@ def do_hyphenation(journal, args): # pylint: disable = too-many-branches
             term = r'\b' + re.escape(match.group()) + r'\b'
         else:
             term = re.escape(match.group())
-        counts[variant] = filter_entries(journal, args, terms=[term])
-    rows = [] # type: list[Sequence[Any]]
-    if args.terms:
-        key_fn = (lambda pair: len(pair[1]))
-    else:
-        key_fn = None
-    rows.extend(
-        (variant, len(entries), min(entries).iso(), max(entries).iso())
-        for variant, entries in sorted(counts.items(), key=key_fn)
+        entries = filter_entries(journal, args, terms=[term])
+        rows.append((variant, len(entries), min(entries).iso(), max(entries).iso()))
+    print_table(
+        sorted(rows, key=(lambda row: row[1])),
+        ['VARIANT', 'COUNT', 'FIRST', 'LAST'],
     )
-    print_table(rows, ['VARIANT', 'COUNT', 'FIRST', 'LAST'])
 
 
 @register()

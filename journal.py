@@ -550,36 +550,35 @@ OPERATIONS = []
 Option = namedtuple('Option', 'priority, flag, desc, function')
 
 
-def register(*args):
+def register(flag=None):
     # type: (str) -> Callable[[Callable[[Journal, Namespace], None]], Callable[[Journal, Namespace], None]]
     """Register a function for the CLI.
 
     Parameters:
-        *args (str): The option and the description.
+        flag (str): The option flag. Optional; if not provided, the function name is used instead.
 
     Returns:
         Callable[[Callable[[Journal, Namespace], None]], Callable[[Journal, Namespace], None]]:
             The argument function.
     """
 
-    def wrapped(function):
-        # type: (Callable[[Journal, Namespace], None]) -> Callable[[Journal, Namespace], None]
-        assert 1 <= len(args) <= 2
+    def wrapped(function, flag):
+        # type: (Callable[[Journal, Namespace], None], str) -> Callable[[Journal, Namespace], None]
         assert function.__name__.startswith('do_')
-        if len(args) == 1:
+        if flag is None:
             priority = 2
             flag = '--' + function.__name__[3:].replace("_", "-")
-            desc = args[0]
-        elif len(args) == 2:
+        else:
             priority = 1
-            flag, desc = args
+        desc = function.__doc__.splitlines()[0].strip('.')
+        desc = desc[0].lower() + desc[1:]
         OPERATIONS.append(Option(priority, flag, desc, function))
         return function
 
-    return wrapped
+    return (lambda function: wrapped(function, flag)) # pylint: disable = superfluous-parens
 
 
-@register('-A', 'archive to datetimed tarball')
+@register('-A')
 def do_archive(_, args):
     # type: (Journal, Namespace) -> None
     """Archive to datetimed tarball.
@@ -604,7 +603,7 @@ def do_archive(_, args):
         tar.add(__file__, arcname=join_path(archive_name, basename(__file__)))
 
 
-@register('-C', 'count words and entries')
+@register('-C')
 def do_count(journal, args):
     # type: (Journal, Namespace) -> None
     """Count words and entries.
@@ -646,7 +645,7 @@ def do_count(journal, args):
     print_table(table, (list(columns.keys()) if args.headers else []))
 
 
-@register('-G', 'graph entry references in DOT')
+@register('-G')
 def do_graph(journal, args):
     # type: (Journal, Namespace) -> None
     """Graph entry references in DOT.
@@ -719,7 +718,7 @@ def do_graph(journal, args):
     print('}')
 
 
-@register('-I', 're-index and update cache')
+@register('-I')
 def do_index(journal, _):
     # type: (Journal, Namespace) -> None
     """Re-index and update cache.
@@ -733,7 +732,7 @@ def do_index(journal, _):
         sys_exit(1)
 
 
-@register('-L', 'list entry titles')
+@register('-L')
 def do_list(journal, args):
     # type: (Journal, Namespace) -> None
     """List entry titles.
@@ -749,7 +748,7 @@ def do_list(journal, args):
     ))
 
 
-@register('-S', 'show entry contents')
+@register('-S')
 def do_show(journal, args): # pylint: disable = too-many-branches
     # type: (Journal, Namespace) -> None
     """Show entry contents.
@@ -792,7 +791,7 @@ def do_show(journal, args): # pylint: disable = too-many-branches
         print(text)
 
 
-@register('list entries that hyphenate the terms differently')
+@register()
 def do_hyphenation(journal, args): # pylint: disable = too-many-branches
     # type: (Journal, Namespace) -> None
     """List entries that hyphenate the terms differently.
@@ -840,7 +839,7 @@ def do_hyphenation(journal, args): # pylint: disable = too-many-branches
     print_table(rows, ['VARIANT', 'COUNT', 'FIRST', 'LAST'])
 
 
-@register('list search results in vim :grep format')
+@register()
 def do_vimgrep(journal, args): # pylint: disable = too-many-branches
     # type: (Journal, Namespace) -> None
     """List search results in vim :grep format.

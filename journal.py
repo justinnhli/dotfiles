@@ -839,7 +839,7 @@ def do_hyphenation(journal, args): # pylint: disable = too-many-branches
 @register()
 def do_vimgrep(journal, args): # pylint: disable = too-many-branches
     # type: (Journal, Namespace) -> None
-    """List search results in vim :grep format.
+    """List results in vim :grep format.
 
     Parameters:
         journal (Journal): The journal.

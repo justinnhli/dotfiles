@@ -967,6 +967,12 @@ def build_arg_parser(arg_parser):
         default=re.IGNORECASE,
         help='ignore case-insensitivity',
     )
+    group.add_argument(
+        '-w',
+        dest='whole_words',
+        action='store_true',
+        help='only match whole words',
+    )
 
     group = arg_parser.add_argument_group('OUTPUT OPTIONS (IGNORED BY -[AI])')
     group.add_argument(
@@ -1015,12 +1021,6 @@ def build_arg_parser(arg_parser):
         choices=('uniform', 'length', 'cites', 'refs'),
         default='length',
         help='[G] the attribute that affects node size (default: %(default)s)',
-    )
-    group.add_argument(
-        '--whole-words',
-        dest='whole_words',
-        action='store_true',
-        help='[hyphenation] only match whole words',
     )
 
     group = arg_parser.add_argument_group('MISCELLANEOUS OPTIONS')

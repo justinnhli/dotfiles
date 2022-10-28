@@ -791,10 +791,10 @@ def do_show(journal, args): # pylint: disable = too-many-branches
         print(text)
 
 
-@register()
-def do_hyphenation(journal, args): # pylint: disable = too-many-branches
+@register('-W')
+def do_wording(journal, args): # pylint: disable = too-many-branches
     # type: (Journal, Namespace) -> None
-    """List entries that hyphenate the terms differently.
+    """Count uses of a phrase.
 
     Parameters:
         journal (Journal): The journal.
@@ -1078,7 +1078,7 @@ def process_args(arg_parser, args):
     Returns:
         Namespace: The CLI arguments, augmented.
     """
-    if args.operation.__name__ == 'do_hyphenation':
+    if args.operation.__name__ == 'do_wording':
         args.terms = list(chain(*(term.split('-') for term in args.terms)))
     if args.date_spec is None:
         args.date_ranges = None

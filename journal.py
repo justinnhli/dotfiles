@@ -203,12 +203,14 @@ class Journal(Entries):
                     entry_dict['line_num'],
                 )
 
-    def _filter_by_terms(self, selected, terms, icase):
-        # type: (set[Title], Iterable[str], bool) -> set[Title]
+    def _filter_by_terms(self, selected, terms, icase, whole_words):
+        # type: (set[Title], Iterable[str], bool, bool) -> set[Title]
         flags = re.MULTILINE
         if icase:
             flags |= re.IGNORECASE
         for term in terms:
+            if whole_words:
+                term = r'\b' + term + r'\b'
             selected = set(
                 title for title in selected
                 if re.search(term, self.entries[title].text, flags=flags)
@@ -227,13 +229,14 @@ class Journal(Entries):
             candidates |= set(k for k in selected if start_date <= k.date < end_date)
         return candidates
 
-    def filter(self, terms=None, icase=True, date_ranges=None, dates_only=False):
-        # type: (Iterable[str], bool, Sequence[DateRange], bool) -> dict[Title, Entry]
+    def filter(self, terms=None, icase=True, whole_words=False, date_ranges=None, dates_only=False):
+        # type: (Iterable[str], bool, bool, Sequence[DateRange], bool) -> dict[Title, Entry]
         """Filter the entries.
 
         Parameters:
             terms (Iterable[str]): Search terms for the entries.
             icase (bool): Ignore case. Defaults to True.
+            whole_words (bool): Match must be the entire word. Defaults to False.
             date_ranges (Sequence[DateRange]):
                 Date ranges for the entries. Optional.
             dates_only (bool): Filter out non-date entries.
@@ -247,7 +250,7 @@ class Journal(Entries):
         if date_ranges:
             selected = self._filter_by_date(selected, *date_ranges)
         if terms:
-            selected = self._filter_by_terms(selected, terms, icase)
+            selected = self._filter_by_terms(selected, terms, icase, whole_words)
         return {title: self.entries[title] for title in selected}
 
     def _write_tags_file(self):
@@ -397,6 +400,7 @@ def filter_entries(journal, args, **kwargs):
     return journal.filter(
         terms=kwargs.get('terms', args.terms),
         icase=kwargs.get('icase', args.icase),
+        whole_words=kwargs.get('whole_words', args.whole_words),
         date_ranges=kwargs.get('date_ranges', args.date_ranges),
         dates_only=kwargs.get('dates_only', None),
     )

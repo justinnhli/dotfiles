@@ -324,9 +324,18 @@ nnoremap  <leader><leader>u  :UndotreeToggle<cr>
 " colorscheme {{{1
 
 " colorscheme {{{3
-let g:colorscheme = 'iceberg'
+let g:colorschemes = []
+let g:colorschemes = g:colorschemes + [['iceberg', 'dark'],]
+let g:colorschemes = g:colorschemes + [['default', 'dark'],]
+let g:colorschemes = g:colorschemes + [['iceberg', 'light'],]
+let g:colorscheme_index = 0
+function s:SetColorScheme()
+	execute 'set background=' .. g:colorschemes[g:colorscheme_index][1]
+	execute 'colorscheme ' .. g:colorschemes[g:colorscheme_index][0]
+	execute 'set ft=' .. &ft
+endfunction
 try
-	execute 'colorscheme ' .. g:colorscheme
+    call s:SetColorScheme()
 catch
 	colorscheme default
 endtry
@@ -719,17 +728,9 @@ endfunction
 
 " toggle colorscheme {{{3
 function s:ToggleColorScheme()
-	if &background ==# 'dark'
-		if g:colors_name ==# g:colorscheme
-			colorscheme default
-		else
-			set background=light
-			execute 'colorscheme ' .. g:colorscheme
-		endif
-	else
-		set background=dark
-		execute 'colorscheme ' .. g:colorscheme
-	endif
+	let g:colorscheme_index += 1
+	let g:colorscheme_index = g:colorscheme_index % len(g:colorschemes)
+    call s:SetColorScheme()
 endfunction
 
 " toggle spellcheck {{{3
@@ -740,8 +741,7 @@ function s:ToggleSpellCheck()
 		for group in l:spellgroups
 			execute 'highlight clear ' .. group
 		endfor
-		execute 'colorscheme ' .. g:colorscheme
-		execute 'set ft=' .. &ft
+        call s:SetColorScheme()
 	elseif execute('highlight SpellBad') !~? 'links to Error'
 		set spell
 		for group in l:spellgroups

@@ -334,11 +334,14 @@ function s:SetColorScheme()
 	execute 'colorscheme ' .. g:colorschemes[g:colorscheme_index][0]
 	execute 'set ft=' .. &ft
 endfunction
-try
-    call s:SetColorScheme()
-catch
-	colorscheme default
-endtry
+for g:colorscheme_index in range(len(g:colorschemes))
+	try
+		call s:SetColorScheme()
+		break
+	catch
+		let g:colorscheme_index += 1
+	endtry
+endfor
 
 " mappings {{{1
 

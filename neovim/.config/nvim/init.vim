@@ -957,11 +957,13 @@ xnoremap  q:     :
 function s:FormatTable()
 	:'<,'>s/\m\C  \+/	/eg
 	:silent '<,'>!column -ts '	'
+	execute 'normal! g;g;'
 endfunction
 
 " format columns {{{3
 function s:FormatColumns()
 	:'<,'>s/\m\C  \+/	/eg
+	execute 'normal! g;g;'
 endfunction
 
 " other mappings {{{2

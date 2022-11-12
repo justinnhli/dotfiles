@@ -733,7 +733,7 @@ endfunction
 function s:ToggleColorScheme()
 	let g:colorscheme_index += 1
 	let g:colorscheme_index = g:colorscheme_index % len(g:colorschemes)
-    call s:SetColorScheme()
+	call s:SetColorScheme()
 endfunction
 
 " toggle spellcheck {{{3
@@ -744,7 +744,7 @@ function s:ToggleSpellCheck()
 		for group in l:spellgroups
 			execute 'highlight clear ' .. group
 		endfor
-        call s:SetColorScheme()
+		call s:SetColorScheme()
 	elseif execute('highlight SpellBad') !~? 'links to Error'
 		set spell
 		for group in l:spellgroups
@@ -1044,17 +1044,17 @@ augroup justinnhli_quickfix
 	autocmd  InsertEnter      *   silent! lclose | silent! cclose
 	" hide quickfix and location windows when the file has changed
 	if exists('#TextChanged')
-	    autocmd  TextChanged      *   silent! lclose | silent! cclose
+		autocmd  TextChanged      *   silent! lclose | silent! cclose
 	endif
 augroup END
 
 " change grep {{{3
 function s:GrepTrim(str)
 	if a:str =~ '^\s*$'
-        return a:str
-    else
-        return trim(a:str)
-    endif
+		return a:str
+	else
+		return trim(a:str)
+	endif
 endfunction
 function s:AutosetGrepMappings()
 	" we need this guard because normal grep requires specifying the files to search through
@@ -1253,24 +1253,24 @@ function EmojiToShortcode()
 	"😲
 	"😧
 	"😣
-    " remove variant selectors
-    %s/\%uFE00//eg
-    %s/\%uFE01//eg
-    %s/\%uFE02//eg
-    %s/\%uFE03//eg
-    %s/\%uFE04//eg
-    %s/\%uFE05//eg
-    %s/\%uFE06//eg
-    %s/\%uFE07//eg
-    %s/\%uFE08//eg
-    %s/\%uFE09//eg
-    %s/\%uFE0A//eg
-    %s/\%uFE0B//eg
-    %s/\%uFE0C//eg
-    %s/\%uFE0D//eg
-    %s/\%uFE0E//eg
-    %s/\%uFE0F//eg
-    " replace emoji with shortcodes
+	" remove variant selectors
+	%s/\%uFE00//eg
+	%s/\%uFE01//eg
+	%s/\%uFE02//eg
+	%s/\%uFE03//eg
+	%s/\%uFE04//eg
+	%s/\%uFE05//eg
+	%s/\%uFE06//eg
+	%s/\%uFE07//eg
+	%s/\%uFE08//eg
+	%s/\%uFE09//eg
+	%s/\%uFE0A//eg
+	%s/\%uFE0B//eg
+	%s/\%uFE0C//eg
+	%s/\%uFE0D//eg
+	%s/\%uFE0E//eg
+	%s/\%uFE0F//eg
+	" replace emoji with shortcodes
 	%s/☺/:smile:/eg
 	%s/❤/:heart:/eg
 	%s/👍/:thumbs_up:/eg
@@ -1308,6 +1308,6 @@ function EmojiToShortcode()
 	%s/🥰/:smile_with_hearts:/eg
 	%s/🥲/:tear:/eg
 	%s/🥺/:glossy_eyes:/eg
-    %s/🖕/:middle_finger:/eg
-    %s/😞/:disappointed_face:/eg
+	%s/🖕/:middle_finger:/eg
+	%s/😞/:disappointed_face:/eg
 endfunction

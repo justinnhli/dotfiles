@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # find device
-device="$(iwconfig 2>/dev/null | grep 'IEEE 802.11' | awk '{print $1}')"
+device="$(ip link show | sed 's/^[0-9]*: //; s/:.*//' | grep '^w')"
 
 # kill processes
 killall -9 wpa_supplicant dhcpcd && ip link set "$device" down

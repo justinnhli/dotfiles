@@ -93,7 +93,9 @@ prompt_command_fn() {
 	# right before prompting for the next command, save the previous command in a file.
 	echo "$(date -u +%Y-%m-%dT%H:%M:%SZ)	$(hostname)	$PWD	$(history 1 | sed 's/^ *[0-9 -]* //; s/ *$//;')" >> "$HOME/Dropbox/personal/logs/$(date -u +%Y).shistory"
 }
-if [ "$(whoami)" == "justinnhli" ]; then
+if [ "$(whoami)" == "root" ]; then
+	PS1='root@\h \W# '
+elif [ "$(whoami)" == "justinnhli" ]; then
 	PS1='\h \W\$ '
 else
 	PS1='\u@\h \W\$ '

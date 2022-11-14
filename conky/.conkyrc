@@ -30,6 +30,10 @@ home: ${fs_used /home}/${fs_size /home}
 
 === NET ===
 
+enp2s0: ${addr enp2s0}
+speed: ${upspeed enp2s0} U  ${downspeed enp2s0} D
+total: ${totalup enp2s0} U  ${totaldown enp2s0} D
+
 wlp5s0: ${addr wlp5s0}
 speed: ${upspeed wlp5s0} U  ${downspeed wlp5s0} D
 total: ${totalup wlp5s0} U  ${totaldown wlp5s0} D

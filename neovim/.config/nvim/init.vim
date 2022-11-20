@@ -37,6 +37,7 @@ if has('nvim')
 		Plug 'ludovicchabant/vim-gutentags'
 		Plug 'rhysd/clever-f.vim'
 		" color schemes
+		Plug 'sainnhe/everforest'
 		Plug 'cocopon/iceberg.vim'
 		" settings
 		Plug 'tpope/vim-sleuth'
@@ -325,6 +326,7 @@ nnoremap  <leader><leader>u  :UndotreeToggle<cr>
 
 " colorscheme {{{3
 let g:colorschemes = []
+let g:colorschemes = g:colorschemes + [['everforest', 'dark'],]
 let g:colorschemes = g:colorschemes + [['iceberg', 'dark'],]
 let g:colorschemes = g:colorschemes + [['default', 'dark'],]
 let g:colorschemes = g:colorschemes + [['iceberg', 'light'],]

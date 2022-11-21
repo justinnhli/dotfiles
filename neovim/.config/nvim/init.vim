@@ -13,6 +13,8 @@ let g:justinnhli_pim_path=expand('~/Dropbox/pim')
 let g:justinnhli_scholarship_path=expand('~/Dropbox/scholarship')
 let g:justinnhli_library_path=expand('~/papers')
 
+let g:large_file_size = 1024 * 1024 * 10 " define a large file as > 10MB
+
 " vimplug {{{1
 
 " vimplug {{{3
@@ -1126,14 +1128,12 @@ endif
 
 " reduce large files overhead {{{3
 function s:HandleLargeFiles()
-	" define large as > 10MB
-	let g:LargeFile = 1024 * 1024 * 10
 	" set options:
 	" eventignore+=FileType (no syntax highlighting etc.; assumes FileType always on)
 	" noswapfile (save copy of file)
 	" bufhidden=unload (save memory when other file is viewed)
 	" undolevels=-1 (no undo possible)
-	if getfsize(expand('<afile>')) > g:LargeFile
+	if getfsize(expand('<afile>')) > g:large_file_size
 		set eventignore+=FileType
 		setlocal noswapfile
 		setlocal bufhidden=unload 

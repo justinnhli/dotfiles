@@ -765,13 +765,13 @@ nnoremap  <leader><leader>0  :call <SID>ToggleScrollOff()<cr>:set scrolloff?<cr>
 nnoremap  <leader><leader>c  :call <SID>ToggleColorColumn()<cr>:setlocal colorcolumn?<cr>
 nnoremap  <leader><leader>d  :call <SID>ToggleDiff()<cr>:echo (&diff ? 'diffthis' : 'diffoff')<cr>
 nnoremap  <leader><leader>f  :call <SID>ToggleFoldMethod()<cr>:set foldmethod?<cr>
-nnoremap  <leader><leader>l  :set list!<cr>:set list?<cr>
+nnoremap  <leader><leader>l  :set list! list?<cr>
 nnoremap  <leader><leader>m  :call <SID>ToggleColorScheme()<cr>:echo &background g:colors_name<cr>
-nnoremap  <leader><leader>n  :set number!<cr>:set number?<cr>
-nnoremap  <leader><leader>p  :set paste!<cr>:set paste?<cr>
+nnoremap  <leader><leader>n  :set number! number?<cr>
+nnoremap  <leader><leader>p  :set paste! paste?<cr>
 nnoremap  <leader><leader>s  :call <SID>ToggleSpellCheck()<cr>:set spell?<cr>
-nnoremap  <leader><leader>w  :set wrap!<cr>:set wrap?<cr>
-nnoremap  <leader><leader>/  :set hlsearch!<cr>:set hlsearch?<cr>
+nnoremap  <leader><leader>w  :set wrap! wrap?<cr>
+nnoremap  <leader><leader>/  :set hlsearch! hlsearch?<cr>
 
 " text movement functions {{{2
 

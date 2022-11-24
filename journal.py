@@ -753,8 +753,9 @@ def do_list(journal, args):
 
 
 @register('-S')
-def do_show(journal, args): # pylint: disable = too-many-branches
+def do_show(journal, args):
     # type: (Journal, Namespace) -> None
+    # pylint: disable = too-many-branches
     """Show entry contents.
 
     Parameters:
@@ -796,7 +797,7 @@ def do_show(journal, args): # pylint: disable = too-many-branches
 
 
 @register('-W')
-def do_wording(journal, args): # pylint: disable = too-many-branches
+def do_wording(journal, args):
     # type: (Journal, Namespace) -> None
     """Count uses of a phrase.
 
@@ -841,8 +842,9 @@ def do_wording(journal, args): # pylint: disable = too-many-branches
 
 
 @register()
-def do_vimgrep(journal, args): # pylint: disable = too-many-branches
+def do_vimgrep(journal, args):
     # type: (Journal, Namespace) -> None
+    # pylint: disable = too-many-branches
     """List results in vim :grep format.
 
     Parameters:
@@ -1132,6 +1134,7 @@ def parse_args(arg_parser, args):
 
 def log_search(arg_parser, args, journal):
     # type: (ArgumentParser, Namespace, Journal) -> None
+    # pylint: disable = protected-access
     """Log a Journal search.
 
     Parameters:
@@ -1139,7 +1142,6 @@ def log_search(arg_parser, args, journal):
         args (Namespace): The CLI arguments.
         journal (Journal): The journal.
     """
-    # pylint: disable = protected-access
     logged_functions = ('do_show', 'do_list', 'do_vimgrep')
     if args.operation.__name__ not in logged_functions:
         return

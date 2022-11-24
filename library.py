@@ -393,11 +393,6 @@ class Library:
             if pages.isdigit():
                 return
             if ' ' in pages or '--' not in pages:
-                print(dedent(f'''
-                    pages not in <start>--<end> format for {key}
-                        current:
-                            pages = {{{pages}}},
-                ''').strip())
                 if '-' in pages:
                     start, end = pages.split('-')
                     start = start.strip()
@@ -406,6 +401,12 @@ class Library:
                         pages not in <start>--<end> format for {key}
                             suggestion:
                                 pages = {{{start}--{end}}},
+                    ''').strip())
+                else:
+                    print(dedent(f'''
+                        pages not in <start>--<end> format for {key}
+                            current:
+                                pages = {{{pages}}},
                     ''').strip())
 
         def check_latex(key, paper):

@@ -20,13 +20,13 @@ def read_all_inputs(files):
     if files:
         result = []
         for file in files:
-            with open(file, "r") as fd:
+            with open(file, 'r', encoding='utf-8') as fd:
                 result.append(fd.read())
-        return "".join(result)
+        return ''.join(result)
     elif not sys.stdin.isatty():
         return sys.stdin.read()
     else:
-        return ""
+        return ''
 
 
 def parse_email(lines, subject):
@@ -83,7 +83,7 @@ def format_emails(text):
         email_lines = lines[email_start:]
         emails.append(parse_email(email_lines, subject))
     if len(emails) != num_emails:
-        print('WARNING: Gmail lists {} emails, but I found {}'.format(num_emails, len(emails)))
+        print(f'WARNING: Gmail lists {num_emails} emails, but I found {len(emails)}')
         print()
     for email in emails:
         print(email.date.strftime('%Y-%m-%d'))

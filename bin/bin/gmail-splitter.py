@@ -5,6 +5,13 @@ from collections import namedtuple
 from datetime import datetime
 from textwrap import indent
 
+SIGNATURE = '''
+ ___ Justin (Ning Hui) Li
+(o,o) Comp-Sci & Cog-Sci
+/)  ) Occidental College
+-"-"- http://justinnhli.com/
+'''.strip('\n')
+
 Person = namedtuple('Person', ('name', 'email'))
 Email = namedtuple('Email', ('date', 'sender', 'recipients', 'subject', 'text'))
 
@@ -40,10 +47,13 @@ def parse_email(lines, subject):
             text_start += 1
         else:
             break
-    text = '\n'.join(
+    lines = [
         line.rstrip() for line in lines[text_start:]
         if line.strip() not in ('', '[Quoted text hidden]')
-    )
+    ]
+    text = '\n'.join(lines)
+    if text.endswith(SIGNATURE):
+        text = text[:-len(SIGNATURE)].strip()
     return Email(date, sender, recipients, subject, text)
 
 

@@ -91,7 +91,13 @@ export PYTHONPATH="${PYTHONPATH//\/\//\/}"
 # prompt
 prompt_command_fn() {
 	# right before prompting for the next command, save the previous command in a file.
-	echo "$(date -u +%Y-%m-%dT%H:%M:%SZ)	$(hostname)	$PWD	$(history 1 | sed 's/^ *[0-9 -]* //; s/ *$//;')" >> "$HOME/Dropbox/personal/logs/$(date -u +%Y).shistory"
+	if [ -z "$prev_pwd" ]; then
+		save_pwd="$PWD"
+	else
+		save_pwd="$prev_pwd"
+	fi
+	echo "$(date -u +%Y-%m-%dT%H:%M:%SZ)	$(hostname)	"$save_pwd"	$(history 1 | sed 's/^ *[0-9 -]* //; s/ *$//;')" >> "$HOME/Dropbox/personal/logs/$(date -u +%Y).shistory"
+	export prev_pwd="$PWD"
 }
 if [ "$(whoami)" == "root" ]; then
 	PS1='root@\h \W# '

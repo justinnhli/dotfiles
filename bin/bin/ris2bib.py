@@ -4,6 +4,7 @@ import re
 import sys
 from collections import defaultdict
 from textwrap import dedent
+from itertools import chain
 
 
 PROP_MAP = {
@@ -21,12 +22,12 @@ PROP_MAP = {
 }
 
 
-def get_only(mapping, key):
+def get_only(mapping, key, force_list=False):
     value = mapping[key]
-    if len(value) == 1:
-        return value[0]
-    else:
+    if force_list or len(value) != 1:
         return value
+    else:
+        return value[0]
 
 
 def ris2bib(ris):
@@ -43,7 +44,10 @@ def ris2bib(ris):
         if ris_prop in ris_props:
             if bib_prop not in bib_props:
                 bib_props[bib_prop] = get_only(ris_props, ris_prop)
-    bib_props['author'] = ' and '.join(get_only(ris_props, 'AU'))
+    bib_props['author'] = ' and '.join(chain(*(
+        get_only(ris_props, prop, True)
+        for prop in ['AU', 'A1', 'A2', 'A3', 'A4']
+    )))
     if 'ED' in ris_props:
         bib_props['editor'] = ' and '.join(get_only(ris_props, 'ED'))
     if 'SP' in ris_props and 'EP' in ris_props:

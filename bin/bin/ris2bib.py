@@ -70,7 +70,7 @@ def main():
             ris = fd.read().strip()
         bib_id, bib_props = ris2bib(ris)
         print(f'@article {{{bib_id},')
-        for key, value in bib_props.items():
+        for key, value in sorted(bib_props.items()):
             print(f'    {key} = {{{value}}},')
         print(f'}}')
 

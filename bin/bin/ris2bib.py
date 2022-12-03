@@ -31,6 +31,8 @@ def get_only(mapping, key):
 def ris2bib(ris):
     ris_props = defaultdict(list)
     for line in ris.splitlines():
+        if not re.fullmatch(r'\s*[A-Z0-9][A-Z0-9]\s*-.*', line):
+            continue
         key, value = line.split('-', maxsplit=1)
         value = value.strip()
         if value:

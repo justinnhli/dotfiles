@@ -11,6 +11,7 @@ PROP_MAP = {
     'TI': 'title',
     'T1': 'title',
     'PY': 'year',
+    'Y1': 'year',
     'VL': 'volume',
     'IS': 'number',
     'UR': 'url',
@@ -40,8 +41,8 @@ def ris2bib(ris):
     bib_props = {}
     for ris_prop, bib_prop in PROP_MAP.items():
         if ris_prop in ris_props:
-            assert bib_prop not in bib_props
-            bib_props[bib_prop] = get_only(ris_props, ris_prop)
+            if bib_prop not in bib_props:
+                bib_props[bib_prop] = get_only(ris_props, ris_prop)
     bib_props['author'] = ' and '.join(get_only(ris_props, 'AU'))
     if 'ED' in ris_props:
         bib_props['editor'] = ' and '.join(get_only(ris_props, 'ED'))

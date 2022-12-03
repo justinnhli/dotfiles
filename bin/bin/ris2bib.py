@@ -157,6 +157,43 @@ TESTS = [
             ''',
         ),
     ),
+    (
+        '''
+        Provider: American Psychological Association
+        Database: PsycINFO
+        Content: application/x-research-info-systems
+
+        TY  - CHAP
+        DESCRIPTORS  - *Cognitive Processes;  *Forgetting;  *Memory; Recall (Learning)
+        ID  - 1994-98352-001
+        T1  - Hypermnesia, incubation, and mind popping: On remembering without really trying.
+        T2  - Attention and performance 15:  Conscious and nonconscious information processing.
+        T3  - Attention and performance series.
+        A1  - Mandler, George
+        SP  - 3
+        EP  - 33
+        Y1  - 1994
+        CY  - Cambridge,  MA,  US
+        PB  - The MIT Press
+        SN  - 0-262-21012-6 (Hardcover)
+        N2  - start with an overview and a critical analysis of . . . 3 areas [of implicit and explicit processes: hypermnesia, incubation, mind popping] / [consider] a theoretical analysis of the phenomena involved / the general thrust of these analyses will be informed by a framework that stresses activation and elaboration processes / the literature on hypermnesia and incubation is briefly reviewed, and the phenomena are placed in the context of activation/integration and elaboration processes  add . . . evidence [mind popping] that suggests that deliberate search for the target perception or memory may inhibit successful performance, whereas nonintentional attitudes favor such performance (PsycINFO Database Record (c) 2019 APA, all rights reserved)
+        KW  - *Cognitive Processes
+        KW  - *Forgetting
+        KW  - *Memory
+        KW  - Recall (Learning)
+        ER  -
+        ''',
+        (
+            'Mandler1994HypermnesiaIncubationAnd',
+            '''
+                author = {Mandler, George},
+                pages = {3--33},
+                publisher = {The MIT Press},
+                title = {Hypermnesia, incubation, and mind popping: On remembering without really trying.},
+                year = {1994},
+            ''',
+        ),
+    ),
 ]
 
 

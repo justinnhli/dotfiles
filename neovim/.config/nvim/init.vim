@@ -698,9 +698,9 @@ nnoremap  <leader>T   :tabnew ~/Dropbox/personal/logs/ifttt/tweets.txt<cr>
 " toggle scrolloff {{{3
 function s:ToggleScrollOff()
 	if &scrolloff == 0
-		set scrolloff=1
+		setlocal scrolloff=1
 	elseif &scrolloff == 1
-		set scrolloff=0
+		setlocal scrolloff=0
 	endif
 endfunction
 
@@ -727,9 +727,9 @@ endfunction
 " toggle foldmethod {{{3
 function s:ToggleFoldMethod()
 	if &foldmethod ==# 'indent'
-		set foldmethod=syntax
+		setlocal foldmethod=syntax
 	elseif &foldmethod ==# 'syntax'
-		set foldmethod=indent
+		setlocal foldmethod=indent
 	endif
 endfunction
 
@@ -744,19 +744,19 @@ endfunction
 function s:ToggleSpellCheck()
 	let l:spellgroups = ['SpellBad', 'SpellCap', 'SpellRare', 'SpellLocal']
 	if &spell == 0
-		set spell
+		setlocal spell
 		for group in l:spellgroups
 			execute 'highlight clear ' .. group
 		endfor
 		call s:SetColorScheme()
 	elseif execute('highlight SpellBad') !~? 'links to Error'
-		set spell
+		setlocal spell
 		for group in l:spellgroups
 			execute 'highlight clear ' .. group
 			execute 'highlight link ' .. group .. ' Error'
 		endfor
 	else
-		set nospell
+		setlocal nospell
 	endif
 endfunction
 

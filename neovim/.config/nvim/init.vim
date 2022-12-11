@@ -1103,7 +1103,7 @@ function s:LoadFiletypeTemplate()
 		" read in the template file
 		execute '0r ' .. l:templates_file
 		" delete the blank last line
-		execute 'normal! :$\<cr>"_dd'
+		execute '$d_'
 		" place cursor at the marker and delete it
 		call search(' *TODO')
 		execute 'normal! "_de'

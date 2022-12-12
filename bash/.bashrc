@@ -109,6 +109,7 @@ fi
 if [ -d "$HOME/Dropbox/personal/logs" ]; then
 	PROMPT_COMMAND=prompt_command_fn
 fi
+unset prev_pwd
 
 # aliases
 alias rm='rm -i'

@@ -62,8 +62,8 @@ def update_brew():
     run(['brew', 'update'], check=True)
     run(['brew', 'upgrade'], check=True)
     run(['brew', 'upgrade', '--cask'], check=True)
-    run(['brew', 'cleanup'], check=True)
     run(['brew', 'autoremove'], check=True)
+    run(['brew', 'cleanup'], check=True)
 
 
 @register()

@@ -4,6 +4,7 @@
 # pylint: disable = too-many-lines
 
 import re
+from json import load as json_load, dump as json_dump
 from argparse import ArgumentParser, Namespace, _ArgumentGroup
 from ast import literal_eval
 from calendar import monthrange
@@ -194,7 +195,7 @@ class Journal(Entries):
     def _read_cache(self):
         # type: () -> None
         with self.cache_file.open() as fd:
-            for title, entry_dict in literal_eval(fd.read()).items():
+            for title, entry_dict in json_load(fd).items():
                 title = Title(title)
                 self.entries[title] = Entry(
                     title,
@@ -273,19 +274,17 @@ class Journal(Entries):
 
     def _write_cache(self):
         # type: () -> None
-        lines = []
-        lines.append('{')
-        for entry in sorted(self.entries.values()):
-            relative_path = entry.filepath.relative_to(self.directory)
-            lines.append(f"'{entry.title}': {{")
-            lines.append(f"    'title': '{entry.title}',")
-            lines.append(f"    'filepath': '{relative_path}',")
-            lines.append(f"    'line_num': {entry.line_num},")
-            lines.append(f"    'text': {repr(entry.text)},")
-            lines.append('},')
-        lines.append('}')
+        entries = {
+            str(title): {
+                'title': str(title),
+                'filepath': str(entry.filepath.relative_to(self.directory)),
+                'line_num': entry.line_num,
+                'text': entry.text,
+            }
+            for title, entry in self.entries.items()
+        }
         with self.cache_file.open('w', encoding='utf-8') as fd:
-            fd.write('\n'.join(lines))
+            json_dump(entries, fd)
 
     def lint(self):
         # type: () -> list[tuple[Path, int, str]]

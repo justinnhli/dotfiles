@@ -156,7 +156,7 @@ class Journal(Entries):
         Returns:
             Path: The tag file.
         """
-        return self.directory.joinpath('.tags').resolve()
+        return self.directory / '.tags'
 
     @property
     def cache_file(self):
@@ -166,7 +166,7 @@ class Journal(Entries):
         Returns:
             Path: The cache file.
         """
-        return self.directory.joinpath('.cache').resolve()
+        return self.directory / '.cache'
 
     def _check_metadata(self):
         # type: () -> None
@@ -200,7 +200,7 @@ class Journal(Entries):
                 self.entries[title] = Entry(
                     title,
                     entry_dict['text'],
-                    Path(entry_dict['filepath']).expanduser().resolve(),
+                    self.directory / entry_dict['filepath'],
                     entry_dict['line_num'],
                 )
 
@@ -1144,7 +1144,7 @@ def log_search(arg_parser, args, journal):
     logged_functions = ('do_show', 'do_list', 'do_vimgrep')
     if args.operation.__name__ not in logged_functions:
         return
-    log_file = journal.directory.joinpath('.log').resolve()
+    log_file = journal.directory / '.log'
     if not (args.log and log_file.exists()):
         return
     op_flag = None

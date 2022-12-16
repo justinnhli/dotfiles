@@ -200,7 +200,7 @@ class Journal(Entries):
                 self.entries[title] = Entry(
                     title,
                     entry_dict['text'],
-                    self.directory / entry_dict['filepath'],
+                    self.directory / entry_dict['rel_path'],
                     entry_dict['line_num'],
                 )
 
@@ -277,7 +277,7 @@ class Journal(Entries):
         entries = {
             str(title): {
                 'title': str(title),
-                'filepath': str(entry.filepath.relative_to(self.directory)),
+                'rel_path': str(entry.filepath.relative_to(self.directory)),
                 'line_num': entry.line_num,
                 'text': entry.text,
             }

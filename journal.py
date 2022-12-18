@@ -4,7 +4,7 @@
 # pylint: disable = too-many-lines
 
 import re
-from json import load as json_load, dump as json_dump
+from json import load as json_read, dump as json_write
 from argparse import ArgumentParser, Namespace, _ArgumentGroup
 from calendar import monthrange
 from collections import namedtuple, defaultdict
@@ -194,7 +194,7 @@ class Journal(Entries):
     def _read_cache(self):
         # type: () -> None
         with self.cache_file.open() as fd:
-            for title, entry_dict in json_load(fd).items():
+            for title, entry_dict in json_read(fd).items():
                 title = Title(title)
                 self.entries[title] = Entry(
                     title,
@@ -283,7 +283,7 @@ class Journal(Entries):
             for title, entry in self.entries.items()
         }
         with self.cache_file.open('w', encoding='utf-8') as fd:
-            json_dump(entries, fd)
+            json_write(entries, fd)
 
     def lint(self):
         # type: () -> list[tuple[Path, int, str]]

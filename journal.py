@@ -841,15 +841,14 @@ def do_wording(journal, args):
 @register()
 def do_vimgrep(journal, args):
     # type: (Journal, Namespace) -> None
-    # pylint: disable = too-many-branches
     """List results in vim :grep format.
 
     Parameters:
         journal (Journal): The journal.
         args (Namespace): The CLI arguments.
     """
-    prefix_len = 20
-    suffix_len = 40
+    prefix_words = 3
+    suffix_words = 8
     entries = filter_entries(journal, args)
     if not args.terms:
         args.terms.append('^.')
@@ -858,33 +857,19 @@ def do_vimgrep(journal, args):
         results = []
         for term in args.terms:
             for match in re.finditer(term, entry.text, flags=args.icase):
-                match_index = match.start()
-                if match_index == 0:
-                    line_num = 1
-                    col_num = 1
-                else:
-                    prev_lines = entry.text[:match_index].splitlines()
-                    line_num = len(prev_lines)
-                    col_num = len(prev_lines[-1]) + 1
-                match_line = lines[line_num - 1].strip()
-                if col_num < prefix_len:
-                    start_index = 0
-                    prefix = ''
-                else:
-                    start_index = match_line.rfind(' ', 0, col_num - prefix_len) + 1
-                    prefix = '[...] '
-                suffix_index = col_num + len(match.group()) + suffix_len
-                suffix = ''
-                if suffix_index >= len(match_line):
-                    end_index = len(match_line)
-                else:
-                    end_index = match_line.find(' ', suffix_index)
-                    if end_index == -1:
-                        end_index = len(match_line)
-                    else:
-                        suffix = ' [...]'
-                snippet = match_line[start_index:end_index]
-                results.append((line_num, col_num, f'{prefix}{snippet}{suffix}'))
+                prev_lines = ('\n' + entry.text[:match.start()]).splitlines()
+                line_num = len(prev_lines) - 1
+                col_num = len(prev_lines[-1]) + 1
+                match_line = lines[line_num - 1]
+                prefix = re.search(
+                    r'(\S+ ){,' + str(prefix_words) + '}\S*$',
+                    match_line[:col_num - 1],
+                ).group()
+                suffix = re.search(
+                    r'^\S*( \S+){,' + str(suffix_words) + '}',
+                    match_line[col_num + len(match.group()) - 1:],
+                ).group()
+                results.append((line_num, col_num, f'{prefix}{match.group()}{suffix}'))
         for line_num, col_num, preview in sorted(results):
             print(':'.join([
                 f'{entry.filepath}',

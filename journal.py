@@ -11,7 +11,7 @@ from collections import namedtuple, defaultdict
 from datetime import datetime, timedelta
 from inspect import currentframe
 from itertools import chain, groupby
-from os import chdir as cd, chmod, environ, execvp, fork, remove as rm, wait
+from os import chdir as cd, chmod, environ, execvp, fork, wait
 from pathlib import Path
 from stat import S_IRUSR
 from statistics import mean, median, stdev
@@ -771,7 +771,7 @@ def do_show(journal, args):
         chmod(temp_file, S_IRUSR)
         if fork():
             wait()
-            rm(temp_file)
+            temp_file.unlink()
         else:
             cd(args.directory)
             editor = environ.get('VISUAL', environ.get('EDITOR', 'nvim'))

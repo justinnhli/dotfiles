@@ -115,9 +115,9 @@ def lint(contacts):
         for attr in ('ADR', 'EMAIL', 'TEL', 'URL'):
             for val in contact.attrs[attr]:
                 val = val.strip()
-                if val and val in existing[attr]:
+                if val and val.lower() in existing[attr]:
                     print(f'duplicate {attr}: {val}')
-                existing[attr].add(val)
+                existing[attr].add(val.lower())
 
 
 def main():

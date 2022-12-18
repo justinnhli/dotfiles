@@ -65,7 +65,7 @@ def main():
     # type: () -> None
     """Provide a CLI entry point."""
     arg_parser = ArgumentParser(description='create a thumbnail grid of videos')
-    arg_parser.add_argument('paths', type=Path, nargs='+', help='video file(s) to process')
+    arg_parser.add_argument('paths', metavar='path', type=Path, nargs='+', help='video file(s) to process')
     arg_parser.add_argument('--overwrite', action='store_true', help='regenerate thumbnails')
     arg_parser.add_argument('--scale', default=120, help='thumbnail scale (default:120)')
     args = arg_parser.parse_args()

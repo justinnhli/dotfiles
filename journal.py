@@ -288,7 +288,7 @@ class Journal(Entries):
     def lint(self):
         # type: () -> list[tuple[Path, int, str]]
         """Check the journal for errors."""
-        # pylint: disable = line-too-long, too-many-nested-blocks, too-many-branches
+        # pylint: disable = too-many-nested-blocks, too-many-branches
         ascii_regex = re.compile('(\t*[!-~]([ -~]*[!-~])?)?')
         errors = []
         titles = set()
@@ -753,7 +753,6 @@ def do_list(journal, args):
 @register('-S')
 def do_show(journal, args):
     # type: (Journal, Namespace) -> None
-    # pylint: disable = too-many-branches
     """Show entry contents.
 
     Parameters:

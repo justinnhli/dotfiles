@@ -6,7 +6,6 @@
 import re
 from json import load as json_load, dump as json_dump
 from argparse import ArgumentParser, Namespace, _ArgumentGroup
-from ast import literal_eval
 from calendar import monthrange
 from collections import namedtuple, defaultdict
 from datetime import datetime, timedelta

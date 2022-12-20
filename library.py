@@ -297,6 +297,8 @@ class Library:
                 first_author = re.sub(r'\\.{(.)}', r'\1', first_author)
             title = getattr(paper, 'title').title()
             year = getattr(paper, 'year')
+            if year == 'FIXME':
+                return
             suggestion = f'{first_author}{year}{title}'
             suggestion = re.sub('[^0-9A-Za-z]', '', suggestion)
             short_suggestion = f'{first_author}{year}{"".join(title.split()[:3])}'
@@ -390,7 +392,7 @@ class Library:
             if not hasattr(paper, 'pages'):
                 return
             pages = getattr(paper, 'pages')
-            if pages.isdigit():
+            if pages.isdigit() or pages == 'FIXME':
                 return
             if ' ' in pages or '--' not in pages:
                 if '-' in pages:

@@ -857,19 +857,19 @@ def do_vimgrep(journal, args):
         results = []
         for term in args.terms:
             for match in re.finditer(term, entry.text, flags=args.icase):
-                prev_lines = ('\n' + entry.text[:match.start()]).splitlines()
+                prev_lines = ('\n' + entry.text[:match.start() + 1]).splitlines()
                 line_num = len(prev_lines) - 1
-                col_num = len(prev_lines[-1]) + 1
+                col_num = len(prev_lines[-1]) - 1
                 match_line = lines[line_num - 1]
                 prefix = re.search(
                     r'(\S+ ){,' + str(prefix_words) + '}\S*$',
-                    match_line[:col_num - 1],
+                    match_line[:col_num],
                 ).group()
                 suffix = re.search(
                     r'^\S*( \S+){,' + str(suffix_words) + '}',
-                    match_line[col_num + len(match.group()) - 1:],
+                    match_line[col_num + len(match.group()):],
                 ).group()
-                results.append((line_num, col_num, f'{prefix}{match.group()}{suffix}'))
+                results.append((line_num, col_num + 1, f'{prefix}{match.group()}{suffix}'))
         for line_num, col_num, preview in sorted(results):
             print(':'.join([
                 f'{entry.filepath}',

@@ -123,6 +123,12 @@ fi
 if command -v flake8 >/dev/null 2>&1; then
 	alias flake8='flake8 --ignore=E501'
 fi
+if command -v lftp >/dev/null 2>&1; then
+	sftp() {
+		echo 'error: use lftp instead'
+		echo "    lftp sftp://$1"
+	}
+fi
 if ! command -v pass >/dev/null 2>&1; then
 	alias pass='remote-pass.sh'
 fi

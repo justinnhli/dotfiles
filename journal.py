@@ -802,7 +802,10 @@ def do_wording(journal, args):
         journal (Journal): The journal.
         args (Namespace): The CLI arguments.
     """
-    journal_text = '\n'.join(entry.text for entry in journal.entries.values())
+    journal_text = '\n'.join(
+        entry.text for entry in
+        filter_entries(journal, args, terms=None).values()
+    )
     alpha_regex = re.compile("[a-z']", flags=re.IGNORECASE)
     if args.terms:
         phrases = set(['-'.join(args.terms),])

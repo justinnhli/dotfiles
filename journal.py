@@ -865,7 +865,7 @@ def do_vimgrep(journal, args):
                 col_num = len(prev_lines[-1]) - 1
                 match_line = lines[line_num - 1]
                 prefix = re.search(
-                    r'(\S+ ){,' + str(prefix_words) + '}\S*$',
+                    r'(\S+ ){,' + str(prefix_words) + r'}\S*$',
                     match_line[:col_num],
                 ).group()
                 suffix = re.search(

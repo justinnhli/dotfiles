@@ -155,22 +155,22 @@ def delete_os_metadata(path=None):
     """
 
     def rm_tree(path):
-        for child in path.glob('*'):
-            if child.is_file():
-                child.unlink()
-            else:
+        if path.is_file():
+            try:
+                path.unlink()
+            except PermissionError as err:
+                print(err)
+        else:
+            for child in path.glob('*'):
                 rm_tree(child)
-        path.rmdir()
+            path.rmdir()
 
     if path is None:
         path = Path.cwd()
     print('deleting OS metadata files')
     for filename in ('Icon\r', '.DS_Store', '__MACOSX'):
         for filepath in path.glob(f'**/{filename}'):
-            if filepath.is_dir():
-                rm_tree(filepath)
-            else:
-                filepath.unlink()
+            rm_tree(filepath)
             print(f'    deleted {filepath}')
 
 

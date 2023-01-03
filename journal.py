@@ -550,6 +550,21 @@ def log_error(message):
 
 OPERATIONS = []
 Option = namedtuple('Option', 'priority, flag, desc, function')
+COUNT_COL_FNS = {
+    'LINE LEN': ('length', summarize_line_lengths),
+    'READABILITY': ('readability', summarize_readability),
+}
+GRAPH_NODE_FNS = {
+    'uniform': (lambda entries, node: 48),
+    'length': (lambda entries, node: len(entries[node].text.split()) / 100),
+    'cites': (lambda entries, node:
+        5 * (1 + sum(
+            1 for entry in entries.values()
+            if entry.text > node and node in entry.text
+        ))
+    ),
+    'refs': (lambda entries, node: 5 * len(REFERENCE_REGEX.findall(entries[node].text))),
+}
 
 
 def register(flag=None):
@@ -632,10 +647,9 @@ def do_count(journal, args):
             0 if len(num_words) <= 1 else round(stdev(num_words))
         ),
     } # type: dict[str, Callable[[Entries, str, Sequence[int]], Any]]
-    if 'length' in args.columns:
-        columns['LINE LEN'] = summarize_line_lengths
-    if 'readability' in args.columns:
-        columns['READABILITY'] = summarize_readability
+    for heading, (flag, function) in COUNT_COL_FNS.items():
+        if flag in args.columns:
+            columns[heading] = function
     entries = filter_entries(journal, args, dates_only=True)
     if not entries:
         return
@@ -682,17 +696,7 @@ def do_graph(journal, args):
             path.add(rep)
             rep = disjoint_sets[rep]
         components[rep] |= path
-    node_fn = {
-        'uniform': (lambda entries, node: 48),
-        'length': (lambda entries, node: len(entries[node].text.split()) / 100),
-        'cites': (lambda entries, node:
-            5 * (1 + sum(
-                1 for entry in entries.values()
-                if entry.text > node and node in entry.text
-            ))
-        ),
-        'refs': (lambda entries, node: 5 * len(REFERENCE_REGEX.findall(entries[node].text))),
-    }[args.node_size] # type: Callable[[Entries, Title], float]
+    node_fn = GRAPH_NODE_FNS[args.node_size] # type: Callable[[Entries, Title], float]
     print('digraph {')
     print('\tgraph [size="48", model="subset", rankdir="BT"];')
     print('\tnode [fontcolor="#4E9A06", shape="none"];')
@@ -985,7 +989,7 @@ def build_arg_parser(arg_parser):
     group.add_argument(
         '--unit',
         dest='unit',
-        choices=('year', 'month', 'day'),
+        choices=tuple(STRING_LENGTHS.keys()),
         default='year',
         help='[C] set tabulation unit (default: %(default)s)',
     )
@@ -993,7 +997,7 @@ def build_arg_parser(arg_parser):
         '--column',
         dest='columns',
         action='append',
-        choices=('length', 'readability'),
+        choices=tuple(COUNT_COL_FNS.keys()),
         default=[],
         help='[C] include additional statistics',
     )
@@ -1005,7 +1009,7 @@ def build_arg_parser(arg_parser):
     )
     group.add_argument(
         '--node-size-fn',
-        choices=('uniform', 'length', 'cites', 'refs'),
+        choices=tuple(GRAPH_NODE_FNS.keys()),
         default='length',
         help='[G] the attribute that affects node size (default: %(default)s)',
     )

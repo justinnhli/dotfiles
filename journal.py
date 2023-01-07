@@ -257,21 +257,14 @@ class Journal(Entries):
 
     def _write_tags_file(self):
         # type: () -> None
-        tags = {}
-        for journal_file in self.journal_files:
-            self._read_file(journal_file)
-            rel_path = journal_file.relative_to(self.directory)
-            with journal_file.open() as fd:
-                for line_num, line in enumerate(fd, start=1):
-                    if not line or line.startswith('\t'):
-                        continue
-                    line = line.strip()
-                    tags[line] = (rel_path, line_num)
-                    if DATE_REGEX.fullmatch(line.rstrip()):
-                        tags[line[:DATE_LENGTH]] = (rel_path, line_num)
+        tags = []
+        for title, entry in sorted(self.entries.items()):
+            filepath = entry.filepath.relative_to(self.directory)
+            if DATE_REGEX.fullmatch(title.title) and title.title != title.title[:10]:
+                tags.append(f'{title.title[:10]}\t{filepath}\t{entry.line_num}')
+            tags.append(f'{title.title}\t{filepath}\t{entry.line_num}')
         with self.tags_file.open('w', encoding='utf-8') as fd:
-            for tag, (filepath, line_num) in sorted(tags.items()):
-                fd.write(f'{tag}\t{filepath}\t{line_num}\n')
+            fd.write('\n'.join(tags))
 
     def _write_cache(self):
         # type: () -> None

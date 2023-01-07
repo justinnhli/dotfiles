@@ -221,7 +221,6 @@ class Journal(Entries):
 
     def _filter_by_date(self, selected, *date_ranges):
         # type: (set[Title], DateRange) -> set[Title]
-        # pylint: disable = no-self-use
         first_date = min(selected).date
         last_date = next_date(max(selected).date)
         candidates = set()
@@ -413,7 +412,11 @@ def group_entries(entries, unit, summary=True, reverse=True):
     Returns:
         dict[str, Entries]: The grouped entries.
     """
-    key_func = (lambda entry: entry[0].iso(unit, 'other'))
+
+    def key_func(entry):
+        # type: (tuple[Title, Entry]) -> str
+        return entry[0].iso(unit, 'other')
+
     grouped = groupby(
         sorted(entries.items(), reverse=reverse, key=key_func),
         key_func,
@@ -1148,8 +1151,7 @@ def log_search(arg_parser, args, journal):
                     options.append((option_string, option_value))
     log_args = op_flag
     collapsible = (len(op_flag) == 2)
-    sort_key = (lambda pair: (pair[1] is not None, pair[0].upper()))
-    for opt_str, opt_val in sorted(options, key=sort_key):
+    for opt_str, opt_val in sorted(options, key=(lambda pair: (pair[1] is not None, pair[0].upper()))):
         if collapsible and len(opt_str) == 2:
             log_args += opt_str[1]
         else:

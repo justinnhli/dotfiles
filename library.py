@@ -214,7 +214,6 @@ class Library:
         Parameters:
             *file_path_strs (str): The file path to open
         """
-        # pylint: disable = no-self-use
         for file_path_str in file_path_strs:
             _run_shell_command('open', str(Path(file_path_str).expanduser().resolve()))
 
@@ -235,7 +234,6 @@ class Library:
 
     def passthrough(self, name, operation='default'):
         # type: (str, str) -> None
-        # pylint: disable = no-self-use
         print(name, operation)
         raise NotImplementedError()
 
@@ -502,7 +500,7 @@ class Library:
 
     # remote management
 
-    def url(self, *names): # pylint: disable = no-self-use
+    def url(self, *names):
         # type: (str) -> None
         for name in names:
             if name.endswith('.pdf'):

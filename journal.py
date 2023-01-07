@@ -1077,6 +1077,8 @@ def process_args(arg_parser, args):
     """
     if args.operation.__name__ == 'do_wording':
         args.terms = list(chain(*(term.split('-') for term in args.terms)))
+    elif args.operation.__name__ == 'do_index':
+        args.use_cache = False
     if args.date_spec is None:
         args.date_ranges = None
     else:

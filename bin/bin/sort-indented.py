@@ -52,8 +52,8 @@ def sort_indented(text, depth=None, reverse=False):
     def add_items(result, items, item):
         if item:
             items.append(item)
-        for item in sorted(items, key='\n'.join, reverse=reverse):
-            result.extend(item)
+        for child_items in sorted(items, key='\n'.join, reverse=reverse):
+            result.extend(child_items)
 
     indent = determine_indent(text)
     if depth is None:

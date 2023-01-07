@@ -72,7 +72,7 @@ def main():
         print(f'@article {{{bib_id},')
         for key, value in sorted(bib_props.items()):
             print(f'    {key} = {{{value}}},')
-        print(f'}}')
+        print('}')
 
 
 TESTS = [

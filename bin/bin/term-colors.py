@@ -8,5 +8,5 @@ write = sys.stdout.write
 for i in range(2):
     for j in range(30, 38):
         for k in range(40, 48):
-            write("\33[%d;%d;%dm%d;%d;%d\33[m " % (i, j, k, i, j, k))
-        write("\n")
+            write(f'\33[{i:d};{j:d};{k:d}m{i:d};{j:d};{k:d}\33[m ')
+        write('\n')

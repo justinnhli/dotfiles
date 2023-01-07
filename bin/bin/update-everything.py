@@ -194,7 +194,7 @@ def merge_history():
                         shistory.add((*components[:3], components[3].strip()))
             filepath.unlink()
         prev_line = ('', '', '')
-        with history_path.joinpath(f'{year}.shistory').open('w') as fd:
+        with history_path.joinpath(f'{year}.shistory').open('w', encoding='utf-8') as fd:
             for history in sorted(shistory):
                 if history[1:] == prev_line:
                     continue

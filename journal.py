@@ -145,6 +145,8 @@ class Journal(Entries):
         for journal_file in self.directory.glob(f'**/*{FILE_EXTENSION}'):
             if journal_file in self.ignores:
                 continue
+            if any(part.startswith('.') for part in journal_file.relative_to(self.directory).parts):
+                continue
             yield journal_file
 
     @property

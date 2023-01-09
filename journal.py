@@ -536,12 +536,17 @@ def log_error(message):
     """
     frame = currentframe()
     assert frame, 'Python does not support frame introspection'
-    local_vars = frame.f_back.f_locals
-    return (
-        local_vars['journal_file'],
-        local_vars['line_num'],
-        message,
-    )
+    frame = frame.f_back
+    journal_file = None
+    line_num = None
+    while True:
+        local_vars = frame.f_locals
+        if 'journal_file' in local_vars and 'line_num' in local_vars:
+            journal_file = local_vars['journal_file'],
+            line_num = local_vars['line_num'],
+            break
+        frame = frame.f_back
+    return (journal_file, line_num, message)
 
 
 # operations

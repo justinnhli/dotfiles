@@ -542,8 +542,8 @@ def log_error(message):
     while True:
         local_vars = frame.f_locals
         if 'journal_file' in local_vars and 'line_num' in local_vars:
-            journal_file = local_vars['journal_file'],
-            line_num = local_vars['line_num'],
+            journal_file = local_vars['journal_file']
+            line_num = local_vars['line_num']
             break
         frame = frame.f_back
     return (journal_file, line_num, message)

@@ -650,12 +650,12 @@ def do_count(journal, args):
             0 if len(num_words) <= 1 else round(stdev(num_words))
         ),
     } # type: dict[str, Callable[[Entries, str, Sequence[int]], Any]]
-    for heading, (flag, function) in COUNT_COL_FNS.items():
-        if flag in args.columns:
-            columns[heading] = function
     entries = filter_entries(journal, args, dates_only=True)
     if not entries:
         return
+    for heading, (flag, function) in COUNT_COL_FNS.items():
+        if flag in args.columns:
+            columns[heading] = function
     length_map = {title: len(entry.text.split()) for title, entry in entries.items()}
     table = [] # type: list[Sequence[str]]
     for timespan, group in group_entries(entries, args.unit, args.summary, args.reverse).items():

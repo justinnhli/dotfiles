@@ -427,6 +427,17 @@ class Library:
                                 {suggestion}
                     ''').strip())
 
+        def check_files():
+            # type: () -> None
+            """Check for papers not in the index."""
+            filenames = {
+                pdf_path.stem: pdf_path
+                for pdf_path in PAPERS_PATH.glob('**/*.pdf')
+            }
+            unindexed_files = set(filenames) - set(self.papers)
+            for pdf in unindexed_files:
+                print(f'no entry for file: {filenames[pdf]}')
+
         for key, paper in self.papers.items():
             check_names(key, paper)
             check_id(key, paper)
@@ -435,6 +446,7 @@ class Library:
             check_doi(key, paper)
             check_pages(key, paper)
             check_latex(key, paper)
+        check_files()
 
     def toc(self, out_path=None):
         # type: (Optional[Path]) -> None

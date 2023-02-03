@@ -1000,7 +1000,7 @@ def build_arg_parser(arg_parser):
         '--column',
         dest='columns',
         action='append',
-        choices=tuple(COUNT_COL_FNS.keys()),
+        choices=tuple(flag for flag, _ in COUNT_COL_FNS.values()),
         default=[],
         help='[C] include additional statistics',
     )

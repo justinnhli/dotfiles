@@ -699,7 +699,7 @@ def do_graph(journal, args):
             path.add(rep)
             rep = disjoint_sets[rep]
         components[rep] |= path
-    node_fn = GRAPH_NODE_FNS[args.node_size] # type: Callable[[Entries, Title], float]
+    node_fn = GRAPH_NODE_FNS[args.node_size_fn] # type: Callable[[Entries, Title], float]
     print('digraph {')
     print('\tgraph [size="48", model="subset", rankdir="BT"];')
     print('\tnode [fontcolor="#4E9A06", shape="none"];')

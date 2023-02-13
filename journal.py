@@ -259,7 +259,7 @@ class Journal(Entries):
         tags = []
         for title, entry in sorted(self.entries.items()):
             filepath = entry.filepath.relative_to(self.directory)
-            if DATE_REGEX.fullmatch(title.title) and title.title != title.title[:10]:
+            if len(title.title) > 10 and DATE_REGEX.fullmatch(title.title):
                 tags.append(f'{title.title[:10]}\t{filepath}\t{entry.line_num}')
             tags.append(f'{title.title}\t{filepath}\t{entry.line_num}')
         with self.tags_file.open('w', encoding='utf-8') as fd:

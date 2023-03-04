@@ -331,7 +331,7 @@ class Library:
                 new_value = re.sub('  +', ' ', value.strip())
                 if value != new_value:
                     print(dedent(f'''
-                        {attr} for {key} has leading/trailing/multiple spaces:
+                        leading/trailing/multiple spaces in {attr} of {key}:
                             suggestion:
                                 {attr} = {{{new_value}}},
                     ''').strip())

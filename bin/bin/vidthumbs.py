@@ -40,12 +40,13 @@ def image_path(video_path):
     return video_path.parent.joinpath(video_path.stem + '.png')
 
 
-def create_thumbnail_grid(path):
-    # type: (Path) -> None
+def create_thumbnail_grid(path, scale=120):
+    # type: (Path, int) -> None
     """Create a thumbnail grid of a video.
 
     Parameters:
         path (Path): The path of the video file.
+        scale (int): The scale of the images.
     """
     length = video_length(path)
     frequency = int(length) // 16
@@ -54,7 +55,7 @@ def create_thumbnail_grid(path):
             'ffmpeg',
             '-i', str(path),
             '-loglevel', 'error',
-            '-vf', f'fps=1/{frequency},scale=-1:120,tile=4x4',
+            '-vf', f'fps=1/{frequency},scale=-1:{scale},tile=4x4',
             str(image_path(path)),
         ],
         check=False,
@@ -67,7 +68,7 @@ def main():
     arg_parser = ArgumentParser(description='create a thumbnail grid of videos')
     arg_parser.add_argument('paths', metavar='path', type=Path, nargs='+', help='video file(s) to process')
     arg_parser.add_argument('--overwrite', action='store_true', help='regenerate thumbnails')
-    arg_parser.add_argument('--scale', default=120, help='thumbnail scale (default:120)')
+    arg_parser.add_argument('--scale', type=int, default=120, help='thumbnail scale (default:120)')
     args = arg_parser.parse_args()
     to_process = set()
     for path in args.paths:
@@ -79,7 +80,7 @@ def main():
         to_process.add(path)
     for i, path in enumerate(sorted(to_process), start=1):
         print(f'({i}/{len(to_process)}) {path}')
-        create_thumbnail_grid(path)
+        create_thumbnail_grid(path, scale=args.scale)
 
 
 if __name__ == '__main__':

@@ -190,8 +190,16 @@ def merge_history():
             with filepath.open() as fd:
                 for line in fd:
                     components = line.strip().split('\t', maxsplit=3)
-                    if len(components) == 4:
-                        shistory.add((*components[:3], components[3].strip()))
+                    if len(components) != 4:
+                        continue
+                    date_str, host, pwd, command = components
+                    # FIXME will need to deal with timezones in the future
+                    if date_str.endswith('Z'):
+                        pass
+                    else:
+                        pass
+                    command = command.strip()
+                    shistory.add((date_str, host, pwd, command))
             filepath.unlink()
         prev_line = ('', '', '')
         with history_path.joinpath(f'{year}.shistory').open('w', encoding='utf-8') as fd:

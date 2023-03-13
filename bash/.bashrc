@@ -38,6 +38,7 @@ case "$(uname)" in
 esac
 export HISTSIZE=10000
 export HISTCONTROL=ignoredups
+export HISTTIMEFORMAT='%Y-%m-%dT%H:%M:%S%Z '
 
 # environment variables
 # gpg
@@ -91,13 +92,19 @@ export PYTHONPATH="${PYTHONPATH//\/\//\/}"
 # prompt
 prompt_command_fn() {
 	# right before prompting for the next command, save the previous command in a file.
-	if [ -z "$prev_pwd" ]; then
+	if [ -z "$prev_history_pwd" ]; then
 		save_pwd="$PWD"
 	else
-		save_pwd="$prev_pwd"
+		save_pwd="$prev_history_pwd"
 	fi
-	echo "$(date -u +%Y-%m-%dT%H:%M:%SZ)	$(hostname)	"$save_pwd"	$(history 1 | sed 's/^ *[0-9 -]* //; s/ *$//;')" >> "$HOME/Dropbox/personal/logs/$(date -u +%Y).shistory"
-	export prev_pwd="$PWD"
+	history_id="$(history 1 | sed 's/^ *//; s/ .*$//;')"
+	history_date="$(history 1 | sed 's/^ *[0-9-]* *//; s/ .*$//;')"
+	history_command="$(history 1 | sed 's/^ *[0-9-]* *//; s/^[^ ]* *//; s/ *$//;')"
+	if [[ "$history_id" != "$prev_history_id" ]]; then
+		echo "$history_date	$(hostname)	"$save_pwd"	$history_command" >> "$HOME/Dropbox/personal/logs/$(date -u +%Y).shistory"
+	fi
+	export prev_history_pwd="$PWD"
+	export prev_history_id="$history_id"
 }
 if [ "$(whoami)" == "root" ]; then
 	PS1='root@\h \W# '
@@ -109,7 +116,8 @@ fi
 if [ -d "$HOME/Dropbox/personal/logs" ]; then
 	PROMPT_COMMAND=prompt_command_fn
 fi
-unset prev_pwd
+unset prev_history_pwd
+unset prev_history_id
 
 # aliases
 alias rm='rm -i'

@@ -193,11 +193,9 @@ def merge_history():
                     if len(components) != 4:
                         continue
                     date_str, host, pwd, command = components
-                    # FIXME will need to deal with timezones in the future
-                    if date_str.endswith('Z'):
-                        pass
-                    else:
-                        pass
+                    if not date_str.endswith('Z'):
+                        date = datetime.strptime(date_str, '%Y-%m-%dT%H:%M:%S%z')
+                        date_str = (date - date.utcoffset()).replace(tzinfo=None).strftime('%Y-%m-%dT%H:%M:%SZ')
                     command = command.strip()
                     shistory.add((date_str, host, pwd, command))
             filepath.unlink()

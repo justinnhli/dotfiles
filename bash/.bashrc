@@ -38,7 +38,7 @@ case "$(uname)" in
 esac
 export HISTSIZE=10000
 export HISTCONTROL=ignoredups
-export HISTTIMEFORMAT='%Y-%m-%dT%H:%M:%S%Z '
+export HISTTIMEFORMAT='%Y-%m-%dT%H:%M:%S%z '
 
 # environment variables
 # gpg

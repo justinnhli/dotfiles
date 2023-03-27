@@ -73,6 +73,8 @@ def main():
     to_process = set()
     for path in args.paths:
         path = path.expanduser().resolve()
+        if not path.exists():
+            continue
         if path in to_process:
             continue
         if image_path(path).exists() and not args.overwrite:

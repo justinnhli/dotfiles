@@ -700,6 +700,8 @@ function s:ToggleScrollOff()
 	if &scrolloff == 0
 		setlocal scrolloff=1
 	elseif &scrolloff == 1
+		setlocal scrolloff=999
+	elseif &scrolloff == 999
 		setlocal scrolloff=0
 	endif
 endfunction

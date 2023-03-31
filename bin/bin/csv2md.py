@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""Convert a CSV to Markdown for easier per-row viewing."""
 
 import sys
 import re
@@ -8,6 +9,8 @@ from textwrap import indent
 
 
 def to_markdown(path):
+    # type: (Path) -> None
+    """Convert a CSV into a Markdown file, displaying data row by row."""
     with path.open() as fd:
         for row in DictReader(fd):
             for key, value in row.items():
@@ -26,6 +29,8 @@ def to_markdown(path):
 
 
 def main():
+    # type: () -> None
+    """Provide a CLI entry point."""
     to_markdown(Path(sys.argv[1]).expanduser().resolve())
 
 

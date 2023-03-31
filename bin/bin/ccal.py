@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-
 """A CLI version of Dave Seah's Compact Calendar."""
 
 from calendar import monthrange

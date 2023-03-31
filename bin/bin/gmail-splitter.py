@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+"""Convert Gmail conversation print content to a journal-suitable format."""
+
 import re
 from sys import stdin
 from argparse import ArgumentParser, FileType
@@ -18,6 +20,8 @@ Email = namedtuple('Email', ('date', 'sender', 'recipients', 'subject', 'text'))
 
 
 def parse_email(lines, subject):
+    # type: (list[str], str) -> Email
+    """Parse a string into an Email."""
     match = re.match('([^<>]*) <([^<>]*@[^<>]*)>(.*)', lines[0])
     sender = Person(match.group(1), match.group(2))
     date_str = match.group(3).strip()
@@ -46,6 +50,8 @@ def parse_email(lines, subject):
 
 
 def format_emails(text):
+    # type: (str) -> None
+    """Print out emails one by one."""
     emails = []
     subject = ''
     lines = text.splitlines()

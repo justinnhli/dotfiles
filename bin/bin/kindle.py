@@ -10,6 +10,8 @@ from bs4 import BeautifulSoup
 
 
 def _extract_text(soup):
+    # type: (BeautifulSoup) -> str
+    """Get all text inside a HTML tag."""
     text = []
     for desc in soup.descendants:
         if not hasattr(desc, 'contents'):
@@ -21,6 +23,8 @@ def _extract_text(soup):
 
 
 def extract_highlights(soup):
+    # type: (BeautifulSoup) -> tuple[str, str, str]
+    """Extract a highlight from HTML."""
     metadata = soup.select('.kp-notebook-metadata')[0]
     location = re.search(
         r'Location:\s*([0-9, ]*)',
@@ -43,6 +47,8 @@ def extract_highlights(soup):
 
 
 def _to_markdown_item(location, highlight, note):
+    # type: (str, str, str) -> str
+    """Print a note as a Markdown list item."""
     lines = [
         f'* > {highlight} - Location {location}',
     ]
@@ -54,6 +60,8 @@ def _to_markdown_item(location, highlight, note):
 
 
 def highlights_to_markdown(html):
+    # type: (str) -> None
+    """Convert Kindle highlights into Markdown."""
     items = []
     soup = BeautifulSoup(html, 'html.parser')
     for tag in soup.select('.kp-notebook-row-separator'):
@@ -64,6 +72,8 @@ def highlights_to_markdown(html):
 
 
 def main():
+    # type: () -> None
+    """Provide a CLI entry point."""
     arg_parser = ArgumentParser()
     arg_parser.add_argument(
         'filename',

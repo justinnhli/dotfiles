@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""Sort the input by the text at the indent level."""
 
 import re
 from sys import stdin
@@ -6,6 +7,8 @@ from argparse import ArgumentParser, FileType
 
 
 def determine_indent(text):
+    # type: (str) -> str
+    """Determine the indent string of a string."""
     indent = ''
     for line in text.splitlines():
         match = re.match(r'\s*', line).group()
@@ -21,6 +24,8 @@ def determine_indent(text):
 
 
 def min_indent(text, indent):
+    # type: (str, str) -> int
+    """Determine the minimum indent of the input."""
     return min(
         (
             len(re.findall(indent, line[:re.search(r'[^\s]', line).start()]))
@@ -31,6 +36,8 @@ def min_indent(text, indent):
 
 
 def get_indent(line, indent):
+    # type: (str, str) -> int
+    """Determine the indent of a line."""
     count = 0
     while line.startswith(indent):
         count += 1
@@ -39,6 +46,8 @@ def get_indent(line, indent):
 
 
 def sort_indented(text, depth=None, reverse=False):
+    # type: (str, int, bool) -> str
+    """Sort the input by the text at the indent level."""
 
     def add_items(result, items, item):
         if item:
@@ -71,6 +80,8 @@ def sort_indented(text, depth=None, reverse=False):
 
 
 def main():
+    # type: () -> None
+    """Provide a CLI entry point."""
     arg_parser = ArgumentParser()
     arg_parser.add_argument('inputfile', nargs='?', type=FileType('r'), default=stdin)
     arg_parser.add_argument('-d', dest='depth', type=int, help='the depth of the indent to sort by')

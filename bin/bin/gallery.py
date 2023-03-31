@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-
 """Create a quick HTML gallery from images."""
 
 from argparse import ArgumentParser

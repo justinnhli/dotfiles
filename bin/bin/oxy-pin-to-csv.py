@@ -1,10 +1,16 @@
 #!/usr/bin/env python3
+"""Convert Oxy registration PINs to a compact format."""
 
 import sys
 from csv import DictReader
 
 
-def pin_to_csv():
+def main():
+    # type: () -> None
+    """Provide a CLI entry point."""
+    if len(sys.argv) != 2:
+        print(f'usage: {sys.argv[0]} <pin-export.csv>')
+        sys.exit(1)
     students = []
     with open(sys.argv[1], encoding='utf-8-sig') as fd:
         for row in DictReader(fd):
@@ -18,13 +24,6 @@ def pin_to_csv():
             ]))
     for student in sorted(students):
         print(student)
-
-
-def main():
-    if len(sys.argv) != 2:
-        print(f'usage: {sys.argv[0]} <pin-export.csv>')
-        sys.exit(1)
-    pin_to_csv()
 
 
 if __name__ == '__main__':

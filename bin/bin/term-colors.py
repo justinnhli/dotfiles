@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""Test colors in a terminal."""
 
 # modified from https://askubuntu.com/a/27318
 

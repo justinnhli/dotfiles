@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""Command neovim from the built-in terminal."""
 
 import re
 import sys
@@ -35,9 +36,6 @@ except (ModuleNotFoundError, ImportError) as err:
     run_with_venv('neovim')
 
 
-# FIXME
-# if sys.argv[0] in ('vi', 'vim'), don't treat argument as commands
-
 EDIT_COMMANDS = {
     'tabnew': True,
     'e': False,
@@ -50,13 +48,17 @@ EDIT_COMMANDS = {
 
 
 def print_and_exit(message):
+    # type: (str) -> None
+    """Print and exit with error code 1."""
     print(sys.argv[0] + ': ' + message)
-    exit(1)
+    sys.exit(1)
 
 
 def main():
+    # type: () -> None
+    """Provide a CLI entry point."""
     if len(sys.argv) == 1:
-        print_and_exit('Usage: {} <command> [arguments]'.format(sys.argv[0]))
+        print_and_exit(f'Usage: {sys.argv[0]} <command> [arguments]')
     addr = environ.get('NVIM', None)
     if not addr:
         print_and_exit('$NVIM not set; quitting')
@@ -75,11 +77,11 @@ def main():
     try:
         for command in commands:
             nvim.command(command)
-    except NvimError as e:
-        if hasattr(e.args[0], 'decode'):
-            print_and_exit(e.args[0].decode('utf-8'))
+    except NvimError as nve:
+        if hasattr(nve.args[0], 'decode'):
+            print_and_exit(nve.args[0].decode('utf-8'))
         else:
-            print_and_exit(e.args[0])
+            print_and_exit(nve.args[0])
 
 
 if __name__ == '__main__':

@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-
 """A script to create a thumbnail grid for a video."""
 
 from argparse import ArgumentParser

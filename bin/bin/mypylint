@@ -1,13 +1,11 @@
 #!/usr/bin/env python3
-
 """A script that combines multiple Python linters and checkers."""
 
 import re
 import subprocess
 import sys
-from argparse import ArgumentParser
 from collections import namedtuple
-from os import environ, execv
+from os import environ
 from pathlib import Path
 from typing import List
 
@@ -27,7 +25,7 @@ def _module_exists(module):
         bool: True if the module exists in the venv, False otherwise.
     """
     try:
-        subprocess.run([VENV_PYTHON, '-c', 'import pylint'], check=True, capture_output=True)
+        subprocess.run([VENV_PYTHON, '-c', f'import {module}'], check=True, capture_output=True)
     except subprocess.CalledProcessError:
         return False
     return True
@@ -72,7 +70,7 @@ def run_pylint(path):
         match = re.fullmatch(
             ' '.join([
                 '(?P<filename>[^:]*):(?P<linenum>[0-9]+):(?P<column>-?[0-9]+):',
-                '(?P<message>.*) \[(?P<message_id>.*)\]',
+                r'(?P<message>.*) \[(?P<message_id>.*)\]',
             ]),
             line.strip(),
         )
@@ -120,7 +118,7 @@ def run_mypy(path):
             ' '.join([
                 '(?P<filename>[^:]*):(?P<linenum>[0-9]+):(?P<column>[0-9]+):',
                 '(?P<output_type>[^:]*):',
-                '(?P<message>.*?) *\[(?P<message_id>.*)\]',
+                r'(?P<message>.*?) *\[(?P<message_id>.*)\]',
             ]),
             line.strip(),
         )
@@ -188,14 +186,14 @@ def main():
         _err_print('pydocstyle not found, skipping')
     has_errors = False
     for arg in sys.argv[1:]:
-        arg = Path(arg).expanduser().resolve()
+        path = Path(arg).expanduser().resolve()
         errors = []
         if has_pylint:
-            errors.extend(run_pylint(arg))
+            errors.extend(run_pylint(path))
         if not errors and has_mypy:
-            errors.extend(run_mypy(arg))
+            errors.extend(run_mypy(path))
         if not errors and has_pydocstyle:
-            errors.extend(run_pydocstyle(arg))
+            errors.extend(run_pydocstyle(path))
         for error in sorted(errors):
             _err_print(f'{error.filename}:{error.linenum}:{error.column}: {error.message}')
         has_errors |= bool(errors)

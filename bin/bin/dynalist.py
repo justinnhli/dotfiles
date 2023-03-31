@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
+"""Download a file from Dynalist."""
 
 import json
 import re
 from argparse import ArgumentParser
 from collections import namedtuple
 from os import environ
+from typing import Any, Mapping
 
 try:
     import requests
@@ -40,11 +42,15 @@ TOKEN = environ['DYNALIST_TOKEN']
 TreeLine = namedtuple('TreeLine', 'id, text, indent, sibling_index')
 
 def send_json_post(uri, data):
+    # type: (str, Mapping[str, str]) -> dict[str, Any]
+    """Send a post request with json data."""
     response = requests.post(uri, data=json.dumps(data))
     return json.loads(response.text)
 
 
 def list_files():
+    # type: () -> dict[str, dict[str, str]]
+    """List all Dynalist files by name."""
     data = send_json_post(
         'https://dynalist.io/api/v1/file/list',
         {
@@ -56,6 +62,8 @@ def list_files():
 
 
 def get_file_id(filename):
+    # type: (str) -> str
+    """Get the file ID of a Dynalist file."""
     files = list_files()
     if filename not in files:
         raise KeyError(f'Cannot find file with title "{filename}"')
@@ -63,6 +71,8 @@ def get_file_id(filename):
 
 
 def get_file_nodes(filename):
+    # type: (str) -> dict[str, dict[str, Any]]
+    """Get the nodes of a Dynalist file."""
     data = send_json_post(
         'https://dynalist.io/api/v1/doc/read',
         {
@@ -76,6 +86,8 @@ def get_file_nodes(filename):
 
 
 def get_file(filename):
+    # type: (str) -> str
+    """Get a file from Dynalist."""
     nodes = get_file_nodes(filename)
     assert 'children' not in nodes['root']
     treelines = [] # type: list[TreeLine]
@@ -98,6 +110,8 @@ def get_file(filename):
 
 
 def main():
+    # type: () -> None
+    """Provide an CLI entry point."""
     arg_parser = ArgumentParser()
     arg_parser.add_argument('remote', help='Dynalist file to read from or write to.')
     args = arg_parser.parse_args()

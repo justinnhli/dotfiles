@@ -1,78 +1,90 @@
 #!/usr/bin/env python3
+"""Convert ris bibliographical information to bibtex."""
+
+# pylint: disable = line-too-long
 
 import re
 import sys
 from collections import defaultdict
-from textwrap import dedent
 from itertools import chain
+from textwrap import dedent
 
 
 PROP_MAP = {
-    # AU, ED, SP, EP is processed separately
-    'TI': 'title',
-    'T1': 'title',
-    'PY': 'year',
-    'Y1': 'year',
-    'VL': 'volume',
-    'IS': 'number',
-    'UR': 'url',
-    'DO': 'doi',
-    'JO': 'journal',
-    'PB': 'publisher',
+    # author, editor, and pages are processed separately
+    'title': ['TI', 'T1'],
+    'year': ['PY', 'Y1'],
+    'volume': ['VL'],
+    'number': ['IS'],
+    'url': ['UR'],
+    'doi': ['DO'],
+    'journal': ['JO'],
+    'publisher': ['PB'],
 }
 
 
-def get_only(mapping, key, force_list=False):
-    value = mapping[key]
-    if force_list or len(value) != 1:
-        return value
-    else:
-        return value[0]
-
-
-def ris2bib(ris):
-    ris_props = defaultdict(list)
-    for line in ris.splitlines():
+def parse_ris(ris_str):
+    # type: (str) -> dict[str, list[str]]
+    """Parse the contents of a ris file."""
+    ris = defaultdict(list)
+    for line in ris_str.splitlines():
         if not re.fullmatch(r'\s*[A-Z0-9][A-Z0-9]\s*-.*', line):
             continue
         key, value = line.split('-', maxsplit=1)
         value = value.strip()
         if value:
-            ris_props[key.strip()].append(value)
-    bib_props = {}
-    for ris_prop, bib_prop in PROP_MAP.items():
-        if ris_prop in ris_props:
-            if bib_prop not in bib_props:
-                bib_props[bib_prop] = get_only(ris_props, ris_prop)
-    bib_props['author'] = ' and '.join(chain(*(
-        get_only(ris_props, prop, True)
-        for prop in ['AU', 'A1', 'A2', 'A3', 'A4']
+            ris[key.strip()].append(value)
+    return ris
+
+
+def ris2bib(ris):
+    # type: (dict[str, list[str]]) -> dict[str, str]
+    """Convert ris file contents to bibtex."""
+    bib = {}
+    for bib_prop, ris_props in PROP_MAP.items():
+        for ris_prop in ris_props:
+            if ris_prop in ris:
+                bib[bib_prop] = ris[ris_prop][0]
+                break
+    bib['author'] = ' and '.join(chain(*(
+        ris[prop] for prop in ['AU', 'A1', 'A2', 'A3', 'A4']
     )))
-    if 'ED' in ris_props:
-        bib_props['editor'] = ' and '.join(get_only(ris_props, 'ED'))
-    if 'SP' in ris_props and 'EP' in ris_props:
-        bib_props['pages'] = get_only(ris_props, 'SP') + '--' + get_only(ris_props, 'EP')
+    if 'ED' in ris:
+        bib['editor'] = ' and '.join(ris['ED'])
+    if 'SP' in ris and 'EP' in ris:
+        bib['pages'] = ris['SP'][0] + '--' + ris['EP'][0]
+    return bib
+
+
+def bib_to_str(bib):
+    # type: (dict[str, str]) -> str
+    """Generate a bibtex entry from bibtex data."""
     bib_id = re.sub('[^0-9A-Za-z]', '', ''.join([
-        bib_props['author'].split()[0].strip(','),
-        bib_props['year'],
-        *(word.title() for word in bib_props['title'].split()[:3]),
+        bib['author'].split()[0].strip(','),
+        bib['year'],
+        *(word.title() for word in bib['title'].split()[:3]),
     ]))
-    return bib_id, bib_props
+    return '\n'.join([
+        f'@article {{{bib_id},',
+        *(
+            f'    {key} = {{{value}}},'
+            for key, value in sorted(bib.items())
+        ),
+        '}',
+    ])
 
 
 def main():
+    # type: () -> None
+    """Provide a CLI entry point."""
     test()
     if len(sys.argv) < 2:
         print(f'usage: {sys.argv[0]} RIS_FILE ...')
         sys.exit(1)
     for ris_file in sys.argv[1:]:
         with open(ris_file, encoding='utf-8') as fd:
-            ris = fd.read().strip()
-        bib_id, bib_props = ris2bib(ris)
-        print(f'@article {{{bib_id},')
-        for key, value in sorted(bib_props.items()):
-            print(f'    {key} = {{{value}}},')
-        print('}')
+            ris_str = fd.read().strip()
+        print(bib_to_str(ris2bib(parse_ris(ris_str))))
 
 
 TESTS = [
@@ -96,19 +108,18 @@ TESTS = [
         ID  - Garfinkel2022
         ER  -
         ''',
-        (
-            'Garfinkel2022TeachingDynamicsTo',
-            '''
-                author = {Garfinkel, Alan and Bennoun, Steve and Deeds, Eric and Van Valkenburgh, Blaire},
-                doi = {10.1007/s11538-022-00999-4},
-                journal = {Bulletin of Mathematical Biology},
-                number = {3},
-                title = {Teaching Dynamics to Biology Undergraduates: the UCLA Experience},
-                url = {https://doi.org/10.1007/s11538-022-00999-4},
-                volume = {84},
-                year = {2022},
-            ''',
-        ),
+        '''
+        @article {Garfinkel2022TeachingDynamicsTo,
+            author = {Garfinkel, Alan and Bennoun, Steve and Deeds, Eric and Van Valkenburgh, Blaire},
+            doi = {10.1007/s11538-022-00999-4},
+            journal = {Bulletin of Mathematical Biology},
+            number = {3},
+            title = {Teaching Dynamics to Biology Undergraduates: the UCLA Experience},
+            url = {https://doi.org/10.1007/s11538-022-00999-4},
+            volume = {84},
+            year = {2022},
+        }
+        ''',
     ),
     (
         '''
@@ -141,21 +152,20 @@ TESTS = [
         Y2  - 2022/10/05
         ER  - 
         ''',
-        (
-            'Lerner2012SpreadingActivationIn',
-            '''
-                author = {Lerner, Itamar and Bentin, Shlomo and Shriki, Oren},
-                doi = {https://doi.org/10.1111/cogs.12007},
-                journal = {Cognitive Science},
-                number = {8},
-                pages = {1339--1382},
-                publisher = {John Wiley & Sons, Ltd},
-                title = {Spreading Activation in an Attractor Network With Latching Dynamics: Automatic Semantic Priming Revisited},
-                url = {https://doi.org/10.1111/cogs.12007},
-                volume = {36},
-                year = {2012},
-            ''',
-        ),
+        '''
+        @article {Lerner2012SpreadingActivationIn,
+            author = {Lerner, Itamar and Bentin, Shlomo and Shriki, Oren},
+            doi = {https://doi.org/10.1111/cogs.12007},
+            journal = {Cognitive Science},
+            number = {8},
+            pages = {1339--1382},
+            publisher = {John Wiley & Sons, Ltd},
+            title = {Spreading Activation in an Attractor Network With Latching Dynamics: Automatic Semantic Priming Revisited},
+            url = {https://doi.org/10.1111/cogs.12007},
+            volume = {36},
+            year = {2012},
+        }
+        ''',
     ),
     (
         '''
@@ -183,27 +193,27 @@ TESTS = [
         KW  - Recall (Learning)
         ER  -
         ''',
-        (
-            'Mandler1994HypermnesiaIncubationAnd',
-            '''
-                author = {Mandler, George},
-                pages = {3--33},
-                publisher = {The MIT Press},
-                title = {Hypermnesia, incubation, and mind popping: On remembering without really trying.},
-                year = {1994},
-            ''',
-        ),
+        '''
+        @article {Mandler1994HypermnesiaIncubationAnd,
+            author = {Mandler, George},
+            pages = {3--33},
+            publisher = {The MIT Press},
+            title = {Hypermnesia, incubation, and mind popping: On remembering without really trying.},
+            year = {1994},
+        }
+        ''',
     ),
 ]
 
 
 def test():
-    for ris, (bib_id, bib_props) in TESTS:
-        bib_id_a, bib_props_a = ris2bib(ris.strip())
-        assert bib_id == bib_id_a
-        for (key, value), expected in zip(sorted(bib_props_a.items()), dedent(bib_props).strip().splitlines()):
-            actual = f'{key} = {{{value}}},'
-            assert actual == expected, f"{actual}\n\ndoesn't match\n\n{expected}"
+    # type: () -> None
+    """Test the ris to bibtex conversion."""
+    for ris_str, bib_str in TESTS:
+        ris_str = dedent(ris_str).strip()
+        bib_str = dedent(bib_str).strip()
+        result = bib_to_str(ris2bib(parse_ris(ris_str))).strip()
+        assert bib_str == result, '\n\n'.join([ris_str, bib_str, result])
 
 
 if __name__ == '__main__':

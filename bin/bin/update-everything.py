@@ -244,7 +244,7 @@ def pull_git():
     git_path = Path('~/git').expanduser().resolve()
     if not git_path.exists():
         return
-    run(['git-all', 'pull'], cwd=git_path, check=True)
+    run(['git-all.sh', 'pull'], cwd=git_path, check=True)
 
 
 @register()
@@ -254,7 +254,7 @@ def update_actr():
     actr_path = Path('~/act-r').expanduser().resolve()
     if not actr_path.exists():
         return
-    run(['git-all', 'pull'], cwd=actr_path, check=True)
+    run(['git-all.sh', 'pull'], cwd=actr_path, check=True)
 
 
 # bundles

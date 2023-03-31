@@ -7,7 +7,7 @@ case "$1" in
 	if which brew >/dev/null 2>&1; then
 		comm \
 			"$PACKAGES_PATH/brew" \
-			<(set-difference <(brew leaves) <(brew list --cask))
+			<(set-difference.sh <(brew leaves) <(brew list --cask))
 	else
 		echo 'cannot find `brew` command'
 		exit 1
@@ -54,7 +54,7 @@ case "$1" in
 			<(sort $PACKAGES_PATH/pacman) \
 			<( \
 				( \
-					set-difference <(pacman -Qenq) <( (pacman -Qgq base-devel texlive-most && pacman -Slq core ) | sort | uniq) && \
+					set-difference.sh <(pacman -Qenq) <( (pacman -Qgq base-devel texlive-most && pacman -Slq core ) | sort | uniq) && \
 					echo base-devel && \
 					echo texlive-most \
 				) | sort

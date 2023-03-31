@@ -274,10 +274,10 @@ fi
 # nvim terminal
 if [ $nvim_terminal -eq 1 ]; then
 	unset MANPAGER
-	alias :='$(command -v nvimcmd)'
-	alias vi='$(command -v nvimcmd) tabnew'
-	alias vim='$(command -v nvimcmd) tabnew'
-	alias nvim='$(command -v nvimcmd) tabnew'
+	alias :='$(command -v nvimcmd.py)'
+	alias vi='$(command -v nvimcmd.py) tabnew'
+	alias vim='$(command -v nvimcmd.py) tabnew'
+	alias nvim='$(command -v nvimcmd.py) tabnew'
 	workon neovim
 fi
 
@@ -289,13 +289,13 @@ if [ -d "$pim_path" ]; then
 		alias jrnl="journal.py \$(find $pim_path/journal/ -maxdepth 1 -name '[a-z]*.journal' | sed 's/^/--ignore /' | tr '\n' ' ')"
 	fi
 	if [ $nvim_terminal -eq 1 ]; then
-		alias vijj='$(command -v nvimcmd) "tabnew | execute(\"normal 1 JJ\") | tabclose -1"'
-		alias vijl='$(command -v nvimcmd) "tabnew | execute(\"normal 1 JL\") | tabclose -1"'
-		alias vijr='$(command -v nvimcmd) "tabnew | execute(\"normal 1 JR\") | tabclose -1"'
-		alias vijn='$(command -v nvimcmd) "tabnew | execute(\"normal 1 JN\") | tabclose -1"'
-		alias vijd='$(command -v nvimcmd) "tabnew | execute(\"normal 1 JD\") | tabclose -1"'
-		alias vijc='$(command -v nvimcmd) "tabnew | execute(\"normal 1 JC\") | tabclose -1"'
-		alias vijp='$(command -v nvimcmd) "tabnew | execute(\"normal 1 JP\") | tabclose -1"'
+		alias vijj='$(command -v nvimcmd.py) "tabnew | execute(\"normal 1 JJ\") | tabclose -1"'
+		alias vijl='$(command -v nvimcmd.py) "tabnew | execute(\"normal 1 JL\") | tabclose -1"'
+		alias vijr='$(command -v nvimcmd.py) "tabnew | execute(\"normal 1 JR\") | tabclose -1"'
+		alias vijn='$(command -v nvimcmd.py) "tabnew | execute(\"normal 1 JN\") | tabclose -1"'
+		alias vijd='$(command -v nvimcmd.py) "tabnew | execute(\"normal 1 JD\") | tabclose -1"'
+		alias vijc='$(command -v nvimcmd.py) "tabnew | execute(\"normal 1 JC\") | tabclose -1"'
+		alias vijp='$(command -v nvimcmd.py) "tabnew | execute(\"normal 1 JP\") | tabclose -1"'
 	else
 		alias vijj='$VISUAL -c "normal 1 JJ" -c tabonly'
 		alias vijl='$VISUAL -c "normal 1 JL" -c tabonly'

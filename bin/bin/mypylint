@@ -87,42 +87,6 @@ def run_pylint(path):
     return errors
 
 
-def run_pydocstyle(path):
-    # type: (Path) -> List[Error]
-    """Get errors from pydocstyle.
-
-    Parameters:
-        path (Path): The path to the file to check.
-
-    Returns:
-        List[Error]: A list of errors.
-    """
-    process = subprocess.run(
-        [
-            VENV_PYTHON,
-            '-m',
-            'pydocstyle',
-            str(path),
-        ],
-        check=False,
-        capture_output=True,
-    )
-    lines = process.stdout.decode('utf-8').splitlines()
-    errors = []
-    for line1, line2 in zip(lines[0::2], lines[1::2]):
-        match1 = re.fullmatch('(?P<filename>[^:]*):(?P<linenum>[0-9]+) .*', line1.strip())
-        match2 = re.fullmatch('^(?P<message_id>[^:]*): (?P<message>.*)', line2.strip())
-        if match1 is None or match2 is None:
-            continue
-        filename = str(Path(match1.group('filename')).expanduser().resolve())
-        linenum = match1.group('linenum')
-        column = 0
-        message = match2.group('message')
-        message_id = match2.group('message_id')
-        errors.append(Error(filename, int(linenum), int(column), f'{message} ({message_id})'))
-    return errors
-
-
 def run_mypy(path):
     # type: (Path) -> List[Error]
     """Get errors from mypy.
@@ -174,19 +138,54 @@ def run_mypy(path):
     return errors
 
 
+def run_pydocstyle(path):
+    # type: (Path) -> List[Error]
+    """Get errors from pydocstyle.
+
+    Parameters:
+        path (Path): The path to the file to check.
+
+    Returns:
+        List[Error]: A list of errors.
+    """
+    process = subprocess.run(
+        [
+            VENV_PYTHON,
+            '-m',
+            'pydocstyle',
+            str(path),
+        ],
+        check=False,
+        capture_output=True,
+    )
+    lines = process.stdout.decode('utf-8').splitlines()
+    errors = []
+    for line1, line2 in zip(lines[0::2], lines[1::2]):
+        match1 = re.fullmatch('(?P<filename>[^:]*):(?P<linenum>[0-9]+) .*', line1.strip())
+        match2 = re.fullmatch('^(?P<message_id>[^:]*): (?P<message>.*)', line2.strip())
+        if match1 is None or match2 is None:
+            continue
+        filename = str(Path(match1.group('filename')).expanduser().resolve())
+        linenum = match1.group('linenum')
+        column = 0
+        message = match2.group('message')
+        message_id = match2.group('message_id')
+        errors.append(Error(filename, int(linenum), int(column), f'{message} ({message_id})'))
+    return errors
+
+
 def main():
     # type: () -> None
     """Deal with command line arguments."""
     has_pylint = _module_exists('pylint')
     if not has_pylint:
         _err_print('pylint not found, skipping')
+    has_mypy = _module_exists('mypy')
+    if not has_mypy:
+        _err_print('mypy not found, skipping')
     has_pydocstyle = _module_exists('pydocstyle')
     if not has_pydocstyle:
         _err_print('pydocstyle not found, skipping')
-    has_mypy = _module_exists('mypy')
-    if not has_pydocstyle:
-        _err_print('mypy not found, skipping')
-
     has_errors = False
     for arg in sys.argv[1:]:
         arg = Path(arg).expanduser().resolve()

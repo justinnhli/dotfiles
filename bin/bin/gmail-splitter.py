@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import re
-import sys
+from sys import stdin
+from argparse import ArgumentParser, FileType
 from collections import namedtuple
 from datetime import datetime
 from textwrap import indent
@@ -14,19 +15,6 @@ SIGNATURE = '''
 
 Person = namedtuple('Person', ('name', 'email'))
 Email = namedtuple('Email', ('date', 'sender', 'recipients', 'subject', 'text'))
-
-
-def read_all_inputs(files):
-    if files:
-        result = []
-        for file in files:
-            with open(file, 'r', encoding='utf-8') as fd:
-                result.append(fd.read())
-        return ''.join(result)
-    elif not sys.stdin.isatty():
-        return sys.stdin.read()
-    else:
-        return ''
 
 
 def parse_email(lines, subject):
@@ -91,8 +79,12 @@ def format_emails(text):
 
 
 def main():
-    text = read_all_inputs(sys.argv[1:]).strip()
-    format_emails(text)
+    # type: () -> None
+    """Provide a CLI entry point."""
+    arg_parser = ArgumentParser()
+    arg_parser.add_argument('inputfile', nargs='?', type=FileType('r'), default=stdin)
+    args = arg_parser.parse_args()
+    format_emails(args.inputfile.read())
 
 
 if __name__ == '__main__':

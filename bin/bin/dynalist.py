@@ -113,7 +113,7 @@ def main():
     # type: () -> None
     """Provide an CLI entry point."""
     arg_parser = ArgumentParser()
-    arg_parser.add_argument('remote', help='Dynalist file to read from or write to.')
+    arg_parser.add_argument('remote', help='Dynalist file to read')
     args = arg_parser.parse_args()
     print(get_file(args.remote))
 

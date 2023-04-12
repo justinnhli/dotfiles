@@ -89,7 +89,7 @@ def get_file(filename):
     # type: (str) -> str
     """Get a file from Dynalist."""
     nodes = get_file_nodes(filename)
-    assert 'children' not in nodes['root']
+    assert 'children' in nodes['root']
     treelines = [] # type: list[TreeLine]
     for root_sibling_num, root_id in enumerate(nodes['root']['children'], start=1):
         stack = [(nodes[root_id], 0, root_sibling_num)]

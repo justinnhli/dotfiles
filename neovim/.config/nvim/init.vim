@@ -698,11 +698,11 @@ nnoremap  <leader>T   :tabnew ~/Dropbox/personal/logs/ifttt/tweets.txt<cr>
 " toggle scrolloff {{{3
 function s:ToggleScrollOff()
 	if &scrolloff == 0
-		setlocal scrolloff=1
-	elseif &scrolloff == 1
 		setlocal scrolloff=999
-	elseif &scrolloff == 999
+	elseif &scrolloff == 1
 		setlocal scrolloff=0
+	elseif &scrolloff == 999
+		setlocal scrolloff=1
 	endif
 endfunction
 

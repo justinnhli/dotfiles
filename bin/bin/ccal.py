@@ -30,41 +30,43 @@ def str_to_date(string, start=True):
             if not start:
                 result = result.replace(month=12, day=31)
             return result
-        if len(string) == 7:
+        elif len(string) == 7:
             result = datetime.strptime(string, '%Y-%m').date()
             if not start:
                 result = result.replace(
                     day=monthrange(result.year, result.month)[1]
                 )
             return result
-        if len(string) == 10:
+        elif len(string) == 10:
             return datetime.strptime(string, '%Y-%m-%d').date()
-    except ValueError:
-        pass
-    raise ArgumentTypeError(
-        f'argument "{string}" should be in format YYYY[-MM[-DD]]'
-    )
+        else:
+            raise ValueError()
+    except ValueError as err:
+        raise ArgumentTypeError(
+            f'argument "{string}" should be in format YYYY[-MM[-DD]]'
+        ) from err
 
 
 def parse_args(args):
-    # type: (Namespace) -> tuple[date, date, Optional[date]]
+    # type: (Namespace) -> tuple[date, date, Optional[date], str]
     """Parse the start and end date CLI arguments to datetime.date objects.
 
     Arguments:
         args (Namespace): The command line arguments.
 
     Returns:
-        Tuple[date, date, date]: The start date, end date, and marker date.
+        Tuple[date, date, Optional[date], str]:
+            The start date, end date, marker date, and the header side.
 
     Raises:
         ArgumentTypeError: If the end date is earlier than the start date.
     """
     start, end = args.start, args.end
     today = date.today()
-    if args.no_marker:
-        mark_date = None
-    else:
+    if args.marker:
         mark_date = today
+    else:
+        mark_date = None
     if end is not None:
         start_date = str_to_date(start, start=True)
         end_date = str_to_date(end, start=False)
@@ -83,20 +85,25 @@ def parse_args(args):
         raise ArgumentTypeError(
             f'start date must be before end date, but got {start_date} and {end_date}'
         )
-    return start_date, end_date, mark_date
+    return start_date, end_date, mark_date, args.header
 
 
-def print_calendar(start_date, end_date, mark_date=None):
-    # type: (date, date, Optional[date]) -> None
+def print_calendar(start_date, end_date, mark_date=None, header='right'):
+    # type: (date, date, Optional[date], str) -> None
     """Print a compact calendar.
 
     Arguments:
         start_date (date): The start date.
         end_date (date): The end date.
         mark_date (date): The date to mark. Defaults to None.
+        header (str): The side to print the header. One of "left", "right".
+            Defaults to "right".
     """
     curr_date = start_date - ((start_date.weekday() + 1) % 7) * ONE_DAY
-    print(' Su Mo Tu We Th Fr Sa')
+    if header == 'left':
+        print(10 * ' ' + ' Su Mo Tu We Th Fr Sa')
+    else:
+        print(' Su Mo Tu We Th Fr Sa')
     while curr_date <= end_date:
         output = ' '.join(
             f'{(curr_date + (i * ONE_DAY)).day: >2d}'
@@ -107,7 +114,12 @@ def print_calendar(start_date, end_date, mark_date=None):
             output = output.replace(f' {mark_date.day: >2d} ', f'[{mark_date.day: >2d}]')
         curr_date += 7 * ONE_DAY
         if (curr_date - start_date).days <= 7 or 1 < curr_date.day <= 8:
-            output += curr_date.strftime('%b %Y')
+            if header == 'right':
+                output += curr_date.strftime('%b %Y')
+            else:
+                output = curr_date.strftime(' %b %Y ') + output
+        elif header == 'left':
+            output = 10 * ' ' + output
         print(output)
 
 
@@ -117,7 +129,14 @@ def main():
     arg_parser = ArgumentParser()
     arg_parser.add_argument('start', nargs='?', help='start date')
     arg_parser.add_argument('end', nargs='?', help='end date')
-    arg_parser.add_argument('--no-marker', action='store_true', help='hide today marker')
+    arg_parser.add_argument(
+        '--no-marker', dest='marker', action='store_false',
+        help='hide today marker',
+    )
+    arg_parser.add_argument(
+        '--header', choices=['left', 'right'], default='right',
+        help='side to put month headers. default: right',
+    )
     args = arg_parser.parse_args()
     print_calendar(*parse_args(args))
 

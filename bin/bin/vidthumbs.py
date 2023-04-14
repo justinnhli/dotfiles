@@ -80,8 +80,9 @@ def main():
             continue
         to_process.add(path)
     for i, path in enumerate(sorted(to_process), start=1):
-        print(f'({i}/{len(to_process)}) {path}')
+        print(f'({i}/{len(to_process)}) {path}... ', end='', flush=True)
         create_thumbnail_grid(path, scale=args.scale)
+        print('done', flush=True)
 
 
 if __name__ == '__main__':

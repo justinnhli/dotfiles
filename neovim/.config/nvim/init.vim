@@ -691,7 +691,6 @@ nnoremap  <leader>B   :tabnew ~/.bashrc<cr>
 nnoremap  <leader>V   :tabnew $MYVIMRC<cr>
 nnoremap  <leader>S   :tabnew ~/.config/nvim/spell/en.utf-8.add<cr>
 nnoremap  <leader>H   :tabnew ~/Dropbox/personal/logs/<C-r>=strftime('%Y')<cr>.shistory<cr>
-nnoremap  <leader>T   :tabnew ~/Dropbox/personal/logs/ifttt/tweets.txt<cr>
 
 " toggle functions {{{2
 

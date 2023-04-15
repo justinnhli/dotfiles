@@ -343,7 +343,7 @@ class Library:
                 r'(?P<word>[^ ]*[A-Za-z][A-Z][^ ]*)',
                 r'\? (?P<word>\w+)',
             ]
-            for attr in ['title', 'booktitle']:
+            for attr in ['title', 'booktitle', 'journal']:
                 if not hasattr(paper, attr):
                     continue
                 title = getattr(paper, attr)

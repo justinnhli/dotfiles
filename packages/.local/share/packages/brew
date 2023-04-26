@@ -1,8 +1,11 @@
 automake
+baobab
 checkbashisms
 cmake
 cmark
+coreutils
 ffmpeg
+flyctl
 gcc
 git
 graphviz
@@ -11,9 +14,13 @@ imagemagick
 lftp
 neovim
 openjdk
+pass
+pinentry-mac
 python
+ripgrep-all
 shellcheck
 stow
+tesseract
 tmux
 universal-ctags/universal-ctags/universal-ctags
 wget

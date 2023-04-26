@@ -101,7 +101,7 @@ prompt_command_fn() {
 	history_date="$(history 1 | sed 's/^ *[0-9-]* *//; s/ .*$//;')"
 	history_command="$(history 1 | sed 's/^ *[0-9-]* *//; s/^[^ ]* *//; s/ *$//;')"
 	if [[ "$history_id" != "$prev_history_id" ]]; then
-		echo "$history_date	$(hostname)	"$save_pwd"	$history_command" >> "$HOME/Dropbox/personal/logs/$(date -u +%Y).shistory"
+		echo "$history_date	$(whoami)@$(hostname)	"$save_pwd"	$history_command" >> ~justinnhli/Dropbox/personal/logs/$(date -u +%Y).shistory
 	fi
 	export prev_history_pwd="$PWD"
 	export prev_history_id="$history_id"
@@ -113,7 +113,7 @@ elif [ "$(whoami)" == "justinnhli" ]; then
 else
 	PS1='\u@\h \W\$ '
 fi
-if [ -d "$HOME/Dropbox/personal/logs" ]; then
+if [ -d ~justinnhli/Dropbox/personal/logs ]; then
 	PROMPT_COMMAND=prompt_command_fn
 fi
 unset prev_history_pwd

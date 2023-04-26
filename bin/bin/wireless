@@ -4,7 +4,8 @@
 device="$(ip link show | sed 's/^[0-9]*: //; s/:.*//' | grep '^w')"
 
 # kill processes
-killall -9 wpa_supplicant dhcpcd && ip link set "$device" down
+killall -9 wpa_supplicant dhcpcd
+ip link set "$device" down
 
 # restart processes
 iwconfig "$device" channel auto

@@ -222,24 +222,52 @@ if command -v python3 >/dev/null 2>&1; then
 			fi
 		fi
 		$py -m venv "$PYTHON_VENV_HOME/$1"
-		workon "$1"
-		pip install --upgrade pip wheel
-		if [ $# -gt 1 ]; then
-			shift 1
-			pip install "$@"
-		fi
+		source "$PYTHON_VENV_HOME/$1/bin/activate"
 	}
 	workon() {
-		if [ $# -eq 0 ]; then
+		# if there are no arguments, print existing venvs
+		if [[ $# == 0 ]]; then
 			lsvenv
 			return 0
 		fi
-		if [ -f "$PYTHON_VENV_HOME/$1/bin/activate" ]; then
+		keep_trying=1
+		# if an existing venv has that name, activate it
+		if [[ -f $PYTHON_VENV_HOME/$1/bin/activate ]]; then
+			keep_trying=0
 			source "$PYTHON_VENV_HOME/$1/bin/activate"
-		else
-			read -rp "venv '$1' not found; do you want to create it (Y/n)? " response
+		fi
+		# if a venv packages file has that name, ask to create the venv with those packages
+		venv_packages_file="$HOME/.local/share/packages/venv/$1"
+		if [[ $keep_trying == 1 && -f $venv_packages_file ]]; then
+			read -rp "create venv using packages in $venv_packages_file (Y/n)? " response
 			if [[ ! $response =~ ^[Nn]$ ]]; then
-				mkvenv "$@"
+				keep_trying=0
+				mkvenv $1 -r $venv_packages_file
+			fi
+		fi
+		# if the venv name is the same as the current directory and there is a requirements.txt
+		# ask to create the venv with those packages
+		if [[ $keep_trying == 1 && "$1" == "$(basename $(pwd))" && -f requirements.txt ]]; then
+			read -rp "create venv using packages in $(pwd)/requirements.txt (Y/n)? " response
+			if [[ ! $response =~ ^[Nn]$ ]]; then
+				keep_trying=0
+				mkvenv $1 -r "$(pwd)/requirements.txt"
+			fi
+		fi
+		# ask to create the venv and install the package with that name
+		if [[ $keep_trying == 1 ]]; then
+			read -rp "create venv and install package $1 (Y/n)? " response
+			if [[ ! $response =~ ^[Nn]$ ]]; then
+				keep_trying=0
+				mkvenv $1 && pip install "$1"
+			fi
+		fi
+		# ask to create an empty venv
+		if [[ $keep_trying == 1 ]]; then
+			read -rp "create empty venv (Y/n)? " response
+			if [[ ! $response =~ ^[Nn]$ ]]; then
+				keep_trying=0
+				mkvenv $1
 			fi
 		fi
 	}

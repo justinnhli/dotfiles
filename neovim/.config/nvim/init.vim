@@ -21,12 +21,14 @@ let g:large_file_size = 1024 * 1024 * 10 " define a large file as > 10MB
 if has('nvim')
 	"auto-install vim-plug
 	let s:plug_path = fnamemodify($MYVIMRC, ':p:h') .. '/autoload/plug.vim'
-	if empty(glob(s:plug_path))
+	if !filereadable(s:plug_path)
 		call system("curl -fLo " .. s:plug_path .. " --create-dirs 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'")
-		augroup justinnhli_vimplug
-			autocmd!
-			autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
-		augroup END
+		if filereadable(s:plug_path)
+			augroup justinnhli_vimplug
+				autocmd!
+				autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+			augroup END
+		endif
 	endif
 
 	try

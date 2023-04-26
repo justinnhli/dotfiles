@@ -19,7 +19,11 @@ export XDG_CACHE_HOME=$HOME/.cache
 export XDG_DATA_HOME=$HOME/.local/share
 export SECRETS_HOME=$HOME/.secrets
 if command -v nvim >/dev/null 2>&1; then
-	export EDITOR=nvim
+	if [ -d ~/.config/nvim ]; then
+		export EDITOR=nvim
+	elif [ -f ~/.vimrc ]; then
+		export EDITOR='nvim -u ~/.vimrc'
+	fi
 	export MANPAGER='nvim +Man!'
 	export MANWIDTH=999
 elif command -v vim >/dev/null 2>&1; then

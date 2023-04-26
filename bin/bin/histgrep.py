@@ -17,6 +17,7 @@ def main():
     arg_parser = ArgumentParser()
     arg_parser.add_argument('patterns', nargs='*')
     arg_parser.add_argument('-d', dest='date', action='store')
+    arg_parser.add_argument('-u', dest='user', action='store')
     arg_parser.add_argument('-m', dest='machine', action='store')
     arg_parser.add_argument('-p', dest='pwd', action='store')
     arg_parser.add_argument('-v', dest='verbose', action='store_true')
@@ -27,6 +28,8 @@ def main():
             for line in fd:
                 event = Event(*line.strip().split('\t', maxsplit=3))
                 if args.date is not None and not re.search(args.date, event.date):
+                    continue
+                if args.user is not None and not re.search(args.user, event.machine):
                     continue
                 if args.machine is not None and not re.search(args.machine, event.machine):
                     continue

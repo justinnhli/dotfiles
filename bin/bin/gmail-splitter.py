@@ -54,7 +54,7 @@ def format_emails(text):
     """Print out emails one by one."""
     emails = []
     subject = ''
-    lines = text.splitlines()
+    lines = text.strip().splitlines()
     subject = lines[1]
     num_emails = int(lines[2].split()[0])
     email_num = 0

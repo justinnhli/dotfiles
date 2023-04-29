@@ -220,7 +220,7 @@ def find_conflicts(path=None):
     if path is None:
         path = Path.cwd()
     print('finding conflicted files')
-    for conflict in path.glob('*conflicted*'):
+    for conflict in path.glob('**/*conflicted*'):
         if '.dropbox.cache' not in str(conflict):
             print(conflict)
 

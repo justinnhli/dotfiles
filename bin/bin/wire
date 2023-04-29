@@ -1,0 +1,25 @@
+#!/bin/sh
+
+# determine networking device
+if [[ "$1" == 'wired' ]]; then
+    device="$(ip link show | sed 's/^[0-9]*: //; s/:.*//' | grep '^e')"
+elif [[ "$1" == 'wireless' ]]; then
+    device="$(ip link show | sed 's/^[0-9]*: //; s/:.*//' | grep '^w')"
+else
+    echo "$0 <wired|wireless>"
+    exit 1
+fi
+
+# shut down networking processes
+killall -9 dhcpcd
+if [[ "$1" == 'wireless' ]]; then
+    killall -9 wpa_supplicant 
+fi
+ip link set "$device" down
+
+# start up networking processes
+ip link set "$device" up
+if [[ "$1" == 'wireless' ]]; then
+    wpa_supplicant -Bi "$device" -c /root/wpa_supplicant.conf
+fi
+dhcpcd "$device" --debug --debug

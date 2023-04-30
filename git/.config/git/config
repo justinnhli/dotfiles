@@ -40,6 +40,8 @@
     new-branch = switch --create
     delete-branch = branch --delete
     force-delete-branch = branch --delete --force
+    # worktrees
+    worktrees = worktree list
     # remotes
     remotes = remote --verbose
     # pushing

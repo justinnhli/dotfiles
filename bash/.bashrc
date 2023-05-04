@@ -223,6 +223,7 @@ if command -v python3 >/dev/null 2>&1; then
 		fi
 		$py -m venv "$PYTHON_VENV_HOME/$1"
 		source "$PYTHON_VENV_HOME/$1/bin/activate"
+		pip install --upgrade pip wheel
 	}
 	workon() {
 		# if there are no arguments, print existing venvs
@@ -242,7 +243,8 @@ if command -v python3 >/dev/null 2>&1; then
 			read -rp "create venv using packages in $venv_packages_file (Y/n)? " response
 			if [[ ! $response =~ ^[Nn]$ ]]; then
 				keep_trying=0
-				mkvenv $1 -r $venv_packages_file
+				mkvenv $1
+				pip install -r $venv_packages_file
 			fi
 		fi
 		# if the venv name is the same as the current directory and there is a requirements.txt
@@ -251,7 +253,8 @@ if command -v python3 >/dev/null 2>&1; then
 			read -rp "create venv using packages in $(pwd)/requirements.txt (Y/n)? " response
 			if [[ ! $response =~ ^[Nn]$ ]]; then
 				keep_trying=0
-				mkvenv $1 -r "$(pwd)/requirements.txt"
+				mkvenv $1
+				pip install -r "$(pwd)/requirements.txt"
 			fi
 		fi
 		# ask to create the venv and install the package with that name
@@ -259,7 +262,8 @@ if command -v python3 >/dev/null 2>&1; then
 			read -rp "create venv and install package $1 (Y/n)? " response
 			if [[ ! $response =~ ^[Nn]$ ]]; then
 				keep_trying=0
-				mkvenv $1 && pip install "$1"
+				mkvenv $1
+				pip install "$1"
 			fi
 		fi
 		# ask to create an empty venv

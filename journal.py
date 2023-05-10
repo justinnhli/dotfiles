@@ -831,7 +831,6 @@ def do_wording(journal, args):
             variant = variant.lower()
         if variant in seen:
             continue
-        seen.add(variant)
         if args.whole_words:
             if alpha_regex.match(journal_text[match.start() - 1]):
                 continue
@@ -842,6 +841,7 @@ def do_wording(journal, args):
             term = re.escape(match.group())
         entries = filter_entries(journal, args, terms=[term])
         rows.append((variant, len(entries), min(entries).iso(), max(entries).iso()))
+        seen.add(variant)
     print_table(
         sorted(rows, key=(lambda row: row[1])),
         ['VARIANT', 'COUNT', 'FIRST', 'LAST'],

@@ -1,5 +1,0 @@
-#!/bin/sh
-
-find . -mindepth 1 -maxdepth 1 -type d -name '[a-z]*' | sed 's#^./##' | while read package; do
-	stow --verbose --restow --target "$HOME" "$package" 2> >(grep -v 'BUG in find_stowed_path? Absolute/relative mismatch' 1>&2)
-done

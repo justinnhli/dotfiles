@@ -33,7 +33,7 @@ except (ModuleNotFoundError, ImportError) as err:
             raise ImportError(f'no module {err.name} in venv "{venv}" ({venv_python})')
         execv(str(venv_python), [str(venv_python), *sys.argv])
 
-    run_with_venv('pdfocr')
+    run_with_venv('pytesseract')
 
 
 def ocr_directory(path, lang='eng', verbose=False):

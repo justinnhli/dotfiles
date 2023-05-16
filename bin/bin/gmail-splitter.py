@@ -80,7 +80,7 @@ def format_emails(text):
         print(f'WARNING: Gmail lists {num_emails} emails, but I found {len(emails)}')
         print()
     for email in emails:
-        print(email.date.strftime('%Y-%m-%d'))
+        print(f'{email.date.strftime("%Y-%m-%d")} ({email.sender.name})')
         print(indent(email.text, '\t'))
 
 

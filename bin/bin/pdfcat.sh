@@ -1,8 +1,8 @@
 #!/bin/sh
 
 usage() {
-    echo "Usage: $(basename $0) outputFile inputFile1[first,last] ..."
-    exit $1
+    echo "Usage: $(basename "$0") outputFile inputFile1[first,last] ..."
+    exit "$1"
 }
 
 E_BADARGS=65

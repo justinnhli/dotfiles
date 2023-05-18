@@ -9,7 +9,7 @@ case "$1" in
 			"$PACKAGES_PATH/brew" \
 			<(set-difference.sh <(brew leaves) <(brew list --cask))
 	else
-		echo 'cannot find `brew` command'
+		echo "cannot find \`brew\` command"
 		exit 1
 	fi;;
 "brew-cask")
@@ -18,7 +18,7 @@ case "$1" in
 			"$PACKAGES_PATH/brew-cask" \
 			<(brew list --cask)
 	else
-		echo 'cannot find `brew` command'
+		echo "cannot find \`brew\` command"
 		exit 1
 	fi;;
 "brew-taps")
@@ -27,16 +27,16 @@ case "$1" in
 			"$PACKAGES_PATH/brew-tap" \
 			<(brew tap)
 	else
-		echo 'cannot find `brew` command'
+		echo "cannot find \`brew\` command"
 		exit 1
 	fi;;
 "npm")
 	if which npm >/dev/null 2>&1; then
 		comm \
 			"$PACKAGES_PATH/npm" \
-			<(npm list --global --parseable --depth=0 | grep node_modules | while read module; do basename "$module"; done | sort | uniq)
+			<(npm list --global --parseable --depth=0 | grep node_modules | while read -r module; do basename "$module"; done | sort | uniq)
 	else
-		echo 'cannot find `npm` command'
+		echo "cannot find \`npm\` command"
 		exit 1
 	fi;;
 "pikaur")
@@ -45,13 +45,13 @@ case "$1" in
 			"$PACKAGES_PATH/pikaur" \
 			<(pacman -Qemq)
 	else
-		echo 'cannot find `pikaur` command'
+		echo "cannot find \`pikaur\` command"
 		exit 1
 	fi;;
 "pacman")
 	if which pacman >/dev/null 2>&1; then
 		comm \
-			<(sort $PACKAGES_PATH/pacman) \
+			<(sort "$PACKAGES_PATH/pacman") \
 			<( \
 				( \
 					set-difference.sh <(pacman -Qenq) <( (pacman -Qgq base-devel texlive-most && pacman -Slq core ) | sort | uniq) && \
@@ -60,7 +60,7 @@ case "$1" in
 				) | sort
 			)
 	else
-		echo 'cannot find `pacman` command'
+		echo "cannot find \`pacman\` command"
 		exit 1
 	fi;;
 "pip")

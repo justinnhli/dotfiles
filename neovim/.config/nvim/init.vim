@@ -331,9 +331,9 @@ nnoremap  <leader><leader>u  :UndotreeToggle<cr>
 " colorscheme {{{3
 let g:colorschemes = []
 let g:colorschemes = g:colorschemes + [['everforest', 'dark'],]
-let g:colorschemes = g:colorschemes + [['iceberg', 'dark'],]
-let g:colorschemes = g:colorschemes + [['default', 'dark'],]
 let g:colorschemes = g:colorschemes + [['iceberg', 'light'],]
+let g:colorschemes = g:colorschemes + [['default', 'dark'],]
+let g:colorschemes = g:colorschemes + [['iceberg', 'dark'],]
 let g:colorscheme_index = 0
 function s:SetColorScheme()
 	execute 'set background=' .. g:colorschemes[g:colorscheme_index][1]

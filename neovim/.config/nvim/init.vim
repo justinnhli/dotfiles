@@ -476,11 +476,11 @@ function s:MaximizeWindow()
 		vertical resize
 		augroup justinnhli_maximize_window
 			autocmd!
-			autocmd WinLeave * execute "normal! \<C-w>="
+			autocmd WinLeave * execute 'normal! \<C-w>='
 		augroup END
 	else
 		let w:maximized = 0
-		execute "normal! \<C-w>="
+		execute 'normal! \<C-w>='
 		autocmd! justinnhli_maximize_window
 	endif
 endfunction

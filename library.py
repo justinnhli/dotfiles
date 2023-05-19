@@ -23,6 +23,7 @@ WEIRD_NAMES = {}
 
 def load_weird_names():
     # type: () -> None
+    """Read in weird names data."""
     with Path(__file__).parent.joinpath('entities.csv').open(encoding='utf-8') as fd:
         for row in DictReader(fd, delimiter='\t'):
             WEIRD_NAMES[row['author']] = row['short-name']
@@ -78,6 +79,7 @@ class Paper:
     @property
     def directory(self):
         # type: () -> Path
+        """Print the local library directory path."""
         if self.library:
             return self.library.directory
         else:
@@ -86,6 +88,7 @@ class Paper:
     @property
     def remote_host(self):
         # type: () -> str
+        """Print the remote host."""
         if self.library:
             return self.library.remote_host
         else:
@@ -94,6 +97,7 @@ class Paper:
     @property
     def remote_path(self):
         # type: () -> Path
+        """Print the remote library directory path."""
         if self.library:
             return self.library.remote_path
         else:
@@ -134,6 +138,7 @@ class Paper:
     @property
     def pdfinfo(self):
         # type: () -> None
+        """Read pdfinfo."""
         if not self.local.exists():
             raise FileNotFoundError(self.local)
         print(_run_shell_command('pdfinfo', str(self.local)))
@@ -234,6 +239,7 @@ class Library:
 
     def passthrough(self, name, operation='default'):
         # type: (str, str) -> None
+        """Pass through operation to paper."""
         print(name, operation)
         raise NotImplementedError()
 
@@ -241,6 +247,7 @@ class Library:
 
     def path(self, *names):
         # type: (*str) -> None
+        """Print local filepaths of papers."""
         for name in names:
             if name.endswith('.pdf'):
                 name = name[:-4]
@@ -504,6 +511,7 @@ class Library:
 
     def unify(self):
         # type: () -> None
+        """Find and unify names."""
         coauthors = defaultdict(list) # type: dict[str, list[tuple[str, str]]]
         for key, paper in self.papers.items():
             authors = getattr(paper, 'author').split(' and ')
@@ -531,6 +539,7 @@ class Library:
 
     def url(self, *names):
         # type: (str) -> None
+        """Print URLs of papers."""
         for name in names:
             if name.endswith('.pdf'):
                 name = name[:-4]
@@ -664,6 +673,7 @@ def _run_shell_command(command, *args, verbose=True):
 
 def main():
     # type: () -> None
+    """Provide a CLI entry point."""
     Library()()
 
 

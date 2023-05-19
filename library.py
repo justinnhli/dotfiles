@@ -137,12 +137,16 @@ class Paper:
 
     @property
     def pdfinfo(self):
-        # type: () -> None
+        # type: () -> dict[str, str]
         """Read pdfinfo."""
         if not self.local.exists():
             raise FileNotFoundError(self.local)
-        print(_run_shell_command('pdfinfo', str(self.local)))
-        # TODO parse pdfinfo
+        pdfinfo = {}
+        for line in _run_shell_command('pdfinfo', str(self.local)).splitlines():
+            key, value = line.split(':', maxsplit=1)
+            value = value.strip()
+            pdfinfo[key] = value
+        return pdfinfo
 
 
 class Library:

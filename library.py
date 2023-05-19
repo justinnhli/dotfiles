@@ -370,6 +370,22 @@ class Library:
                                 {attr} = {{{new_title}}},
                     ''').strip())
 
+        def check_ordinals(key, paper):
+            # type: (str, Paper) -> None
+            """Check for non-superscript ordinals."""
+            for attr in ('booktitle', 'title', 'journal'):
+                if not hasattr(paper, attr):
+                    continue
+                val = getattr(paper, attr)
+                match = re.search('(.*[^0-9][0-9]+)(st|nd|rd|th)(.*)', val)
+                if match:
+                    suggestion = f'{match.group(1)}\\textsuperscript{{{match.group(2)}}}{match.group(3)}'
+                    print(dedent(f'''
+                        non-superscript ordinal in {attr} of {key}:
+                            suggestion:
+                                {attr} = {{{suggestion}}},
+                    ''').strip())
+
         def check_doi(key, paper):
             # type: (str, Paper) -> None
             """Check for DOIs not in URL format."""
@@ -443,6 +459,7 @@ class Library:
             check_id(key, paper)
             check_spaces(key, paper)
             check_capitalization(key, paper)
+            check_ordinals(key, paper)
             check_doi(key, paper)
             check_pages(key, paper)
             check_latex(key, paper)

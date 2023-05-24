@@ -866,6 +866,8 @@ def do_vimgrep(journal, args):
         lines = entry.text.splitlines()
         results = []
         for term in args.terms:
+            if args.whole_words:
+                term = r'\b' + term + r'\b'
             for match in re.finditer(term, entry.text, flags=args.icase):
                 prev_lines = ('\n' + entry.text[:match.start() + 1]).splitlines()
                 line_num = len(prev_lines) - 1

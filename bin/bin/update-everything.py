@@ -271,11 +271,11 @@ def update_everything():
     update_brew()
     update_cabal()
     update_pip()
+    merge_history()
     for path in (desktop_path, dropbox_path, git_path):
         delete_orphans(path)
         delete_os_metadata(path)
         find_conflicts(path)
-    merge_history()
     sync_library()
     update_vimplug()
     pull_git()

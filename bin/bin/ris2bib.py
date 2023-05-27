@@ -4,7 +4,7 @@
 # pylint: disable = line-too-long
 
 import re
-import sys
+from argparse import ArgumentParser, FileType
 from collections import defaultdict
 from itertools import chain
 from textwrap import dedent
@@ -78,13 +78,13 @@ def main():
     # type: () -> None
     """Provide a CLI entry point."""
     test()
-    if len(sys.argv) < 2:
-        print(f'usage: {sys.argv[0]} RIS_FILE ...')
-        sys.exit(1)
-    for ris_file in sys.argv[1:]:
-        with open(ris_file, encoding='utf-8') as fd:
-            ris_str = fd.read().strip()
-        print(bib_to_str(ris2bib(parse_ris(ris_str))))
+    arg_parser = ArgumentParser()
+    arg_parser.add_argument('fds', nargs='*', type=FileType('r'))
+    args = arg_parser.parse_args()
+    if args.fds == []:
+        args = arg_parser.parse_args(['-'])
+    for fd in args.fds:
+        print(bib_to_str(ris2bib(parse_ris(fd.read().strip()))))
 
 
 TESTS = [

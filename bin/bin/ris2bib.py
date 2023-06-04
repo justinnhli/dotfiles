@@ -60,9 +60,9 @@ def bib_to_str(bib):
     # type: (dict[str, str]) -> str
     """Generate a bibtex entry from bibtex data."""
     bib_id = re.sub('[^0-9A-Za-z]', '', ''.join([
-        bib['author'].split()[0].strip(','),
-        bib['year'],
-        *(word.title() for word in bib['title'].split()[:3]),
+        bib.get('author', 'FIXME').split()[0].strip(','),
+        bib.get('year', 'FIXME'),
+        *(word.title() for word in bib.get('title', 'FIXME').split()[:3]),
     ]))
     return '\n'.join([
         f'@article {{{bib_id},',

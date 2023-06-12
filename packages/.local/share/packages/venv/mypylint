@@ -2,4 +2,5 @@ doc484
 mypy
 pydocstyle
 pylint
+pycg
 yapf

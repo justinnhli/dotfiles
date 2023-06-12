@@ -205,7 +205,7 @@ if command -v python3 >/dev/null 2>&1; then
 	fi
 	mkvenv() {
 		if [ $# -lt 1 ]; then
-			echo "usage: ${FUNCNAME[0]} VENV_NAME [PIP_ARGS ...]"
+			echo "usage: ${FUNCNAME[0]} VENV_NAME"
 			return 1
 		elif [ -d "$PYTHON_VENV_HOME/$1" ]; then
 			echo "venv $1 already exists"

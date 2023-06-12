@@ -213,15 +213,10 @@ if command -v python3 >/dev/null 2>&1; then
 		fi
 		# ensure that system python3 is used
 		# (as opposed to python3 in a venv)
-		py="$(command -v python3)"
-		if readlink "$py" >/dev/null; then
-			newpy="$(readlink "$py")"
-			# if the link is relative, prepend the original
-			if [[ "$newpy" == .* ]]; then
-				py="$(dirname "$py")/$newpy"
-			fi
+		if command -v deactivate >/dev/null 2>&1; then
+			deactivate
 		fi
-		$py -m venv "$PYTHON_VENV_HOME/$1"
+		python3 -m venv "$PYTHON_VENV_HOME/$1"
 		source "$PYTHON_VENV_HOME/$1/bin/activate"
 		pip install --upgrade pip wheel
 	}

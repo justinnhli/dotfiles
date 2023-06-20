@@ -8,7 +8,7 @@ from json import loads as json_from_str
 from os import environ
 from pathlib import Path
 from shutil import which
-from subprocess import run
+from subprocess import run, CalledProcessError
 from typing import Any, Callable
 
 
@@ -226,6 +226,42 @@ def find_conflicts(path=None):
 
 
 # personal update actions
+
+@register()
+def update_package_lists():
+    # type: () -> None
+    """Update package lists in dotfiles repo."""
+
+    def cmd_set(*commands):
+        return set(
+            run(commands, check=True, capture_output=True)
+            .stdout.decode('utf-8')
+            .splitlines()
+        )
+
+    commands = {
+        'brew': (lambda: cmd_set('brew', 'leaves') - cmd_set('brew', 'list', '--cask')),
+        'brew-cask': (lambda: cmd_set('brew', 'list', '--cask')),
+        'brew-tap': (lambda: cmd_set('brew', 'tap')),
+        # FIXME 'npm': (lambda: set()),
+        'pacman': (lambda:
+            cmd_set('pacman', '--query', '--explicit', '--native', '--quiet')
+            - cmd_set('pacman', '--query', '--groups', '--quiet', 'base-devel', 'texlive-most')
+            - cmd_set('pacman', '--sync', '--list', '--quiet', 'core')
+        ),
+        'pikaur': (lambda: cmd_set('pacman', '--query', '--explicit', '--foreign', '--quiet')),
+    }
+    packages_dir = Path('~/.local/share/packages').expanduser().resolve()
+    for filename, function in commands.items():
+        packages = set()
+        try:
+            packages = function()
+        except (FileNotFoundError, CalledProcessError):
+            pass
+        if packages:
+            with (packages_dir / filename).open('w') as fd:
+                fd.write('\n'.join(sorted(packages)))
+                fd.write('\n')
 
 @register()
 def sync_library():

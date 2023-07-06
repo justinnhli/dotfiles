@@ -1026,6 +1026,12 @@ nnoremap  <silent>  <leader>.          :<C-u>call <SID>SetFoldLevelToLine()<cr>
 if exists(':tnoremap')
 	tnoremap  <esc><esc>  <C-\><C-n>
 	tnoremap  <C-[><C-[>  <C-\><C-n>
+	tnoremap  <S-up>  <up>
+	tnoremap  <S-down>  <down>
+	tnoremap  <S-left>  <left>
+	tnoremap  <S-right>  <right>
+	tnoremap  <S-backspace>  <backspace>
+	tnoremap  <S-cr>  <cr>
 endif
 
 " commands {{{1

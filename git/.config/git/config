@@ -45,7 +45,7 @@
     # remotes
     remotes = remote --verbose
     # pushing
-    unpushed = log --branches --not --remotes --no-walk --oneline --format=format:'%s (%D)%n'
+    unpushed = log --branches --not --remotes --no-walk --oneline --format=format:'%S%n'
     prepush = log origin..HEAD
     # other
     discards = ! \

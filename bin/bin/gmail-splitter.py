@@ -23,7 +23,10 @@ def parse_email(lines, subject):
     # type: (list[str], str) -> Email
     """Parse a string into an Email."""
     match = re.match('([^<>]*) <([^<>]*@[^<>]*)>(.*)', lines[0])
-    sender = Person(match.group(1), match.group(2))
+    sender_name = match.group(1)
+    if sender_name == 'Justin (Ning Hui) Li':
+        sender_name = 'Justin Li'
+    sender = Person(sender_name, match.group(2))
     date_str = match.group(3).strip()
     date = datetime.strptime(date_str, '%a, %b %d, %Y at %I:%M %p')
     recipients = []

@@ -100,9 +100,9 @@ def update_pip(venv=None):
         pip = Path(environ['PYTHON_VENV_HOME']).joinpath(venv).resolve()
         if not pip.exists():
             return
-    run(['pip', 'install', '--upgrade', 'pip'], check=False)
+    run([str(pip), 'install', '--upgrade', 'pip'], check=False)
     process = run(
-        [pip, 'list', '--format', 'json'],
+        [str(pip), 'list', '--format', 'json'],
         check=True, capture_output=True,
     )
     packages = [
@@ -112,7 +112,7 @@ def update_pip(venv=None):
     if packages:
         env = environ.copy()
         env['PIP_REQUIRE_VIRTUALENV'] = 'false'
-        run([pip, 'install', '--upgrade', *packages], env=env, check=True)
+        run([str(pip), 'install', '--upgrade', *packages], env=env, check=True)
 
 
 # file cleanup actions

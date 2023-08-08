@@ -1225,6 +1225,7 @@ function UnicodeToAscii()
 	%s/\%u200A/ /eg " hair space
 	%s/\%u200B/ /eg " zero width space
 	%s/\%u2028/ /eg " line separator
+	%s/\%u202F/ /eg " narrow no-break space
 	" double quotes (0x22)
 	%s/\%u2018\%u2018/"/eg " left single quotation mark
 	%s/\%u2019\%u2019/"/eg " right single quotation mark

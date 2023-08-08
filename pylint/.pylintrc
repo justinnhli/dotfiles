@@ -1,6 +1,6 @@
 [BASIC]
 
-# Good variable names which should always be accepted, separated by a comma
+# Good variable names which should always be accepted, separated by a comma.
 good-names=i,
            j,
            k,
@@ -48,7 +48,7 @@ score=no
 
 [SIMILARITIES]
 
-# Ignore imports when computing similarities.
+# Imports are removed from the similarity computation
 ignore-imports=no
 
 # Minimum lines number of a similarity.

@@ -1,3 +1,10 @@
+[MAIN]
+
+# List of plugins (as comma separated values of python module names) to load,
+# usually to register additional checkers.
+load-plugins=pylint.extensions.docparams,pylint.extensions.docstyle
+
+
 [BASIC]
 
 # Good variable names which should always be accepted, separated by a comma.

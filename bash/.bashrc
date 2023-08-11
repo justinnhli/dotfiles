@@ -24,7 +24,7 @@ if command -v nvim >/dev/null 2>&1; then
 	elif [ -f ~/.vimrc ]; then
 		export EDITOR='nvim -u ~/.vimrc'
 	fi
-	export MANPAGER='nvim +Man!'
+	export MANPAGER='nvim -c "Man!" -c "set foldmethod=indent" -c "normal zM"'
 	export MANWIDTH=999
 elif command -v vim >/dev/null 2>&1; then
 	export EDITOR=vim

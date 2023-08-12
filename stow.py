@@ -21,9 +21,9 @@ def run(*terms):
     ).stdout.decode('utf-8')
 
 
-def stow():
+def install():
     # type: () -> None
-    """(Re-)stow all files."""
+    """Install package files."""
     home = Path('~').expanduser().resolve()
     for package in sorted(Path().resolve().glob('[a-z]*')):
         if not package.is_dir():
@@ -61,12 +61,12 @@ def main():
     # type: () -> None
     """Provide a CLI interface."""
     arg_parser = ArgumentParser()
-    arg_parser.add_argument('action', nargs='?', choices=['check', 'stow'], default='check')
+    arg_parser.add_argument('action', nargs='?', choices=['check', 'install'], default='check')
     args = arg_parser.parse_args()
     if args.action == 'check':
         check()
-    elif args.action == 'stow':
-        stow()
+    elif args.action == 'install':
+        install()
 
 
 if __name__ == '__main__':

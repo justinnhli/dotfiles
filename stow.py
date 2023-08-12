@@ -32,14 +32,9 @@ def install():
 
 
 def check():
-    # type: () -> bool
-    """Check for stow errors.
-
-    Returns:
-        bool: True if there are errors, False otherwise.
-    """
+    # type: () -> None
+    """Check for stow errors."""
     tracked_files = run('git', 'ls-files', '--exclude-standard').splitlines()
-    errors = False
     for tracked_file in sorted(tracked_files):
         path = Path(tracked_file)
         if len(path.parts) <= 1 or path.parts[0].startswith('.'):
@@ -50,11 +45,8 @@ def check():
         relative_path = stowlink_path.relative_to(Path('~').expanduser())
         if not absolute_path.exists():
             print(f'[{package}] {relative_path} does not exist')
-            errors = True
         elif absolute_path == stowlink_path:
             print(f'[{package}] {relative_path} is not linked')
-            errors = True
-    return bool(errors)
 
 
 def main():

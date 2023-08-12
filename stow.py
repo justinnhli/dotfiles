@@ -21,14 +21,22 @@ def run(*terms):
     ).stdout.decode('utf-8')
 
 
-def install():
+def install(*packages):
     # type: () -> None
     """Install package files."""
-    home = Path('~').expanduser().resolve()
-    for package in sorted(Path().resolve().glob('[a-z]*')):
-        if not package.is_dir():
-            continue
-        run('stow', '--verbose', '--restow', '--target', str(home), package.name)
+    stow_path = Path(__file__).resolve().parent
+    if packages:
+        package_paths = sorted(
+            (stow_path / package) for package in packages
+        )
+        nonexistent = [path.name for path in package_paths if not path.is_dir()]
+        if nonexistent:
+            raise ValueError(f'nonexistent packages: {", ".join(nonexistent)}')
+    else:
+        package_paths = sorted(path for path in stow_path.glob('[a-z]*') if path.is_dir())
+    home = str(Path('~').expanduser().resolve())
+    for package_path in package_paths:
+        run('stow', '--verbose', '--restow', '--target', home, package_path.name)
 
 
 def check():
@@ -54,11 +62,12 @@ def main():
     """Provide a CLI interface."""
     arg_parser = ArgumentParser()
     arg_parser.add_argument('action', nargs='?', choices=['check', 'install'], default='check')
+    arg_parser.add_argument('packages', nargs='*', help='packages to install')
     args = arg_parser.parse_args()
     if args.action == 'check':
         check()
     elif args.action == 'install':
-        install()
+        install(*args.packages)
 
 
 if __name__ == '__main__':

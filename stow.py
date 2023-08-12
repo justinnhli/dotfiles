@@ -11,6 +11,9 @@ def run(*terms):
     # type: (*str) -> str
     """Run a command line.
 
+    Parameters:
+        *terms (str): The terms of the command to run.
+
     Returns:
         str: The standard out.
     """
@@ -22,8 +25,12 @@ def run(*terms):
 
 
 def install(*packages):
-    # type: () -> None
-    """Install package files."""
+    # type: (*str) -> None
+    """Install package files.
+
+    Parameters:
+        *packages (str): The packages to unstow.
+    """
     stow_path = Path(__file__).resolve().parent
     if packages:
         package_paths = sorted(
@@ -61,7 +68,10 @@ def main():
     # type: () -> None
     """Provide a CLI interface."""
     arg_parser = ArgumentParser()
-    arg_parser.add_argument('action', nargs='?', choices=['check', 'install'], default='check')
+    arg_parser.add_argument(
+        'action', nargs='?', choices=['check', 'install'], default='check',
+        help='action to perform',
+    )
     arg_parser.add_argument('packages', nargs='*', help='packages to install')
     args = arg_parser.parse_args()
     if args.action == 'check':

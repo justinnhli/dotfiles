@@ -150,10 +150,10 @@ fi
 if command -v scons >/dev/null 2>&1 && command -v python3 >/dev/null 2>&1; then
 	alias scons="scons --python=\$(command -v python3)"
 fi
-if [ -d "$HOME/git/Soar" ]; then
+if [ -d "$HOME/git/Soar" ] && [ -e $HOME/git/Soar/out/testcli ]; then
 	alias soar='$HOME/git/Soar/out/testcli'
 fi
-if command -v tmux >/dev/null 2>&1; then
+if command -v tmux >/dev/null 2>&1 && [ -e $XDG_CONFIG_HOME/tmux/tmux.conf ]; then
 	alias tmux='tmux -f $XDG_CONFIG_HOME/tmux/tmux.conf'
 fi
 if command -v update-everything.py >/dev/null 2>&1; then
@@ -162,10 +162,10 @@ fi
 if command -v valgrind >/dev/null 2>&1; then
 	alias valgrind='valgrind --dsymutil=yes --leak-check=yes --track-origins=yes'
 fi
-if command -v wget >/dev/null 2>&1; then
+if command -v wget >/dev/null 2>&1 && [ -e $XDG_CACHE_HOME/wget-hsts ]; then
 	alias wget='wget --hsts-file="$XDG_CACHE_HOME/wget-hsts"'
 fi
-if command -v yapf >/dev/null 2>&1; then
+if command -v yapf >/dev/null 2>&1 && [ -e $HOME/.config/yapf/style ]; then
 	alias yapf='yapf --style="$HOME/.config/yapf/style"'
 fi
 

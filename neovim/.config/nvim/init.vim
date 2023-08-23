@@ -939,6 +939,10 @@ xnoremap  <C-s>  <esc>:update<cr>gv
 " <C-d> to insert date {{{3
 inoremap  <C-d>  <C-r>=strftime('%Y-%m-%d')<cr>
 
+" increment/decrement numbers
+nnoremap  <C-=>  <C-a>
+nnoremap  <C-->  <C-x>
+
 " default to very magic search {{{3
 nnoremap  /      /\v
 nnoremap  ?      ?\v

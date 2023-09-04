@@ -334,13 +334,17 @@ let g:colorschemes = g:colorschemes + [['everforest', 'dark'],]
 let g:colorschemes = g:colorschemes + [['iceberg', 'light'],]
 let g:colorschemes = g:colorschemes + [['default', 'dark'],]
 let g:colorschemes = g:colorschemes + [['iceberg', 'dark'],]
-let g:colorscheme_index = 0
+if $TERM =~ 'color'
+	let g:colorscheme_index = 0
+else
+	let g:colorscheme_index = len(g:colorschemes) - 1
+endif
 function s:SetColorScheme()
 	execute 'set background=' .. g:colorschemes[g:colorscheme_index][1]
 	execute 'colorscheme ' .. g:colorschemes[g:colorscheme_index][0]
 	execute 'set ft=' .. &ft
 endfunction
-for g:colorscheme_index in range(len(g:colorschemes))
+for i in range(len(g:colorschemes))
 	try
 		call s:SetColorScheme()
 		break

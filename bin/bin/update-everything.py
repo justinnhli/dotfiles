@@ -146,6 +146,28 @@ def delete_orphans(path=None):
 
 
 @register()
+def delete_swap(path=None):
+    # type: (Path) -> None
+    """Delete old vim swap (.*.swp) files.
+
+    Parameters:
+        path (Path): The directory to clear of orphans.
+    """
+    printed_header = False
+    if path is None:
+        path = Path.cwd()
+    timestamp = datetime.now().timestamp()
+    threshold = 60 * 60 * 24 * 14 # 14 days
+    for filepath in path.glob('**/.*.swp'):
+        if timestamp - filepath.stat().st_mtime > threshold:
+            filepath.unlink()
+            if not printed_header:
+                print('deleting old vim swap files')
+                printed_header = True
+            print(f'    deleted {filepath}')
+
+
+@register()
 def delete_os_metadata(path=None):
     # type: (Path) -> None
     """Delete OS metadata files (Icon, .DS_Store, __MACOSX).
@@ -310,6 +332,7 @@ def update_everything():
     merge_history()
     for path in (desktop_path, dropbox_path, git_path):
         delete_orphans(path)
+        delete_swap(path)
         delete_os_metadata(path)
         find_conflicts(path)
     sync_library()

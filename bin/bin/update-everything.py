@@ -96,6 +96,7 @@ def update_pip(venv=None):
         if not which('pip'):
             return
         pip = Path(which('pip')).resolve()
+        return
     else:
         pip = Path(environ['PYTHON_VENV_HOME']).joinpath(venv).resolve()
         if not pip.exists():
@@ -284,6 +285,7 @@ def update_package_lists():
             with (packages_dir / filename).open('w') as fd:
                 fd.write('\n'.join(sorted(packages)))
                 fd.write('\n')
+
 
 @register()
 def sync_library():

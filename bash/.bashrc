@@ -242,9 +242,8 @@ if command -v python3 >/dev/null 2>&1; then
 				pip install -r $venv_packages_file
 			fi
 		fi
-		# if the venv name is the same as the current directory and there is a requirements.txt
-		# ask to create the venv with those packages
-		if [[ $keep_trying == 1 && "$1" == "$(basename $(pwd))" && -f requirements.txt ]]; then
+		# if there is a requirements.txt in the current directory, ask to create the venv with it
+		if [[ $keep_trying == 1 && -f requirements.txt ]]; then
 			read -rp "create venv using packages in $(pwd)/requirements.txt (Y/n)? " response
 			if [[ ! $response =~ ^[Nn]$ ]]; then
 				keep_trying=0

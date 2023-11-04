@@ -1265,6 +1265,9 @@ function UnicodeToAscii()
 	%s/\%uFB01/fi/eg " fi
 	%s/\%uFB02/fl/eg " fl
 	%s/\%uFB03/ffi/eg " ffi
+	" arrows
+	%s/\%u2190/->/eg " leftwards arrow
+	%s/\%u2192/->/eg " rightwards arrow
 	" specials
 	%s/\%uFFFC//eg " object replacement character
 endfunction

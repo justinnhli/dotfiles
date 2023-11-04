@@ -2,13 +2,13 @@
 #
 # Please see http://i3wm.org/docs/userguide.html for a complete reference!
 
+# set modifier keys
 set $mod Mod1+Control
 
-# Font for window titles. Will also be used by the bar unless a different font
-# is used in the bar {} block below.
+# set window title font (which is also used by bar{} below
 font pango:monospace 10
 
-# Use Mouse+$mod to drag floating windows to their wanted position
+# drag floating windows
 floating_modifier $mod
 
 # start applications
@@ -49,7 +49,7 @@ bindsym $mod+Return fullscreen toggle
 # toggle tiling / floating
 bindsym $mod+Shift+space floating toggle
 
-# Use mod-Control-Up and Down to rotate through the workspace list.
+# change workspace
 bindsym $mod+Left workspace prev
 bindsym $mod+Right workspace next
 bindsym $mod+1 workspace 1

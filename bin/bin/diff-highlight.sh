@@ -15,6 +15,8 @@ if [ -L "$git_path" ]; then
 fi
 # go up two directories
 git_path="$(dirname "$(dirname "$git_path")")"
+# find the first share/git* path, usually git on Linux and git-core on MacOS
+git_path="$(find "$git_path/share" -maxdepth 1 -type d -name 'git*' | sort | head -n 1)"
 # find the diff-highlight program
 diff_highlight_path="$(find "$git_path" -type f -name 'diff-highlight')"
 # if the file exists and is executable

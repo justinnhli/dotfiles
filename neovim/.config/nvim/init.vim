@@ -945,7 +945,9 @@ inoremap  <C-d>  <C-r>=strftime('%Y-%m-%d')<cr>
 
 " increment/decrement numbers
 nnoremap  <C-=>  <C-a>
+xnoremap  <C-=>  <C-a>
 nnoremap  <C-->  <C-x>
+xnoremap  <C-->  <C-x>
 
 " default to very magic search {{{3
 nnoremap  /      /\v

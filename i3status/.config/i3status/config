@@ -7,7 +7,7 @@
 # If the above line is not correctly displayed, fix your editor first!
 
 general {
-    colors = true
+    colors = false
     interval = 5
 }
 
@@ -15,14 +15,15 @@ order += "cpu_usage"
 order += "memory"
 order += "wireless _first_"
 order += "ethernet _first_"
-order += "tztime local"
+order += "read_file uptime"
+order += "time"
 
 cpu_usage {
-    format = "CPU: %usage"
+    format = "CPU: %usage (%cpu0 %cpu1 %cpu2 %cpu3)"
 }
 
 memory {
-    format = "Mem: %used / %total"
+    format = "Mem: %used / %total (%percentage_free)"
 }
 
 wireless _first_ {
@@ -36,6 +37,11 @@ ethernet _first_ {
     format_down = "E: down"
 }
 
-tztime local {
+read_file uptime {
+    format = "Up: %content"
+    path = "~/Dropbox/status/uptime"
+}
+
+time {
     format = "%a %Y-%m-%d %H:%M:%S"
 }

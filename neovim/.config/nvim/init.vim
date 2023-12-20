@@ -693,9 +693,12 @@ endfunction
 nnoremap  <leader>O  :call <SID>OpenExternal('<C-r>=expand('<cWORD>')<cr>')<cr>
 xnoremap  <leader>O  "zy:call <SID>OpenExternal('<C-r>z')<cr>
 
+" vim setting mappings {{{3
+nnoremap  <leader>VV   :tabnew $MYVIMRC<cr>
+nnoremap  <leader>VS   :tabnew <C-r>=fnamemodify($MYVIMRC, ':p:h')<cr>/spell/en.utf-8.add<cr>
+
 " other file mappings {{{3
 nnoremap  <leader>B   :tabnew ~/.bashrc<cr>
-nnoremap  <leader>V   :tabnew $MYVIMRC<cr>
 nnoremap  <leader>S   :tabnew ~/.config/nvim/spell/en.utf-8.add<cr>
 nnoremap  <leader>H   :tabnew ~/Dropbox/personal/logs/<C-r>=strftime('%Y')<cr>.shistory<cr>
 

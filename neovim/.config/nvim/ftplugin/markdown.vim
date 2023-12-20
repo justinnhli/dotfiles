@@ -10,3 +10,4 @@ endif
 if executable('fmt')
 	setlocal formatprg=fmt\ -w\ 2500
 endif
+execute 'source ' .. fnamemodify($MYVIMRC, ':p:h') .. '/autocorrect.vim'

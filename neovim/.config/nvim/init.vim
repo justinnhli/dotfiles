@@ -696,6 +696,7 @@ xnoremap  <leader>O  "zy:call <SID>OpenExternal('<C-r>z')<cr>
 " vim setting mappings {{{3
 nnoremap  <leader>VV   :tabnew $MYVIMRC<cr>
 nnoremap  <leader>VS   :tabnew <C-r>=fnamemodify($MYVIMRC, ':p:h')<cr>/spell/en.utf-8.add<cr>
+nnoremap  <leader>VZ   :tabnew <C-r>=fnamemodify($MYVIMRC, ':p:h')<cr>/autocorrect.vim<cr>
 
 " other file mappings {{{3
 nnoremap  <leader>B   :tabnew ~/.bashrc<cr>
@@ -1019,13 +1020,24 @@ function s:SetFoldLevelToLine()
 	echo l:fold_level
 endfunction
 
+" log a autocorrected spellcheck word {{{3
+function s:AutoCorrectAndLog()
+	let l:bad_word = expand('<cword>')
+	execute 'normal! 1z='
+	let l:new_word = expand('<cword>')
+	let l:autocorrect_file = fnamemodify($MYVIMRC, ':p:h') .. '/autocorrect.vim'
+	call writefile(['"iabbrev  ' .. l:bad_word .. '  ' .. l:new_word], l:autocorrect_file, 'a')
+	"spellsuggest({word} [, {max} [, {capital}]])
+endfunction
+
 " miscellaneous editing mappings {{{3
 nnoremap  <leader>a         ggVG
 nnoremap  <leader>o         :OpenExternal<space>
 nnoremap  <leader>p         "+p
 nnoremap  <leader>y         "+y
 xnoremap  <leader>y         "+y
-nnoremap  <leader>z         1z=
+"nnoremap  <leader>z         1z=:<C-u>call <SID>LogAutoSpellCheck()<cr>
+nnoremap  <leader>z         :<C-u>call <SID>AutoCorrectAndLog()<cr>
 nnoremap  <leader>/         :2match IncSearch ''<left>
 xnoremap  <leader>/         "zy:2match IncSearch <C-r>=shellescape(getreg('z'))<cr><cr>
 nnoremap  <leader>@         :<C-f>ilet @=<C-r><C-r>

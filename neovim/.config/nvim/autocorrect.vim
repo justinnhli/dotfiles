@@ -1,0 +1,15 @@
+iabbrev   teh            the
+iabbrev   fo             for
+"iabbrev  iRS            IRS
+"iabbrev  Juen           June
+"iabbrev  propreityar    proprietary
+"iabbrev  framewokr      framework
+"iabbrev  reponse        response
+"iabbrev  ehlped         helped
+"iabbrev  ot             to
+"iabbrev  converstaions  conversations
+"iabbrev  encouriging    encouraging
+"iabbrev  lavendar       lavender
+"iabbrev  recenlty       recently
+"iabbrev  faculyt        faculty
+"iabbrev  faculy         faculty

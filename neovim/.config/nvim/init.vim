@@ -1026,6 +1026,9 @@ endfunction
 function s:AutoCorrectAndLog()
 	let l:bad_word = expand('<cword>')
 	execute 'normal! 1z='
+	if l:bad_word =~ '-'
+		return
+	endif
 	let l:new_word = expand('<cword>')
 	let l:autocorrect_file = fnamemodify($MYVIMRC, ':p:h') .. '/autocorrect.vim'
 	call writefile(['"iabbrev  <buffer>  ' .. l:bad_word .. '  ' .. l:new_word], l:autocorrect_file, 'a')

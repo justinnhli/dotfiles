@@ -221,6 +221,8 @@ if has('statusline')
 	set   statusline+=%(\ %M%)
 	" file format
 	set   statusline+=\ [%{&ff}]
+	" byte-order mark (BOM)
+	set statusline+=%{&bomb?'[BOM]':''}
 	" read only
 	set   statusline+=%r
 	" file type

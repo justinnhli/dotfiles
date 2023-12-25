@@ -1,15 +1,91 @@
-iabbrev   teh            the
-iabbrev   fo             for
-"iabbrev  iRS            IRS
-"iabbrev  Juen           June
-"iabbrev  propreityar    proprietary
-"iabbrev  framewokr      framework
-"iabbrev  reponse        response
-"iabbrev  ehlped         helped
-"iabbrev  ot             to
-"iabbrev  converstaions  conversations
-"iabbrev  encouriging    encouraging
-"iabbrev  lavendar       lavender
-"iabbrev  recenlty       recently
-"iabbrev  faculyt        faculty
-"iabbrev  faculy         faculty
+iabbrev  <buffer>  Backgorund      Background
+iabbrev  <buffer>  FXIME           FIXME
+iabbrev  <buffer>  Flase           False
+iabbrev  <buffer>  IFXME           FIXME
+iabbrev  <buffer>  Irsael          Israel
+iabbrev  <buffer>  Juen            June
+iabbrev  <buffer>  Paliestina      Palestine
+iabbrev  <buffer>  Romaniaa        Romania
+iabbrev  <buffer>  SHeldon         Sheldon
+iabbrev  <buffer>  Wedny           Wendy
+iabbrev  <buffer>  alsoways        always
+iabbrev  <buffer>  althogh         although
+iabbrev  <buffer>  applicatns      applicants
+iabbrev  <buffer>  appointingment  appointing
+iabbrev  <buffer>  ase             as
+iabbrev  <buffer>  beter           better
+iabbrev  <buffer>  bytpassing      bypassing
+iabbrev  <buffer>  chiar           chair
+iabbrev  <buffer>  clases          classes
+iabbrev  <buffer>  contijue        continue
+iabbrev  <buffer>  contiue         continue
+iabbrev  <buffer>  converstaions   conversations
+iabbrev  <buffer>  coordainte      coordinate
+iabbrev  <buffer>  deparment       department
+iabbrev  <buffer>  deparmtnets     departments
+iabbrev  <buffer>  departmnet      department
+iabbrev  <buffer>  disappoitned    disappointed
+iabbrev  <buffer>  disusuade       dissuade
+iabbrev  <buffer>  ehlped          helped
+iabbrev  <buffer>  encouriging     encouraging
+iabbrev  <buffer>  encouter        encounter
+iabbrev  <buffer>  epople          people
+iabbrev  <buffer>  epxectations    expectations
+iabbrev  <buffer>  epxected        expected
+iabbrev  <buffer>  epxerience      experience
+iabbrev  <buffer>  expllain        explain
+iabbrev  <buffer>  faculy          faculty
+iabbrev  <buffer>  faculyt         faculty
+iabbrev  <buffer>  fielpath        filepath
+iabbrev  <buffer>  fillowup        followup
+iabbrev  <buffer>  fo              for
+iabbrev  <buffer>  forom           from
+iabbrev  <buffer>  framewokr       framework
+iabbrev  <buffer>  gradutaing      graduating
+iabbrev  <buffer>  hapepnings      happenings
+iabbrev  <buffer>  hsitory         history
+iabbrev  <buffer>  htat            that
+iabbrev  <buffer>  htink           think
+iabbrev  <buffer>  hygeine         hygiene
+iabbrev  <buffer>  iRS             IRS
+iabbrev  <buffer>  imbursements    reimbursements
+iabbrev  <buffer>  implementaiotn  implementation
+iabbrev  <buffer>  increas         increase
+iabbrev  <buffer>  influnced       influenced
+iabbrev  <buffer>  insenstiive     insensitive
+iabbrev  <buffer>  lavendar        lavender
+iabbrev  <buffer>  morevement      movement
+iabbrev  <buffer>  nejoyment       enjoyment
+iabbrev  <buffer>  neoriscience    neuroscience
+iabbrev  <buffer>  notewothy       noteworthy
+iabbrev  <buffer>  nto             not
+iabbrev  <buffer>  ot              to
+iabbrev  <buffer>  pervious        previous
+iabbrev  <buffer>  possiblity      possibility
+iabbrev  <buffer>  prnit           print
+iabbrev  <buffer>  propreityar     proprietary
+iabbrev  <buffer>  recenlty        recently
+iabbrev  <buffer>  reflecitons     reflections
+iabbrev  <buffer>  relevent        relevant
+iabbrev  <buffer>  reponse         response
+iabbrev  <buffer>  reptition       repetition
+iabbrev  <buffer>  resereved       reserved
+iabbrev  <buffer>  reuslt          result
+iabbrev  <buffer>  saerch          search
+iabbrev  <buffer>  semster         semester
+iabbrev  <buffer>  sometings       somethings
+iabbrev  <buffer>  specifiically   specifically
+iabbrev  <buffer>  speciifc        specific
+iabbrev  <buffer>  speciific       specific
+iabbrev  <buffer>  stesp           steps
+iabbrev  <buffer>  strignetn       stringent
+iabbrev  <buffer>  taransfer       transfer
+iabbrev  <buffer>  teh             the
+iabbrev  <buffer>  thatthey        that
+iabbrev  <buffer>  thinbking       thinking
+iabbrev  <buffer>  transprency     transparency
+iabbrev  <buffer>  vaculty         faculty
+iabbrev  <buffer>  wahtever        whatever
+iabbrev  <buffer>  weahtly         wealthy
+iabbrev  <buffer>  wehtehr         whether
+iabbrev  <buffer>  wieght          weight

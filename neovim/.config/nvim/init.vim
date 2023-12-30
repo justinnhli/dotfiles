@@ -685,11 +685,10 @@ function s:OpenExternal(arg)
 	let l:target = trim(l:target)
 	if g:os == 'Linux'
 		let l:program = 'xdg-open'
-		call jobstart([l:program, l:target])
 	else
 		let l:program = 'open'
-		call jobstart(l:program .. ' ' .. shellescape(l:target))
 	endif
+	call jobstart([l:program, l:target])
 	echo 'executing ' .. l:program .. ' ' .. l:target
 endfunction
 

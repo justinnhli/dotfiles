@@ -44,6 +44,7 @@ if has('nvim')
 		Plug 'sainnhe/everforest'
 		Plug 'cocopon/iceberg.vim'
 		Plug 'morhetz/gruvbox'
+		Plug 'pgdouyon/vim-yin-yang'
 		" settings
 		Plug 'tpope/vim-sleuth'
 		" syntax
@@ -335,6 +336,7 @@ nnoremap  <leader><leader>u  :UndotreeToggle<cr>
 let g:colorschemes = []
 let g:colorschemes = g:colorschemes + [['everforest', 'dark'],]
 let g:colorschemes = g:colorschemes + [['gruvbox', 'light'],]
+let g:colorschemes = g:colorschemes + [['yang', 'light'],]
 let g:colorschemes = g:colorschemes + [['iceberg', 'light'],]
 let g:colorschemes = g:colorschemes + [['default', 'dark'],]
 let g:colorschemes = g:colorschemes + [['iceberg', 'dark'],]

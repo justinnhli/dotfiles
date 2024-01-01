@@ -23,7 +23,7 @@ cpu_usage {
 }
 
 memory {
-    format = "Mem: %used / %total (%percentage_free)"
+    format = "Mem: %used / %total (%percentage_used)"
 }
 
 wireless _first_ {

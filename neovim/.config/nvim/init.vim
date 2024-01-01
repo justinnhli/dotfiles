@@ -1029,7 +1029,7 @@ endfunction
 function s:AutoCorrectAndLog()
 	let l:bad_word = expand('<cword>')
 	execute 'normal! 1z='
-	if l:bad_word =~ '-'
+	if l:bad_word =~ '[^A-Za-z]'
 		return
 	endif
 	let l:new_word = expand('<cword>')

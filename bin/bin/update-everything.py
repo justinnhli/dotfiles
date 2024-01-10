@@ -216,7 +216,7 @@ def merge_history():
                     lines.add(line)
             filepath.unlink()
         # parse history and datetime
-        shistory = set() # type: set[tuple[str, str, str]]
+        shistory = set() # type: set[tuple[datetime, str, str, str, str]]
         for line in lines:
             components = line.strip().split('\t', maxsplit=3)
             if len(components) != 4:

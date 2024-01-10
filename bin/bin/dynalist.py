@@ -97,7 +97,7 @@ def get_file(filename, files=None):
     assert 'children' in nodes['root']
     treelines = [] # type: list[TreeLine]
     for root_sibling_num, root_id in enumerate(nodes['root']['children'], start=1):
-        stack = [(nodes[root_id], 0, root_sibling_num)]
+        stack = [(nodes[root_id], 0, root_sibling_num)] # type: list[tuple[dict[str, Any], int, int]]
         while stack:
             node, depth, sibling_index = stack.pop()
             node['content'] = re.sub(r'!\(([0-9]{4}-[0-9]{2}-[0-9]{2})\)', r'(\1)', node['content'])

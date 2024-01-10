@@ -9,9 +9,9 @@ from datetime import datetime
 from textwrap import indent
 
 SIGNATURE_RE = '\n'.join([
-    ' ___ Justin \(Ning Hui\) Li',
-    '\(o,o\).*',
-    '/\)  \).*',
+    r' ___ Justin \(Ning Hui\) Li',
+    r'\(o,o\).*',
+    r'/\)  \).*',
     '-"-"-.*',
 ])
 
@@ -23,6 +23,7 @@ def parse_email(lines, subject):
     # type: (list[str], str) -> Email
     """Parse a string into an Email."""
     match = re.match('([^<>]*) <([^<>]*@[^<>]*)>(.*)', lines[0])
+    assert match
     sender_name = match.group(1)
     if sender_name == 'Justin (Ning Hui) Li':
         sender_name = 'Justin Li'

@@ -198,6 +198,28 @@ def delete_os_metadata(path=None):
 
 
 @register()
+def reset_permissions(path=None):
+    # type: (Path) -> None
+    """Reset directory permissions to 755.
+
+    Parameters:
+        path (Path): The root directory to reset permissions.
+    """
+    if path is None:
+        path = Path.cwd()
+    print('resetting directory permissions')
+    for filepath in path.glob('**/*'):
+        if not filepath.is_dir():
+            continue
+        if not filepath.exists():
+            continue # if the file is a broken symlink
+        if filepath.stat().st_mode == 0o40755:
+            continue
+        filepath.chmod(0o755)
+        print(f'    changed permissions of {filepath}')
+
+
+@register()
 def merge_history():
     # type: () -> None
     """Merge shell history logs."""
@@ -344,16 +366,12 @@ def update_everything():
         delete_orphans(path)
         delete_swap(path)
         delete_os_metadata(path)
+        reset_permissions(path)
         find_conflicts(path)
     sync_library()
     update_vimplug()
     pull_git()
     update_actr()
-    '''
-    find . -type d -perm 777 | while read -r f; do
-            chmod 755 "$f" && echo "	fixed permissions of $f"
-    done
-    '''
 
 
 # CLI entry point

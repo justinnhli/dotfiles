@@ -195,7 +195,7 @@ class Library:
                 else:
                     match = re.fullmatch(r'\s*(?P<attr>[^ =]+) *= *{(?P<val>.+)},', line)
                     assert match, f'anomalous bibtex field: {line}'
-                    setattr(paper, match.group('attr'), match.group('val'))
+                    setattr(paper, match.group('attr'), match.group('val').strip())
 
     # individual paper management
 

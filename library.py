@@ -297,7 +297,10 @@ class Library:
         def check_id(key, paper):
             # type: (str, Paper) -> None
             """Check for incorrectly-formed IDs."""
-            author = getattr(paper, 'author')
+            if hasattr(paper, 'author'):
+                author = getattr(paper, 'author')
+            else:
+                author = getattr(paper, 'editor')
             if author.startswith('{'):
                 first_author = re.sub('({[^}]*}).*', r'\1', author)
                 first_author = WEIRD_NAMES.get(first_author, first_author)

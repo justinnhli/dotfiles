@@ -12,9 +12,9 @@ font pango:monospace 10
 floating_modifier $mod
 
 # start applications
-bindsym $mod+t exec "kitty"
-bindsym $mod+f exec "firefox"
-bindsym $mod+e exec "thunar"
+bindsym $mod+t exec kitty
+bindsym $mod+f exec firefox
+bindsym $mod+e exec thunar
 
 # kill focused window
 bindsym $mod+q kill

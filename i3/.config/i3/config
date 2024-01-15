@@ -8,6 +8,9 @@ set $mod Mod1+Control
 # set window title font (which is also used by bar{} below
 font pango:monospace 10
 
+# turn off monitor
+bindsym $mod+Escape exec "sleep 0.5 && xset dpms force off"
+
 # drag floating windows
 floating_modifier $mod
 

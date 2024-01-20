@@ -418,13 +418,13 @@ nnoremap  <leader>tr   q:itabnew scp://user@server.tld//absolute/path/to/file<es
 
 " open terminal (at $HOME if new tab, at the directory of the current file otherwise) {{{3
 if exists(':terminal')
-	nnoremap  <leader>wet  :call <SID>StartTerminal(['silent! lcd ' .. expand('%:p:h')], '')<cr>
-	nnoremap  <leader>wht  :call <SID>StartTerminal(['leftabove vnew', 'silent! lcd ' .. expand('%:p:h')], '')<cr>
-	nnoremap  <leader>wjt  :call <SID>StartTerminal(['rightbelow new', 'silent! lcd ' .. expand('%:p:h')], '')<cr>
-	nnoremap  <leader>wkt  :call <SID>StartTerminal(['leftabove new', 'silent! lcd ' .. expand('%:p:h')], '')<cr>
-	nnoremap  <leader>wlt  :call <SID>StartTerminal(['rightbelow vnew', 'silent! lcd ' .. expand('%:p:h')], '')<cr>
-	nnoremap  <leader>tt   :call <SID>StartTerminal(['tabnew', 'silent! lcd ~'], '')<cr>
-	nnoremap  <leader>tT   :call <SID>StartTerminal(['tabnew', 'silent! lcd ' .. expand('%:p:h')], '')<cr>
+	nnoremap  <silent>  <leader>wet  :call <SID>StartTerminal(['silent! lcd ' .. expand('%:p:h')], '')<cr>
+	nnoremap  <silent>  <leader>wht  :call <SID>StartTerminal(['leftabove vnew', 'silent! lcd ' .. expand('%:p:h')], '')<cr>
+	nnoremap  <silent>  <leader>wjt  :call <SID>StartTerminal(['rightbelow new', 'silent! lcd ' .. expand('%:p:h')], '')<cr>
+	nnoremap  <silent>  <leader>wkt  :call <SID>StartTerminal(['leftabove new', 'silent! lcd ' .. expand('%:p:h')], '')<cr>
+	nnoremap  <silent>  <leader>wlt  :call <SID>StartTerminal(['rightbelow vnew', 'silent! lcd ' .. expand('%:p:h')], '')<cr>
+	nnoremap  <silent>  <leader>tt   :call <SID>StartTerminal(['tabnew', 'silent! lcd ~'], '')<cr>
+	nnoremap  <silent>  <leader>tT   :call <SID>StartTerminal(['tabnew', 'silent! lcd ' .. expand('%:p:h')], '')<cr>
 endif
 
 " open file under cursor {{{3

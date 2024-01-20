@@ -177,6 +177,7 @@ def delete_os_metadata(path=None):
     """
 
     def rm_tree(path):
+        # type: (Path) -> None
         if path.is_file():
             try:
                 path.unlink()
@@ -251,7 +252,7 @@ def merge_history():
             command = command.strip()
             shistory.add((abs_date, date_str, host, pwd, command))
         # write out collated history
-        prev_line = ('', '', '')
+        prev_line = ['', '', '']
         with history_path.joinpath(f'{year}.shistory').open('w', encoding='utf-8') as fd:
             for _, *history in sorted(shistory):
                 if history[1:] == prev_line:
@@ -285,6 +286,7 @@ def update_package_lists():
     """Update package lists in dotfiles repo."""
 
     def cmd_set(*commands):
+        # type: (*str) -> set[str]
         return set(
             run(commands, check=True, capture_output=True)
             .stdout.decode('utf-8')
@@ -302,7 +304,7 @@ def update_package_lists():
             - cmd_set('pacman', '--sync', '--list', '--quiet', 'core')
         ),
         'pikaur': (lambda: cmd_set('pacman', '--query', '--explicit', '--foreign', '--quiet')),
-    }
+    } # type: dict[str, Callable[[], set[str]]]
     packages_dir = Path('~/.local/share/packages').expanduser().resolve()
     for filename, function in commands.items():
         packages = set()

@@ -104,6 +104,9 @@ prompt_command_fn() {
 	history_id="$(history 1 | sed 's/^ *//; s/ .*$//;')"
 	history_date="$(history 1 | sed 's/^ *[0-9-]* *//; s/ .*$//;')"
 	history_command="$(history 1 | sed 's/^ *[0-9-]* *//; s/^[^ ]* *//; s/ *$//;')"
+	if [ -z "$history_command" ]; then
+		return
+	fi
 	if [[ "$history_id" != "$prev_history_id" ]]; then
 		echo "$history_date	$(whoami)@$(hostname)	"$save_pwd"	$history_command" >> ~justinnhli/Dropbox/personal/logs/$(date -u +%Y).shistory
 	fi

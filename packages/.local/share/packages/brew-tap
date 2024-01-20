@@ -1,5 +1,3 @@
-homebrew/cask
 homebrew/cask-fonts
 homebrew/cask-versions
-homebrew/core
-universal-ctags/universal-ctags
+homebrew/services

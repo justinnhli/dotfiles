@@ -19,7 +19,7 @@ order += "read_file uptime"
 order += "time"
 
 cpu_usage {
-    format = "CPU: %usage (%cpu0 %cpu1 %cpu2 %cpu3)"
+    format = "CPU: %usage"
 }
 
 memory {

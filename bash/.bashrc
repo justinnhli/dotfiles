@@ -313,7 +313,7 @@ if [ $nvim_terminal -eq 1 ]; then
 fi
 
 # PIM related settings
-pim_path="$HOME/pim"
+pim_path="$HOME/Dropbox/pim"
 if [ -d "$pim_path" ]; then
 	alias cdjj="cd $pim_path/journal"
 	if command -v journal.py >/dev/null 2>&1; then

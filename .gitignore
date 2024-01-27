@@ -4,6 +4,8 @@ filezilla/.config/filezilla/*
 ipython/.config/ipython/*
 !ipython/.config/ipython/profile_default/ipython_config.py
 jupyter/.config/jupyter/migrated
+gnupg/*
+!gnupg/.gnupg/gpg-agent.conf
 keras/.keras/datasets
 kitty/.config/kitty/current-theme.conf
 neovim/.config/nvim/.netrwhist

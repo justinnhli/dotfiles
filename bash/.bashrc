@@ -106,7 +106,7 @@ prompt_command_fn() {
 		return
 	fi
 	if [[ "$history_id" != "$prev_history_id" ]]; then
-		echo "$history_date	$(whoami)@$(hostname)	"$save_pwd"	$history_command" >> ~justinnhli/Dropbox/personal/logs/$(date -u +%Y).shistory
+		echo "$history_date	$(whoami)@$(hostname)	$save_pwd	$history_command" >> ~justinnhli/Dropbox/personal/logs/"$(date -u +%Y).shistory"
 	fi
 	export prev_history_pwd="$PWD"
 	export prev_history_id="$history_id"
@@ -151,10 +151,10 @@ fi
 if command -v scons >/dev/null 2>&1 && command -v python3 >/dev/null 2>&1; then
 	alias scons="scons --python=\$(command -v python3)"
 fi
-if [ -d "$HOME/git/Soar" ] && [ -e $HOME/git/Soar/out/testcli ]; then
+if [ -d "$HOME/git/Soar" ] && [ -e "$HOME/git/Soar/out/testcli" ]; then
 	alias soar='$HOME/git/Soar/out/testcli'
 fi
-if command -v tmux >/dev/null 2>&1 && [ -e $XDG_CONFIG_HOME/tmux/tmux.conf ]; then
+if command -v tmux >/dev/null 2>&1 && [ -e "$XDG_CONFIG_HOME/tmux/tmux.conf" ]; then
 	alias tmux='tmux -f $XDG_CONFIG_HOME/tmux/tmux.conf'
 fi
 if command -v update-everything.py >/dev/null 2>&1; then
@@ -163,10 +163,10 @@ fi
 if command -v valgrind >/dev/null 2>&1; then
 	alias valgrind='valgrind --dsymutil=yes --leak-check=yes --track-origins=yes'
 fi
-if command -v wget >/dev/null 2>&1 && [ -e $XDG_CACHE_HOME/wget-hsts ]; then
+if command -v wget >/dev/null 2>&1 && [ -e "$XDG_CACHE_HOME/wget-hsts" ]; then
 	alias wget='wget --hsts-file="$XDG_CACHE_HOME/wget-hsts"'
 fi
-if command -v yapf >/dev/null 2>&1 && [ -e $HOME/.config/yapf/style ]; then
+if command -v yapf >/dev/null 2>&1 && [ -e "$HOME/.config/yapf/style" ]; then
 	alias yapf='yapf --style="$HOME/.config/yapf/style"'
 fi
 
@@ -239,8 +239,8 @@ if command -v python3 >/dev/null 2>&1; then
 			read -rp "create venv using packages in $venv_packages_file (Y/n)? " response
 			if [[ ! $response =~ ^[Nn]$ ]]; then
 				keep_trying=0
-				mkvenv $1
-				pip install -r $venv_packages_file
+				mkvenv "$1"
+				pip install -r "$venv_packages_file"
 			fi
 		fi
 		# if there is a requirements.txt in the current directory, ask to create the venv with it
@@ -248,7 +248,7 @@ if command -v python3 >/dev/null 2>&1; then
 			read -rp "create venv using packages in $(pwd)/requirements.txt (Y/n)? " response
 			if [[ ! $response =~ ^[Nn]$ ]]; then
 				keep_trying=0
-				mkvenv $1
+				mkvenv "$1"
 				pip install -r "$(pwd)/requirements.txt"
 			fi
 		fi
@@ -257,7 +257,7 @@ if command -v python3 >/dev/null 2>&1; then
 			read -rp "create venv and install package $1 (Y/n)? " response
 			if [[ ! $response =~ ^[Nn]$ ]]; then
 				keep_trying=0
-				mkvenv $1
+				mkvenv "$1"
 				pip install "$1"
 			fi
 		fi
@@ -266,7 +266,7 @@ if command -v python3 >/dev/null 2>&1; then
 			read -rp "create empty venv (Y/n)? " response
 			if [[ ! $response =~ ^[Nn]$ ]]; then
 				keep_trying=0
-				mkvenv $1
+				mkvenv "$1"
 			fi
 		fi
 	}
@@ -296,7 +296,7 @@ fi
 # set variable for whether we are in an nvim terminal
 # need to separately check if #NVIM is set
 nvim_terminal=0
-if [ ! -z "${NVIM:-}" ]; then
+if [ -n "${NVIM:-}" ]; then
 	if [ "$NVIM" != '' ]; then
 		nvim_terminal=1
 	fi

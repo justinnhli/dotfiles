@@ -323,8 +323,9 @@ def sync_library():
     # type: () -> None
     """Sync paper library."""
     library_path = Path('~/papers').expanduser().resolve()
-    if not library_path.exists() or not which('library.py'):
+    if not which('library.py'):
         return
+    library_path.mkdir(exist_ok=True)
     run(['library.py', 'pull'], check=True)
 
 

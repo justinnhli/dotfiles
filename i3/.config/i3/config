@@ -6,7 +6,7 @@
 set $mod Mod1+Control
 
 # set window title font (which is also used by bar{} below
-font pango:monospace 10
+font pango:Hack 10
 
 # turn off monitor
 bindsym $mod+Escape exec "sleep 0.5 && xset dpms force off"
@@ -23,7 +23,7 @@ bindsym $mod+e exec thunar
 bindsym $mod+q kill
 
 # start dmenu (a program launcher)
-bindsym $mod+space exec dmenu_run
+bindsym $mod+space exec dmenu_run -fn 'Hack-10'
 
 # change focus
 bindsym $mod+h focus left

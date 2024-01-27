@@ -67,10 +67,25 @@
         ]
       ],
       "command": {
-        "name": "NewTab",
+        "name": "RunMultiPurposeCommand",
         "settings": {
-          "position": "default",
-          "focus": true
+          "commands": [
+            {
+              "name": "OpenLinkInNewTab",
+              "settings": {
+                "position": "default",
+                "focus": false,
+                "emptyTab": false
+              }
+            },
+            {
+              "name": "NewTab",
+              "settings": {
+                "position": "default",
+                "focus": true
+              }
+            }
+          ]
         }
       }
     },
@@ -87,6 +102,24 @@
       ],
       "command": {
         "name": "CloseRightTabs"
+      }
+    },
+    {
+      "pattern": [
+        [
+          -1,
+          0
+        ],
+        [
+          0,
+          -1
+        ]
+      ],
+      "command": {
+        "name": "RestoreTab",
+        "settings": {
+          "currentWindowOnly": false
+        }
       }
     }
   ],

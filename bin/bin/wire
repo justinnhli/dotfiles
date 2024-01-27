@@ -1,5 +1,10 @@
 #!/bin/sh
 
+# only continue if there is no connection
+if ping -4 -w 20 -W 5 -c 3 google.com 2>/dev/null; then
+    exit
+fi
+
 # determine networking device
 if [[ "$1" == 'wired' ]]; then
     device="$(ip link show | sed 's/^[0-9]*: //; s/:.*//' | grep '^e')"

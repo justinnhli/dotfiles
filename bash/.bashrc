@@ -45,8 +45,6 @@ export HISTCONTROL=ignoredups
 export HISTTIMEFORMAT='%Y-%m-%dT%H:%M:%S%z '
 
 # environment variables
-# gpg
-export GNUPGHOME="$SECRETS_HOME/.gnupg"
 # ipython
 export IPYTHONDIR="$XDG_CONFIG_HOME/ipython"
 # jupyter

@@ -1,0 +1,112 @@
+{
+  "Gestures": [
+    {
+      "pattern": [
+        [
+          1,
+          0
+        ]
+      ],
+      "command": {
+        "name": "PageForth"
+      }
+    },
+    {
+      "pattern": [
+        [
+          -1,
+          0
+        ]
+      ],
+      "command": {
+        "name": "PageBack"
+      }
+    },
+    {
+      "pattern": [
+        [
+          1,
+          0
+        ],
+        [
+          -1,
+          0
+        ]
+      ],
+      "command": {
+        "name": "ReloadTab",
+        "settings": {
+          "cache": true
+        }
+      }
+    },
+    {
+      "pattern": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "command": {
+        "name": "CloseTab",
+        "settings": {
+          "nextFocus": "default",
+          "closePinned": true
+        }
+      }
+    },
+    {
+      "pattern": [
+        [
+          0,
+          1
+        ]
+      ],
+      "command": {
+        "name": "NewTab",
+        "settings": {
+          "position": "default",
+          "focus": true
+        }
+      }
+    },
+    {
+      "pattern": [
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "command": {
+        "name": "CloseRightTabs"
+      }
+    }
+  ],
+  "Settings": {
+    "Rocker": {
+      "active": true,
+      "leftMouseClick": {
+        "name": "FocusLeftTab",
+        "settings": {
+          "cycling": true,
+          "excludeDiscarded": false
+        }
+      },
+      "rightMouseClick": {
+        "name": "FocusRightTab",
+        "settings": {
+          "cycling": true,
+          "excludeDiscarded": false
+        }
+      }
+    }
+  }
+}

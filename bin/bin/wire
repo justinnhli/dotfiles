@@ -20,6 +20,6 @@ ip link set "$device" down
 # start up networking processes
 ip link set "$device" up
 if [[ "$1" == 'wireless' ]]; then
-    wpa_supplicant -Bi "$device" -c /root/wpa_supplicant.conf
+    wpa_supplicant -Bi "$device" -c /etc/wpa_supplicant/wpa_supplicant.conf
 fi
 dhcpcd "$device" --debug --debug

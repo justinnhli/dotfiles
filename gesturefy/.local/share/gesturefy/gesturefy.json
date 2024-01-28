@@ -79,6 +79,15 @@
               }
             },
             {
+              "name": "SearchTextSelectionInNewTab",
+              "settings": {
+                "searchEngineURL": "",
+                "position": "default",
+                "focus": false,
+                "openEmptySearch": false
+              }
+            },
+            {
               "name": "NewTab",
               "settings": {
                 "position": "default",

@@ -13,7 +13,7 @@ from textwrap import dedent
 from typing import Any, Optional
 
 
-BIBTEX_PATH = Path('~/pim/library.bib').expanduser().resolve()
+BIBTEX_PATH = Path('~/Dropbox/pim/library.bib').expanduser().resolve()
 PAPERS_PATH = Path('~/papers').expanduser().resolve()
 REMOTE_HOST = 'justinnhli.com'
 REMOTE_PATH = Path('/home/justinnhli/justinnhli.com/papers')

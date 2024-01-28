@@ -53,6 +53,11 @@ def ris2bib(ris):
         bib['editor'] = ' and '.join(ris['ED'])
     if 'SP' in ris and 'EP' in ris:
         bib['pages'] = ris['SP'][0] + '--' + ris['EP'][0]
+    if 'doi.org' in bib.get('url', ''):
+        if hasattr(bib, 'doi'):
+            assert bib['url'].endswith(bib['doi'])
+        bib['doi'] = bib['url']
+        del bib['url']
     return bib
 
 
@@ -111,11 +116,10 @@ TESTS = [
         '''
         @article {Garfinkel2022TeachingDynamicsTo,
             author = {Garfinkel, Alan and Bennoun, Steve and Deeds, Eric and Van Valkenburgh, Blaire},
-            doi = {10.1007/s11538-022-00999-4},
+            doi = {https://doi.org/10.1007/s11538-022-00999-4},
             journal = {Bulletin of Mathematical Biology},
             number = {3},
             title = {Teaching Dynamics to Biology Undergraduates: the UCLA Experience},
-            url = {https://doi.org/10.1007/s11538-022-00999-4},
             volume = {84},
             year = {2022},
         }
@@ -161,7 +165,6 @@ TESTS = [
             pages = {1339--1382},
             publisher = {John Wiley & Sons, Ltd},
             title = {Spreading Activation in an Attractor Network With Latching Dynamics: Automatic Semantic Priming Revisited},
-            url = {https://doi.org/10.1111/cogs.12007},
             volume = {36},
             year = {2012},
         }

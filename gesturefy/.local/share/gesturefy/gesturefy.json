@@ -3,23 +3,40 @@
     {
       "pattern": [
         [
-          1,
-          0
+          0,
+          1
         ]
       ],
       "command": {
-        "name": "PageForth"
-      }
-    },
-    {
-      "pattern": [
-        [
-          -1,
-          0
-        ]
-      ],
-      "command": {
-        "name": "PageBack"
+        "name": "NewTab",
+        "settings": {
+          "commands": [
+            {
+              "name": "OpenLinkInNewTab",
+              "settings": {
+                "position": "default",
+                "focus": false,
+                "emptyTab": false
+              }
+            },
+            {
+              "name": "SearchTextSelectionInNewTab",
+              "settings": {
+                "searchEngineURL": "",
+                "position": "default",
+                "focus": false,
+                "openEmptySearch": false
+              }
+            },
+            {
+              "name": "NewTab",
+              "settings": {
+                "position": "default",
+                "focus": true
+              }
+            }
+          ]
+        }
       }
     },
     {
@@ -62,40 +79,23 @@
     {
       "pattern": [
         [
-          0,
-          1
+          1,
+          0
         ]
       ],
       "command": {
-        "name": "RunMultiPurposeCommand",
-        "settings": {
-          "commands": [
-            {
-              "name": "OpenLinkInNewTab",
-              "settings": {
-                "position": "default",
-                "focus": false,
-                "emptyTab": false
-              }
-            },
-            {
-              "name": "SearchTextSelectionInNewTab",
-              "settings": {
-                "searchEngineURL": "",
-                "position": "default",
-                "focus": false,
-                "openEmptySearch": false
-              }
-            },
-            {
-              "name": "NewTab",
-              "settings": {
-                "position": "default",
-                "focus": true
-              }
-            }
-          ]
-        }
+        "name": "PageForth"
+      }
+    },
+    {
+      "pattern": [
+        [
+          -1,
+          0
+        ]
+      ],
+      "command": {
+        "name": "PageBack"
       }
     },
     {

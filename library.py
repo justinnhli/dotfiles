@@ -195,6 +195,7 @@ class Library:
                 else:
                     match = re.fullmatch(r'\s*(?P<attr>[^ =]+) *= *{(?P<val>.+)},', line)
                     assert match, f'anomalous bibtex field: {line}'
+                    assert not hasattr(paper, match.group('attr')), f'{paper.id} has duplicate values for {match.group("attr")}'
                     setattr(paper, match.group('attr'), match.group('val').strip())
 
     # individual paper management

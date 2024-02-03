@@ -421,7 +421,7 @@ class Library:
             if not hasattr(paper, 'pages'):
                 return
             pages = getattr(paper, 'pages')
-            if pages.isdigit() or pages == 'FIXME':
+            if pages == 'FIXME' or re.fullmatch('[A-Za-z]*[0-9]*', pages):
                 return
             if ' ' in pages or '--' not in pages:
                 if '-' in pages:

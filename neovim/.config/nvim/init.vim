@@ -18,7 +18,7 @@ let g:large_file_size = 1024 * 1024 * 10 " define a large file as > 10MB
 " vimplug {{{1
 
 " vimplug {{{3
-if has('nvim')
+if has('nvim') && !empty($MYVIMRC)
 	"auto-install vim-plug
 	let s:plug_path = fnamemodify($MYVIMRC, ':p:h') .. '/autoload/plug.vim'
 	if !filereadable(s:plug_path)

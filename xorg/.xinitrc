@@ -17,7 +17,6 @@ fi
 
 if [ -f "$userresources" ]; then
     xrdb -merge "$userresources"
-
 fi
 
 if [ -f "$usermodmap" ]; then
@@ -35,6 +34,7 @@ fi
 
 # additional settings
 
+# set repeat rate to start after 500 milliseconds
 xset r rate 500
 
 # start window manager or desktop environment

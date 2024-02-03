@@ -1,19 +1,8 @@
-# 
-# /etc/fstab: static file system information
-#
-# <file system>	<dir>	<type>	<options>	<dump>	<pass>
-# /dev/sda3
-UUID=06c1e934-a546-4d09-b5ce-547ae6e278f5	/         	ext4      	rw,relatime,data=ordered	0 1
+# system-specific disks                                                                                
+# <file system>          <dir>     <type>  <options>                                           <dump>  <pass>
 
-# /dev/sda1
-UUID=4C19-85F4      	/boot     	vfat      	rw,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=iso8859-1,shortname=mixed,errors=remount-ro	0 2
-
-# /dev/sda5
-UUID=44bdaff3-e069-4b27-85ed-d1001c0ec772	/home     	ext4      	rw,relatime,data=ordered	0 2
-
-# /dev/sda4
-UUID=3cd422bb-f2dd-417a-868b-6ccac904a3c9	none      	swap      	defaults  	0 0
-
-/dev/sdb1                                  /mnt/usb       vfat    user,noauto,uid=1000,gid=100,fmask=0013,dmask=0002  0       0
-/dev/sdc1                                  /mnt/usb       vfat    user,noauto,uid=1000,gid=100,fmask=0013,dmask=0002  0       0
-/dev/sdd1                                  /mnt/usb       vfat    user,noauto,uid=1000,gid=100,fmask=0013,dmask=0002  0       0
+# generic USB mounts                                                                                   
+# <file system>          <dir>     <type>  <options>                                           <dump>  <pass>
+/dev/sdb1                /mnt/usb  vfat    user,noauto,uid=1000,gid=100,fmask=0013,dmask=0002  0       0
+/dev/sdc1                /mnt/usb  vfat    user,noauto,uid=1000,gid=100,fmask=0013,dmask=0002  0       0
+/dev/sdd1                /mnt/usb  vfat    user,noauto,uid=1000,gid=100,fmask=0013,dmask=0002  0       0

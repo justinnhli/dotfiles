@@ -20,7 +20,6 @@ def main():
     arg_parser.add_argument('-u', dest='user', action='store')
     arg_parser.add_argument('-m', dest='machine', action='store')
     arg_parser.add_argument('-p', dest='pwd', action='store')
-    arg_parser.add_argument('-v', dest='verbose', action='store_true')
     args = arg_parser.parse_args()
     results = set()
     for history_file in sorted(HISTORY_DIR.glob('*.shistory')):
@@ -37,10 +36,7 @@ def main():
                     continue
                 if not all(re.search(pat, event.command) for pat in args.patterns):
                     continue
-                if args.verbose:
-                    results.add('\t'.join((event.date, event.machine, event.pwd, event.command)))
-                else:
-                    results.add(event.command)
+                results.add('\t'.join((event.date, event.machine, event.pwd, event.command)))
     print('\n'.join(sorted(results)))
 
 

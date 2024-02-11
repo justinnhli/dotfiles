@@ -22,7 +22,7 @@ if has('nvim') && !empty($MYVIMRC)
 	"auto-install vim-plug
 	let s:plug_path = fnamemodify($MYVIMRC, ':p:h') .. '/autoload/plug.vim'
 	if !filereadable(s:plug_path)
-		call system("curl -fLo " .. s:plug_path .. " --create-dirs 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'")
+		call system('curl -fLo ' .. s:plug_path .. ' --create-dirs "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"')
 		if filereadable(s:plug_path)
 			augroup justinnhli_vimplug
 				autocmd!
@@ -63,13 +63,13 @@ endif
 " setting functions {{{3
 function BuildTabLine()
 	let l:tabline = ''
-	let s:cur_tab = tabpagenr()
+	let l:cur_tab = tabpagenr()
 	" for each tab page
 	for i in range(tabpagenr('$'))
 		let l:buffers = tabpagebuflist(i + 1)
 		let l:filename = fnamemodify(bufname(l:buffers[tabpagewinnr(i + 1) - 1]), ':p:t')
 		" set highlighting
-		let l:tabline .= (i + 1 == s:cur_tab ? '%#TabLineSel#' : '%#TabLine#')
+		let l:tabline .= (i + 1 == l:cur_tab ? '%#TabLineSel#' : '%#TabLine#')
 		let l:tabline .= ' '
 		" set filename
 		if l:filename ==# ''
@@ -95,15 +95,15 @@ function BuildTabLine()
 	return l:tabline
 endfunction
 
-function! s:use_home_tilde(path)
-	let l:path = a:path
-	if l:path =~ '^' .. $HOME
-		let l:path = '~' .. l:path[strlen($HOME):]
+function s:UseHomeTilde(path)
+	if a:path =~ '^' .. $HOME
+		return '~' .. a:path[strlen($HOME):]
+	else
+		return a:path
 	endif
-	return l:path
 endfunction
 
-function! s:get_git_branch(path)
+function s:GetGitBranch(path)
 	let l:cmd = ''
 	let l:cmd .= '( '
 	let l:cmd .= 'cd ' .. shellescape(fnamemodify(a:path, ':p:h'))
@@ -120,9 +120,9 @@ endfunc
 
 function GetStatusLineFile()
 	" gives git branch, working path, and file path
-	let l:branch = <SID>get_git_branch(expand('%:p:h'))
-	let l:pwd = <SID>use_home_tilde(getcwd()) .. '/'
-	let l:filepath = <SID>use_home_tilde(expand('%'))
+	let l:branch = <SID>GetGitBranch(expand('%:p:h'))
+	let l:pwd = <SID>UseHomeTilde(getcwd()) .. '/'
+	let l:filepath = <SID>UseHomeTilde(expand('%'))
 	let l:max_width = winwidth(0) - 32
 	if strlen(l:branch) + strlen(l:pwd) + strlen(l:filepath) + 3 > l:max_width
 		let l:pwd = pathshorten(l:pwd)
@@ -306,7 +306,7 @@ nnoremap  <leader><leader>g  :Goyo<cr>
 
 " gutentags {{{3
 let g:gutentags_ctags_tagfile = '.tags'
-function! ShouldEnableGutentags(path) abort
+function ShouldEnableGutentags(path) abort
 	return fnamemodify(a:path, ':e') != 'journal'
 endfunction
 let g:gutentags_enabled_user_func = 'ShouldEnableGutentags'
@@ -681,7 +681,7 @@ function s:OpenExternal(arg)
 	endif
 	if l:target == ''
 		echo 'executing `gx`'
-		normal gx
+		normal! gx
 		return
 	endif
 	let l:target = trim(l:target)
@@ -982,14 +982,14 @@ xnoremap  q:     :
 
 " format table {{{3
 function s:FormatTable()
-	:'<,'>s/\m\C  \+/	/eg
-	:silent '<,'>!column -ts '	'
+	'<,'>s/\m\C  \+/	/eg
+	silent '<,'>!column -ts '	'
 	execute 'normal! g;g;'
 endfunction
 
 " format columns {{{3
 function s:FormatColumns()
-	:'<,'>s/\m\C  \+/	/eg
+	'<,'>s/\m\C  \+/	/eg
 	execute 'normal! g;g;'
 endfunction
 

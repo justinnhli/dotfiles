@@ -7,7 +7,7 @@ set nocompatible " neovim default
 
 let g:python3_host_prog = $PYTHON_VENV_HOME .. '/neovim/bin/python3'
 
-let g:os = substitute(system('uname'), '\n', '', '')
+let g:os = tolower(substitute(system('uname'), '\n', '', ''))
 
 let g:justinnhli_pim_path=expand('~/Dropbox/pim')
 let g:justinnhli_scholarship_path=expand('~/Dropbox/scholarship')
@@ -307,7 +307,7 @@ nnoremap  <leader><leader>g  :Goyo<cr>
 " gutentags {{{3
 let g:gutentags_ctags_tagfile = '.tags'
 function ShouldEnableGutentags(path) abort
-	return fnamemodify(a:path, ':e') != 'journal'
+	return fnamemodify(a:path, ':e') !=# 'journal'
 endfunction
 let g:gutentags_enabled_user_func = 'ShouldEnableGutentags'
 
@@ -340,7 +340,7 @@ let g:colorschemes = g:colorschemes + [['yang', 'light'],]
 let g:colorschemes = g:colorschemes + [['iceberg', 'light'],]
 let g:colorschemes = g:colorschemes + [['default', 'dark'],]
 let g:colorschemes = g:colorschemes + [['iceberg', 'dark'],]
-if $TERM =~ 'color'
+if $TERM =~# 'color'
 	let g:colorscheme_index = 0
 else
 	let g:colorscheme_index = len(g:colorschemes) - 1
@@ -659,33 +659,33 @@ endif
 " open external functions {{{3
 function s:OpenExternal(arg)
 	let l:target = trim(a:arg)
-	if l:target != '.' && l:target != '..' && l:target != '~'
+	if l:target !=# '.' && l:target !=# '..' && l:target !=# '~'
 		let l:target = substitute(l:target, '^[^~/0-9A-Za-z.]*', '', '')
 		let l:target = substitute(l:target, '[^/0-9A-Za-z]*$', '', '')
 	endif
-	if l:target =~ '^[^{}]*$' && (isdirectory(expand(l:target)) || filereadable(expand(l:target)))
+	if l:target =~# '^[^{}]*$' && (isdirectory(expand(l:target)) || filereadable(expand(l:target)))
 		" file or directory
 		let l:target = expand(l:target)
-	elseif l:target =~ '[A-Za-z]\+[0-9]\{4\}[A-Z][A-Za-z]*'
+	elseif l:target =~# '[A-Za-z]\+[0-9]\{4\}[A-Z][A-Za-z]*'
 		" research paper
 		let l:paper_id = substitute(l:target, '^.\{-}\([A-Za-z]\+[0-9]\{4\}[A-Z][0-9A-Za-z]*\).*$', '\1', '')
 		let l:target = expand(system('find ' .. g:justinnhli_library_path .. ' -name ' .. l:paper_id .. '.pdf'))
-	elseif l:target =~ '[A-Za-z]\+[0-9A-Za-z.]\+@[0-9A-Za-z.]\+\.[0-9A-Za-z.]\+'
+	elseif l:target =~# '[A-Za-z]\+[0-9A-Za-z.]\+@[0-9A-Za-z.]\+\.[0-9A-Za-z.]\+'
 		" email
 		let l:target = 'https://mail.google.com/mail/u/0/?tf=cm&to=' .. l:target
-	elseif l:target =~ 'https\?://'
+	elseif l:target =~# 'https\?://'
 		" URL; further process to delete everything up to the first 'http'
 		let l:target = substitute(l:target, '^.\{-\}\(https\?://\)', '\1', '')
 	else
 		let l:target = ''
 	endif
-	if l:target == ''
+	if l:target ==# ''
 		echo 'executing `gx`'
 		normal! gx
 		return
 	endif
 	let l:target = trim(l:target)
-	if g:os == 'Linux'
+	if g:os ==# 'linux'
 		let l:program = 'xdg-open'
 	else
 		let l:program = 'open'
@@ -1029,7 +1029,7 @@ endfunction
 function s:AutoCorrectAndLog()
 	let l:bad_word = expand('<cword>')
 	execute 'normal! 1z='
-	if l:bad_word =~ '[^A-Za-z]'
+	if l:bad_word =~# '[^A-Za-z]'
 		return
 	endif
 	let l:new_word = expand('<cword>')
@@ -1097,7 +1097,7 @@ augroup END
 
 " change grep {{{3
 function s:GrepTrim(str)
-	if a:str =~ '^\s*$'
+	if a:str =~# '^\s*$'
 		return a:str
 	else
 		return trim(a:str)
@@ -1208,7 +1208,7 @@ function s:LockQuickfixRead()
 	endif
 endfunction
 function s:LockQuickfixWinLeave()
-	if &buftype == 'quickfix'
+	if &buftype ==# 'quickfix'
 		let w:was_quickfix = 1
 	endif
 endfunction

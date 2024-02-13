@@ -4,6 +4,8 @@
 
 " preamble {{{3
 set nocompatible " neovim default
+set encoding=utf-8 " neovim default
+scriptencoding utf-8
 
 let g:python3_host_prog = $PYTHON_VENV_HOME .. '/neovim/bin/python3'
 
@@ -205,7 +207,6 @@ if has('linebreak')
 endif
 if has('multi_byte')
 	set nobomb
-	set   encoding=utf-8 " neovim default
 	set   fileencoding=utf-8
 endif
 if has('persistent_undo')

@@ -16,6 +16,7 @@ order += "memory"
 order += "wireless _first_"
 order += "ethernet _first_"
 order += "read_file uptime"
+order += "volume master"
 order += "time"
 
 cpu_usage {
@@ -40,6 +41,12 @@ ethernet _first_ {
 read_file uptime {
     format = "Up: %content"
     path = "~/Dropbox/status/uptime"
+}
+
+volume master {
+    format = "Vol: %volume"
+    mixer = "Master"
+    mixer_idx = 0
 }
 
 time {

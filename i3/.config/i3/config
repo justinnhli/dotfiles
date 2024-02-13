@@ -79,9 +79,9 @@ bindsym $mod+Shift+8 move container to workspace 8
 bindsym $mod+Shift+9 move container to workspace 9
 
 # volume control
-bindsym $mod+0 exec "amixer -q set Master 35%,35%"
-bindsym $mod+minus exec "amixer -q set Master 5%-,5%-"
-bindsym $mod+equal exec "amixer -q set Master 5%+,5%+"
+bindsym $mod+0 exec "amixer -qM set Master 20%,20%"
+bindsym $mod+minus exec "amixer -qM set Master 5%-,5%-"
+bindsym $mod+equal exec "amixer -qM set Master 5%+,5%+"
 
 # reload the configuration file
 bindsym $mod+Shift+r reload

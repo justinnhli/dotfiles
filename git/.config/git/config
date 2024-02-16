@@ -6,6 +6,10 @@
 [core]
     editor = nvim
     pager = $HOME/bin/diff-highlight.sh
+[diff]
+    algorithm = histogram
+[commit]
+    verbose = true
 [push]
     default = simple
 [pull]

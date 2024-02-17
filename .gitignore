@@ -1,7 +1,6 @@
 .etc/etc/wpa_supplicant/
 filezilla/.config/filezilla/*
 !filezilla/.config/filezilla/sitemanager.xml
-jupyter/.config/jupyter/migrated
 gnupg/*
 !gnupg/.gnupg/gpg-agent.conf
 keras/.keras/datasets

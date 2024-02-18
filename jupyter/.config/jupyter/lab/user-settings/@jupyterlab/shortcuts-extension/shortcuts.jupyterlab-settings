@@ -391,6 +391,7 @@
     // 
     // List of keyboard shortcuts:
     "shortcuts": [
+        // new shortcuts
         {
             "command": "notebook:clear-cell-output",
             "keys": [
@@ -411,6 +412,157 @@
                 "Shift R"
             ],
             "selector": ".jp-Notebook.jp-mod-commandMode :focus:not(:read-write)"
+        },
+        // disabled shortcuts
+        {
+            "args": {
+                "side": "left",
+                "index": 0
+            },
+            "command": "application:toggle-sidebar-widget",
+            "keys": [
+                "Alt 1"
+            ],
+            "macKeys": [
+                ""
+            ],
+            "selector": "body",
+            "disabled": true
+        },
+        {
+            "args": {
+                "side": "left",
+                "index": 1
+            },
+            "command": "application:toggle-sidebar-widget",
+            "keys": [
+                "Alt 2"
+            ],
+            "macKeys": [
+                ""
+            ],
+            "selector": "body",
+            "disabled": true
+        },
+        {
+            "args": {
+                "side": "left",
+                "index": 2
+            },
+            "command": "application:toggle-sidebar-widget",
+            "keys": [
+                "Alt 3"
+            ],
+            "macKeys": [
+                ""
+            ],
+            "selector": "body",
+            "disabled": true
+        },
+        {
+            "args": {
+                "side": "left",
+                "index": 3
+            },
+            "command": "application:toggle-sidebar-widget",
+            "keys": [
+                "Alt 4"
+            ],
+            "macKeys": [
+                ""
+            ],
+            "selector": "body",
+            "disabled": true
+        },
+        {
+            "args": {
+                "side": "left",
+                "index": 4
+            },
+            "command": "application:toggle-sidebar-widget",
+            "keys": [
+                "Alt 5"
+            ],
+            "macKeys": [
+                ""
+            ],
+            "selector": "body",
+            "disabled": true
+        },
+        {
+            "args": {
+                "side": "left",
+                "index": 5
+            },
+            "command": "application:toggle-sidebar-widget",
+            "keys": [
+                "Alt 6"
+            ],
+            "macKeys": [
+                ""
+            ],
+            "selector": "body",
+            "disabled": true
+        },
+        {
+            "args": {
+                "side": "left",
+                "index": 6
+            },
+            "command": "application:toggle-sidebar-widget",
+            "keys": [
+                "Alt 7"
+            ],
+            "macKeys": [
+                ""
+            ],
+            "selector": "body",
+            "disabled": true
+        },
+        {
+            "args": {
+                "side": "left",
+                "index": 7
+            },
+            "command": "application:toggle-sidebar-widget",
+            "keys": [
+                "Alt 8"
+            ],
+            "macKeys": [
+                ""
+            ],
+            "selector": "body",
+            "disabled": true
+        },
+        {
+            "args": {
+                "side": "left",
+                "index": 8
+            },
+            "command": "application:toggle-sidebar-widget",
+            "keys": [
+                "Alt 9"
+            ],
+            "macKeys": [
+                ""
+            ],
+            "selector": "body",
+            "disabled": true
+        },
+        {
+            "args": {
+                "side": "left",
+                "index": 9
+            },
+            "command": "application:toggle-sidebar-widget",
+            "keys": [
+                "Alt 0"
+            ],
+            "macKeys": [
+                ""
+            ],
+            "selector": "body",
+            "disabled": true
         }
     ]
 }

@@ -1,0 +1,41 @@
+{
+    "enableKernelInitNotification": false,
+    "codeCellConfig": {
+        "highlightTrailingWhitespace": true,
+        "lineWrap": false,
+        "rectangularSelection": false,
+        "allowMultipleSelections": false
+    },
+    "defaultCell": "code",
+    "autoStartDefaultKernel": false,
+    "inputHistoryScope": "global",
+    "kernelShutdown": false,
+    "markdownCellConfig": {
+        "highlightTrailingWhitespace": true,
+        "rectangularSelection": false,
+        "allowMultipleSelections": false
+    },
+    "rawCellConfig": {
+        "highlightTrailingWhitespace": true,
+        "rectangularSelection": false,
+        "allowMultipleSelections": false
+    },
+    "scrollPastEnd": false,
+    "recordTiming": false,
+    "overscanCount": 1,
+    "maxNumberOutputs": 50,
+    "scrollHeadingToTop": true,
+    "showEditorForReadOnlyMarkdown": true,
+    "kernelStatus": {
+        "showOnStatusBar": false,
+        "showProgress": true
+    },
+    "documentWideUndoRedo": false,
+    "showHiddenCellsButton": true,
+    "renderingLayout": "default",
+    "sideBySideLeftMarginOverride": "10px",
+    "sideBySideRightMarginOverride": "10px",
+    "sideBySideOutputRatio": 1,
+    "windowingMode": "defer",
+    "accessKernelHistory": false
+}

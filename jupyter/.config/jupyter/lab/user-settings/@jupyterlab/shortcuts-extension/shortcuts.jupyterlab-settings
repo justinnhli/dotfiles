@@ -413,6 +413,14 @@
             ],
             "selector": ".jp-Notebook.jp-mod-commandMode :focus:not(:read-write)"
         },
+        {
+            "args": {},
+            "command": "notebook:toggle-render-side-by-side-current",
+            "keys": [
+                "Shift S"
+            ],
+            "selector": ".jp-Notebook.jp-mod-commandMode :focus:not(:read-write)"
+        },
         // disabled shortcuts
         {
             "args": {
@@ -563,6 +571,15 @@
             ],
             "selector": "body",
             "disabled": true
-        }
+        },
+        {
+            "args": {},
+            "command": "notebook:toggle-render-side-by-side-current",
+            "keys": [
+                "Shift R"
+            ],
+            "selector": ".jp-Notebook.jp-mod-commandMode:not(.jp-mod-readWrite) :focus",
+            "disabled": true
+        },
     ]
 }

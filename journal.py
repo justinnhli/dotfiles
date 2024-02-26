@@ -183,6 +183,8 @@ class Journal(Entries):
         with filepath.open() as fd:
             line_num = 1
             for raw_entry in fd.read().strip().split('\n\n'):
+                if not raw_entry.strip():
+                    continue
                 lines = raw_entry.splitlines()
                 title = Title(lines[0])
                 self.entries[title] = Entry(

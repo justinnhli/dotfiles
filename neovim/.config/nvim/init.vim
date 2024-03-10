@@ -1045,7 +1045,6 @@ nnoremap  <leader>o         :OpenExternal<space>
 nnoremap  <leader>p         "+p
 nnoremap  <leader>y         "+y
 xnoremap  <leader>y         "+y
-"nnoremap  <leader>z         1z=:<C-u>call <SID>LogAutoSpellCheck()<cr>
 nnoremap  <leader>z         :<C-u>call <SID>AutoCorrectAndLog()<cr>
 nnoremap  <leader>/         :2match IncSearch ''<left>
 xnoremap  <leader>/         "zy:2match IncSearch <C-r>=shellescape(getreg('z'))<cr><cr>

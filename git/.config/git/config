@@ -60,5 +60,5 @@
         git untracked | sed 's/^/untracked: /' && \
         git ignored | sed 's/^/ignored: /'
     aliases = config --get-regexp ^alias\\.
-    graph = log --all --graph --date-order --abbrev-commit --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%ai%C(reset) %C(bold green)(%an)%C(reset)%C(bold yellow)%d%C(reset)%n          %C(white)%s%C(reset)'
+    graph = log --all --graph --date-order --abbrev-commit --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%ai%C(reset) %C(bold green)(%an)%C(reset)%x09%C(white)%s%C(reset) %C(bold yellow)%d%C(reset)'
     log-grep = log --all --abbrev-commit --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%ai%C(reset) %C(white)%s%C(reset)' -G

@@ -62,6 +62,10 @@ def parse_args(args):
         ArgumentTypeError: If the end date is earlier than the start date.
     """
     start, end = args.start, args.end
+    if start is not None:
+        start = start.strip()
+    if end is not None:
+        end = end.strip()
     today = date.today()
     if args.marker:
         mark_date = today

@@ -1021,6 +1021,37 @@ nnoremap  <leader><bslash>  ggVG:<C-u>call <SID>FormatTable()<cr>
 xnoremap  <leader><bar>     :<C-u>call <SID>FormatColumns()<cr>gv
 xnoremap  <leader><bslash>  :<C-u>call <SID>FormatTable()<cr>gv
 
+" thesaurus functions {{{2
+
+" thesaurus functions {{{3
+execute 'source ' .. fnamemodify($MYVIMRC, ':p:h') .. '/thesaurus.vim'
+function ThesaurusFunc(findstart, base)
+	if !exists('g:thesaurus')
+		return
+	endif
+	if a:findstart
+		" return the starting column of the matching word
+		let line = getline('.')
+		let wordStart = col('.') - 1 " FIXME I suspect regex can be used here instead
+		" check backward, accepting only non-white space
+		while wordStart > 0 && line[wordStart - 1] =~ '\S'
+			let wordStart -= 1
+		endwhile
+		return wordStart
+	elseif has_key(g:thesaurus, a:base)
+		"return ['test', a:base]
+		return g:thesaurus[a:base]
+	else
+		return []
+	endif
+endfunction
+set thesaurusfunc=ThesaurusFunc
+
+" thesaurus mappings {{{2
+
+" thesaurus mappings {{{3
+inoremap  <C-t>  <C-x><C-t><C-n><C-n><C-p>
+
 " other mappings {{{2
 
 " stay in visual mode after tabbing {{{3

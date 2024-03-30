@@ -1013,6 +1013,14 @@ function s:FormatColumns()
 	execute 'normal! g;g;'
 endfunction
 
+" editing mappings {{{2
+
+" editing mappings {{{3
+nnoremap  <leader><bar>     ggVG:<C-u>call <SID>FormatColumns()<cr>
+nnoremap  <leader><bslash>  ggVG:<C-u>call <SID>FormatTable()<cr>
+xnoremap  <leader><bar>     :<C-u>call <SID>FormatColumns()<cr>gv
+xnoremap  <leader><bslash>  :<C-u>call <SID>FormatTable()<cr>gv
+
 " other mappings {{{2
 
 " stay in visual mode after tabbing {{{3
@@ -1068,10 +1076,6 @@ nnoremap  <leader>z         :<C-u>call <SID>AutoCorrectAndLog()<cr>
 nnoremap  <leader>/         :2match IncSearch ''<left>
 xnoremap  <leader>/         "zy:2match IncSearch <C-r>=shellescape(getreg('z'))<cr><cr>
 nnoremap  <leader>@         :<C-f>ilet @=<C-r><C-r>
-nnoremap  <leader><bar>     ggVG:<C-u>call <SID>FormatColumns()<cr>
-nnoremap  <leader><bslash>  ggVG:<C-u>call <SID>FormatTable()<cr>
-xnoremap  <leader><bar>     :<C-u>call <SID>FormatColumns()<cr>gv
-xnoremap  <leader><bslash>  :<C-u>call <SID>FormatTable()<cr>gv
 nnoremap  <leader><cr>      :silent lmake<cr>
 xnoremap  <leader><cr>      y<esc>:!<C-r>"<cr>
 nnoremap  <leader>;         :lcd %:p:h<cr>

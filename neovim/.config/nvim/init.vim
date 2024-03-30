@@ -870,8 +870,27 @@ function s:PrevQuickFixOrLocation()
 	lopen
 	lprev
 endfunction
+" load buffers into location list {{{3
+function s:LExprBuffers()
+    let l:buffers = getbufinfo({'buflisted': 1})
+    let l:result = []
+    for l:buffer in l:buffers
+        if l:buffer['hidden'] || empty(l:buffer['name']) || empty(l:buffer['windows'])
+			continue
+        endif
+		if l:buffer['name'] =~# '^term:'
+			continue
+		endif
+		let l:message = printf('buffer: %s; windows: %s', l:buffer['bufnr'], l:buffer['windows'])
+		call add(l:result, fnamemodify(l:buffer['name'], ':p:~') .. ':0:' .. l:message)
+    endfor
+    return l:result
+endfunction
 
 " quickfix/location mappings {{{2
+
+" create location lists from various sources {{{3
+nnoremap  <leader>lb  :lgetexpr <SID>LExprBuffers() <bar> :lopen<cr>
 
 " move to next quickfix/location {{{3
 " TODO turn into autocmd that automatically maps to quickfix and location

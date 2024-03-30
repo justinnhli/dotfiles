@@ -1233,7 +1233,7 @@ function s:HandleLargeFiles()
 	if getfsize(expand('<afile>')) > g:large_file_size
 		set eventignore+=FileType
 		setlocal noswapfile
-		setlocal bufhidden=unload 
+		setlocal bufhidden=unload
 		setlocal undolevels=-1
 	else
 		set eventignore-=FileType

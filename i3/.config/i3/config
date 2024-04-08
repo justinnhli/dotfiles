@@ -95,6 +95,6 @@ bar {
     separator_symbol " | "
 }
 
+exec --no-startup-id xset r rate 500
 exec --no-startup-id feh --bg-scale $HOME/Dropbox/wallpaper.png
 exec dropbox
-exec discord

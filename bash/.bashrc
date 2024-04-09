@@ -212,10 +212,13 @@ if command -v python3 >/dev/null 2>&1; then
 			echo "venv $1 already exists"
 			return 1
 		fi
-		# return if already in a venv
+		# return if unable to deactivate the current venv
 		if [[ $(command -v python3) =~ ^$PYTHON_VENV_HOME* ]]; then
-			echo "already in a venv; deactivate first"
-			return 1
+			deactivate
+			if [[ $(command -v python3) =~ ^$PYTHON_VENV_HOME* ]]; then
+				echo "could not deactivate current venv; quitting..."
+				return 1
+			fi
 		fi
 		python3 -m venv "$PYTHON_VENV_HOME/$1"
 		source "$PYTHON_VENV_HOME/$1/bin/activate"
@@ -227,10 +230,13 @@ if command -v python3 >/dev/null 2>&1; then
 			lsvenv
 			return 0
 		fi
-		# return if already in a venv
+		# return if unable to deactivate the current venv
 		if [[ $(command -v python3) =~ ^$PYTHON_VENV_HOME* ]]; then
-			echo "already in a venv; deactivate first"
-			return 1
+			deactivate
+			if [[ $(command -v python3) =~ ^$PYTHON_VENV_HOME* ]]; then
+				echo "could not deactivate current venv; quitting..."
+				return 1
+			fi
 		fi
 		keep_trying=1
 		# if an existing venv has that name, activate it

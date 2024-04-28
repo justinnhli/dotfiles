@@ -106,7 +106,7 @@ prompt_command_fn() {
 		return
 	fi
 	if [[ "$history_id" != "$prev_history_id" ]]; then
-		echo "$history_date	$(whoami)@$(hostname)	$save_pwd	$history_command" >> ~justinnhli/Dropbox/personal/logs/"$(date -u +%Y).shistory"
+		echo "$history_date	$(whoami)@$(hostname)	$save_pwd	$history_command" >> ~justinnhli/Dropbox/personal/logs/shistory/"$(date -u +%Y).shistory"
 	fi
 	export prev_history_pwd="$PWD"
 	export prev_history_id="$history_id"

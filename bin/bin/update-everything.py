@@ -224,7 +224,7 @@ def merge_history():
     # type: () -> None
     """Merge shell history logs."""
     print('merging shell history logs')
-    history_path = Path('~/Dropbox/personal/logs').expanduser().resolve()
+    history_path = Path('~/Dropbox/personal/logs/shistory/').expanduser().resolve()
     years = set(
         filepath.name[:4]
         for filepath in history_path.glob('[0-9]*.shistory')

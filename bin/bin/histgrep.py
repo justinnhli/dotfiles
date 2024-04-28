@@ -6,7 +6,7 @@ from argparse import ArgumentParser
 from collections import namedtuple
 from pathlib import Path
 
-HISTORY_DIR = Path('~/Dropbox/personal/logs/').expanduser().resolve()
+HISTORY_DIR = Path('~/Dropbox/personal/logs/shistory/').expanduser().resolve()
 
 Event = namedtuple('Event', ('date', 'machine', 'pwd', 'command'))
 

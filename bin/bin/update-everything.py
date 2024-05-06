@@ -225,36 +225,34 @@ def merge_history():
     """Merge shell history logs."""
     print('merging shell history logs')
     history_path = Path('~/Dropbox/personal/logs/shistory/').expanduser().resolve()
-    years = set(
-        filepath.name[:4]
-        for filepath in history_path.glob('[0-9]*.shistory')
-    )
+    # collect all history
+    shistory = set()
+    years = set()
+    for filepath in history_path.glob('*.shistory'):
+        with filepath.open() as fd:
+            for line in fd:
+                components = line.strip().split('\t', maxsplit=3)
+                if len(components) != 4:
+                    continue
+                date_str, host, pwd, command = components
+                if date_str.endswith('Z'):
+                    abs_date = datetime.strptime(date_str, '%Y-%m-%dT%H:%M:%SZ')
+                else:
+                    abs_date = datetime.strptime(date_str, '%Y-%m-%dT%H:%M:%S%z')
+                    abs_date = (abs_date - abs_date.utcoffset()).replace(tzinfo=None)
+                years.add(abs_date.year)
+                command = command.strip()
+                shistory.add((abs_date, date_str, host, pwd, command))
+        filepath.unlink()
+    # write out collated history
     for year in sorted(years):
-        # collect all history for a year
-        lines = set() # type: set[str]
-        for filepath in history_path.glob(f'{year}*.shistory'):
-            with filepath.open() as fd:
-                for line in fd:
-                    lines.add(line)
-            filepath.unlink()
-        # parse history and datetime
-        shistory = set() # type: set[tuple[datetime, str, str, str, str]]
-        for line in lines:
-            components = line.strip().split('\t', maxsplit=3)
-            if len(components) != 4:
-                continue
-            date_str, host, pwd, command = components
-            if date_str.endswith('Z'):
-                abs_date = datetime.strptime(date_str, '%Y-%m-%dT%H:%M:%SZ')
-            else:
-                abs_date = datetime.strptime(date_str, '%Y-%m-%dT%H:%M:%S%z')
-                abs_date = (abs_date - abs_date.utcoffset()).replace(tzinfo=None)
-            command = command.strip()
-            shistory.add((abs_date, date_str, host, pwd, command))
-        # write out collated history
-        prev_line = ['', '', '']
+        year_shistory = sorted(
+            history for history in shistory
+            if history[0].year == year
+        )
+        prev_line = ('', '', '', '')
         with history_path.joinpath(f'{year}.shistory').open('w', encoding='utf-8') as fd:
-            for _, *history in sorted(shistory):
+            for _, *history in year_shistory:
                 if history[1:] == prev_line:
                     continue
                 fd.write('\t'.join(history))

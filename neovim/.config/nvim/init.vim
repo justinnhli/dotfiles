@@ -707,7 +707,7 @@ nnoremap  <leader>VZ   :tabnew <C-r>=fnamemodify($MYVIMRC, ':p:h')<cr>/autocorre
 " other file mappings {{{3
 nnoremap  <leader>B   :tabnew ~/.bashrc<cr>
 nnoremap  <leader>S   :tabnew ~/.config/nvim/spell/en.utf-8.add<cr>
-nnoremap  <leader>H   :tabnew ~/Dropbox/personal/logs/<C-r>=strftime('%Y')<cr>.shistory<cr>
+nnoremap  <leader>H   :tabnew ~/Dropbox/personal/logs/shistory/<C-r>=strftime('%Y')<cr>.shistory<cr>
 
 " toggle functions {{{2
 

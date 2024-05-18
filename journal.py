@@ -407,8 +407,8 @@ def group_entries(entries, unit, summary=True, reverse=True):
     Parameters:
         entries (Entries): The entries.
         unit (str): The tabulation unit. One of 'year', 'month', or 'day'.
-        summary (bool): Whether to show a summary. Defaults to True.
-        reverse (bool): Whether to show entries in chronological order.
+        summary (bool): Whether to include a summary. Defaults to True.
+        reverse (bool): Whether to list entries in chronological order.
             Defaults to True.
 
     Returns:

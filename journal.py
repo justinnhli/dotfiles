@@ -636,7 +636,7 @@ def do_count(journal, args):
     """
     columns = {
         'DATE': (lambda entries, unit, num_words: unit),
-        'POSTS': (lambda entries, unit, num_words: len(entries)),
+        'COUNT': (lambda entries, unit, num_words: len(entries)),
         'FREQ': (lambda entries, unit, num_words:
             f'{((max(entries).date - min(entries).date).days + 1) / len(entries):.2f}'
         ),

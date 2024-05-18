@@ -96,7 +96,7 @@ bar {
 }
 
 # set repeat rate to start after 500 milliseconds
-exec --no-startup-id xset r rate 500
+exec --no-startup-id sh -c 'sleep 15; xset r rate 500'
 # set wallpaper
 exec --no-startup-id feh --bg-scale $HOME/Dropbox/wallpaper.png
 # start dropbox

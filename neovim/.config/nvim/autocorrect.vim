@@ -5,6 +5,7 @@ iabbrev  <buffer>  FXIEM             FIXME
 iabbrev  <buffer>  FXIME             FIXME
 iabbrev  <buffer>  Flase             False
 iabbrev  <buffer>  Frdiay            Friday
+iabbrev  <buffer>  IFMXE             FIXME
 iabbrev  <buffer>  IFXME             FIXME
 iabbrev  <buffer>  Irsael            Israel
 iabbrev  <buffer>  Jaoquin           Joaquin
@@ -35,6 +36,7 @@ iabbrev  <buffer>  activitiies       activities
 iabbrev  <buffer>  activiton         activation
 iabbrev  <buffer>  adavance          advance
 iabbrev  <buffer>  adminstration     administration
+iabbrev  <buffer>  admited           admitted
 iabbrev  <buffer>  adn               and
 iabbrev  <buffer>  afforances        affordances
 iabbrev  <buffer>  agrteement        agreement
@@ -44,6 +46,7 @@ iabbrev  <buffer>  alsoways          always
 iabbrev  <buffer>  althogh           although
 iabbrev  <buffer>  ambiguatity       ambiguity
 iabbrev  <buffer>  analyaized        analyzed
+iabbrev  <buffer>  analyasis         analysis
 iabbrev  <buffer>  anceient          ancient
 iabbrev  <buffer>  ancietn           ancient
 iabbrev  <buffer>  anticpate         anticipate
@@ -55,7 +58,9 @@ iabbrev  <buffer>  applicatns        applicants
 iabbrev  <buffer>  appluing          applying
 iabbrev  <buffer>  appointingment    appointing
 iabbrev  <buffer>  appplication      application
+iabbrev  <buffer>  appreiate         appreciate
 iabbrev  <buffer>  appreicate        appreciate
+iabbrev  <buffer>  approriate        appropriate
 iabbrev  <buffer>  archieve          achieve
 iabbrev  <buffer>  archtiecture      architecture
 iabbrev  <buffer>  archtiectures     architectures
@@ -72,6 +77,7 @@ iabbrev  <buffer>  attendeance       attendance
 iabbrev  <buffer>  attendence        attendance
 iabbrev  <buffer>  audeince          audience
 iabbrev  <buffer>  availabiilty      availability
+iabbrev  <buffer>  avoidant          avoid
 iabbrev  <buffer>  backgorund        background
 iabbrev  <buffer>  beacuse           because
 iabbrev  <buffer>  beignning         beginning
@@ -95,6 +101,7 @@ iabbrev  <buffer>  charistmatic      charismatic
 iabbrev  <buffer>  chekc             check
 iabbrev  <buffer>  chesmitry         chemistry
 iabbrev  <buffer>  chiar             chair
+iabbrev  <buffer>  claculated        calculated
 iabbrev  <buffer>  clas              class
 iabbrev  <buffer>  clases            classes
 iabbrev  <buffer>  classiication     classification
@@ -111,6 +118,8 @@ iabbrev  <buffer>  comfortlabe       comfortable
 iabbrev  <buffer>  commisserated     commiserated
 iabbrev  <buffer>  committment       commitment
 iabbrev  <buffer>  committments      commitments
+iabbrev  <buffer>  commiunicate      communicate
+iabbrev  <buffer>  commmittee        committee
 iabbrev  <buffer>  commtitee         committee
 iabbrev  <buffer>  commuinity        community
 iabbrev  <buffer>  compettence       competence
@@ -122,6 +131,7 @@ iabbrev  <buffer>  concensus         consensus
 iabbrev  <buffer>  concners          concerns
 iabbrev  <buffer>  concsunsus        consensus
 iabbrev  <buffer>  condecending      condescending
+iabbrev  <buffer>  conegstion        congestion
 iabbrev  <buffer>  conintue          continue
 iabbrev  <buffer>  conisder          consider
 iabbrev  <buffer>  conisders         considers
@@ -137,6 +147,7 @@ iabbrev  <buffer>  converstaion      conversation
 iabbrev  <buffer>  converstaions     conversations
 iabbrev  <buffer>  convesion         conversion
 iabbrev  <buffer>  convservative     conservative
+iabbrev  <buffer>  coodinators       coordinators
 iabbrev  <buffer>  coordainte        coordinate
 iabbrev  <buffer>  coordaintes       coordinates
 iabbrev  <buffer>  coordates         coordinates
@@ -152,6 +163,7 @@ iabbrev  <buffer>  damange           damage
 iabbrev  <buffer>  declineing        declining
 iabbrev  <buffer>  deicded           decided
 iabbrev  <buffer>  deisngn           design
+iabbrev  <buffer>  deliberable       deliverable
 iabbrev  <buffer>  delibverately     deliberately
 iabbrev  <buffer>  demostrated       demonstrated
 iabbrev  <buffer>  deparment         department
@@ -189,6 +201,7 @@ iabbrev  <buffer>  ehnce             hence
 iabbrev  <buffer>  eitehr            either
 iabbrev  <buffer>  electged          elected
 iabbrev  <buffer>  eleemnts          elements
+iabbrev  <buffer>  emaphsis          emphasis
 iabbrev  <buffer>  embarassed        embarrassed
 iabbrev  <buffer>  emmory            memory
 iabbrev  <buffer>  encouriging       encouraging
@@ -316,6 +329,7 @@ iabbrev  <buffer>  itnroducing       introducing
 iabbrev  <buffer>  iwll              will
 iabbrev  <buffer>  jayawalking       jaywalking
 iabbrev  <buffer>  judgey            judgy
+iabbrev  <buffer>  keepign           keeping
 iabbrev  <buffer>  konw              know
 iabbrev  <buffer>  lagnuage          language
 iabbrev  <buffer>  lametns           laments
@@ -323,6 +337,7 @@ iabbrev  <buffer>  langauges         languages
 iabbrev  <buffer>  lanugage          language
 iabbrev  <buffer>  lavendar          lavender
 iabbrev  <buffer>  lcimbing          climbing
+iabbrev  <buffer>  leanring          learning
 iabbrev  <buffer>  leats             least
 iabbrev  <buffer>  lessa             less
 iabbrev  <buffer>  lextremely        extremely
@@ -341,9 +356,11 @@ iabbrev  <buffer>  monring           morning
 iabbrev  <buffer>  morevement        movement
 iabbrev  <buffer>  mornning          morning
 iabbrev  <buffer>  motivetd          motivated
+iabbrev  <buffer>  mulitple          multiple
 iabbrev  <buffer>  mutli             multi
 iabbrev  <buffer>  necessariyl       necessarily
 iabbrev  <buffer>  neglfect          neglect
+iabbrev  <buffer>  negotiatie        negotiate
 iabbrev  <buffer>  nejoyment         enjoyment
 iabbrev  <buffer>  neoriscience      neuroscience
 iabbrev  <buffer>  neotiated         negotiated
@@ -352,9 +369,11 @@ iabbrev  <buffer>  notewothy         noteworthy
 iabbrev  <buffer>  nto               not
 iabbrev  <buffer>  ocvgnitinve       cognitive
 iabbrev  <buffer>  oeprators         operators
+iabbrev  <buffer>  ommissions        omissions
 iabbrev  <buffer>  oportunities      opportunities
 iabbrev  <buffer>  oposed            opposed
 iabbrev  <buffer>  opportunites      opportunities
+iabbrev  <buffer>  opporutnities     opportunities
 iabbrev  <buffer>  oppportunities    opportunities
 iabbrev  <buffer>  opuinionated      opinionated
 iabbrev  <buffer>  organizatin       organization
@@ -369,6 +388,7 @@ iabbrev  <buffer>  parmaeter         parameter
 iabbrev  <buffer>  partialar         particular
 iabbrev  <buffer>  particiularly     particularly
 iabbrev  <buffer>  peoiple           people
+iabbrev  <buffer>  performacne       performance
 iabbrev  <buffer>  permanant         permanent
 iabbrev  <buffer>  perpsective       perspective
 iabbrev  <buffer>  perspecitves      perspectives
@@ -380,6 +400,7 @@ iabbrev  <buffer>  plitical          political
 iabbrev  <buffer>  poeple            people
 iabbrev  <buffer>  pointiner         pointer
 iabbrev  <buffer>  poltical          political
+iabbrev  <buffer>  popolations       populations
 iabbrev  <buffer>  popsitions        positions
 iabbrev  <buffer>  populare          popular
 iabbrev  <buffer>  positino          position
@@ -471,15 +492,21 @@ iabbrev  <buffer>  sceince           science
 iabbrev  <buffer>  scietnific        scientific
 iabbrev  <buffer>  scnene            scene
 iabbrev  <buffer>  secnod            second
+iabbrev  <buffer>  sementation       segmentation
 iabbrev  <buffer>  semestner         semester
 iabbrev  <buffer>  semetnece         sentence
+iabbrev  <buffer>  semitism          Semitism
 iabbrev  <buffer>  semster           semester
 iabbrev  <buffer>  separte           separate
 iabbrev  <buffer>  separtely         separately
 iabbrev  <buffer>  seprate           separate
+iabbrev  <buffer>  serendipituously  serendipitously
 iabbrev  <buffer>  setings           settings
+iabbrev  <buffer>  sheparded         shepherded
 iabbrev  <buffer>  simluation        simulation
+iabbrev  <buffer>  simtulation       simulation
 iabbrev  <buffer>  simulatneously    simultaneously
+iabbrev  <buffer>  snipptt           snippet
 iabbrev  <buffer>  socliit           solicit
 iabbrev  <buffer>  soemthing         something
 iabbrev  <buffer>  sometings         somethings
@@ -507,6 +534,7 @@ iabbrev  <buffer>  sturcutre         structure
 iabbrev  <buffer>  suggetsed         suggested
 iabbrev  <buffer>  summerizing       summarizing
 iabbrev  <buffer>  supercedes        supersedes
+iabbrev  <buffer>  suprising         surprising
 iabbrev  <buffer>  sustdents         students
 iabbrev  <buffer>  sustems           systems
 iabbrev  <buffer>  sutdents          students
@@ -528,6 +556,7 @@ iabbrev  <buffer>  thinbking         thinking
 iabbrev  <buffer>  thoguht           thought
 iabbrev  <buffer>  thoguth           thought
 iabbrev  <buffer>  thorugh           through
+iabbrev  <buffer>  throuhgout        throughout
 iabbrev  <buffer>  tlaking           talking
 iabbrev  <buffer>  togehter          together
 iabbrev  <buffer>  togther           together
@@ -554,6 +583,7 @@ iabbrev  <buffer>  visualiztion      visualization
 iabbrev  <buffer>  visualziations    visualizations
 iabbrev  <buffer>  visulization      visualization
 iabbrev  <buffer>  volitility        volatility
+iabbrev  <buffer>  vulnerabilty      vulnerability
 iabbrev  <buffer>  wahtever          whatever
 iabbrev  <buffer>  weahtly           wealthy
 iabbrev  <buffer>  wehtehr           whether

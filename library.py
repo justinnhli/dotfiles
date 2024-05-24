@@ -225,7 +225,8 @@ class Library:
             *file_path_strs (str): The file path to open
         """
         for file_path_str in file_path_strs:
-            _run_shell_command('open', str(Path(file_path_str).expanduser().resolve()))
+            paper = Paper(Path(file_path_str).name)
+            _run_shell_command('open', str(paper.loca))
 
     def remove(self, *file_path_strs):
         # type: (*str) -> None

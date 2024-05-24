@@ -78,6 +78,7 @@ iabbrev  <buffer>  attendence        attendance
 iabbrev  <buffer>  audeince          audience
 iabbrev  <buffer>  availabiilty      availability
 iabbrev  <buffer>  avoidant          avoid
+iabbrev  <buffer>  avoilability      availability
 iabbrev  <buffer>  backgorund        background
 iabbrev  <buffer>  beacuse           because
 iabbrev  <buffer>  beignning         beginning
@@ -166,6 +167,7 @@ iabbrev  <buffer>  deisngn           design
 iabbrev  <buffer>  deliberable       deliverable
 iabbrev  <buffer>  delibverately     deliberately
 iabbrev  <buffer>  demostrated       demonstrated
+iabbrev  <buffer>  deoderant         deodorant
 iabbrev  <buffer>  deparment         department
 iabbrev  <buffer>  deparments        departments
 iabbrev  <buffer>  deparmtnets       departments
@@ -218,6 +220,7 @@ iabbrev  <buffer>  esaier            easier
 iabbrev  <buffer>  essentialy        essentially
 iabbrev  <buffer>  estensibly        ostensibly
 iabbrev  <buffer>  etihcs            ethics
+iabbrev  <buffer>  everthing         everything
 iabbrev  <buffer>  everythign        everything
 iabbrev  <buffer>  eveyrone          everyone
 iabbrev  <buffer>  evnet             event
@@ -301,10 +304,13 @@ iabbrev  <buffer>  indepednetn       independent
 iabbrev  <buffer>  individiaul       individual
 iabbrev  <buffer>  influnced         influenced
 iabbrev  <buffer>  infromation       information
+iabbrev  <buffer>  infrstructure     infrastructure
+iabbrev  <buffer>  ingredeitsnt      ingredients
 iabbrev  <buffer>  inpacts           impacts
 iabbrev  <buffer>  insatead          instead
 iabbrev  <buffer>  insenstiive       insensitive
 iabbrev  <buffer>  insertation       insertion
+iabbrev  <buffer>  insetaed          instead
 iabbrev  <buffer>  institional       institutional
 iabbrev  <buffer>  instituional      institutional
 iabbrev  <buffer>  instituiosn       institutions
@@ -339,12 +345,14 @@ iabbrev  <buffer>  lavendar          lavender
 iabbrev  <buffer>  lcimbing          climbing
 iabbrev  <buffer>  leanring          learning
 iabbrev  <buffer>  leats             least
+iabbrev  <buffer>  legistration      legislation
 iabbrev  <buffer>  lessa             less
 iabbrev  <buffer>  lextremely        extremely
 iabbrev  <buffer>  lingiusts         linguists
 iabbrev  <buffer>  lingusitcs        linguistics
 iabbrev  <buffer>  lingustic         linguistic
 iabbrev  <buffer>  managmeent        management
+iabbrev  <buffer>  manufacturiers    manufacturers
 iabbrev  <buffer>  marraied          married
 iabbrev  <buffer>  mathemtical       mathematical
 iabbrev  <buffer>  mathetically      mathematically
@@ -408,6 +416,7 @@ iabbrev  <buffer>  positoin          position
 iabbrev  <buffer>  possbility        possibility
 iabbrev  <buffer>  possiblities      possibilities
 iabbrev  <buffer>  possiblity        possibility
+iabbrev  <buffer>  postiive          positive
 iabbrev  <buffer>  poteitnally       potentially
 iabbrev  <buffer>  potenitially      potentially
 iabbrev  <buffer>  pratice           practice
@@ -435,11 +444,13 @@ iabbrev  <buffer>  psychanalysis     psychoanalysis
 iabbrev  <buffer>  ptyhon            Python
 iabbrev  <buffer>  publihsh          publish
 iabbrev  <buffer>  publising         publishing
+iabbrev  <buffer>  pulbications      publications
 iabbrev  <buffer>  qeustions         questions
 iabbrev  <buffer>  qualtiies         qualities
 iabbrev  <buffer>  quesitons         questions
 iabbrev  <buffer>  questiona         questions
 iabbrev  <buffer>  questiosn         questions
+iabbrev  <buffer>  quetsions         questions
 iabbrev  <buffer>  rappeling         rappelling
 iabbrev  <buffer>  recations         reactions
 iabbrev  <buffer>  receicing         receiving
@@ -530,6 +541,7 @@ iabbrev  <buffer>  studeents         students
 iabbrev  <buffer>  studenets         students
 iabbrev  <buffer>  studetns          students
 iabbrev  <buffer>  studnet           student
+iabbrev  <buffer>  studnets          students
 iabbrev  <buffer>  sturcutre         structure
 iabbrev  <buffer>  suggetsed         suggested
 iabbrev  <buffer>  summerizing       summarizing
@@ -574,6 +586,7 @@ iabbrev  <buffer>  undersatnding     understanding
 iabbrev  <buffer>  undetrmined       undetermined
 iabbrev  <buffer>  unsurpervised     unsupervised
 iabbrev  <buffer>  vaculty           faculty
+iabbrev  <buffer>  vaoid             avoid
 iabbrev  <buffer>  varaibles         variables
 iabbrev  <buffer>  vehichle          vehicle
 iabbrev  <buffer>  verus             versus

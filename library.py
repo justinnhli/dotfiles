@@ -282,7 +282,7 @@ class Library:
                         else re.sub(
                             pattern,
                             (lambda match: match.group('last') + ', ' + match.group('first')),
-                            person)
+                            person.strip())
                         for person in people
                     ])
                     print(dedent(f'''

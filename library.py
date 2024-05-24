@@ -424,6 +424,8 @@ class Library:
             pages = getattr(paper, 'pages')
             if pages == 'FIXME' or re.fullmatch('[A-Za-z]*[0-9]*', pages):
                 return
+            if re.search('[^0-9-]', pages):
+                return
             if ' ' in pages or '--' not in pages:
                 if '-' in pages:
                     start, end = pages.split('-')

@@ -220,6 +220,22 @@ def reset_permissions(path=None):
 
 
 @register()
+def reset_gnupg_permissions():
+    # type: () -> None
+    """Reset GnuPG settings directory permissions."""
+    gnupg_path = Path('~/.gnupg').expanduser().resolve()
+    run(
+        [
+            'chmod',
+            '-R',
+            'u=rw,u+X,go=',
+            str(gnupg_path),
+        ],
+        check=True,
+    )
+
+
+@register()
 def merge_history():
     # type: () -> None
     """Merge shell history logs."""
@@ -361,6 +377,7 @@ def update_everything():
     update_brew()
     update_cabal()
     update_pip()
+    reset_gnupg_permissions()
     merge_history()
     for path in (desktop_path, dropbox_path, git_path):
         delete_orphans(path)

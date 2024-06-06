@@ -1,5 +1,7 @@
 " vim: foldmethod=marker
 
+" vint: -ProhibitSetNoCompatible
+
 " preamble {{{1
 
 " preamble {{{3
@@ -1001,6 +1003,7 @@ xnoremap  q:     :
 
 " format table {{{3
 function s:FormatTable()
+	" vint: -ProhibitCommandWithUnintendedSideEffect -ProhibitCommandRelyOnUser
 	'<,'>s/\m\C  \+/	/eg
 	silent '<,'>!column -ts '	'
 	execute 'normal! g;g;'
@@ -1008,6 +1011,7 @@ endfunction
 
 " format columns {{{3
 function s:FormatColumns()
+	" vint: -ProhibitCommandWithUnintendedSideEffect -ProhibitCommandRelyOnUser
 	'<,'>s/\m\C  \+/	/eg
 	execute 'normal! g;g;'
 endfunction
@@ -1295,6 +1299,7 @@ augroup END
 
 " UnicodeToAscii {{{3
 function UnicodeToAscii()
+	" vint: -ProhibitCommandWithUnintendedSideEffect -ProhibitCommandRelyOnUser
 	set fileformat=unix
 	" newline (0x13)
 	%s/\%u000B//eg " newline
@@ -1349,6 +1354,7 @@ endfunction
 
 " EmojiToShortcode {{{3
 function EmojiToShortcode()
+	" vint: -ProhibitCommandWithUnintendedSideEffect -ProhibitCommandRelyOnUser
 	" other
 	"😊
 	"😲

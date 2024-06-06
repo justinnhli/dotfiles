@@ -1032,7 +1032,6 @@ if exists('&thesaurusfunc')
 		if a:findstart
 			return match(getline('.')[:col('.') - 2], '.*\zs\s\ze') + 1
 		elseif has_key(g:thesaurus, a:base)
-			"return ['test', a:base]
 			return g:thesaurus[a:base]
 		else
 			return []

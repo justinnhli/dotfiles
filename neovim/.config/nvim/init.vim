@@ -1030,14 +1030,7 @@ if exists('&thesaurusfunc')
 			return
 		endif
 		if a:findstart
-			" return the starting column of the matching word
-			let line = getline('.')
-			let wordStart = col('.') - 1 " FIXME I suspect regex can be used here instead
-			" check backward, accepting only non-white space
-			while wordStart > 0 && line[wordStart - 1] =~ '\S'
-				let wordStart -= 1
-			endwhile
-			return wordStart
+			return match(getline('.')[:col('.') - 2], '.*\zs\s\ze') + 1
 		elseif has_key(g:thesaurus, a:base)
 			"return ['test', a:base]
 			return g:thesaurus[a:base]

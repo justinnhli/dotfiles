@@ -67,11 +67,11 @@ function BuildTabLine()
 	let l:tabline = ''
 	let l:cur_tab = tabpagenr()
 	" for each tab page
-	for i in range(tabpagenr('$'))
-		let l:buffers = tabpagebuflist(i + 1)
-		let l:filename = fnamemodify(bufname(l:buffers[tabpagewinnr(i + 1) - 1]), ':p:t')
+	for l:i in range(tabpagenr('$'))
+		let l:buffers = tabpagebuflist(l:i + 1)
+		let l:filename = fnamemodify(bufname(l:buffers[tabpagewinnr(l:i + 1) - 1]), ':p:t')
 		" set highlighting
-		let l:tabline .= (i + 1 == l:cur_tab ? '%#TabLineSel#' : '%#TabLine#')
+		let l:tabline .= (l:i + 1 == l:cur_tab ? '%#TabLineSel#' : '%#TabLine#')
 		let l:tabline .= ' '
 		" set filename
 		if l:filename ==# ''
@@ -83,7 +83,7 @@ function BuildTabLine()
 		endif
 		let l:tabline .= ' '
 		" set window number and modified flag
-		let l:tabline .= '[' .. tabpagewinnr(i + 1,'$') .. ']'
+		let l:tabline .= '[' .. tabpagewinnr(l:i + 1,'$') .. ']'
 		" tab page is modified if any buffer is modified
 		for b in l:buffers
 			if getbufvar(b, '&modified' )
@@ -1025,11 +1025,11 @@ xnoremap  <leader><bslash>  :<C-u>call <SID>FormatTable()<cr>gv
 " thesaurus functions {{{3
 if exists('&thesaurusfunc')
 	execute 'source ' .. fnamemodify($MYVIMRC, ':p:h') .. '/thesaurus.vim'
-	function ThesaurusFunc(findstart, base)
+	function s:ThesaurusFunc(find_start, base)
 		if !exists('g:thesaurus')
 			return
 		endif
-		if a:findstart
+		if a:find_start
 			return match(getline('.')[:col('.') - 2], '.*\zs\s\ze') + 1
 		elseif has_key(g:thesaurus, a:base)
 			return g:thesaurus[a:base]

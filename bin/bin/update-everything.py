@@ -377,7 +377,6 @@ def update_everything():
     update_brew()
     update_cabal()
     update_pip()
-    reset_gnupg_permissions()
     merge_history()
     for path in (desktop_path, dropbox_path, git_path):
         delete_orphans(path)
@@ -389,6 +388,8 @@ def update_everything():
     update_vimplug()
     pull_git()
     update_actr()
+    # this should happen after pull_git() due to the symbolic links
+    reset_gnupg_permissions()
 
 
 # CLI entry point

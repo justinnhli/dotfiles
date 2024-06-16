@@ -406,7 +406,7 @@ def generate_description():
     callables = {k: v for k, v in REGISTRY.items() if not v.hidden}
     width = max(len(action) for action in callables.keys())
     format_str = f'{{: <{width}s}}'
-    for action, function in callables.items():
+    for action, function in sorted(callables.items()):
         description.append(f'  {format_str.format(action)}  {function.function.__doc__.splitlines()[0]}')
     return description
 

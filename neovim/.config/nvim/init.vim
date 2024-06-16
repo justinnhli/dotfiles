@@ -1041,7 +1041,7 @@ if exists('&thesaurusfunc')
 			return []
 		endif
 	endfunction
-	set thesaurusfunc=ThesaurusFunc
+	set thesaurusfunc=s:ThesaurusFunc
 endif
 
 " thesaurus mappings {{{2

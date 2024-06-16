@@ -1,10 +1,10 @@
 .etc/etc/wpa_supplicant/
 filezilla/.config/filezilla/*
 !filezilla/.config/filezilla/sitemanager.xml
-jupyter/.config/jupyter/migrated
-jupyter/.config/jupyter/lab/workspaces
 gnupg/*
 !gnupg/.gnupg/gpg-agent.conf
+jupyter/.config/jupyter/lab/workspaces
+jupyter/.config/jupyter/migrated
 keras/.keras/datasets
 kitty/.config/kitty/current-theme.conf
 neovim/.config/nvim/.netrwhist

@@ -4,12 +4,15 @@
 import argparse
 from collections import OrderedDict, namedtuple
 from datetime import datetime
+from functools import cache
 from json import loads as json_from_str
 from os import environ
 from pathlib import Path
 from shutil import which
 from subprocess import run, CalledProcessError
 from typing import Any, Callable
+
+HOME_COMPUTER = 'spark'
 
 
 # registry
@@ -353,6 +356,60 @@ def pull_git():
     run(['git-all.sh', 'pull'], cwd=git_path, check=True)
 
 
+@cache
+def is_home_network():
+    # type: () -> bool
+    """Check if we are on the home network."""
+    try:
+        run(
+            ['ssh', '-oBatchMode=yes', '-oConnectTimeout=1', HOME_COMPUTER, 'exit'],
+            check=True,
+        )
+        return True
+    except CalledProcessError:
+        return False
+
+
+def sync_vim_file(relative_path):
+    # type: (Path) -> None
+    """Combine a vim file and update the local version."""
+    if is_home_network():
+        host = HOME_COMPUTER
+    else:
+        host = 'home'
+    assert not relative_path.is_absolute()
+    local_path = Path.home() / relative_path
+    lines = set()
+    process = run(
+        ['ssh', '-oBatchMode=yes', host, 'cat', str(Path('/home/justinnhli/') / relative_path)],
+        check=True,
+        capture_output=True,
+    )
+    lines.update(
+        line.strip() for line
+        in process.stdout.decode('utf-8').splitlines()
+    )
+    with (local_path).open() as fd:
+        lines.update(line.strip() for line in fd)
+    synced = [
+        line.strip() for line in sorted(
+            lines,
+            key=(lambda s: (s.startswith('"'), s)),
+        )
+    ]
+    with local_path.open('w') as fd:
+        fd.write('\n'.join(synced))
+        fd.write('\n')
+
+
+@register()
+def sync_vim_spellfiles():
+    # type: () -> None
+    """Sync vim spell files."""
+    sync_vim_file(Path('.config/nvim/autocorrect.vim'))
+    sync_vim_file(Path('.config/nvim/spell/en.utf-8.add'))
+
+
 @register()
 def update_actr():
     # type: () -> None
@@ -385,6 +442,7 @@ def update_everything():
         reset_permissions(path)
         find_conflicts(path)
     sync_library()
+    sync_vim_spellfiles()
     update_vimplug()
     pull_git()
     update_actr()

@@ -5,6 +5,7 @@ gnupg/*
 !gnupg/.gnupg/gpg-agent.conf
 jupyter/.config/jupyter/lab/workspaces
 jupyter/.config/jupyter/migrated
+jupyter/.config/jupyter/serverconfig/jupyterlabapputilsextensionannouncements.json
 keras/.keras/datasets
 kitty/.config/kitty/current-theme.conf
 neovim/.config/nvim/.netrwhist

@@ -846,7 +846,7 @@ def do_wording(journal, args):
         seen.add(variant)
     print_table(
         sorted(rows, key=(lambda row: row[1])),
-        ['VARIANT', 'COUNT', 'FIRST', 'LAST'],
+        (['VARIANT', 'COUNT', 'FIRST', 'LAST'] if args.headers else []),
     )
 
 
@@ -985,7 +985,7 @@ def build_arg_parser(arg_parser):
         '--no-headers',
         dest='headers',
         action='store_false',
-        help='[C] do not print headers',
+        help='[CW] do not print headers',
     )
     group.add_argument(
         '--no-summary',

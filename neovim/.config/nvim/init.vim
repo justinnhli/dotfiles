@@ -1382,6 +1382,7 @@ function EmojiToShortcode()
 	%s/❤/:heart:/eg
 	%s/👍/:thumbs_up:/eg
 	%s/💯/:100:/eg
+	%s/🖕/:middle_finger:/eg
 	%s/😀/:grinning:/eg
 	%s/😁/:grinning:/eg
 	%s/😂/:laughing_crying_face:/eg
@@ -1393,11 +1394,13 @@ function EmojiToShortcode()
 	%s/😈/:horns:/eg
 	%s/😉/:wink:/eg
 	%s/😊/:blushing_smile:/eg
+	%s/😋/:yum:/eg
 	%s/😍/:heart_eyes:/eg
 	%s/😎/:sunglasses:/eg
 	%s/😏/:smirk:/eg
 	%s/😓/:defeated_sweat:/eg
 	%s/😘/:kiss_with_hearts:/eg
+	%s/😞/:disappointed_face:/eg
 	%s/😠/:anger:/eg
 	%s/😡/:anger:/eg
 	%s/😢/:tear:/eg
@@ -1415,6 +1418,4 @@ function EmojiToShortcode()
 	%s/🥰/:smile_with_hearts:/eg
 	%s/🥲/:tear:/eg
 	%s/🥺/:glossy_eyes:/eg
-	%s/🖕/:middle_finger:/eg
-	%s/😞/:disappointed_face:/eg
 endfunction

@@ -364,6 +364,7 @@ def is_home_network():
         run(
             ['ssh', '-oBatchMode=yes', '-oConnectTimeout=1', HOME_COMPUTER, 'exit'],
             check=True,
+            capture_output=True,
         )
         return True
     except CalledProcessError:

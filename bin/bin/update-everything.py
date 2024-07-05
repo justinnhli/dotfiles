@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """A script to update everything on a system."""
 
+import re
 import argparse
 from collections import OrderedDict, namedtuple
 from datetime import datetime
@@ -262,7 +263,8 @@ def merge_history():
                 years.add(abs_date.year)
                 command = command.strip()
                 shistory.add((abs_date, date_str, host, pwd, command))
-        filepath.unlink()
+        if not re.fullmatch('[0-9]+\\.shistory', filepath.name):
+            filepath.unlink()
     # write out collated history
     for year in sorted(years):
         year_shistory = sorted(

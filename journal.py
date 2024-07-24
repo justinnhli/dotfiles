@@ -5,7 +5,7 @@
 
 import re
 from json import load as json_read, dump as json_write
-from argparse import ArgumentParser, Namespace, _ArgumentGroup
+from argparse import ArgumentParser, Namespace
 from calendar import monthrange
 from collections import namedtuple, defaultdict
 from datetime import datetime, timedelta
@@ -916,8 +916,8 @@ def build_arg_parser(arg_parser):
         help='pattern which must exist in entries',
     )
 
-    group = None # type: Optional[_ArgumentGroup]
-    group = arg_parser.add_argument_group('OPERATIONS').add_mutually_exclusive_group(required=True)
+    group = arg_parser.add_argument_group('OPERATIONS')
+    group = group.add_mutually_exclusive_group(required=True)
     for _, flag, desc, function in sorted(OPERATIONS, key=(lambda opt: (opt.priority, opt.flag))):
         group.add_argument(
             flag,

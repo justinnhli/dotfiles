@@ -1028,11 +1028,9 @@ xnoremap  <leader><bslash>  :<C-u>call <SID>FormatTable()<cr>gv
 
 " thesaurus functions {{{3
 if exists('&thesaurusfunc')
+	let g:thesaurus = {}
 	execute 'source ' .. fnamemodify($MYVIMRC, ':p:h') .. '/thesaurus.vim'
 	function s:ThesaurusFunc(find_start, base)
-		if !exists('g:thesaurus')
-			return
-		endif
 		if a:find_start
 			return match(getline('.')[:col('.') - 2], '.*\zs\s\ze') + 1
 		elseif has_key(g:thesaurus, a:base)

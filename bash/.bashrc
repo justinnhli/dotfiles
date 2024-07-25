@@ -120,7 +120,7 @@ else
 	PS1='\u@\h \W\$ '
 fi
 if [ -d ~justinnhli/Dropbox/personal/logs ]; then
-	PROMPT_COMMAND=prompt_command_fn
+	export PROMPT_COMMAND=prompt_command_fn
 fi
 unset prev_history_pwd
 unset prev_history_id

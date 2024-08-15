@@ -4,8 +4,8 @@ let g:markdown_fenced_languages = ['java']
 let g:markdown_fenced_languages += ['css', 'html', 'javascript', 'python', 'sh', 'vim']
 setlocal expandtab
 setlocal wrap
-if executable('cmark')
-	setlocal makeprg=cmark\ --unsafe\ '%:p'\ >\ '%:p:r.html'
+if !empty(glob('~/bin/mfmd.sh'))
+	setlocal makeprg=$HOME/bin/mfmd.sh\ '%:p'\ >\ '%:p:r.html'
 endif
 if executable('fmt')
 	setlocal formatprg=fmt\ -w\ 2500

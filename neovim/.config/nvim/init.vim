@@ -1096,6 +1096,10 @@ function s:AutoCorrectAndLog()
 	if empty(spellbadword(l:bad_word)[0])
 		return
 	endif
+	" ignore if the only differences are in capitalization
+	if tolower(l:bad_word) == tolower(l:new_word)
+		return
+	endif
 	" add the word to the autocorrect file
 	let l:autocorrect_file = fnamemodify($MYVIMRC, ':p:h') .. '/autocorrect.vim'
 	call writefile(['"iabbrev  <buffer>  ' .. l:bad_word .. '  ' .. l:new_word], l:autocorrect_file, 'a')

@@ -1084,18 +1084,21 @@ endfunction
 
 " log a autocorrected spellcheck word {{{3
 function s:AutoCorrectAndLog()
+	" get the incorrect word and the correct word
 	let l:bad_word = expand('<cword>')
 	execute 'normal! 1z='
+	let l:new_word = expand('<cword>')
+	" ignore if the word contains non-alphabetic characters
 	if l:bad_word =~# '[^A-Za-z]'
 		return
 	endif
+	" ignore if the word is in the dictionary
 	if empty(spellbadword(l:bad_word)[0])
 		return
 	endif
-	let l:new_word = expand('<cword>')
+	" add the word to the autocorrect file
 	let l:autocorrect_file = fnamemodify($MYVIMRC, ':p:h') .. '/autocorrect.vim'
 	call writefile(['"iabbrev  <buffer>  ' .. l:bad_word .. '  ' .. l:new_word], l:autocorrect_file, 'a')
-	"spellsuggest({word} [, {max} [, {capital}]])
 endfunction
 
 " miscellaneous editing mappings {{{3

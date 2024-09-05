@@ -665,7 +665,7 @@ function s:OpenExternal(arg)
 	let l:target = trim(a:arg)
 	if l:target !=# '.' && l:target !=# '..' && l:target !=# '~'
 		let l:target = substitute(l:target, '^[^~/0-9A-Za-z.]*', '', '')
-		let l:target = substitute(l:target, '[^/0-9A-Za-z]*$', '', '')
+		let l:target = substitute(l:target, '[^/0-9A-Za-z-]*$', '', '')
 	endif
 	if l:target =~# '^[^{}]*$' && (isdirectory(expand(l:target)) || filereadable(expand(l:target)))
 		" file or directory

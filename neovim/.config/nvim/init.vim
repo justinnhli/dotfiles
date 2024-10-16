@@ -226,7 +226,7 @@ if has('statusline')
 	" file format
 	set   statusline+=\ [%{&ff}]
 	" byte-order mark (BOM)
-	set statusline+=%{&bomb?'[BOM]':''}
+	set   statusline+=%{&bomb?'[BOM]':''}
 	" read only
 	set   statusline+=%r
 	" file type
@@ -245,7 +245,7 @@ if has('syntax')
 	set   spellcapcheck=
 endif
 if (has('termguicolors'))
-	set termguicolors " neovim default
+	set   termguicolors " neovim default
 endif
 if has('vertsplit')
 	set   splitright

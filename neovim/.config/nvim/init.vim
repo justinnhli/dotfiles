@@ -148,7 +148,7 @@ if has('syntax')
 endif
 set   autoindent " neovim default
 set   autoread " neovim default
-set   background=dark
+set   background=dark " neovim default
 set   backspace=indent,eol,start " neovim default
 set   cinoptions=(s,m1
 set   confirm
@@ -169,11 +169,11 @@ set   mouse=
 set   number
 set   scrolloff=1
 set   shiftwidth=4
-set   sidescroll=1
+set   sidescroll=1 " neovim default
 set   sidescrolloff=10
 set   smartcase
 set   smarttab " neovim default
-set nostartofline
+set nostartofline " neovim default
 set   tabpagemax=50 " neovim default
 set   tabstop=4
 set   tags+=./.tags,.tags
@@ -182,7 +182,7 @@ set   title
 set   whichwrap=b,s,<,>,h,l,[,]
 set nowrap
 if has('cmdline_info')
-	set   showcmd
+	set   showcmd " neovim default
 endif
 if has('folding')
 	set   foldclose=all
@@ -245,7 +245,7 @@ if has('syntax')
 	set   spellcapcheck=
 endif
 if (has('termguicolors'))
-	set termguicolors
+	set termguicolors " neovim default
 endif
 if has('vertsplit')
 	set   splitright

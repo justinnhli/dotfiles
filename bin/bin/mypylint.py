@@ -82,7 +82,12 @@ def run_pylint(path):
         column = match.group('column')
         message = match.group('message')
         message_id = match.group('message_id')
-        errors.append(Error(filename, int(linenum), int(column), f'{message} ({message_id})'))
+        errors.append(Error(
+            filename,
+            int(linenum),
+            int(column),
+            f'{message} (pylint {message_id})',
+        ))
     return errors
 
 
@@ -133,7 +138,12 @@ def run_mypy(path):
         message_id = match.group('message_id')
         if output_type != 'error':
             continue
-        errors.append(Error(filename, int(linenum), int(column), f'{message} ({message_id})'))
+        errors.append(Error(
+            filename,
+            int(linenum),
+            int(column),
+            f'{message} (mypy {message_id})',
+        ))
     return errors
 
 
@@ -169,7 +179,12 @@ def run_pydocstyle(path):
         column = 0
         message = match2.group('message')
         message_id = match2.group('message_id')
-        errors.append(Error(filename, int(linenum), int(column), f'{message} ({message_id})'))
+        errors.append(Error(
+            filename,
+            int(linenum),
+            int(column),
+            f'{message} (pydocstyle {message_id})',
+        ))
     return errors
 
 

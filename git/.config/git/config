@@ -52,6 +52,9 @@
     unpushed = log --branches --not --remotes --no-walk --oneline --format=format:'%S%n'
     prepush = log origin..HEAD
     # other
+    lint = ! \
+        git fetch --all --prune && \
+        git gc
     discards = ! \
         git unpushed | sed 's/^/branch: /' && \
         git staged | sed 's/^/staged: /' && \

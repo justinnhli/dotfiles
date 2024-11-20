@@ -4,6 +4,7 @@
 import re
 import subprocess
 import sys
+from argparse import ArgumentParser
 from collections import namedtuple
 from os import environ
 from pathlib import Path
@@ -184,16 +185,20 @@ def main():
     has_pydocstyle = _module_exists('pydocstyle')
     if not has_pydocstyle:
         _err_print('pydocstyle not found, skipping')
+    arg_parser = ArgumentParser()
+    arg_parser.add_argument('--all', action='store_true', help='show all messages')
+    arg_parser.add_argument('files', type=Path, nargs='+', help='files to lint')
+    args = arg_parser.parse_args()
     has_errors = False
-    for arg in sys.argv[1:]:
-        path = Path(arg).expanduser().resolve()
-        errors = []
-        if has_pylint:
-            errors.extend(run_pylint(path))
-        if not errors and has_mypy:
-            errors.extend(run_mypy(path))
-        if not errors and has_pydocstyle:
-            errors.extend(run_pydocstyle(path))
+    for filepath in args.files:
+        filepath = filepath.expanduser().resolve()
+        errors = [] # type: list[Error]
+        if has_pylint and (args.all or not errors):
+            errors.extend(run_pylint(filepath))
+        if has_mypy and (args.all or not errors):
+            errors.extend(run_mypy(filepath))
+        if has_pydocstyle and (args.all or not errors):
+            errors.extend(run_pydocstyle(filepath))
         for error in sorted(errors):
             _err_print(f'{error.filename}:{error.linenum}:{error.column}: {error.message}')
         has_errors |= bool(errors)

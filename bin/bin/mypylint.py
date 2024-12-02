@@ -124,7 +124,7 @@ def run_mypy(path):
             ' '.join([
                 '(?P<filename>[^:]*):(?P<linenum>[0-9]+):(?P<column>[0-9]+):',
                 '(?P<output_type>[^:]*):',
-                r'(?P<message>.*?) *\[(?P<message_id>.*)\]',
+                r'(?P<message>.*?) *\[(?P<message_id>[a-z-]*)\]',
             ]),
             line.strip(),
         )

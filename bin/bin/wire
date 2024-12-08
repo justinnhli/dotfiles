@@ -27,4 +27,5 @@ ip link set "$device" up
 if [[ "$1" == 'wireless' ]]; then
     wpa_supplicant -Bi "$device" -c /etc/wpa_supplicant/wpa_supplicant.conf
 fi
+iwconfig "$device" power off # turn off power management
 dhcpcd "$device" --debug --debug

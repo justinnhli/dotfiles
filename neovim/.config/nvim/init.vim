@@ -165,7 +165,6 @@ set   ignorecase
 set   laststatus=2 " neovim default
 set   lazyredraw
 set   listchars=tab:>>,trail:.
-set   mouse=
 set   number
 set   scrolloff=1
 set   shiftwidth=4

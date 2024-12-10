@@ -905,18 +905,18 @@ nnoremap  <C-S-k>  :silent! lpfile<cr>
 " disabled mappings {{{2
 
 " disable arrow keys {{{3
-noremap   <up>       <nop>
-noremap   <down>     <nop>
-noremap   <left>     <nop>
-noremap   <right>    <nop>
-noremap   <C-up>     <nop>
-noremap   <C-down>   <nop>
-noremap   <C-left>   <nop>
-noremap   <C-right>  <nop>
-noremap   <S-up>     <nop>
-noremap   <S-down>   <nop>
-noremap   <S-left>   <nop>
-noremap   <S-right>  <nop>
+nnoremap  <up>       <nop>
+nnoremap  <down>     <nop>
+nnoremap  <left>     <nop>
+nnoremap  <right>    <nop>
+nnoremap  <C-up>     <nop>
+nnoremap  <C-down>   <nop>
+nnoremap  <C-left>   <nop>
+nnoremap  <C-right>  <nop>
+nnoremap  <S-up>     <nop>
+nnoremap  <S-down>   <nop>
+nnoremap  <S-left>   <nop>
+nnoremap  <S-right>  <nop>
 inoremap  <up>       <nop>
 inoremap  <down>     <nop>
 inoremap  <left>     <nop>
@@ -929,6 +929,18 @@ inoremap  <S-up>     <nop>
 inoremap  <S-down>   <nop>
 inoremap  <S-left>   <nop>
 inoremap  <S-right>  <nop>
+xnoremap  <up>       <nop>
+xnoremap  <down>     <nop>
+xnoremap  <left>     <nop>
+xnoremap  <right>    <nop>
+xnoremap  <C-up>     <nop>
+xnoremap  <C-down>   <nop>
+xnoremap  <C-left>   <nop>
+xnoremap  <C-right>  <nop>
+xnoremap  <S-up>     <nop>
+xnoremap  <S-down>   <nop>
+xnoremap  <S-left>   <nop>
+xnoremap  <S-right>  <nop>
 
 " disable function keys {{{3
 nnoremap  <F1>   <nop>

@@ -942,6 +942,10 @@ xnoremap  <S-down>   <nop>
 xnoremap  <S-left>   <nop>
 xnoremap  <S-right>  <nop>
 
+" disable right mouse {{{3
+noremap   <rightmouse>  <nop>
+inoremap  <rightmouse>  <nop>
+
 " disable function keys {{{3
 nnoremap  <F1>   <nop>
 nnoremap  <F2>   <nop>

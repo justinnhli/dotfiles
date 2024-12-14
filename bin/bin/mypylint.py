@@ -107,7 +107,6 @@ def run_mypy(path):
             '-m',
             'mypy',
             '--strict',
-            '--follow-imports', 'error',
             '--ignore-missing-imports',
             '--no-warn-return-any',
             '--no-strict-optional',

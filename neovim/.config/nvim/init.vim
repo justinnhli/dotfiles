@@ -943,8 +943,18 @@ xnoremap  <S-left>   <nop>
 xnoremap  <S-right>  <nop>
 
 " disable right mouse {{{3
-noremap   <rightmouse>  <nop>
-inoremap  <rightmouse>  <nop>
+nnoremap  <rightmouse>    <nop>
+nnoremap  <2-rightmouse>  <nop>
+nnoremap  <3-rightmouse>  <nop>
+nnoremap  <4-rightmouse>  <nop>
+inoremap  <rightmouse>    <nop>
+inoremap  <2-rightmouse>  <nop>
+inoremap  <3-rightmouse>  <nop>
+inoremap  <4-rightmouse>  <nop>
+xnoremap  <rightmouse>    <nop>
+xnoremap  <2-rightmouse>  <nop>
+xnoremap  <3-rightmouse>  <nop>
+xnoremap  <4-rightmouse>  <nop>
 
 " disable function keys {{{3
 nnoremap  <F1>   <nop>

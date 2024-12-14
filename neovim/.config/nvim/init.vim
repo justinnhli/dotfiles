@@ -897,8 +897,8 @@ nnoremap  <leader>lb  :lgetexpr <SID>LExprBuffers() <bar> :lopen<cr>
 " TODO turn into autocmd that automatically maps to quickfix and location
 " the event is QuickFixCmdPost
 " check if location list is open with if get(getloclist(0, {'winid':0}), 'winid', 0)
-nnoremap  <S-j>  :silent! call <SID>NextQuickFixOrLocation()<cr>
-nnoremap  <S-k>  :silent! call <SID>PrevQuickFixOrLocation()<cr>
+nnoremap  <S-j>    :silent! call <SID>NextQuickFixOrLocation()<cr>
+nnoremap  <S-k>    :silent! call <SID>PrevQuickFixOrLocation()<cr>
 nnoremap  <C-S-j>  :silent! lnfile<cr>
 nnoremap  <C-S-k>  :silent! lpfile<cr>
 

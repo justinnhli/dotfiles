@@ -18,18 +18,25 @@ PAPERS_PATH = Path('~/papers').expanduser().resolve()
 REMOTE_HOST = 'justinnhli.com'
 REMOTE_PATH = Path('/home/justinnhli/justinnhli.com/papers')
 
-WEIRD_NAMES = {}
+WEIRD_NAMES = {
+    '{Pew Research Center}': 'Pew',
+    '{National Transportation Safety Board}': 'NTSB',
+    '{Association of Computing Machinery}': 'ACM',
+    '{Computing Research Association}': 'CRA',
+    '{Gallup Inc.}': 'Gallup',
+    '{Google Inc.}': 'Google',
+    '{Liberal Arts Computer Science Consortium}': 'LACS',
+    '{National Academies of Sciences, Engineering, and Medicine}': 'NASEM',
+    '{Open Science Collaboration}': 'OSC',
+    '{The ABC Research Group}': 'ABC',
+    '{The Cell Editorial Team}': 'Cell',
+    '{The College Board}': 'CB',
+    '{The Economist}': 'Economist',
+    '{The Joint Task Force on Computing Curricula}': 'JTFCC',
+    '{UMBEL Project}': 'UMBEL',
+    'others': '',
+}
 
-
-def load_weird_names():
-    # type: () -> None
-    """Read in weird names data."""
-    with Path(__file__).parent.joinpath('entities.csv').open(encoding='utf-8') as fd:
-        for row in DictReader(fd, delimiter='\t'):
-            WEIRD_NAMES[row['author']] = row['short-name']
-
-
-load_weird_names()
 
 BIBTEX_FIELDS = [
     'id',

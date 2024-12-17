@@ -5,7 +5,7 @@ from collections import defaultdict
 from pathlib import Path
 from typing import Mapping
 
-CONTACTS_PATH = Path('~/pim/contacts/contacts.vcf').expanduser()
+CONTACTS_PATH = Path('~/Dropbox/pim/contacts/contacts.vcf').expanduser()
 
 
 class Contact:

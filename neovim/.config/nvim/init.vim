@@ -1032,6 +1032,7 @@ function s:FormatTable()
 	" vint: -ProhibitCommandWithUnintendedSideEffect -ProhibitCommandRelyOnUser
 	'<,'>s/\m\C  \+/	/eg
 	silent '<,'>!column -ts '	'
+	'<,'>s/\m\C \+$//eg
 	execute 'normal! g;g;'
 endfunction
 

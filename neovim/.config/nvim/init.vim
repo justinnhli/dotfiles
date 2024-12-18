@@ -1028,23 +1028,29 @@ xnoremap  q:     :
 " editing functions {{{2
 
 " format table {{{3
-function s:FormatTable(use_spaces)
+function s:FormatTable(visual, use_spaces)
 	" vint: -ProhibitCommandWithUnintendedSideEffect -ProhibitCommandRelyOnUser
-	'<,'>s/\m\C  \+/	/eg
-	if a:use_spaces
-		silent '<,'>!column -ts '	'
-		'<,'>s/\m\C \+$//eg
+	if a:visual
+		let l:range="'<,'>"
+	else
+		let l:range='%'
 	endif
-	execute 'normal! g;g;'
+    let l:save_cursor = getpos('.')
+	execute l:range .. 's/\m\C  \+/	/eg'
+	if a:use_spaces
+		execute "silent " .. l:range .. "!column -ts '	'"
+		execute l:range .. 's/\m\C \+$//eg'
+	endif
+	call setpos('.', l:save_cursor)
 endfunction
 
 " editing mappings {{{2
 
 " editing mappings {{{3
-nnoremap  <leader><bar>     ggVG:<C-u>call <SID>FormatTable(v:false)<cr>
-nnoremap  <leader><bslash>  ggVG:<C-u>call <SID>FormatTable(v:true)<cr>
-xnoremap  <leader><bar>     :<C-u>call <SID>FormatTable(v:false)<cr>gv
-xnoremap  <leader><bslash>  :<C-u>call <SID>FormatTable(v:true)<cr>gv
+nnoremap  <leader><bar>     :<C-u>call <SID>FormatTable(v:false, v:false)<cr>
+nnoremap  <leader><bslash>  :<C-u>call <SID>FormatTable(v:false, v:true)<cr>
+xnoremap  <leader><bar>     :<C-u>call <SID>FormatTable(v:true, v:false)<cr>gv
+xnoremap  <leader><bslash>  :<C-u>call <SID>FormatTable(v:true, v:true)<cr>gv
 
 " thesaurus functions {{{2
 

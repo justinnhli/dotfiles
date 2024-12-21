@@ -431,10 +431,10 @@ endif
 
 " open file under cursor {{{3
 nnoremap  <leader>we.  :execute 'edit ' .. expand('<cfile>')<cr>
-nnoremap  <leader>wh.  :execute 'leftabove vertical ' .. expand('<cfile>')<cr>
-nnoremap  <leader>wj.  :execute 'rightbelow ' .. expand('<cfile>')<cr>
-nnoremap  <leader>wk.  :execute 'leftabove ' .. expand('<cfile>')<cr>
-nnoremap  <leader>wl.  :execute 'rightbelow vertical ' .. expand('<cfile>')<cr>
+nnoremap  <leader>wh.  :execute 'leftabove vsplit ' .. expand('<cfile>')<cr>
+nnoremap  <leader>wj.  :execute 'rightbelow split ' .. expand('<cfile>')<cr>
+nnoremap  <leader>wk.  :execute 'leftabove split ' .. expand('<cfile>')<cr>
+nnoremap  <leader>wl.  :execute 'rightbelow vsplit ' .. expand('<cfile>')<cr>
 nnoremap  <leader>t.   :execute 'tabnew ' .. expand('<cfile>')<cr>
 xnoremap  <leader>we.  gf
 xnoremap  <leader>wh.  :<C-u>leftabove vertical wincmd f<cr>

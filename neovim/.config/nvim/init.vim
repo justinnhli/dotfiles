@@ -1035,13 +1035,13 @@ function s:FormatTable(visual, use_spaces)
 	else
 		let l:range='%'
 	endif
-    let l:save_cursor = getpos('.')
+    let l:cursor = getpos('.')
 	execute l:range .. 's/\m\C  \+/	/eg'
 	if a:use_spaces
 		execute "silent " .. l:range .. "!column -ts '	'"
 		execute l:range .. 's/\m\C \+$//eg'
 	endif
-	call setpos('.', l:save_cursor)
+	call setpos('.', l:cursor)
 endfunction
 
 " editing mappings {{{2

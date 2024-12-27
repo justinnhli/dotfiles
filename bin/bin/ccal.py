@@ -30,17 +30,16 @@ def str_to_date(string, start=True):
             if not start:
                 result = result.replace(month=12, day=31)
             return result
-        elif len(string) == 7:
+        if len(string) == 7:
             result = datetime.strptime(string, '%Y-%m').date()
             if not start:
                 result = result.replace(
                     day=monthrange(result.year, result.month)[1]
                 )
             return result
-        elif len(string) == 10:
+        if len(string) == 10:
             return datetime.strptime(string, '%Y-%m-%d').date()
-        else:
-            raise ValueError()
+        raise ValueError()
     except ValueError as err:
         raise ArgumentTypeError(
             f'argument "{string}" should be in format YYYY[-MM[-DD]]'

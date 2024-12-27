@@ -105,9 +105,10 @@ def print_calendar(start_date, end_date, mark_date=None, header='right'):
     """
     curr_date = start_date - ((start_date.weekday() + 1) % 7) * ONE_DAY
     if header == 'left':
-        print(10 * ' ' + ' Su Mo Tu We Th Fr Sa')
+        left_margin = 9 * ' '
     else:
-        print(' Su Mo Tu We Th Fr Sa')
+        left_margin = ''
+    print(left_margin + ' Su Mo Tu We Th Fr Sa')
     while curr_date <= end_date:
         output = ' '.join(
             f'{(curr_date + (i * ONE_DAY)).day: >2d}'
@@ -117,13 +118,16 @@ def print_calendar(start_date, end_date, mark_date=None, header='right'):
         if mark_date and 0 <= (mark_date - curr_date).days <= 7:
             output = output.replace(f' {mark_date.day: >2d} ', f'[{mark_date.day: >2d}]')
         curr_date += 7 * ONE_DAY
-        if (curr_date - start_date).days <= 7 or 1 < curr_date.day <= 8:
-            if header == 'right':
-                output += curr_date.strftime('%b %Y')
-            else:
-                output = curr_date.strftime(' %b %Y ') + output
-        elif header == 'left':
-            output = 10 * ' ' + output
+        if (curr_date - start_date).days <= 7:
+            month = start_date.strftime('%b %Y')
+        elif 1 < curr_date.day <= 8:
+            month = curr_date.strftime('%b %Y')
+        else:
+            month = ''
+        if header == 'left':
+            output = left_margin[len(month) + 1:] + month + ' ' + output
+        else:
+            output += month
         print(output)
 
 

@@ -321,7 +321,6 @@ if [ $nvim_terminal -eq 1 ]; then
 	alias vi='$(command -v nvimcmd.py) tabnew'
 	alias vim='$(command -v nvimcmd.py) tabnew'
 	alias nvim='$(command -v nvimcmd.py) tabnew'
-	workon neovim
 fi
 
 # PIM related settings

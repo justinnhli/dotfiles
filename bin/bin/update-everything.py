@@ -255,11 +255,11 @@ def merge_history():
                 if len(components) != 4:
                     continue
                 date_str, host, pwd, command = components
-                if date_str.endswith('Z'):
-                    abs_date = datetime.strptime(date_str, '%Y-%m-%dT%H:%M:%SZ')
-                else:
+                try:
                     abs_date = datetime.strptime(date_str, '%Y-%m-%dT%H:%M:%S%z')
-                    abs_date = (abs_date - abs_date.utcoffset()).replace(tzinfo=None)
+                except ValueError:
+                    continue
+                abs_date = (abs_date - abs_date.utcoffset()).replace(tzinfo=None)
                 years.add(abs_date.year)
                 command = command.strip()
                 shistory.add((abs_date, date_str, host, pwd, command))

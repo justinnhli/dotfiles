@@ -16,6 +16,7 @@ cat << EOF
         ol ol ol {list-style-type:lower-roman;}
         table {border-collapse:collapse;}
         table tr, table td {border:1px solid #000000; border-collapse:collapse;}
+        table tr, table th, table td {border:1px solid #000000; border-collapse:collapse;}
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.4.1/styles/github-gist.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.4.1/highlight.min.js"></script>

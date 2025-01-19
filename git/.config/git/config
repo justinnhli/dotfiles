@@ -53,6 +53,7 @@
     prepush = log origin..HEAD
     # other
     lint = ! \
+        git worktree prune && \
         git fetch --all --prune && \
         git gc
     discards = ! \

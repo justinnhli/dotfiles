@@ -339,6 +339,7 @@ if [ -d "$pim_path" ]; then
 		alias vijd='$(command -v nvimcmd.py) "tabnew | execute(\"normal 1 JD\") | tabclose -1"'
 		alias vijc='$(command -v nvimcmd.py) "tabnew | execute(\"normal 1 JC\") | tabclose -1"'
 		alias vijp='$(command -v nvimcmd.py) "tabnew | execute(\"normal 1 JP\") | tabclose -1"'
+		alias vijs='$(command -v nvimcmd.py) "tabnew | execute(\"normal 1 JS\") | tabclose -1"'
 	else
 		alias vijj='$VISUAL -c "normal 1 JJ" -c tabonly'
 		alias vijl='$VISUAL -c "normal 1 JL" -c tabonly'
@@ -348,6 +349,7 @@ if [ -d "$pim_path" ]; then
 		alias vijd='$VISUAL -c "normal 1 JD" -c tabonly'
 		alias vijc='$VISUAL -c "normal 1 JC" -c tabonly'
 		alias vijp='$VISUAL -c "normal 1 JP" -c tabonly'
+		alias vijs='$VISUAL -c "normal 1 JS" -c tabonly'
 	fi
 fi
 

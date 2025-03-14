@@ -233,7 +233,7 @@ class Library:
         """
         for file_path_str in file_path_strs:
             paper = Paper(Path(file_path_str).name)
-            _run_shell_command('open', str(paper.loca))
+            _run_shell_command('open', str(paper.local))
 
     def remove(self, *file_path_strs):
         # type: (*str) -> None

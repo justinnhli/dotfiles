@@ -227,15 +227,12 @@ def run_pydocstyle(path):
 def main():
     # type: () -> None
     """Deal with command line arguments."""
-    has_pylint = _module_exists('pylint')
-    if not has_pylint:
-        _err_print('pylint not found, skipping')
-    has_mypy = _module_exists('mypy')
-    if not has_mypy:
-        _err_print('mypy not found, skipping')
-    has_pydocstyle = _module_exists('pydocstyle')
-    if not has_pydocstyle:
-        _err_print('pydocstyle not found, skipping')
+    linters = [
+        ('pylint', run_pylint),
+        ('mypy', run_mypy),
+        #('pyright', run_pyright),
+        ('pydocstyle', run_pydocstyle),
+    ]
     arg_parser = ArgumentParser()
     arg_parser.add_argument(
         '--staged',
@@ -248,12 +245,13 @@ def main():
     for filepath in args.files:
         filepath = filepath.expanduser().resolve()
         errors = [] # type: list[Error]
-        if has_pylint and not (args.staged and errors):
-            errors.extend(run_pylint(filepath))
-        if has_mypy and not (args.staged and errors):
-            errors.extend(run_mypy(filepath))
-        if has_pydocstyle and not (args.staged and errors):
-            errors.extend(run_pydocstyle(filepath))
+        for linter_name, lint_function in linters:
+            if args.staged and errors:
+                break
+            if not _module_exists(linter_name):
+                _err_print(f'{linter_name} not found, skipping')
+                continue
+            errors.extend(lint_function(filepath))
         for error in sorted(errors):
             _err_print(f'{error.filename}:{error.linenum}:{error.column}: {error.message}')
         has_errors |= bool(errors)

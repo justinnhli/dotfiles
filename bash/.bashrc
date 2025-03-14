@@ -330,27 +330,18 @@ if [ -d "$pim_path" ]; then
 	if command -v journal.py >/dev/null 2>&1; then
 		alias jrnl="journal.py \$(find $pim_path/journal/ -maxdepth 1 -name '[a-z]*.journal' | sed 's/^/--ignore /' | tr '\n' ' ')"
 	fi
-	if [ $nvim_terminal -eq 1 ]; then
-		alias vijj='$(command -v nvimcmd.py) "tabnew | execute(\"normal 1 JJ\") | tabclose -1"'
-		alias vijl='$(command -v nvimcmd.py) "tabnew | execute(\"normal 1 JL\") | tabclose -1"'
-		alias vijr='$(command -v nvimcmd.py) "tabnew | execute(\"normal 1 JR\") | tabclose -1"'
-		alias vijm='$(command -v nvimcmd.py) "tabnew | execute(\"normal 1 JM\") | tabclose -1"'
-		alias vijn='$(command -v nvimcmd.py) "tabnew | execute(\"normal 1 JN\") | tabclose -1"'
-		alias vijd='$(command -v nvimcmd.py) "tabnew | execute(\"normal 1 JD\") | tabclose -1"'
-		alias vijc='$(command -v nvimcmd.py) "tabnew | execute(\"normal 1 JC\") | tabclose -1"'
-		alias vijp='$(command -v nvimcmd.py) "tabnew | execute(\"normal 1 JP\") | tabclose -1"'
-		alias vijs='$(command -v nvimcmd.py) "tabnew | execute(\"normal 1 JS\") | tabclose -1"'
-	else
-		alias vijj='$VISUAL -c "normal 1 JJ" -c tabonly'
-		alias vijl='$VISUAL -c "normal 1 JL" -c tabonly'
-		alias vijr='$VISUAL -c "normal 1 JR" -c tabonly'
-		alias vijm='$VISUAL -c "normal 1 JM" -c tabonly'
-		alias vijn='$VISUAL -c "normal 1 JN" -c tabonly'
-		alias vijd='$VISUAL -c "normal 1 JD" -c tabonly'
-		alias vijc='$VISUAL -c "normal 1 JC" -c tabonly'
-		alias vijp='$VISUAL -c "normal 1 JP" -c tabonly'
-		alias vijs='$VISUAL -c "normal 1 JS" -c tabonly'
-	fi
+	# programmatically generate vijj and related aliases
+	for lower_key in j l r m n d c p s; do
+		upper_key="$(echo "$lower_key" | tr '[:lower:]' '[:upper:]')"
+		alias_name="vij${lower_key}"
+		if [ $nvim_terminal -eq 1 ]; then
+			alias_command="\$(command -v nvimcmd.py) \"tabnew | execute(\\\"normal 1 J${upper_key}\\\") | tabclose -1\""
+			alias "$alias_name=$alias_command"
+		else
+			alias_command="\$VISUAL -c \"normal 1 J${upper_key}\" -c tabonly"
+			alias "$alias_name=$alias_command"
+		fi
+	done 
 fi
 
 # automatically correct minor spelling errors with `cd`

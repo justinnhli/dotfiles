@@ -202,18 +202,22 @@ def main():
     if not has_pydocstyle:
         _err_print('pydocstyle not found, skipping')
     arg_parser = ArgumentParser()
-    arg_parser.add_argument('--all', action='store_true', help='show all messages')
+    arg_parser.add_argument(
+        '--staged',
+        action='store_true',
+        help='show messages from one tool at a time',
+    )
     arg_parser.add_argument('files', type=Path, nargs='+', help='files to lint')
     args = arg_parser.parse_args()
     has_errors = False
     for filepath in args.files:
         filepath = filepath.expanduser().resolve()
         errors = [] # type: list[Error]
-        if has_pylint and (args.all or not errors):
+        if has_pylint and not (args.staged and errors):
             errors.extend(run_pylint(filepath))
-        if has_mypy and (args.all or not errors):
+        if has_mypy and not (args.staged and errors):
             errors.extend(run_mypy(filepath))
-        if has_pydocstyle and (args.all or not errors):
+        if has_pydocstyle and not (args.staged and errors):
             errors.extend(run_pydocstyle(filepath))
         for error in sorted(errors):
             _err_print(f'{error.filename}:{error.linenum}:{error.column}: {error.message}')

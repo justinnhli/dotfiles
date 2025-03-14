@@ -4,6 +4,7 @@
 import re
 import subprocess
 import sys
+from json import loads as json_loads
 from argparse import ArgumentParser
 from collections import namedtuple
 from os import environ
@@ -144,6 +145,40 @@ def run_mypy(path):
             int(linenum),
             int(column),
             f'{message} (mypy {message_id})',
+        ))
+    return errors
+
+
+def run_pyright(path):
+    # type: (Path) -> List[Error]
+    """Get errors from pyright.
+
+    Parameters:
+        path (Path): The path to the file to check.
+
+    Returns:
+        List[Error]: A list of errors.
+    """
+    process = subprocess.run(
+        [
+            VENV_PYTHON,
+            '-m',
+            'pyright',
+            '--outputjson',
+            str(path),
+        ],
+        check=False,
+        capture_output=True,
+    )
+    errors = []
+    json_output = json_loads(process.stdout.decode('utf-8'))
+    for error_dict in json_output['generalDiagnostics']:
+        message = re.sub(r'\n\s*', '; ', error_dict['message'])
+        errors.append(Error(
+            str(Path(error_dict['file']).expanduser().resolve()),
+            error_dict['range']['start']['line'] + 1,
+            error_dict['range']['start']['character'],
+            f'{message} (pyright {error_dict["rule"]})',
         ))
     return errors
 

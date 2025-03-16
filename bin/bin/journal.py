@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 """Command line tool for viewing and maintaining a journal."""
 
-# pylint: disable = too-many-lines
-
 import re
 from json import load as json_read, dump as json_write
 from argparse import ArgumentParser, Namespace
@@ -284,7 +282,6 @@ class Journal(Entries):
     def lint(self):
         # type: () -> list[tuple[Path, int, str]]
         """Check the journal for errors."""
-        # pylint: disable = too-many-nested-blocks, too-many-branches
         ascii_regex = re.compile('(\t*[!-~]([ -~]*[!-~])?)?')
         errors = []
         titles = set()
@@ -1160,7 +1157,11 @@ def log_search(arg_parser, args, journal):
                     options.append((option_string, option_value))
     log_args = op_flag
     collapsible = (len(op_flag) == 2)
-    for opt_str, opt_val in sorted(options, key=(lambda pair: (pair[1] is not None, pair[0].upper()))):
+    sorted_options = sorted(
+        options,
+        key=(lambda pair: (pair[1] is not None, pair[0].upper())),
+    )
+    for opt_str, opt_val in sorted_options:
         if collapsible and len(opt_str) == 2:
             log_args += opt_str[1]
         else:

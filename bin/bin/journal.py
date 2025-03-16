@@ -550,6 +550,8 @@ def log_error(message):
 
 # operations
 
+
+OperationFunction = Callable[[Journal, Namespace], None]
 OPERATIONS = []
 Option = namedtuple('Option', 'priority, flag, desc, function')
 COUNT_COL_FNS = {
@@ -570,19 +572,19 @@ GRAPH_NODE_FNS = {
 
 
 def register(flag=None):
-    # type: (str) -> Callable[[Callable[[Journal, Namespace], None]], Callable[[Journal, Namespace], None]]
+    # type: (str) -> Callable[[OperationFunction], OperationFunction]
     """Register a function for the CLI.
 
     Parameters:
         flag (str): The option flag. Optional; if not provided, the function name is used instead.
 
     Returns:
-        Callable[[Callable[[Journal, Namespace], None]], Callable[[Journal, Namespace], None]]:
+        Callable[[OperationFunction], OperationFunction]:
             The argument function.
     """
 
     def wrapped(function, flag):
-        # type: (Callable[[Journal, Namespace], None], str) -> Callable[[Journal, Namespace], None]
+        # type: (OperationFunction, str) -> OperationFunction
         assert function.__name__.startswith('do_')
         if flag is None:
             priority = 2

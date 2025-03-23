@@ -117,10 +117,10 @@ def print_calendar(start_date, end_date, mark_date=None, header='right'):
         if mark_date and 0 <= (mark_date - curr_date).days <= 7:
             output = output.replace(f' {mark_date.day: >2d} ', f'[{mark_date.day: >2d}]')
         curr_date += 7 * ONE_DAY
-        if (curr_date - start_date).days <= 7:
-            month = start_date.strftime('%b %Y')
-        elif 1 < curr_date.day <= 8:
+        if 1 < curr_date.day <= 8:
             month = curr_date.strftime('%b %Y')
+        elif (curr_date - start_date).days <= 7:
+            month = start_date.strftime('%b %Y')
         else:
             month = ''
         if header == 'left':

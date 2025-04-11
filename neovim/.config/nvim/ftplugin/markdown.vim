@@ -6,6 +6,10 @@ setlocal expandtab
 setlocal wrap
 if !empty(glob('~/bin/mfmd.sh'))
 	setlocal makeprg=$HOME/bin/mfmd.sh\ '%:p'\ >\ '%:p:r.html'
+	augroup justinnhli_markdown_make_on_write
+		autocmd!
+		autocmd BufWritePost *.md silent make
+	augroup END
 endif
 if executable('fmt')
 	setlocal formatprg=fmt\ -w\ 2500

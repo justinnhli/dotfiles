@@ -237,7 +237,7 @@ def main():
         ('pylint', run_pylint),
         ('mypy', run_mypy),
         #('pyright', run_pyright),
-        ('pydocstyle', run_pydocstyle),
+        #('pydocstyle', run_pydocstyle),
     ]
     arg_parser = ArgumentParser()
     arg_parser.add_argument(

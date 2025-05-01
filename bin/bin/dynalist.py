@@ -46,6 +46,8 @@ def send_json_post(uri, data):
     # type: (str, Mapping[str, str]) -> dict[str, Any]
     """Send a post request with json data."""
     response = requests.post(uri, data=json.dumps(data))
+    if response.status_code != 200:
+        raise ConnectionError(f'connecting to {uri} resulted in status code {response.status_code}')
     return json.loads(response.text)
 
 

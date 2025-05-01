@@ -234,10 +234,10 @@ def main():
     # type: () -> None
     """Deal with command line arguments."""
     linters = [
-        ('pylint', run_pylint),
-        ('mypy', run_mypy),
-        #('pyright', run_pyright),
-        #('pydocstyle', run_pydocstyle),
+        ('pylint', True, run_pylint),
+        ('mypy', True, run_mypy),
+        ('pyright', False, run_pyright),
+        ('pydocstyle', False, run_pydocstyle),
     ]
     arg_parser = ArgumentParser()
     arg_parser.add_argument(
@@ -245,19 +245,30 @@ def main():
         action='store_true',
         help='show messages from one tool at a time',
     )
+    for linter, default, _ in linters:
+        arg_parser.add_argument(
+            f'--{linter}',
+            action='store_true',
+            default=default,
+            help=f'include {linter} in output',
+        )
     arg_parser.add_argument('files', type=Path, nargs='+', help='files to lint')
     args = arg_parser.parse_args()
+    for linter, _, _ in linters:
+        if not getattr(args, linter):
+            continue
+        if not _module_exists(linter):
+            _err_print(f'{linter} not found, skipping')
+            setattr(args, linter, False)
     has_errors = False
     for filepath in args.files:
         filepath = filepath.expanduser().resolve()
         errors = [] # type: list[Error]
-        for linter_name, lint_function in linters:
+        for linter, _, lint_function in linters:
             if args.staged and errors:
                 break
-            if not _module_exists(linter_name):
-                _err_print(f'{linter_name} not found, skipping')
-                continue
-            errors.extend(lint_function(filepath))
+            if getattr(args, linter):
+                errors.extend(lint_function(filepath))
         for error in sorted(errors):
             _err_print(f'{error.filename}:{error.linenum}:{error.column}: {error.message}')
         has_errors |= bool(errors)

@@ -1446,6 +1446,7 @@ function EmojiToShortcode()
 	%s/🙂/:grinning:/eg
 	%s/🙃/:upside_down_smile:/eg
 	%s/🙄/:eye_roll:/eg
+	%s/🙏/:prayer_hands:/eg
 	%s/🤔/:thinking_face:/eg
 	%s/🤗/:hugging_face:/eg
 	%s/🤣/:rofl:/eg

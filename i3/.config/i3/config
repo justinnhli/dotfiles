@@ -100,4 +100,4 @@ exec --no-startup-id sh -c 'sleep 15; xset r rate 500'
 # set wallpaper
 exec --no-startup-id feh --no-fehbg --bg-scale $HOME/Dropbox/wallpaper.png
 # start dropbox
-exec dropbox
+exec $HOME/Dropbox/projects/dropbox-no-display.sh

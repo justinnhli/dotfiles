@@ -177,7 +177,6 @@ set   tabpagemax=50 " neovim default
 set   tabstop=4
 set   tags+=./.tags,.tags
 set   timeoutlen=500
-set   title
 set   whichwrap=b,s,<,>,h,l,[,]
 set nowrap
 if has('cmdline_info')

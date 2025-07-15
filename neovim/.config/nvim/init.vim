@@ -1385,16 +1385,15 @@ function UnicodeToAscii()
 	%s/\%u2192/->/eg " rightwards arrow
 	" specials
 	%s/\%uFFFC//eg " object replacement character
+	%s/\%u2122/(TM)/eg " trademark
 endfunction
 
 " EmojiToShortcode {{{3
 function EmojiToShortcode()
 	" vint: -ProhibitCommandWithUnintendedSideEffect -ProhibitCommandRelyOnUser
 	" other
-	"😊
-	"😲
-	"😧
 	"😣
+	"🥴
 	" remove variant selectors
 	%s/\%uFE00//eg
 	%s/\%uFE01//eg
@@ -1439,9 +1438,12 @@ function EmojiToShortcode()
 	%s/😠/:anger:/eg
 	%s/😡/:anger:/eg
 	%s/😢/:tear:/eg
+	%s/😦/:anguish_face:/eg
+	%s/😧/:anguish_face:/eg
 	%s/😬/:grimace:/eg
 	%s/😭/:streaming_tears:/eg
 	%s/😮/:open_mouth_face:/eg
+	%s/😲/:astonished:/eg
 	%s/🙂/:grinning:/eg
 	%s/🙃/:upside_down_smile:/eg
 	%s/🙄/:eye_roll:/eg
@@ -1451,7 +1453,10 @@ function EmojiToShortcode()
 	%s/🤣/:rofl:/eg
 	%s/🤮/:vomit:/eg
 	%s/🤯/:mind_blown:/eg
+	%s/🤷/:shrug:/eg
 	%s/🥰/:smile_with_hearts:/eg
 	%s/🥲/:tear:/eg
+	%s/🥵/:hot_face:/eg
 	%s/🥺/:glossy_eyes:/eg
+	%s/🫠/:melting_face:/eg
 endfunction

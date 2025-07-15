@@ -30,7 +30,7 @@ def parse_email(lines, subject):
     sender = Person(sender_name, match.group(2))
     date_str = match.group(3).strip()
     date = datetime.strptime(date_str, '%a, %b %d, %Y at %I:%M %p')
-    recipients = []
+    recipients = ''
     for line in lines[1:4]:
         if line[:3] not in ('To:', 'Cc:', 'Bcc'):
             continue

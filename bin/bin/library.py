@@ -2,7 +2,6 @@
 """A library of research papers."""
 
 import re
-from csv import DictReader
 from itertools import chain
 from argparse import ArgumentParser
 from collections import defaultdict

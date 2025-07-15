@@ -114,7 +114,7 @@ def print_grid(resolution=60, civilian_time=False):
         ''').strip())
         cur_time += timedelta(minutes=resolution)
     # print grid
-    for days_offset, weekday in enumerate(WEEKDAYS):
+    for _, weekday in enumerate(WEEKDAYS):
         cur_time = datetime.now().replace(hour=START_HOUR, minute=0)
         while cur_time.hour < END_HOUR:
             classes = []

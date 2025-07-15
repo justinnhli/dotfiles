@@ -382,7 +382,7 @@ def sync_vim_file(relative_path):
         host = 'home'
     assert not relative_path.is_absolute()
     local_path = Path.home() / relative_path
-    lines = set() # type: set(str)
+    lines = set() # type: set[str]
     process = run(
         ['ssh', '-oBatchMode=yes', host, 'cat', str(Path('/home/justinnhli/') / relative_path)],
         check=True,

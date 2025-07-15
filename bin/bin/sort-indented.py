@@ -59,9 +59,9 @@ def sort_indented(text, depth=None, reverse=False):
     if depth is None:
         depth = min_indent(text, indent)
     assert indent != ''
-    result = []
-    items = []
-    item = []
+    result = [] # type: list[str]
+    items = [] # type: list[list[str]]
+    item = [] # type: list[str]
     for line in text.splitlines():
         line_indent = get_indent(line, indent)
         if line_indent < depth:

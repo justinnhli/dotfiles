@@ -353,9 +353,13 @@ def pull_git():
     # type: () -> None
     """Pull on all git repos."""
     git_path = Path('~/git').expanduser().resolve()
-    if not git_path.exists() or (git_path / '.jj').exists():
-        return
-    run(['git-all.sh', 'pull'], cwd=git_path, check=True)
+    for repo_git_path in sorted(git_path.glob('*/.git/')):
+        repo_path = repo_git_path.parent
+        if (repo_path / '.jj').exists():
+            continue
+        print(repo_path)
+        run(['git', 'pull'], cwd=repo_path, check=False),
+        print()
 
 
 @cache

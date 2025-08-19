@@ -1302,6 +1302,7 @@ function s:LockQuickfixWinLeave()
 	endif
 endfunction
 augroup justinnhli_lock_quickfix
+	autocmd!
 	autocmd BufRead      *  call <sid>LockQuickfixRead()
 	autocmd BufWinLeave  *  call <sid>LockQuickfixWinLeave()
 augroup END

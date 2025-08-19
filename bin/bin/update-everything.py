@@ -54,7 +54,7 @@ def update_arch():
     """Update Arch Linux packages."""
     if not which('pikaur'):
         return
-    run(['pikaur', '-Syu'], check=True)
+    run(['pikaur', '-Syu', '--noedit'], check=True)
 
 
 @register()

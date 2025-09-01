@@ -315,6 +315,7 @@ let g:gutentags_enabled_user_func = 'ShouldEnableGutentags'
 " journal {{{3
 let g:jrnl_ignore_files = split(globpath('~/journal', '*.journal'), '\n')
 augroup justinnhli_journal
+	autocmd!
 	autocmd  FileType  journal  nnoremap  <buffer>  <leader>j  q:iJournal -S
 	autocmd  FileType  journal  xnoremap  <buffer>  <leader>j  "zyq:iJournal -S "<C-r>z"
 augroup END

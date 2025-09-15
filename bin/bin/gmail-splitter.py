@@ -47,6 +47,8 @@ def parse_email(lines, subject):
         line.rstrip() for line in lines[text_start:]
         if line.strip() not in ('', '[Quoted text hidden]')
     ]
+    if '--' in lines:
+        lines = lines[:lines.index('--')]
     text = '\n'.join(lines)
     text = re.sub(SIGNATURE_RE, '', text).strip()
     return Email(date, sender, recipients, subject, text)

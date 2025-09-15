@@ -54,7 +54,7 @@ def create_thumbnail_grid(path, scale=120):
             'ffmpeg',
             '-i', str(path),
             '-loglevel', 'error',
-            '-vf', f'fps=1/{frequency},scale=-1:{scale},tile=4x4',
+            '-vf', f'fps=1/{frequency},scale=oh*dar:{scale},tile=4x4',
             str(image_path(path)),
         ],
         check=False,

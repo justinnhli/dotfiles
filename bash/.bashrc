@@ -7,7 +7,7 @@ update_dot_files() {
 }
 
 # paths
-PATH="/usr/local/bin:/usr/local/opt/sqlite/bin:$PATH"
+PATH="/usr/local/bin:/usr/local/opt/sqlite/bin:/usr/local/sbin:$PATH"
 PATH="$HOME/bin:$PATH"
 PATH="$(find "$HOME/git" -maxdepth 2 -type f -perm -100 -exec dirname {} ';' 2>/dev/null | sort -f | uniq | tr '\n' ':' | sed 's/:$//'):$PATH"
 PATH="$(find "$HOME/Dropbox/projects" -maxdepth 2 -type f -perm -100 -exec dirname {} ';' 2>/dev/null | sort -f | uniq | tr '\n' ':' | sed 's/:$//'):$PATH"

@@ -65,6 +65,15 @@ BIBTEX_FIELDS = [
     'year',
 ]
 
+
+def is_lawsuit(author):
+    # type: (str) -> bool
+    return (
+        ' and ' not in author
+        and re.fullmatch('.* v\\. .*', author[1:-1])
+    )
+
+
 class Paper:
     """A research paper."""
 
@@ -280,6 +289,8 @@ class Library:
                 value = getattr(paper, attr)
                 if value in WEIRD_NAMES:
                     return
+                if is_lawsuit(value):
+                    return
                 people = value.split(' and ')
                 if any((',' not in person) for person in people if person not in WEIRD_NAMES):
                     pattern = ' *(?P<first>[A-Z][^ ]*( +[A-Z][^ ]*)*) +(?P<last>.*) *'
@@ -309,7 +320,9 @@ class Library:
                 author = getattr(paper, 'author')
             else:
                 author = getattr(paper, 'editor')
-            if author.startswith('{'):
+            if is_lawsuit(author):
+                return
+            elif author.startswith('{'):
                 first_author = re.sub('({[^}]*}).*', r'\1', author)
                 first_author = WEIRD_NAMES.get(first_author, first_author)
             else:

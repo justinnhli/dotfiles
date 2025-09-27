@@ -43,7 +43,7 @@ def _err_print(message):
     print(message, file=sys.stderr)
 
 
-def run_pylint(path):
+def run_pylint(args, path):
     # type: (Path) -> List[Error]
     """Get errors from pylint.
 
@@ -72,6 +72,8 @@ def run_pylint(path):
             '--disable', 'too-many-statements',
             str(path),
         ],
+        cwd=args.pwd,
+        env={'PYTHONPATH': str(args.pwd)},
         check=False,
         capture_output=True,
     )
@@ -100,7 +102,7 @@ def run_pylint(path):
     return errors
 
 
-def run_mypy(path):
+def run_mypy(args, path):
     # type: (Path) -> List[Error]
     """Get errors from mypy.
 
@@ -123,6 +125,8 @@ def run_mypy(path):
             '--show-error-codes',
             str(path),
         ],
+        cwd=args.pwd,
+        env={'PYTHONPATH': str(args.pwd)},
         check=False,
         capture_output=True,
     )
@@ -155,7 +159,7 @@ def run_mypy(path):
     return errors
 
 
-def run_pyright(path):
+def run_pyright(args, path):
     # type: (Path) -> List[Error]
     """Get errors from pyright.
 
@@ -173,6 +177,8 @@ def run_pyright(path):
             '--outputjson',
             str(path),
         ],
+        cwd=args.pwd,
+        env={'PYTHONPATH': str(args.pwd)},
         check=False,
         capture_output=True,
     )
@@ -189,7 +195,7 @@ def run_pyright(path):
     return errors
 
 
-def run_pydocstyle(path):
+def run_pydocstyle(args, path):
     # type: (Path) -> List[Error]
     """Get errors from pydocstyle.
 
@@ -206,6 +212,8 @@ def run_pydocstyle(path):
             'pydocstyle',
             str(path),
         ],
+        cwd=args.pwd,
+        env={'PYTHONPATH': str(args.pwd)},
         check=False,
         capture_output=True,
     )
@@ -245,6 +253,12 @@ def main():
         action='store_true',
         help='show messages from one tool at a time',
     )
+    arg_parser.add_argument(
+        '--pwd',
+        type=Path,
+        default=Path().resolve(),
+        help='run linters from the given directory',
+    )
     for linter, default, _ in linters:
         arg_parser.add_argument(
             f'--{linter}',
@@ -268,7 +282,7 @@ def main():
             if args.staged and errors:
                 break
             if getattr(args, linter):
-                errors.extend(lint_function(filepath))
+                errors.extend(lint_function(args, filepath))
         for error in sorted(errors):
             _err_print(f'{error.filename}:{error.linenum}:{error.column}: {error.message}')
         has_errors |= bool(errors)

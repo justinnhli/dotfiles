@@ -200,7 +200,7 @@ class Library:
                 if not line or re.fullmatch(r'\s*%.*', line):
                     continue
                 if line.startswith('@'):
-                    match = re.fullmatch('@(?P<type>[^ ]+) *{(?P<id>[^,]+),', line)
+                    match = re.fullmatch('@(?P<type>[^ ]+) *{(?P<id>[^,]+),(\s*%.*)?', line)
                     assert match, f'anomalous bibtex entry: {line}'
                     paper = Paper(match.group('id'), library=self)
                     paper.type = match.group('type')
@@ -208,7 +208,7 @@ class Library:
                     self.papers[paper.id] = paper
                     paper = None
                 else:
-                    match = re.fullmatch(r'\s*(?P<attr>[^ =]+) *= *{(?P<val>.+)},', line)
+                    match = re.fullmatch(r'\s*(?P<attr>[^ =]+) *= *{(?P<val>.+)},(\s*%.*)?', line)
                     assert match, f'anomalous bibtex field: {line}'
                     assert not hasattr(paper, match.group('attr')), f'{paper.id} has duplicate values for {match.group("attr")}'
                     setattr(paper, match.group('attr'), match.group('val').strip())

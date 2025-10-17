@@ -268,6 +268,7 @@ def main():
         )
     arg_parser.add_argument('files', type=Path, nargs='+', help='files to lint')
     args = arg_parser.parse_args()
+    args.files = sorted(path.expanduser().resolve() for path in args.files)
     for linter, _, _ in linters:
         if not getattr(args, linter):
             continue

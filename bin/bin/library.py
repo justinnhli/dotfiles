@@ -18,15 +18,16 @@ REMOTE_HOST = 'justinnhli.com'
 REMOTE_PATH = Path('/home/justinnhli/justinnhli.com/papers')
 
 WEIRD_NAMES = {
-    '{Pew Research Center}': 'Pew',
-    '{National Transportation Safety Board}': 'NTSB',
+    '{ACM Committee for Computing Education in Community Colleges (CCECC)}': 'CCECC',
     '{Association of Computing Machinery}': 'ACM',
     '{Computing Research Association}': 'CRA',
     '{Gallup Inc.}': 'Gallup',
     '{Google Inc.}': 'Google',
     '{Liberal Arts Computer Science Consortium}': 'LACS',
     '{National Academies of Sciences, Engineering, and Medicine}': 'NASEM',
+    '{National Transportation Safety Board}': 'NTSB',
     '{Open Science Collaboration}': 'OSC',
+    '{Pew Research Center}': 'Pew',
     '{The ABC Research Group}': 'ABC',
     '{The Cell Editorial Team}': 'Cell',
     '{The College Board}': 'CB',

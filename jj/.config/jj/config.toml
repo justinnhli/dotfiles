@@ -6,3 +6,10 @@ email = "justinnhli@gmail.com"
 
 [ui]
 diff-editor = ":builtin"
+
+[revsets]
+# hide bookmarks that start with "backlog"
+log = "present(@)|present(trunk())|(present(trunk())..~(ancestors(bookmarks(backlog), 2)~::@))"
+
+[aliases]
+log-normal = ["log", "-r", "present(@) | ancestors(immutable_heads().., 2) | present(trunk())"]

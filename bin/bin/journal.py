@@ -461,10 +461,10 @@ def summarize_line_lengths(entries, unit, num_words):
         num_words (Sequence[int]): The number of words in each entry in the group.
 
     Returns:
-        str: The length of longest line.
+        int: The length of longest line.
     """
     text = '\n'.join(entry.text for entry in entries.values())
-    return str(max(len(line) for line in text.splitlines()))
+    return max(len(line) for line in text.splitlines())
 
 
 def summarize_readability(entries, unit, num_words):

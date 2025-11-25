@@ -201,7 +201,7 @@ class Library:
                 if not line or re.fullmatch(r'\s*%.*', line):
                     continue
                 if line.startswith('@'):
-                    match = re.fullmatch('@(?P<type>[^ ]+) *{(?P<id>[^,]+),(\s*%.*)?', line)
+                    match = re.fullmatch(r'@(?P<type>[^ ]+) *{(?P<id>[^,]+),(\s*%.*)?', line)
                     assert match, f'anomalous bibtex entry: {line}'
                     paper = Paper(match.group('id'), library=self)
                     paper.type = match.group('type')

@@ -8,6 +8,7 @@ if !empty(glob('~/bin/mfmd.sh'))
 	setlocal makeprg=$HOME/bin/mfmd.sh\ '%:p'\ >\ '%:p:r.html'
 	augroup justinnhli_markdown_make_on_write
 		autocmd!
+		autocmd BufWritePre *.md silent %s#\(^\|[^(<]\)\(\<https\?://[^[:blank:]()]\+\>/\?\)#\1<\2>#g
 		autocmd BufWritePost *.md silent make
 	augroup END
 endif

@@ -622,6 +622,7 @@ if isdirectory(g:justinnhli_pim_path)
 	nnoremap  <silent>  <leader>JD  :tabnew<cr>:r!dynalist.py mobile<cr>:0d<cr>:setlocal buftype=nowrite filetype=journal nomodifiable<cr>zM
 	nnoremap  <silent>  <leader>JC  :tabnew <C-r>=g:justinnhli_pim_path<cr>/contacts/contacts.vcf<cr>
 	nnoremap  <silent>  <leader>JP  :tabnew <C-r>=g:justinnhli_pim_path<cr>/library.bib<cr>
+	nnoremap  <silent>  <leader>JT  :tabnew <C-r>=g:justinnhli_pim_path<cr>/journal/temp.journal<cr>
 endif
 
 " float output functions {{{3

@@ -331,7 +331,7 @@ if [ -d "$pim_path" ]; then
 		alias jrnl="journal.py \$(find $pim_path/journal/ -maxdepth 1 -name '[a-z]*.journal' | sed 's/^/--ignore /' | tr '\n' ' ')"
 	fi
 	# programmatically generate vijj and related aliases
-	for lower_key in j l r m n d c p s; do
+	for lower_key in j l r m n d c p s t; do
 		upper_key="$(echo "$lower_key" | tr '[:lower:]' '[:upper:]')"
 		alias_name="vij${lower_key}"
 		if [ $nvim_terminal -eq 1 ]; then

@@ -21,4 +21,5 @@ diff-editor = ":builtin"
 log = "@ | trunk() | ancestors((~::trunk()) ~ ancestors(bookmarks(backlog)), 2)"
 
 [aliases]
-log-normal = ["log", "-r", "present(@) | ancestors(immutable_heads().., 2) | present(trunk())"]
+logg = ["log", "-r", "present(@) | ancestors(immutable_heads().., 2) | present(trunk())"]
+loga = ["log", "-r", "::"]

@@ -23,6 +23,7 @@ let g:large_file_size = 1024 * 1024 * 10 " define a large file as > 10MB
 
 " vimplug {{{3
 if has('nvim') && !empty($MYVIMRC)
+	" TODO eventually replace with built-in package manager (:help packadd)
 	"auto-install vim-plug
 	let s:plug_path = fnamemodify($MYVIMRC, ':p:h') .. '/autoload/plug.vim'
 	if !filereadable(s:plug_path)
@@ -39,7 +40,7 @@ if has('nvim') && !empty($MYVIMRC)
 		call plug#begin(expand('<sfile>:p:h') .. '/plugged')
 		" tools
 		Plug 'junegunn/goyo.vim'
-		Plug 'mbbill/undotree'
+		Plug 'mbbill/undotree' " TODO eventually replace with built-in undotree (:help undotree)
 		Plug 'tpope/vim-fugitive'
 		" extensions
 		Plug 'ludovicchabant/vim-gutentags'

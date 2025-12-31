@@ -112,12 +112,13 @@ prompt_command_fn() {
 	export prev_history_pwd="$PWD"
 	export prev_history_id="$history_id"
 }
+# \033]133;A\007 is OSC 133, to help terminals identify prompts
 if [ "$(whoami)" == "root" ]; then
-	PS1='root@\h \W# '
+	PS1='\033]133;A\007root@\h \W# '
 elif [ "$(whoami)" == "justinnhli" ]; then
-	PS1='\h \W\$ '
+	PS1='\033]133;A\007\h \W\$ '
 else
-	PS1='\u@\h \W\$ '
+	PS1='\033]133;A\007\u@\h \W\$ '
 fi
 if [ -d ~justinnhli/Dropbox/personal/logs ]; then
 	export PROMPT_COMMAND=prompt_command_fn

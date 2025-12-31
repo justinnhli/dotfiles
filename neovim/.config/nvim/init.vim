@@ -1259,13 +1259,9 @@ augroup END
 
 " open directories in terminal {{{3
 if exists(':terminal')
-	function s:IsDir(dir) abort
-		return !empty(a:dir) && isdirectory(a:dir)
-	endfunction
 	augroup justinnhli_open_directories
 		autocmd!
-		autocmd  VimEnter  *  silent! autocmd! FileExplorer *
-		autocmd  BufEnter  *  if s:IsDir(expand('%')) | call <SID>StartTerminal(['silent! lcd ' .. expand('%:p:h')], '') | endif
+		autocmd  BufEnter  *  ++nested  if isdirectory(expand('%')) | call <SID>StartTerminal(['silent! lcd ' .. expand('%:p')], '') | endif
 	augroup END
 endif
 

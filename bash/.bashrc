@@ -1,9 +1,9 @@
 #!/bin/bash
 
 update_dot_files() {
-	curl -L 'https://raw.githubusercontent.com/justinnhli/dotfiles/master/bash/.bash_profile' > "$HOME/.bash_profile"
-	curl -L 'https://raw.githubusercontent.com/justinnhli/dotfiles/master/bash/.bashrc' > "$HOME/.bashrc"
-	curl -L 'https://raw.githubusercontent.com/justinnhli/dotfiles/master/neovim/.config/nvim/init.vim' | sed 's/ \.\. / . /g' > "$HOME/.vimrc"
+	curl -L 'https://raw.githubusercontent.com/justinnhli/dotfiles/main/bash/.bash_profile' > "$HOME/.bash_profile"
+	curl -L 'https://raw.githubusercontent.com/justinnhli/dotfiles/main/bash/.bashrc' > "$HOME/.bashrc"
+	curl -L 'https://raw.githubusercontent.com/justinnhli/dotfiles/main/neovim/.config/nvim/init.vim' | sed 's/ \.\. / . /g' > "$HOME/.vimrc"
 }
 
 # paths

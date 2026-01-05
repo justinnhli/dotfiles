@@ -12,13 +12,13 @@ diff-editor = ":builtin"
 #     the working commit
 # trunk()
 #     the default bookmark/remote
-# ancestors((~::trunk()) ~ ancestors(bookmarks(backlog)), 2)
+# ancestors((~::trunk()) ~ ancestors(bookmarks(hidden)), 2)
 #     together, this is all non-trunk branches except backlogs
 #     breaking down the first argument
 #         ~::trunk() is everything that is not the ancestor of trunk(), except
-#         ~ancestors(bookmarks(backlog)) the ancestors of "backlog" bookmarks
+#         ~ancestors(bookmarks(substring:hidden)) the ancestors of "hidden" bookmarks
 #     the ancestors of those commits is to include the branch point
-log = "@ | trunk() | ancestors((~::trunk()) ~ ancestors(bookmarks(substring:backlog)), 2)"
+log = "@ | trunk() | ancestors((~::trunk()) ~ ancestors(bookmarks(substring:hidden)), 2)"
 
 [aliases]
 logn = ["log", "-r", "present(@) | ancestors(immutable_heads().., 2) | present(trunk())"]

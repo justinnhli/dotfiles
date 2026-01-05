@@ -18,8 +18,8 @@ diff-editor = ":builtin"
 #         ~::trunk() is everything that is not the ancestor of trunk(), except
 #         ~ancestors(bookmarks(backlog)) the ancestors of "backlog" bookmarks
 #     the ancestors of those commits is to include the branch point
-log = "@ | trunk() | ancestors((~::trunk()) ~ ancestors(bookmarks(backlog)), 2)"
+log = "@ | trunk() | ancestors((~::trunk()) ~ ancestors(bookmarks(substring:backlog)), 2)"
 
 [aliases]
-logg = ["log", "-r", "present(@) | ancestors(immutable_heads().., 2) | present(trunk())"]
+logn = ["log", "-r", "present(@) | ancestors(immutable_heads().., 2) | present(trunk())"]
 loga = ["log", "-r", "::"]

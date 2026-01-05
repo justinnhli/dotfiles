@@ -25,3 +25,4 @@ log = "fork_point(@ | trunk() | (heads(::) ~ bookmarks(regex:'^hidden-')))::(@ |
 [aliases]
 logn = ["log", "-r", "present(@) | ancestors(immutable_heads().., 2) | present(trunk())"]
 loga = ["log", "-r", "::"]
+tug = ["bookmark", "move", "--from", "heads(::@- & bookmarks())", "--to", "@-"]

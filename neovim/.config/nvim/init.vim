@@ -619,6 +619,12 @@ if isdirectory(g:justinnhli_pim_path)
 		execute 'tabnew ' .. l:note_file
 		$
 	endfunction
+	function s:EditDynalist()
+		let l:dynalist_file = g:justinnhli_pim_path .. '/journal/dynalist.journal'
+		call system('~/bin/dynalist.py --headers --output ' .. l:dynalist_file)
+		execute 'tabnew ' .. l:dynalist_file
+		silent! setlocal buftype=nowrite filetype=journal nomodifiable
+	endfunction
 	nnoremap  <silent>  <leader>JJ  :tabnew <C-r>=g:justinnhli_pim_path<cr>/journal/next.journal<cr>
 	nnoremap  <silent>  <leader>JL  :tabnew <C-r>=g:justinnhli_pim_path<cr>/journal/list.journal<cr>
 	nnoremap  <silent>  <leader>JR  :tabnew <C-r>=g:justinnhli_pim_path<cr>/journal/repo.journal<cr>
@@ -626,7 +632,7 @@ if isdirectory(g:justinnhli_pim_path)
 	nnoremap  <silent>  <leader>JB  :call <SID>EditLatestNote()<cr>
 	nnoremap  <silent>  <leader>JN  :tabnew <C-r>=g:justinnhli_pim_path<cr>/notes/<C-r>=strftime('%Y-%m')<cr>.journal<cr>:$<cr>
 	nnoremap  <silent>  <leader>JS  :tabnew $HOME/Dropbox/sync.txt<cr>
-	nnoremap  <silent>  <leader>JD  :tabnew<cr>:r!dynalist.py mobile<cr>:0d<cr>:setlocal buftype=nowrite filetype=journal nomodifiable<cr>zM
+	nnoremap  <silent>  <leader>JD  :call <SID>EditDynalist()<cr>
 	nnoremap  <silent>  <leader>JC  :tabnew <C-r>=g:justinnhli_pim_path<cr>/contacts/contacts.vcf<cr>
 	nnoremap  <silent>  <leader>JP  :tabnew <C-r>=g:justinnhli_pim_path<cr>/library.bib<cr>
 	nnoremap  <silent>  <leader>JT  :tabnew <C-r>=g:justinnhli_pim_path<cr>/journal/temp.journal<cr>

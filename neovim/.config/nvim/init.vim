@@ -614,14 +614,16 @@ nnoremap  <M-0>      :10tabnext<cr>
 
 " pim file mappings {{{3
 if isdirectory(g:justinnhli_pim_path)
-	function FindLatestNote()
-		return sort(globpath(g:justinnhli_pim_path, 'notes/[0-9][0-9][0-9][0-9]*.journal', v:false, v:true))[-1]
+	function s:EditLatestNote()
+		let l:note_file = sort(globpath(g:justinnhli_pim_path, 'notes/[0-9][0-9][0-9][0-9]*.journal', v:false, v:true))[-1]
+		execute 'tabnew ' .. l:note_file
+		$
 	endfunction
 	nnoremap  <silent>  <leader>JJ  :tabnew <C-r>=g:justinnhli_pim_path<cr>/journal/next.journal<cr>
 	nnoremap  <silent>  <leader>JL  :tabnew <C-r>=g:justinnhli_pim_path<cr>/journal/list.journal<cr>
 	nnoremap  <silent>  <leader>JR  :tabnew <C-r>=g:justinnhli_pim_path<cr>/journal/repo.journal<cr>
 	nnoremap  <silent>  <leader>JM  :tabnew <C-r>=g:justinnhli_pim_path<cr>/journal/memo.md<cr>
-	nnoremap  <silent>  <leader>JB  :tabnew <C-r>=FindLatestNote()<cr><cr>:$<cr>
+	nnoremap  <silent>  <leader>JB  :call <SID>EditLatestNote()<cr>
 	nnoremap  <silent>  <leader>JN  :tabnew <C-r>=g:justinnhli_pim_path<cr>/notes/<C-r>=strftime('%Y-%m')<cr>.journal<cr>:$<cr>
 	nnoremap  <silent>  <leader>JS  :tabnew $HOME/Dropbox/sync.txt<cr>
 	nnoremap  <silent>  <leader>JD  :tabnew<cr>:r!dynalist.py mobile<cr>:0d<cr>:setlocal buftype=nowrite filetype=journal nomodifiable<cr>zM

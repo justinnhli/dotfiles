@@ -362,6 +362,18 @@ def pull_git():
         print()
 
 
+@register()
+def pull_jj():
+    # type: () -> None
+    """Fetch on all jj repos."""
+    git_path = Path('~/git').expanduser().resolve()
+    for repo_git_path in sorted(git_path.glob('*/.jj/')):
+        repo_path = repo_git_path.parent
+        print(repo_path)
+        run(['jj', 'git', 'fetch'], cwd=repo_path, check=False),
+        print()
+
+
 @cache
 def is_home_network():
     # type: () -> bool

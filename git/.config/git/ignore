@@ -64,6 +64,7 @@ htmlcov
 *.egg-info
 
 # TEMPORARY FILES
+.swn
 .swo
 .swp
 .*.swp

@@ -630,34 +630,34 @@ endif
 if exists('*nvim_create_buf')
 	function FloatOutput(cmd)
 		" get the output to display
-		let output = [''] + systemlist(a:cmd)
-		let output = map(output, '" " .. v:val')
+		let l:output = [''] + systemlist(a:cmd)
+		let l:output = map(l:output, '" " .. v:val')
 		" compute window properties
-		let col = wincol() - (winwidth(0) / 2)
-		let row = winline() - (winheight(0) / 2)
-		if row < 0
-			let row_offset = 1
-			let col_offset = (col < 0 ? 0 : 1)
-			let anchor = (col < 0 ? 'NW' : 'NE')
+		let l:col = wincol() - (winwidth(0) / 2)
+		let l:row = winline() - (winheight(0) / 2)
+		if l:row < 0
+			let l:row_offset = 1
+			let l:col_offset = (l:col < 0 ? 0 : 1)
+			let l:anchor = (l:col < 0 ? 'NW' : 'NE')
 		else
-			let row_offset = 0
-			let col_offset = (col < 0 ? 0 : 1)
-			let anchor = (col < 0 ? 'SW' : 'SE')
+			let l:row_offset = 0
+			let l:col_offset = (l:col < 0 ? 0 : 1)
+			let l:anchor = (l:col < 0 ? 'SW' : 'SE')
 		endif
 		" create the window
-		let buf = nvim_create_buf(v:false, v:true)
-		call nvim_buf_set_lines(buf, 0, -1, v:true, output)
-		let opts = {
+		let l:buf = nvim_create_buf(v:false, v:true)
+		call nvim_buf_set_lines(l:buf, 0, -1, v:true, l:output)
+		let l:opts = {
 			\ 'relative': 'cursor',
-			\ 'width': max(map(output, 'len(v:val)')) + 2,
-			\ 'height': len(output) + 1,
-			\ 'col': col_offset, 'row': row_offset,
-			\ 'anchor': anchor,
+			\ 'width': max(map(l:output, 'len(v:val)')) + 2,
+			\ 'height': len(l:output) + 1,
+			\ 'col': l:col_offset, 'row': l:row_offset,
+			\ 'anchor': l:anchor,
 			\ 'style': 'minimal',
 		\}
-		let win = nvim_open_win(buf, 0, opts)
+		let l:win = nvim_open_win(l:buf, 0, l:opts)
 		" create a remap to close the window
-		execute 'nnoremap  <buffer>  <cr>  :call nvim_win_close(' .. win .. ', v:false) \| nunmap <buffer> <lt>cr><cr>'
+		execute 'nnoremap  <buffer>  <cr>  :call nvim_win_close(' .. l:win .. ', v:false) \| nunmap <buffer> <lt>cr><cr>'
 	endfunction
 endif
 

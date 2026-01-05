@@ -13,12 +13,14 @@ diff-editor = ":builtin"
 #         the working commit
 #     trunk()
 #         the remote of the default bookmark
-#     bookmarks() ~ bookmarks(regex:'^hidden-')
-#         all bookmarks except those starting with "hidden-"
-# together, this setting shows:
-#     the current commit, and
-#     all commits between trunk() and heads(), excluding hidden bookmarks
-log = "@ | trunk()::(@ | (heads(::) ~ bookmarks(regex:'^hidden-')))"
+#     heads(::) ~ bookmarks(regex:'^hidden-')
+#         all heads except bookmarks starting with "hidden-"
+#     fork_point(...)
+#         the last common ancestor of all arguments
+# together, this setting shows all comments:
+#     from the fork_point() of all of the above
+#     to all of the above
+log = "fork_point(@ | trunk() | (heads(::) ~ bookmarks(regex:'^hidden-')))::(@ | trunk() | (heads(::) ~ bookmarks(regex:'^hidden-')))"
 
 [aliases]
 logn = ["log", "-r", "present(@) | ancestors(immutable_heads().., 2) | present(trunk())"]

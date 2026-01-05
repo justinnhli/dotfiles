@@ -8,17 +8,17 @@ email = "justinnhli@gmail.com"
 diff-editor = ":builtin"
 
 [revsets]
-# @
-#     the working commit
-# trunk()
-#     the default bookmark/remote
-# ancestors((~::trunk()) ~ ancestors(bookmarks(hidden)), 2)
-#     together, this is all non-trunk branches except backlogs
-#     breaking down the first argument
-#         ~::trunk() is everything that is not the ancestor of trunk(), except
-#         ~ancestors(bookmarks(substring:hidden)) the ancestors of "hidden" bookmarks
-#     the ancestors of those commits is to include the branch point
-log = "@ | trunk() | ancestors((~::trunk()) ~ ancestors(bookmarks(substring:hidden)), 2)"
+# breaking this down:
+#     @
+#         the working commit
+#     trunk()
+#         the remote of the default bookmark
+#     bookmarks() ~ bookmarks(regex:'^hidden-')
+#         all bookmarks except those starting with "hidden-"
+# together, this setting shows:
+#     the current commit, and
+#     all commits between trunk() and heads(), excluding hidden bookmarks
+log = "@ | trunk()::(@ | (heads(::) ~ bookmarks(regex:'^hidden-')))"
 
 [aliases]
 logn = ["log", "-r", "present(@) | ancestors(immutable_heads().., 2) | present(trunk())"]

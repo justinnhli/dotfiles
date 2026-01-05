@@ -6,6 +6,7 @@ import re
 from argparse import ArgumentParser
 from collections import namedtuple
 from os import environ
+from pathlib import Path
 from textwrap import indent
 from typing import Any, Optional, Mapping
 
@@ -122,21 +123,28 @@ def main():
     arg_parser = ArgumentParser()
     arg_parser.add_argument('--list', action='store_true', help='list files instead of printing contents')
     arg_parser.add_argument('--headers', action='store_true', help='always include headers')
+    arg_parser.add_argument('--output', type=Path, help='file to store output in')
     arg_parser.add_argument('filenames', metavar='filename', nargs='*', help='Dynalist file(s) to read')
     args = arg_parser.parse_args()
     files = list_files()
+    result = []
     if args.list:
-        print('\n'.join(sorted(files.keys())))
+        result = sorted(files.keys())
     else:
         if not args.filenames:
             args.filenames = list(files.keys())
         for filename in args.filenames:
             contents = get_file(filename, files)
             if args.headers or len(files) > 1:
-                print(filename)
-                print(indent(contents, '\t'))
+                result.append(filename)
+                result.append(indent(contents, '\t'))
             else:
-                print(contents)
+                result.append(contents)
+    if args.output is None:
+        print('\n'.join(result))
+    else:
+        with args.output.open('w') as fd:
+            fd.write('\n'.join(result))
 
 
 if __name__ == '__main__':

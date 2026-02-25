@@ -10,22 +10,17 @@ colocate = false
 [ui]
 diff-editor = ":builtin"
 
+[revset-aliases]
+"closest_bookmark(to)" = "heads(::to & bookmarks())"
+"hidden_bookmarks()" = "bookmarks(regex:'^hidden-')"
+"non_hidden_heads()" = "heads(::) ~ hidden_bookmarks()"
+"closest_immutable(to)" = "heads(::to & immutable_heads())"
+"important_commits()" = "@ | closest_immutable(@) | non_hidden_heads()"
+
 [revsets]
-# breaking this down:
-#     @
-#         the working commit
-#     trunk()
-#         the remote of the default bookmark
-#     heads(::) ~ bookmarks(regex:'^hidden-')
-#         all heads except bookmarks starting with "hidden-"
-#     fork_point(...)
-#         the last common ancestor of all arguments
-# together, this setting shows all comments:
-#     from the fork_point() of all of the above
-#     to all of the above
-log = "fork_point(@ | trunk() | (heads(::) ~ bookmarks(regex:'^hidden-')))::(@ | trunk() | (heads(::) ~ bookmarks(regex:'^hidden-')))"
+log = "fork_point(important_commits())::important_commits()"
 
 [aliases]
 logn = ["log", "-r", "present(@) | ancestors(immutable_heads().., 2) | present(trunk())"]
 loga = ["log", "-r", "::"]
-tug = ["bookmark", "move", "--from", "heads(::@- & bookmarks())", "--to", "@-"]
+tug = ["bookmark", "move", "--from", "closest_bookmark(@-)", "--to", "@-"]

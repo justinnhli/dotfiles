@@ -7,7 +7,7 @@
 *.o
 *.pyc
 *.so
-__pycache__
+__pycache__/
 
 # LATEX COMPILED PRODUCTS
 *-blx.bib
@@ -50,15 +50,15 @@ Icon?
 Thumbs.db
 
 # IDE METADATA
-.idea
+.idea/
 *.iml
 
 # OTHER METADATA
-.coverage
-.ipynb_checkpoints
-.mypy_cache
-.pytest_cache
-.hypothesis
+.coverage/
+.ipynb_checkpoints/
+.mypy_cache/
+.pytest_cache/
+.hypothesis/
 .tags
 .tags.*
 htmlcov

@@ -328,6 +328,7 @@ fi
 pim_path="$HOME/Dropbox/pim"
 if [ -d "$pim_path" ]; then
 	alias cdjj="cd $pim_path/journal"
+	alias cdjn="cd $pim_path/notes"
 	if command -v journal.py >/dev/null 2>&1; then
 		alias jrnl="journal.py \$(find $pim_path/journal/ -maxdepth 1 -name '[a-z]*.journal' | sed 's/^/--ignore /' | tr '\n' ' ')"
 	fi

@@ -49,7 +49,7 @@ def install(*packages):
 def check():
     # type: () -> None
     """Check for stow errors."""
-    tracked_files = run('git', 'ls-files', '--exclude-standard').splitlines()
+    tracked_files = run('jj', 'file', 'list').splitlines()
     for tracked_file in sorted(tracked_files):
         path = Path(tracked_file)
         if len(path.parts) <= 1 or path.parts[0].startswith('.'):

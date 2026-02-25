@@ -4,6 +4,9 @@
 name = "Justin Li"
 email = "justinnhli@gmail.com"
 
+[git]
+colocate = false
+
 [ui]
 diff-editor = ":builtin"
 

@@ -1,8 +1,11 @@
-# system-specific disks                                                                                
-# <file system>          <dir>     <type>  <options>                                           <dump>  <pass>
+# Static information about the filesystems.                                                                                                                                        
+# See fstab(5) for details.                                                                                                                                                        
 
-# generic USB mounts                                                                                   
-# <file system>          <dir>     <type>  <options>                                           <dump>  <pass>
-/dev/sdb1                /mnt/usb  vfat    user,noauto,uid=1000,gid=100,fmask=0013,dmask=0002  0       0
-/dev/sdc1                /mnt/usb  vfat    user,noauto,uid=1000,gid=100,fmask=0013,dmask=0002  0       0
-/dev/sdd1                /mnt/usb  vfat    user,noauto,uid=1000,gid=100,fmask=0013,dmask=0002  0       0
+# system-specific disks                                                                                                                                                            
+# <file system>                              <dir>  <type>  <options>                                                                                              <dump>  <pass>  
+# /dev/nvme0n1p3                                                                                                                                                                   
+UUID=a970490f-061d-4cfd-af5f-53970bf704db    /      ext4    rw,relatime                                                                                            0       1       
+# /dev/nvme0n1p1                                                                                                                                                                   
+UUID=5E96-DBD7                               /boot  vfat    rw,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=ascii,shortname=mixed,utf8,errors=remount-ro  0       2       
+# /dev/nvme0n1p2                                                                                                                                                                   
+UUID=f82cda3d-6714-4840-940e-3ff211af4ca8    none   swap    defaults                                                                                               0       0       

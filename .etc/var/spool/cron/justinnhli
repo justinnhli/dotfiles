@@ -1,9 +1,6 @@
-
-MAIL=justinnhli@gmail.com
-
 #minute  hour  date  month  day_of_week  command
-0        0     *     *      *            /usr/bin/date > /home/justinnhli/Dropbox/croncheck/cron
-0        0     *     *      *            /home/justinnhli/Dropbox/bin/subitize-update.sh && /usr/bin/date > /home/justinnhli/Dropbox/croncheck/subitize
-*/15     *     *     *      *            /home/justinnhli/journal/tools/dynalist-push.sh && /usr/bin/date > /home/justinnhli/Dropbox/croncheck/dynalist
-*        *     *     *      *            /home/justinnhli/journal/tools/journalbot.sh && /usr/bin/date > /home/justinnhli/Dropbox/croncheck/journalbot
-#0        0     *     *      0            /home/justinnhli/git/oxy-compsci.github.io/cron-script.sh
+0        0     *     *      *            /home/justinnhli/bin/update-everything.py merge-history
+0        0     *     *      *            /usr/bin/python3 $HOME/Dropbox/pim/journal/tools/autorepo.py --directory $HOME/Dropbox/pim/journal/ stash
+0        0     *     *      *            /home/justinnhli/Dropbox/projects/subitize-update.sh
+10       0     *     *      *            /home/justinnhli/Dropbox/projects/autojj.sh
+5        *     *     *      *            /home/justinnhli/Dropbox/projects/cron-uptime.sh

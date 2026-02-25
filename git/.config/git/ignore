@@ -58,6 +58,7 @@ Thumbs.db
 .ipynb_checkpoints
 .mypy_cache
 .pytest_cache
+.hypothesis
 .tags
 .tags.*
 htmlcov

@@ -131,6 +131,7 @@ alias rm='rm -i'
 alias cp='cp -i'
 alias mv='mv -i'
 alias grep='grep --color=auto'
+alias sshh='ssh home'
 
 if command -v bc >/dev/null 2>&1; then
 	alias bc='bc -l'

@@ -3,6 +3,7 @@ filezilla/.config/filezilla/*
 !filezilla/.config/filezilla/sitemanager.xml
 gnupg/*
 !gnupg/.gnupg/gpg-agent.conf
+jj/.config/jj/repos
 jupyter/.config/jupyter/lab/workspaces
 jupyter/.config/jupyter/migrated
 jupyter/.config/jupyter/serverconfig/jupyterlabapputilsextensionannouncements.json

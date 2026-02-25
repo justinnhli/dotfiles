@@ -14,7 +14,7 @@ def main():
     students = []
     with open(sys.argv[1], encoding='utf-8-sig') as fd:
         for row in DictReader(fd):
-            advisors = ', '.join([row['Pri. Adviser'], row['Sec. Advisor']])
+            advisors = ', '.join([row['Pri. Adviser'], row['Sec. Adviser']])
             advisors = advisors.strip().strip(',')
             students.append('\n'.join([
                 f'{row["Student Name"]} (advisor(s): {advisors})',

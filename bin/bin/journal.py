@@ -451,7 +451,7 @@ def print_table(data, headers=None, gap_size=2):
 
 
 def summarize_line_lengths(entries, unit, num_words):
-    # type: (Entries, str, Sequence[int]) -> str
+    # type: (Entries, str, Sequence[int]) -> int
     # pylint: disable = unused-argument
     """Get the length of the longest line of a group of entries.
 
@@ -863,9 +863,9 @@ def do_vimgrep(journal, args):
     entries = filter_entries(journal, args)
     if not args.terms:
         args.terms.append('^.')
+    results = []
     for _, entry in sorted(entries.items(), reverse=args.reverse):
         lines = entry.text.splitlines()
-        results = []
         for term in args.terms:
             if args.whole_words:
                 term = r'\b' + term + r'\b'
@@ -882,14 +882,20 @@ def do_vimgrep(journal, args):
                     r'^\S*( \S+){,' + str(suffix_words) + '}',
                     match_line[col_num + len(match.group()):],
                 ).group()
-                results.append((line_num, col_num + 1, f'{prefix}{match.group()}{suffix}'))
-        for line_num, col_num, preview in sorted(results):
-            print(':'.join([
-                f'{entry.filepath}',
-                f'{entry.line_num + line_num - 1}',
-                f'{col_num}',
-                f' {preview}',
-            ]))
+                results.append((
+                    entry.filepath,
+                    entry.line_num + line_num - 1,
+                    col_num + 1,
+                    entry.title,
+                    f'{prefix}{match.group()}{suffix}'
+                ))
+    for path, line_num, col_num, title, preview in sorted(results):
+        print(':'.join([
+            f'{path}',
+            f'{line_num}',
+            f'{col_num}',
+            f' {preview}',
+        ]))
 
 
 # CLI

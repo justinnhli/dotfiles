@@ -14,14 +14,15 @@ export XDG_DATA_HOME=$HOME/.local/share
 export XDG_STATE_HOME=$HOME/.local/state
 
 # other path constants
+export CODE_REPO_HOME=$HOME/repos
 export SECRETS_HOME=$HOME/.secrets
 
 # set up search path variables
 PATH="/usr/local/bin:/usr/local/opt/sqlite/bin:/usr/local/sbin:$PATH"
 PATH="$HOME/bin:$PATH"
-PATH="$(find "$HOME/git" -maxdepth 2 -type f -perm -100 -exec dirname {} ';' 2>/dev/null | sort -f | uniq | tr '\n' ':' | sed 's/:$//'):$PATH"
+PATH="$(find "$CODE_REPO_HOME" -maxdepth 2 -type f -perm -100 -exec dirname {} ';' 2>/dev/null | sort -f | uniq | tr '\n' ':' | sed 's/:$//'):$PATH"
 PATH="$(find "$HOME/Dropbox/projects" -maxdepth 2 -type f -perm -100 -exec dirname {} ';' 2>/dev/null | sort -f | uniq | tr '\n' ':' | sed 's/:$//'):$PATH"
-export PYTHONPATH="$HOME/Dropbox/projects:$HOME/git"
+export PYTHONPATH="$HOME/Dropbox/projects:$CODE_REPO_HOME"
 
 # basic environment
 if command -v nvim >/dev/null 2>&1; then
@@ -72,7 +73,7 @@ fi
 # scikit-learn
 export SCIKIT_LEARN_DATA="$XDG_DATA_HOME/scikit-learn"
 # soar
-if [ -d "$HOME/git/Soar" ]; then
+if [ -d "$CODE_REPO_HOME/Soar" ]; then
 	case "$(uname)" in
 	'Linux')
 		if [ -d '/usr/lib/jvm/default-java' ]; then
@@ -80,11 +81,11 @@ if [ -d "$HOME/git/Soar" ]; then
 		elif [ -d '/usr/lib/jvm/default' ]; then
 			export JAVA_HOME='/usr/lib/jvm/default'
 		fi
-		export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$HOME/git/Soar/out";;
+		export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$CODE_REPO_HOME/Soar/out";;
 	'Darwin')
-		export DYLD_LIBRARY_PATH="$DYLD_LIBRARY_PATH:$HOME/git/Soar/out";;
+		export DYLD_LIBRARY_PATH="$DYLD_LIBRARY_PATH:$CODE_REPO_HOME/Soar/out";;
 	esac
-	export PYTHONPATH="$HOME/git/Soar/out:$PYTHONPATH"
+	export PYTHONPATH="$CODE_REPO_HOME/Soar/out:$PYTHONPATH"
 fi
 # sqlite
 export SQLITE_HISTORY="$XDG_DATA_HOME/sqlite_history"
@@ -158,8 +159,8 @@ fi
 if command -v scons >/dev/null 2>&1 && command -v python3 >/dev/null 2>&1; then
 	alias scons="scons --python=\$(command -v python3)"
 fi
-if [ -d "$HOME/git/Soar" ] && [ -e "$HOME/git/Soar/out/testcli" ]; then
-	alias soar='$HOME/git/Soar/out/testcli'
+if [ -d "$CODE_REPO_HOME/Soar" ] && [ -e "$CODE_REPO_HOME/Soar/out/testcli" ]; then
+	alias soar='$CODE_REPO_HOME/Soar/out/testcli'
 fi
 if command -v tmux >/dev/null 2>&1 && [ -e "$XDG_CONFIG_HOME/tmux/tmux.conf" ]; then
 	alias tmux='tmux -f $XDG_CONFIG_HOME/tmux/tmux.conf'

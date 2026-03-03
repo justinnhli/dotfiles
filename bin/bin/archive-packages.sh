@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PACKAGES_PATH="$HOME/git/dotfiles/packages/.local/share/packages/"
+PACKAGES_PATH="$HOME/repos/dotfiles/packages/.local/share/packages/"
 
 case "$1" in
 "brew")

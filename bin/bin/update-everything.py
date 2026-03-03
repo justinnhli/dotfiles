@@ -14,6 +14,7 @@ from subprocess import run, CalledProcessError
 from typing import Any, Callable
 
 HOME_COMPUTER = 'spark'
+CODE_REPO_PATH = Path('~/repos').expanduser().resolve()
 
 
 # registry
@@ -352,7 +353,7 @@ def sync_library():
 def pull_git():
     # type: () -> None
     """Pull on all git repos."""
-    git_path = Path('~/git').expanduser().resolve()
+    git_path = CODE_REPO_PATH.expanduser().resolve()
     for repo_git_path in sorted(git_path.glob('*/.git/')):
         repo_path = repo_git_path.parent
         if (repo_path / '.jj').exists():
@@ -366,7 +367,7 @@ def pull_git():
 def pull_jj():
     # type: () -> None
     """Fetch on all jj repos."""
-    git_path = Path('~/git').expanduser().resolve()
+    git_path = CODE_REPO_PATH.expanduser().resolve()
     for repo_git_path in sorted(git_path.glob('*/.jj/')):
         repo_path = repo_git_path.parent
         print(repo_path)

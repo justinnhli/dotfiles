@@ -729,17 +729,6 @@ nnoremap  <leader>H   :tabnew ~/Dropbox/personal/logs/shistory/<C-r>=strftime('%
 
 " toggle functions {{{2
 
-" toggle scrolloff {{{3
-function s:ToggleScrollOff()
-	if &scrolloff == 0
-		setlocal scrolloff=999
-	elseif &scrolloff == 1
-		setlocal scrolloff=0
-	elseif &scrolloff == 999
-		setlocal scrolloff=1
-	endif
-endfunction
-
 " toggle colorcolumn {{{3
 function s:ToggleColorColumn()
 	if &colorcolumn == 0
@@ -749,6 +738,13 @@ function s:ToggleColorColumn()
 	else
 		setlocal colorcolumn=0
 	endif
+endfunction
+
+" toggle colorscheme {{{3
+function s:ToggleColorScheme()
+	let g:colorscheme_index += 1
+	let g:colorscheme_index = g:colorscheme_index % len(g:colorschemes)
+	call s:SetColorScheme()
 endfunction
 
 " toggle diff {{{3
@@ -769,11 +765,15 @@ function s:ToggleFoldMethod()
 	endif
 endfunction
 
-" toggle colorscheme {{{3
-function s:ToggleColorScheme()
-	let g:colorscheme_index += 1
-	let g:colorscheme_index = g:colorscheme_index % len(g:colorschemes)
-	call s:SetColorScheme()
+" toggle scrolloff {{{3
+function s:ToggleScrollOff()
+	if &scrolloff == 0
+		setlocal scrolloff=999
+	elseif &scrolloff == 1
+		setlocal scrolloff=0
+	elseif &scrolloff == 999
+		setlocal scrolloff=1
+	endif
 endfunction
 
 " toggle spellcheck {{{3

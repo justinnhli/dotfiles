@@ -347,7 +347,7 @@ if $TERM =~# 'color'
 else
 	let g:colorscheme_index = len(g:colorschemes) - 1
 endif
-function s:SetColorScheme(index=-1)
+function s:SetColorscheme(index=-1)
 	if a:index >= 0
 		let g:colorscheme_index = a:index
 	endif
@@ -357,7 +357,7 @@ function s:SetColorScheme(index=-1)
 endfunction
 for s:i in range(len(g:colorschemes))
 	try
-		call s:SetColorScheme()
+		call s:SetColorscheme()
 		break
 	catch
 		let g:colorscheme_index += 1
@@ -760,9 +760,9 @@ function s:ToggleColorColumn()
 endfunction
 
 " colorscheme {{{4
-function s:ToggleColorScheme()
+function s:ToggleColorscheme()
 	let g:colorscheme_index = (g:colorscheme_index + 1) % len(g:colorschemes)
-	call s:SetColorScheme()
+	call s:SetColorscheme()
 endfunction
 
 " diff {{{4
@@ -851,7 +851,7 @@ function s:ToggleSpellCheck()
 		for l:group in l:spellgroups
 			execute 'highlight clear ' .. l:group
 		endfor
-		call s:SetColorScheme()
+		call s:SetColorscheme()
 	elseif execute('highlight SpellBad') !~? 'links to Error'
 		setlocal spell
 		for l:group in l:spellgroups
@@ -869,8 +869,8 @@ nnoremap  <leader><leader>c  :call <SID>ToggleColorColumn()<cr>:setlocal colorco
 nnoremap  <leader><leader>d  :call <SID>ToggleDiff()<cr>:echo (&diff ? 'diffthis' : 'diffoff')<cr>
 nnoremap  <leader><leader>f  :call <SID>ToggleFoldMethod()<cr>:set foldmethod?<cr>
 nnoremap  <leader><leader>l  :set list! list?<cr>
-nnoremap  <leader><leader>m  :call <SID>ToggleColorScheme()<cr>:echo &background g:colors_name<cr>
-nnoremap  <leader><leader>M  :call <SID>SetColorScheme(0)<cr>:echo &background g:colors_name<cr>
+nnoremap  <leader><leader>m  :call <SID>ToggleColorscheme()<cr>:echo &background g:colors_name<cr>
+nnoremap  <leader><leader>M  :call <SID>SetColorscheme(0)<cr>:echo &background g:colors_name<cr>
 nnoremap  <leader><leader>n  :set number! number?<cr>
 nnoremap  <leader><leader>p  :set paste! paste?<cr>
 nnoremap  <leader><leader>s  :call <SID>ToggleSpellCheck()<cr>:set spell?<cr>

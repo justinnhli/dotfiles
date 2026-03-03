@@ -40,7 +40,7 @@ if has('nvim') && !empty($MYVIMRC)
 		call plug#begin(expand('<sfile>:p:h') .. '/plugged')
 		" tools
 		Plug 'junegunn/goyo.vim'
-		Plug 'mbbill/undotree' " TODO eventually replace with built-in undotree (:help undotree)
+		Plug 'mbbill/undotree' " TODO eventually replace with built-in undotree (:help :Undotree)
 		" extensions
 		Plug 'ludovicchabant/vim-gutentags'
 		Plug 'rhysd/clever-f.vim'

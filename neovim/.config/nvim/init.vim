@@ -758,8 +758,7 @@ endfunction
 
 " colorscheme {{{4
 function s:ToggleColorScheme()
-	let g:colorscheme_index += 1
-	let g:colorscheme_index = g:colorscheme_index % len(g:colorschemes)
+	let g:colorscheme_index = (g:colorscheme_index + 1) % len(g:colorschemes)
 	call s:SetColorScheme()
 endfunction
 

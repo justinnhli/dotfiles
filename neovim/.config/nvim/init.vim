@@ -347,7 +347,10 @@ if $TERM =~# 'color'
 else
 	let g:colorscheme_index = len(g:colorschemes) - 1
 endif
-function s:SetColorScheme()
+function s:SetColorScheme(index=-1)
+	if a:index >= 0
+		let g:colorscheme_index = a:index
+	endif
 	execute 'set background=' .. g:colorschemes[g:colorscheme_index][1]
 	execute 'colorscheme ' .. g:colorschemes[g:colorscheme_index][0]
 	execute 'set ft=' .. &ft
@@ -867,6 +870,7 @@ nnoremap  <leader><leader>d  :call <SID>ToggleDiff()<cr>:echo (&diff ? 'diffthis
 nnoremap  <leader><leader>f  :call <SID>ToggleFoldMethod()<cr>:set foldmethod?<cr>
 nnoremap  <leader><leader>l  :set list! list?<cr>
 nnoremap  <leader><leader>m  :call <SID>ToggleColorScheme()<cr>:echo &background g:colors_name<cr>
+nnoremap  <leader><leader>M  :call <SID>SetColorScheme(0)<cr>:echo &background g:colors_name<cr>
 nnoremap  <leader><leader>n  :set number! number?<cr>
 nnoremap  <leader><leader>p  :set paste! paste?<cr>
 nnoremap  <leader><leader>s  :call <SID>ToggleSpellCheck()<cr>:set spell?<cr>

@@ -221,9 +221,8 @@ if has('persistent_undo')
 	set   undofile
 endif
 if has('statusline')
-	set   statusline=
 	" buffer number
-	set   statusline+=%n
+	set   statusline=%n
 	" git branch, pwd, file path
 	set   statusline+=\ %{GetStatusLineFile()}
 	" modified

@@ -13,7 +13,7 @@ diff-editor = ":builtin"
 [revset-aliases]
 "closest_bookmark(to)" = "heads(::to & bookmarks())"
 "hidden_bookmarks()" = "bookmarks(regex:'^hidden-')"
-"non_hidden_heads()" = "heads(::) ~ hidden_bookmarks()"
+"non_hidden_heads()" = "heads(::) ~ hidden_bookmarks() ~ untracked_remote_bookmarks()"
 "closest_immutable(to)" = "heads(::to & immutable_heads())"
 "important_commits()" = "@ | closest_immutable(@) | non_hidden_heads()"
 

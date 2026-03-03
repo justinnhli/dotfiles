@@ -41,7 +41,6 @@ if has('nvim') && !empty($MYVIMRC)
 		" tools
 		Plug 'junegunn/goyo.vim'
 		Plug 'mbbill/undotree' " TODO eventually replace with built-in undotree (:help undotree)
-		Plug 'tpope/vim-fugitive'
 		" extensions
 		Plug 'ludovicchabant/vim-gutentags'
 		Plug 'rhysd/clever-f.vim'
@@ -303,13 +302,6 @@ let g:mapleader = ' '
 " clever f {{{3
 let g:clever_f_fix_key_direction = 1
 let g:clever_f_timeout_ms = 5000
-
-" fugitive {{{3
-nnoremap  <leader>gg  :Git<space>
-nnoremap  <leader>gb  :Git blame<cr>
-nnoremap  <leader>gc  :Git commit -m ""<left>
-nnoremap  <leader>gd  :Gdiffsplit<cr>
-nnoremap  <leader>gp  :Git push<cr>
 
 " goyo {{{3
 nnoremap  <leader><leader>g  :Goyo<cr>

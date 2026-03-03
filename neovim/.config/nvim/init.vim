@@ -878,7 +878,7 @@ nnoremap  <leader><leader>w  :set wrap! wrap?<cr>
 nnoremap  <leader><leader>/  :set hlsearch! hlsearch?<cr>
 
 " folding {{{2
-" get fold level of line 
+" get fold level of line
 function s:SetFoldLevelToLine()
 	if &shiftwidth == 0
 		let l:fold_level = indent('.') / &tabstop
@@ -900,7 +900,7 @@ xnoremap  ?          y<esc>?\V<C-r>"<cr>
 " 2match
 nnoremap  <leader>/  :2match IncSearch ''<left>
 xnoremap  <leader>/  "zy:2match IncSearch <C-r>=shellescape(getreg('z'))<cr><cr>
-" n/N always goes forwards/backwards (and turns on highlighting) 
+" n/N always goes forwards/backwards (and turns on highlighting)
 nnoremap  n          :set hlsearch<cr>/<cr>zz
 nnoremap  <S-n>      :set hlsearch<cr>?<cr>zz
 xnoremap  n          :<C-u>set hlsearch<cr>/<cr>zz

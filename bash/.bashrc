@@ -7,7 +7,16 @@ update_dot_files() {
 	curl -L 'https://raw.githubusercontent.com/justinnhli/dotfiles/main/neovim/.config/nvim/init.vim' | sed 's/ \.\. / . /g' > "$HOME/.vimrc"
 }
 
-# paths
+# XDG paths
+export XDG_CONFIG_HOME=$HOME/.config
+export XDG_CACHE_HOME=$HOME/.cache
+export XDG_DATA_HOME=$HOME/.local/share
+export XDG_STATE_HOME=$HOME/.local/state
+
+# other path constants
+export SECRETS_HOME=$HOME/.secrets
+
+# set up search path variables
 PATH="/usr/local/bin:/usr/local/opt/sqlite/bin:/usr/local/sbin:$PATH"
 PATH="$HOME/bin:$PATH"
 PATH="$(find "$HOME/git" -maxdepth 2 -type f -perm -100 -exec dirname {} ';' 2>/dev/null | sort -f | uniq | tr '\n' ':' | sed 's/:$//'):$PATH"
@@ -15,11 +24,6 @@ PATH="$(find "$HOME/Dropbox/projects" -maxdepth 2 -type f -perm -100 -exec dirna
 export PYTHONPATH="$HOME/Dropbox/projects:$HOME/git"
 
 # basic environment
-export XDG_CONFIG_HOME=$HOME/.config
-export XDG_CACHE_HOME=$HOME/.cache
-export XDG_DATA_HOME=$HOME/.local/share
-export XDG_STATE_HOME=$HOME/.local/state
-export SECRETS_HOME=$HOME/.secrets
 if command -v nvim >/dev/null 2>&1; then
 	if [ -d ~/.config/nvim ]; then
 		export EDITOR=nvim

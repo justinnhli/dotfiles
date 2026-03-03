@@ -864,7 +864,7 @@ def do_vimgrep(journal, args):
     if not args.terms:
         args.terms.append('^.')
     results = []
-    for _, entry in sorted(entries.items(), reverse=args.reverse):
+    for entry in entries.values():
         lines = entry.text.splitlines()
         for term in args.terms:
             if args.whole_words:
@@ -882,14 +882,17 @@ def do_vimgrep(journal, args):
                     r'^\S*( \S+){,' + str(suffix_words) + '}',
                     match_line[col_num + len(match.group()):],
                 ).group()
+                match_line_num = entry.line_num + line_num - 1
+                match_col_num = col_num + 1
                 results.append((
+                    (entry.title, -match_line_num, -match_col_num),
                     entry.filepath,
-                    entry.line_num + line_num - 1,
-                    col_num + 1,
+                    match_line_num,
+                    match_col_num,
                     entry.title,
                     f'{prefix}{match.group()}{suffix}'
                 ))
-    for path, line_num, col_num, title, preview in sorted(results):
+    for _, path, line_num, col_num, title, preview in sorted(results, reverse=args.reverse):
         print(':'.join([
             f'{path}',
             f'{line_num}',

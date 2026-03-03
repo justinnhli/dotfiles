@@ -150,13 +150,6 @@ function GetStatusLineFile()
 	return l:branch .. ' ' .. l:pwd .. ' ' .. l:filepath
 endfunction
 
-function BuildStatusColumn()
-	if v:virtnum >= 1
-		return ''
-	endif
-	return '%=%l'
-endfunction
-
 " settings {{{3
 filetype plugin on
 filetype indent on
@@ -187,10 +180,10 @@ set   scrolloff=1
 set   shiftwidth=4
 set   sidescroll=1 " neovim default
 set   sidescrolloff=10
+set   signcolumn=number
 set   smartcase
 set   smarttab " neovim default
 set nostartofline " neovim default
-set   statuscolumn=%{%BuildStatusColumn()%}
 set   tabpagemax=50 " neovim default
 set   tabstop=4
 set   tags+=./.tags,.tags

@@ -1026,7 +1026,7 @@ def build_arg_parser(arg_parser):
         '--node-size-fn',
         choices=tuple(GRAPH_NODE_FNS.keys()),
         default='length',
-        help='[G] the attribute that affects node size (default: %(default)s)',
+        help='[G] set the node size attribute (default: %(default)s)',
     )
 
     group = arg_parser.add_argument_group('MISCELLANEOUS OPTIONS')
@@ -1034,7 +1034,7 @@ def build_arg_parser(arg_parser):
         '--no-log',
         dest='log',
         action='store_false',
-        help='do not log filter',
+        help='do not log command',
     )
 
     return arg_parser

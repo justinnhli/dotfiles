@@ -438,7 +438,7 @@ nnoremap  <leader>tn   :tabnew<space>
 function s:CreateRemoteURL()
 	let l:user = expand('$USER')
 	let l:server = 'home'
-	let l:path = expand('#:p')
+	let l:path = substitute(expand('#:p'), '^/Users', '/home', '')
 	return 'scp://' .. l:user .. '@' .. l:server .. '/' .. l:path
 endfunction
 nnoremap  <leader>wer  q:iedit <C-r>=<SID>CreateRemoteURL()<cr><esc>F:w

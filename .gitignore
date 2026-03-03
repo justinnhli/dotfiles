@@ -7,7 +7,6 @@ jupyter/.config/jupyter/lab/workspaces
 jupyter/.config/jupyter/migrated
 jupyter/.config/jupyter/serverconfig/jupyterlabapputilsextensionannouncements.json
 keras/.keras/datasets
-kitty/.config/kitty/current-theme.conf
 neovim/.config/nvim/.netrwhist
 neovim/.config/nvim/autoload/plug.vim
 neovim/.config/nvim/autoload/plug.vim.old

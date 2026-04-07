@@ -54,7 +54,7 @@ Thumbs.db
 *.iml
 
 # OTHER METADATA
-.coverage/
+.coverage
 .ipynb_checkpoints/
 .mypy_cache/
 .pytest_cache/

@@ -11,6 +11,13 @@ let g:python3_host_prog = $PYTHON_VENV_HOME .. '/pynvim/bin/python3'
 
 let g:os = tolower(substitute(system('uname'), '\n', '', ''))
 
+let g:vimrc_dir_path = fnamemodify($MYVIMRC, ':p:h')
+let g:templates_dir_path = g:vimrc_dir_path .. '/templates/'
+let g:autocorrect_path = g:vimrc_dir_path .. '/autocorrect.vim'
+let g:spell_path = g:vimrc_dir_path .. '/spell/en.utf-8.add'
+let g:thesaurus_path = g:vimrc_dir_path .. '/thesaurus.vim'
+let g:vimplug_path = g:vimrc_dir_path .. '/autoload/plug.vim'
+
 let g:justinnhli_pim_path=expand('~/Dropbox/pim')
 let g:justinnhli_scholarship_path=expand('~/Dropbox/scholarship')
 let g:justinnhli_library_path=expand('~/papers')
@@ -45,10 +52,9 @@ if has('nvim') && !empty($MYVIMRC)
 	let s:plugins = s:plugins + ['raimon49/requirements.txt.vim']
 
 	" auto-install vim-plug
-	let s:plug_path = fnamemodify($MYVIMRC, ':p:h') .. '/autoload/plug.vim'
-	if !filereadable(s:plug_path)
-		call system('curl -fLo ' .. s:plug_path .. ' --create-dirs "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"')
-		if filereadable(s:plug_path)
+	if !filereadable(g:vimplug_path)
+		call system('curl -fLo ' .. g:vimlug_path .. ' --create-dirs "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"')
+		if filereadable(g:vimplug_path)
 			augroup justinnhli_vimplug
 				autocmd!
 				autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
@@ -396,8 +402,8 @@ endif
 
 " vim config files {{{3
 nnoremap  <leader>VV   :tabnew $MYVIMRC<cr>
-nnoremap  <leader>VS   :tabnew <C-r>=fnamemodify($MYVIMRC, ':p:h')<cr>/spell/en.utf-8.add<cr>
-nnoremap  <leader>VZ   :tabnew <C-r>=fnamemodify($MYVIMRC, ':p:h')<cr>/autocorrect.vim<cr>
+nnoremap  <leader>VS   :tabnew <C-r>=g:spell_path<cr><cr>
+nnoremap  <leader>VZ   :tabnew <C-r>=g:autocorrect_path<cr><cr>
 
 " other files {{{3
 nnoremap  <leader>B   :tabnew ~/.bashrc<cr>
@@ -726,7 +732,6 @@ xnoremap  <leader><bslash>  :<C-u>call <SID>FormatTable(v:true, v:true)<cr>gv
 " thesaurus {{{3
 
 if exists('&thesaurusfunc')
-	let g:thesaurus_path = fnamemodify($MYVIMRC, ':p:h') .. '/thesaurus.vim'
 	function s:ThesaurusFunc(find_start, base)
 		if !exists('g:jrnl_ignore_files') || !exists('g:thesaurus') || empty(g:thesaurus)
 			if filereadable(g:thesaurus_path)
@@ -1166,8 +1171,7 @@ function s:AutoCorrectAndLog()
 		return
 	endif
 	" add the word to the autocorrect file
-	let l:autocorrect_file = fnamemodify($MYVIMRC, ':p:h') .. '/autocorrect.vim'
-	call writefile(['"iabbrev  <buffer>  ' .. l:bad_word .. '  ' .. l:new_word], l:autocorrect_file, 'a')
+	call writefile(['"iabbrev  <buffer>  ' .. l:bad_word .. '  ' .. l:new_word], g:autocorrect_path, 'a')
 endfunction
 nnoremap  <leader>z         :<C-u>call <SID>AutoCorrectAndLog()<cr>
 
@@ -1371,7 +1375,7 @@ augroup END
 
 " load filetype templates {{{3
 function s:LoadFiletypeTemplate()
-	let l:templates_file = fnamemodify($MYVIMRC, ':p:h') .. '/templates/' .. &filetype
+	let l:templates_file = g:templates_dir_path .. '/' .. &filetype
 	if filereadable(l:templates_file)
 		" read in the template file
 		execute '0r ' .. l:templates_file

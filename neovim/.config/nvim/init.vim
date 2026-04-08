@@ -24,6 +24,29 @@ let g:large_file_size = 1024 * 1024 * 10 " define a large file as > 10MB
 " vimplug {{{3
 if has('nvim') && !empty($MYVIMRC)
 	" TODO eventually replace with built-in package manager (:help packadd)
+
+	" define plugins
+	let s:plugins = []
+	" tools
+	let s:plugins = s:plugins + ['junegunn/goyo.vim']
+	let s:plugins = s:plugins + ['mbbill/undotree'] " TODO eventually replace with built-in undotree (:help :Undotree)
+	" extensions
+	let s:plugins = s:plugins + ['ludovicchabant/vim-gutentags']
+	let s:plugins = s:plugins + ['rhysd/clever-f.vim']
+	" color schemes
+	let s:plugins = s:plugins + ['sainnhe/everforest']
+	let s:plugins = s:plugins + ['cocopon/iceberg.vim']
+	let s:plugins = s:plugins + ['morhetz/gruvbox']
+	let s:plugins = s:plugins + ['pgdouyon/vim-yin-yang']
+	" settings
+	let s:plugins = s:plugins + ['tpope/vim-sleuth']
+	" syntax
+	let s:plugins = s:plugins + ['glench/vim-jinja2-syntax']
+	let s:plugins = s:plugins + ['justinnhli/journal.vim']
+	let s:plugins = s:plugins + ['keith/swift.vim']
+	let s:plugins = s:plugins + ['leafgarland/typescript-vim']
+	let s:plugins = s:plugins + ['raimon49/requirements.txt.vim']
+
 	" auto-install vim-plug
 	let s:plug_path = fnamemodify($MYVIMRC, ':p:h') .. '/autoload/plug.vim'
 	if !filereadable(s:plug_path)
@@ -36,27 +59,12 @@ if has('nvim') && !empty($MYVIMRC)
 		endif
 	endif
 
+	" register plugins with vim-plug
 	try
 		call plug#begin(expand('<sfile>:p:h') .. '/plugged')
-		" tools
-		Plug 'junegunn/goyo.vim'
-		Plug 'mbbill/undotree' " TODO eventually replace with built-in undotree (:help :Undotree)
-		" extensions
-		Plug 'ludovicchabant/vim-gutentags'
-		Plug 'rhysd/clever-f.vim'
-		" color schemes
-		Plug 'sainnhe/everforest'
-		Plug 'cocopon/iceberg.vim'
-		Plug 'morhetz/gruvbox'
-		Plug 'pgdouyon/vim-yin-yang'
-		" settings
-		Plug 'tpope/vim-sleuth'
-		" syntax
-		Plug 'glench/vim-jinja2-syntax'
-		Plug 'justinnhli/journal.vim'
-		Plug 'keith/swift.vim'
-		Plug 'leafgarland/typescript-vim'
-		Plug 'raimon49/requirements.txt.vim'
+		for s:plugin in s:plugins
+			Plug s:plugin
+		endfor
 		call plug#end()
 	catch
 	endtry

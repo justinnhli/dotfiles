@@ -903,7 +903,7 @@ def do_vimgrep(journal, args):
                 match_line_num = entry.line_num + line_num - 1
                 match_col_num = col_num + 1
                 entry_results.append((
-                    (-match_line_num, -match_col_num),
+                    (match_line_num, match_col_num),
                     entry.filepath,
                     match_line_num,
                     match_col_num,

@@ -80,12 +80,12 @@ def update_cabal():
 
 
 @register()
-def update_vimplug():
+def update_vim_pack():
     # type: () -> None
     """Update neovim packages."""
     if not which('nvim'):
         return
-    run(['nvim', '-c', ':lua vim.pack.update()'], check=True)
+    run(['nvim', '-c', 'lua vim.pack.update()', '-c', 'qa'], check=True)
 
 
 @register()
@@ -461,7 +461,7 @@ def update_everything():
         find_conflicts(path)
     sync_library()
     sync_vim_spellfiles()
-    update_vimplug()
+    update_vim_pack()
     pull_git()
     fetch_jj()
     update_actr()

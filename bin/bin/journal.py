@@ -40,8 +40,8 @@ class Title:
         """Initialize a new Title."""
         self.title = title
         self.is_date = bool(DATE_REGEX.fullmatch(self.title))
-        self._date = None # type: Optional[datetime]
-        self._iso = None # type: Optional[str]
+        self._date = None # type: datetime
+        self._iso = None # type: str
 
     @property
     def date(self):
@@ -53,12 +53,15 @@ class Title:
         return self._date
 
     def iso(self, unit='day', default=None):
-        # type: (str, Optional[str]) -> str
+        # type: (str, str) -> str
         """Get a normalized title.
 
         Parameters:
-            unit (str): The unit of the date. One of 'year', 'month', or 'day'.
-            default (str): The default title, if the title is not a date.
+            unit: The unit of the date. One of 'year', 'month', or 'day'.
+            default: The default title, if the title is not a date.
+
+        Returns:
+            str: An ISO-formatted date string, up to the specified unit.
         """
         if self._iso is None:
             if self.is_date:
@@ -102,9 +105,9 @@ class Journal(Entries):
         """Initialize the journal.
 
         Parameters:
-            directory (Union[Path, str]): The directory of the journal.
-            use_cache (bool): Whether to use the cache file. Defaults to True.
-            ignores (Iterable[Path]): Paths to ignore. Optional.
+            directory: The directory of the journal.
+            use_cache: Whether to use the cache file. Defaults to True.
+            ignores: Paths to ignore. Optional.
         """
         if isinstance(directory, str):
             directory = Path(directory)
@@ -236,12 +239,11 @@ class Journal(Entries):
         """Filter the entries.
 
         Parameters:
-            terms (Iterable[str]): Search terms for the entries.
-            icase (bool): Ignore case. Defaults to True.
-            whole_words (bool): Match must be the entire word. Defaults to False.
-            date_ranges (Sequence[DateRange]):
-                Date ranges for the entries. Optional.
-            title_type (str): Filter by title type. Defaults to None
+            terms: Search terms for the entries.
+            icase: Ignore case. Defaults to True.
+            whole_words: Match must be the entire word. Defaults to False.
+            date_ranges: Date ranges for the entries. Optional.
+            title_type: Filter by title type. Defaults to None
 
         Returns:
             dict[str, Entry]: The entries.
@@ -284,7 +286,11 @@ class Journal(Entries):
 
     def lint(self):
         # type: () -> list[tuple[Path, int, str]]
-        """Check the journal for errors."""
+        """Check the journal for errors.
+
+        Returns:
+            list[tuple[Path, int, str]]: A list of errors.
+        """
         ascii_regex = re.compile('(\t*[!-~]([ -~]*[!-~])?)?')
         errors = []
         titles = set()
@@ -339,7 +345,11 @@ class Journal(Entries):
 
     def update_metadata(self):
         # type: () -> list[tuple[Path, int, str]]
-        """Update the tags file and the cache."""
+        """Update the tags file and the cache.
+
+        Returns:
+            list[tuple[Path, int, str]]: A list of errors.
+        """
         errors = self.lint()
         if not errors:
             self._write_tags_file()
@@ -355,7 +365,7 @@ def title_to_date(title):
     """Convert an entry title to a datetime.
 
     Parameters:
-        title (str): The entry title.
+        title: The entry title.
 
     Returns:
         datetime: The datetime.
@@ -371,7 +381,7 @@ def next_date(date):
     """Calculate the next date.
 
     Parameters:
-        date (datetime): The previous date.
+        date: The previous date.
 
     Returns:
         datetime: The next date.
@@ -384,8 +394,8 @@ def filter_entries(journal, args, **kwargs):
     """Filter entries by the CLI arguments.
 
     Parameters:
-        journal (Journal): The journal.
-        args (Namespace): The CLI arguments.
+        journal: The journal.
+        args: The CLI arguments.
         **kwargs: Override values for the CLI arguments.
 
     Returns:
@@ -405,23 +415,23 @@ def group_entries(entries, unit, summary=True, reverse=True):
     """Group entries by date.
 
     Parameters:
-        entries (Entries): The entries.
-        unit (str): The tabulation unit. One of 'year', 'month', or 'day'.
-        summary (bool): Whether to include a summary. Defaults to True.
-        reverse (bool): Whether to list entries in chronological order.
+        entries: The entries.
+        unit: The tabulation unit. One of 'year', 'month', or 'day'.
+        summary: Whether to include a summary. Defaults to True.
+        reverse: Whether to list entries in chronological order.
             Defaults to True.
 
     Returns:
         dict[str, Entries]: The grouped entries.
     """
 
-    def key_func(entry):
+    def _key_func(entry):
         # type: (tuple[Title, Entry]) -> str
         return entry[0].iso(unit, 'other')
 
     grouped = groupby(
-        sorted(entries.items(), reverse=reverse, key=key_func),
-        key_func,
+        sorted(entries.items(), reverse=reverse, key=_key_func),
+        _key_func,
     )
     result = {group: dict(entries) for group, entries in grouped} # type: dict[str, Entries]
     if summary:
@@ -431,7 +441,16 @@ def group_entries(entries, unit, summary=True, reverse=True):
 
 def sort_entries(entries, key_func=None, reverse=True):
     # type: (Iterable[Entry], Callable[[Entry], Any], bool) -> list[Entry]
-    """Sort entries lexicographically, but always put date entries first."""
+    """Sort entries lexicographically, but always put date entries first.
+
+    Parameters:
+        entries: The entries to sort.
+        key_func: The key to sort by.
+        reverse: Whether to sort in reverse.
+
+    Returns:
+        list[Entry]: The sorted list of entries
+    """
     grouped_entries = defaultdict(list)
     for entry in entries:
         grouped_entries[entry.title.is_date].append(entry)
@@ -442,13 +461,13 @@ def sort_entries(entries, key_func=None, reverse=True):
 
 
 def print_table(data, headers=None, gap_size=2):
-    # type: (list[Sequence[Any]], Optional[Sequence[str]], int) -> None
+    # type: (list[Sequence[Any]], Sequence[str], int) -> None
     """Print a table of data.
 
     Parameters:
-        data (list[Sequence[Any]]): The rows of data.
-        headers (Optional[Sequence[str]]): The headers.
-        gap_size (int): The number of spaces between columns. Defaults to 2.
+        data: The rows of data.
+        headers: The headers.
+        gap_size: The number of spaces between columns. Defaults to 2.
     """
     if not data:
         return
@@ -465,32 +484,26 @@ def print_table(data, headers=None, gap_size=2):
         print(gap.join(col.rjust(width) for width, col in zip(widths, row)))
 
 
-def summarize_line_lengths(entries, unit, num_words):
+def summarize_line_lengths(entries, _1, _2):
     # type: (Entries, str, Sequence[int]) -> int
-    # pylint: disable = unused-argument
     """Get the length of the longest line of a group of entries.
 
     Parameters:
-        entries (Entries): The entries.
-        unit (str): The grouping unit.
-        num_words (Sequence[int]): The number of words in each entry in the group.
+        entries: The entries.
 
     Returns:
-        int: The length of longest line.
+        The length of longest line.
     """
     text = '\n'.join(entry.text for entry in entries.values())
     return max(len(line) for line in text.splitlines())
 
 
-def summarize_readability(entries, unit, num_words):
+def summarize_readability(entries, _1, _2):
     # type: (Entries, str, Sequence[int]) -> str
-    # pylint: disable = unused-argument
     """Calculate the Kincaid reading grade level of a group of entries.
 
     Parameters:
-        entries (Entries): The entries.
-        unit (str): The grouping unit.
-        num_words (Sequence[int]): The number of words in each entry in the group.
+        entries: The entries.
 
     Returns:
         str: The reading grade level.
@@ -498,7 +511,7 @@ def summarize_readability(entries, unit, num_words):
     non_alnum_regex = re.compile('[^ 0-9A-Za-z]')
     multispace_regex = re.compile('  +')
 
-    def to_sentences(text):
+    def _to_sentences(text):
         # type: (str) -> chain[str]
         for paragraph in text.splitlines():
             paragraph = paragraph.strip()
@@ -508,32 +521,32 @@ def summarize_readability(entries, unit, num_words):
             sentences = chain(*(sentence.split('? ') for sentence in sentences))
             yield from sentences
 
-    def strip_punct(text):
+    def _strip_punct(text):
         # type: (str) -> str
         text = text.replace("'", '')
         text = non_alnum_regex.sub(' ', text)
         text = multispace_regex.sub(' ', text)
         return text.strip()
 
-    def letters_to_syllables(letters):
+    def _letters_to_syllables(letters):
         # type: (int) -> float
         return letters / 3.26 # constant updated 2021-07-14
 
-    def kincaid(text):
+    def _kincaid(text):
         # type: (str) -> float
-        sentences = [strip_punct(sentence) for sentence in to_sentences(text)]
-        words = strip_punct(text).split()
+        sentences = [_strip_punct(sentence) for sentence in _to_sentences(text)]
+        words = _strip_punct(text).split()
         num_letters = sum(len(word) for word in words)
         num_words = len(words)
         num_sentences = len(sentences)
         return (
             0.39 * (num_words / num_sentences)
-            + 11.8 * (letters_to_syllables(num_letters) / num_words)
+            + 11.8 * (_letters_to_syllables(num_letters) / num_words)
             - 15.59
         )
 
     text = '\n'.join(entry.text for entry in entries.values())
-    return f'{kincaid(text):.3f}'
+    return f'{_kincaid(text):.3f}'
 
 
 def log_error(message):
@@ -541,7 +554,7 @@ def log_error(message):
     """Create the log error message.
 
     Parameters:
-        message (str): The error message.
+        message: The error message.
 
     Returns:
         Path: The journal file where the error occurred.
@@ -591,14 +604,14 @@ def register(flag=None):
     """Register a function for the CLI.
 
     Parameters:
-        flag (str): The option flag. Optional; if not provided, the function name is used instead.
+        flag: The option flag. Optional; if not provided, the function name is used instead.
 
     Returns:
         Callable[[OperationFunction], OperationFunction]:
             The argument function.
     """
 
-    def wrapped(function, flag):
+    def _wrapped(function, flag):
         # type: (OperationFunction, str) -> OperationFunction
         assert function.__name__.startswith('do_')
         if flag is None:
@@ -611,7 +624,7 @@ def register(flag=None):
         OPERATIONS.append(Option(priority, flag, desc, function))
         return function
 
-    return (lambda function: wrapped(function, flag)) # pylint: disable = superfluous-parens
+    return (lambda function: _wrapped(function, flag)) # pylint: disable = superfluous-parens
 
 
 @register('-A')
@@ -620,12 +633,12 @@ def do_archive(_, args):
     """Archive to a tarball.
 
     Parameters:
-        args (Namespace): The CLI arguments.
+        args: The CLI arguments.
     """
     from os.path import basename, join as join_path # pylint: disable = import-outside-toplevel
 
-    def tarinfo_filter(tarinfo):
-        # type: (TarInfo) -> Optional[TarInfo]
+    def _tarinfo_filter(tarinfo):
+        # type: (TarInfo) -> TarInfo
         if basename(tarinfo.name)[0] in '._':
             return None
         elif tarinfo.size > 1048576:
@@ -636,7 +649,7 @@ def do_archive(_, args):
     archive_stem = 'jrnl' + datetime.now().strftime('%Y%m%d%H%M%S')
     archive_path = Path() / f'{archive_stem}.txz'
     with open_tar_file(archive_path, 'w:xz') as tar:
-        tar.add(args.directory, arcname=archive_stem, filter=tarinfo_filter)
+        tar.add(args.directory, arcname=archive_stem, filter=_tarinfo_filter)
         tar.add(__file__, arcname=join_path(archive_stem, basename(__file__)))
     encrypted_path = archive_path.with_suffix('.txz.gpg')
     run(
@@ -655,7 +668,11 @@ def do_archive(_, args):
 @register('-U')
 def do_unarchive(_, args):
     # type: (Journal, Namespace) -> None
-    """Unarchive from a tarball."""
+    """Unarchive from a tarball.
+
+    Parameters:
+        args: The CLI arguments.
+    """
     assert len(args.terms) == 1
     encrypted_path = Path(args.terms[0]).expanduser().resolve()
     assert encrypted_path.exists()
@@ -680,8 +697,8 @@ def do_count(journal, args):
     """Count words and entries.
 
     Parameters:
-        journal (Journal): The journal.
-        args (Namespace): The CLI arguments.
+        journal: The journal.
+        args: The CLI arguments.
     """
     columns = {
         'DATE': (lambda entries, unit, num_words: unit),
@@ -721,8 +738,8 @@ def do_graph(journal, args):
     """Graph entry references in DOT.
 
     Parameters:
-        journal (Journal): The journal.
-        args (Namespace): The CLI arguments.
+        journal: The journal.
+        args: The CLI arguments.
     """
     entries = filter_entries(journal, args, title_type='date')
     disjoint_sets = dict((k, k) for k in entries)
@@ -784,7 +801,7 @@ def do_index(journal, _):
     """Re-index and update cache.
 
     Parameters:
-        journal (Journal): The journal.
+        journal: The journal.
     """
     errors = journal.update_metadata()
     if errors:
@@ -798,8 +815,8 @@ def do_list(journal, args):
     """List entry titles.
 
     Parameters:
-        journal (Journal): The journal.
-        args (Namespace): The CLI arguments.
+        journal: The journal.
+        args: The CLI arguments.
     """
     entries = filter_entries(journal, args)
     print('\n'.join(
@@ -814,8 +831,8 @@ def do_show(journal, args):
     """Show entry contents.
 
     Parameters:
-        journal (Journal): The journal.
-        args (Namespace): The CLI arguments.
+        journal: The journal.
+        args: The CLI arguments.
     """
     entries = filter_entries(journal, args)
     if not entries:
@@ -860,8 +877,8 @@ def do_wording(journal, args):
     """Count uses of a phrase.
 
     Parameters:
-        journal (Journal): The journal.
-        args (Namespace): The CLI arguments.
+        journal: The journal.
+        args: The CLI arguments.
     """
     journal_text = '\n'.join(
         entry.text for entry in
@@ -908,8 +925,8 @@ def do_vimgrep(journal, args):
     """List results in vim :grep format.
 
     Parameters:
-        journal (Journal): The journal.
-        args (Namespace): The CLI arguments.
+        journal: The journal.
+        args: The CLI arguments.
     """
     prefix_words = 3
     suffix_words = 8
@@ -968,7 +985,7 @@ def build_arg_parser(arg_parser):
     """Add arguments to the ArgumentParser.
 
     Parameters:
-        arg_parser (ArgumentParser): The argument parser.
+        arg_parser: The argument parser.
 
     Returns:
         ArgumentParser: The argument parser.
@@ -1110,7 +1127,7 @@ def fill_date_range(date_range):
     """Expand date ranges to start and end dates.
 
     Parameters:
-        date_range (str): The CLI date range.
+        date_range: The CLI date range.
 
     Returns:
         datetime: The start date.
@@ -1147,8 +1164,8 @@ def process_args(arg_parser, args):
     """Process and check CLI arguments.
 
     Parameters:
-        arg_parser (ArgumentParser): The CLI argument parser.
-        args (Namespace): The CLI arguments.
+        arg_parser: The CLI argument parser.
+        args: The CLI arguments.
 
     Returns:
         Namespace: The CLI arguments, augmented.
@@ -1188,8 +1205,8 @@ def parse_args(arg_parser, args):
     """Parser the CLI arguments.
 
     Parameters:
-        arg_parser (ArgumentParser): The CLI argument parser.
-        args (Namespace): The CLI arguments.
+        arg_parser: The CLI argument parser.
+        args: The CLI arguments.
     """
     if arg_parser is None:
         arg_parser = build_arg_parser(ArgumentParser())
@@ -1215,9 +1232,9 @@ def log_search(arg_parser, args, journal):
     """Log a Journal search.
 
     Parameters:
-        arg_parser (ArgumentParser): The CLI argument parser.
-        args (Namespace): The CLI arguments.
-        journal (Journal): The journal.
+        arg_parser: The CLI argument parser.
+        args: The CLI arguments.
+        journal: The journal.
     """
     log_file = journal.directory / '.log'
     if not (args.log and log_file.exists()):

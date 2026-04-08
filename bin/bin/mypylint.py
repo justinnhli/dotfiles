@@ -5,7 +5,7 @@ import re
 import subprocess
 import sys
 from json import loads as json_loads
-from argparse import ArgumentParser
+from argparse import ArgumentParser, Namespace
 from collections import namedtuple
 from os import environ
 from pathlib import Path
@@ -44,10 +44,11 @@ def _err_print(message):
 
 
 def run_pylint(args, path):
-    # type: (Path) -> List[Error]
+    # type: (Namespace, Path) -> List[Error]
     """Get errors from pylint.
 
     Parameters:
+        args (Namespace): The parsed arguments.
         path (Path): The path to the file to check.
 
     Returns:
@@ -104,10 +105,11 @@ def run_pylint(args, path):
 
 
 def run_mypy(args, path):
-    # type: (Path) -> List[Error]
+    # type: (Namespace, Path) -> List[Error]
     """Get errors from mypy.
 
     Parameters:
+        args (Namespace): The parsed arguments.
         path (Path): The path to the file to check.
 
     Returns:
@@ -161,10 +163,11 @@ def run_mypy(args, path):
 
 
 def run_pyright(args, path):
-    # type: (Path) -> List[Error]
+    # type: (Namespace, Path) -> List[Error]
     """Get errors from pyright.
 
     Parameters:
+        args (Namespace): The parsed arguments.
         path (Path): The path to the file to check.
 
     Returns:
@@ -197,10 +200,11 @@ def run_pyright(args, path):
 
 
 def run_pydocstyle(args, path):
-    # type: (Path) -> List[Error]
+    # type: (Namespace, Path) -> List[Error]
     """Get errors from pydocstyle.
 
     Parameters:
+        args (Namespace): The parsed arguments.
         path (Path): The path to the file to check.
 
     Returns:

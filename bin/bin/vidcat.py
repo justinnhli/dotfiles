@@ -6,6 +6,8 @@ from subprocess import run
 
 
 def main():
+    # type: () -> None
+    """Provide a CLI entry point."""
     # define arguments
     arg_parser = ArgumentParser()
     arg_parser.add_argument('inputs', nargs='+', type=Path)

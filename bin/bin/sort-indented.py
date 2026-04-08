@@ -51,6 +51,7 @@ def sort_indented(text, depth=None, reverse=False):
     """Sort the input by the text at the indent level."""
 
     def add_items(result, items, item):
+        # type: (list[str], list[list[str]], list[str]) -> None
         if item:
             items.append(item)
         for child_items in sorted(items, key='\n'.join, reverse=reverse):

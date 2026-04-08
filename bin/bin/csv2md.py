@@ -16,7 +16,7 @@ def to_markdown(path):
             for key, value in row.items():
                 key = key.strip()
                 if value is None:
-                    value == ''
+                    value = ''
                 value = re.sub(r'(http[\S]*)', r'<\1>', value)
                 lines = [line.strip() for line in value.splitlines() if line.strip()]
                 if len(lines) == 1:

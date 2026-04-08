@@ -20,8 +20,8 @@ CODE_REPO_PATH = Path('~/repos').expanduser().resolve()
 # registry
 
 
-REGISTRY = OrderedDict()
 Function = namedtuple('Function', 'name, function, hidden')
+REGISTRY = OrderedDict() # type: dict[str, Function]
 
 
 def register(hidden=False):
@@ -247,7 +247,7 @@ def merge_history():
     print('merging shell history logs')
     history_path = Path('~/Dropbox/personal/logs/shistory/').expanduser().resolve()
     # collect all history
-    shistory = set()
+    shistory = set() # type: set[tuple[datetime, str, str, str, str]]
     years = set()
     for filepath in history_path.glob('*.shistory'):
         with filepath.open() as fd:
@@ -274,10 +274,10 @@ def merge_history():
         )
         prev_line = ('', '', '', '')
         with history_path.joinpath(f'{year}.shistory').open('w', encoding='utf-8') as fd:
-            for _, *history in year_shistory:
+            for history in year_shistory:
                 if history[1:] == prev_line:
                     continue
-                fd.write('\t'.join(history))
+                fd.write('\t'.join(history[1:]))
                 fd.write('\n')
                 prev_line = history[1:]
 
@@ -358,7 +358,7 @@ def pull_git():
         if (repo_path / '.jj').exists():
             continue
         print(repo_path)
-        run(['git', 'pull'], cwd=repo_path, check=False),
+        run(['git', 'pull'], cwd=repo_path, check=False)
         print()
 
 
@@ -369,7 +369,7 @@ def fetch_jj():
     for repo_git_path in sorted(CODE_REPO_PATH.glob('*/.jj/')):
         repo_path = repo_git_path.parent
         print(repo_path)
-        run(['jj', 'git', 'fetch'], cwd=repo_path, check=False),
+        run(['jj', 'git', 'fetch'], cwd=repo_path, check=False)
         print()
 
 

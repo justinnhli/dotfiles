@@ -8,6 +8,8 @@ from tempfile import NamedTemporaryFile
 
 
 def main():
+    # type: () -> None
+    """Provide a CLI entry point."""
     # set up the argument parser
     arg_parser = ArgumentParser()
     if 'NVIM' in environ:

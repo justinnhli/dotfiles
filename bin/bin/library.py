@@ -69,7 +69,8 @@ BIBTEX_FIELDS = [
 
 def is_lawsuit(author):
     # type: (str) -> bool
-    return (
+    """Determine whether an entry is a lawsuit."""
+    return bool(
         ' and ' not in author
         and re.fullmatch('.* v\\. .*', author[1:-1])
     )

@@ -17,7 +17,7 @@ from subprocess import run
 from sys import stdout, exit as sys_exit
 from tarfile import open as open_tar_file, TarInfo
 from tempfile import mkstemp
-from typing import Any, Optional, Union, Callable, Generator, Iterable, Sequence, Mapping
+from typing import Any, Optional, Union, Callable, Generator, Iterator, Iterable, Sequence, Mapping
 
 FILE_EXTENSION = '.journal'
 STRING_LENGTHS = {
@@ -512,7 +512,7 @@ def summarize_readability(entries, _1, _2):
     multispace_regex = re.compile('  +')
 
     def _to_sentences(text):
-        # type: (str) -> chain[str]
+        # type: (str) -> Iterator[str]
         for paragraph in text.splitlines():
             paragraph = paragraph.strip()
             if not paragraph:

@@ -6,6 +6,8 @@ from collections import defaultdict
 
 
 def run(command):
+    # type: (list[str]) -> list[str]
+    """Run a subprocess."""
     return subprocess_run(
         command,
         check=True,
@@ -14,6 +16,8 @@ def run(command):
 
 
 def main():
+    # type: () -> None
+    """Provide a CLI entry point."""
     # collect subsets of packages
     casks = set(line.strip() for line in run(['brew', 'list', '--cask']))
     leaves = set(line.strip() for line in run(['brew', 'leaves']))
@@ -27,7 +31,7 @@ def main():
     ]
     packages = set()
     dependencies = defaultdict(set)
-    stack = []
+    stack = [] # type: list[str]
     for line in lines:
         indent = len(re.findall('    ', line))
         package = line.strip()

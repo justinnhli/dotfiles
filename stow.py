@@ -3,6 +3,7 @@
 """Manage stowed files."""
 
 from argparse import ArgumentParser
+from collections import defaultdict
 from pathlib import Path
 from subprocess import run as subprocess_run
 
@@ -49,19 +50,28 @@ def install(*packages):
 def check():
     # type: () -> None
     """Check for stow errors."""
+    home = Path('~').expanduser()
     tracked_files = run('jj', 'file', 'list').splitlines()
+    dir_used_by = defaultdict(set)
+    errors = []
     for tracked_file in sorted(tracked_files):
         path = Path(tracked_file)
         if len(path.parts) <= 1 or path.parts[0].startswith('.'):
             continue
         package = path.parts[0]
-        stowlink_path = Path('~').expanduser().joinpath(*path.parts[1:])
+        stowlink_path = home.joinpath(*path.parts[1:])
         absolute_path = stowlink_path.resolve()
         relative_path = stowlink_path.relative_to(Path('~').expanduser())
         if not absolute_path.exists():
-            print(f'[{package}] {relative_path} does not exist')
+            errors.append(f'[{package}] {relative_path} does not exist')
         elif absolute_path == stowlink_path:
-            print(f'[{package}] {relative_path} is not linked')
+            errors.append(f'[{package}] {relative_path} exists but is not a link')
+        dir_used_by[stowlink_path.parent].add(package)
+    for real_dir in sorted(dir_used_by):
+        if len(dir_used_by[real_dir]) == 1 and real_dir == real_dir.resolve():
+            errors.append(f'[{package}] {real_dir} exists but is not a link')
+    for error in sorted(errors):
+        print(error)
 
 
 def main():

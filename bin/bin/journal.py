@@ -580,8 +580,8 @@ def log_error(message):
 
 
 OperationFunction = Callable[[Journal, Namespace], None]
-OPERATIONS = []
 Option = namedtuple('Option', 'priority, flag, desc, function')
+OPERATIONS = [] # type: list[Option]
 COUNT_COL_FNS = {
     'LINE LEN': ('length', summarize_line_lengths),
     'READABILITY': ('readability', summarize_readability),

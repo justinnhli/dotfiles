@@ -435,12 +435,18 @@ nnoremap  <leader>wln  :rightbelow vnew<cr>
 nnoremap  <leader>tn   :tabnew<space>
 
 " open remote file {{{3
-nnoremap  <leader>wer  q:iedit scp://user@server.tld//absolute/path/to/file<esc>F:w
-nnoremap  <leader>whr  q:ileftabove vsplit scp://user@server.tld//absolute/path/to/file<esc>F:w
-nnoremap  <leader>wjr  q:irightbelow split scp://user@server.tld//absolute/path/to/file<esc>F:w
-nnoremap  <leader>wkr  q:ileftabove split scp://user@server.tld//absolute/path/to/file<esc>F:w
-nnoremap  <leader>wlr  q:irightbelow vsplit scp://user@server.tld//absolute/path/to/file<esc>F:w
-nnoremap  <leader>tr   q:itabnew scp://user@server.tld//absolute/path/to/file<esc>F:w
+function s:CreateRemoteURL()
+	let l:user = expand('$USER')
+	let l:server = 'home'
+	let l:path = expand('#:p')
+	return 'scp://' .. l:user .. '@' .. l:server .. '/' .. l:path
+endfunction
+nnoremap  <leader>wer  q:iedit <C-r>=<SID>CreateRemoteURL()<cr><esc>F:w
+nnoremap  <leader>whr  q:ileftabove vsplit <C-r>=<SID>CreateRemoteURL()<cr><esc>F:w
+nnoremap  <leader>wjr  q:irightbelow split <C-r>=<SID>CreateRemoteURL()<cr><esc>F:w
+nnoremap  <leader>wkr  q:ileftabove split <C-r>=<SID>CreateRemoteURL()<cr><esc>F:w
+nnoremap  <leader>wlr  q:irightbelow vsplit <C-r>=<SID>CreateRemoteURL()<cr><esc>F:w
+nnoremap  <leader>tr   q:itabnew <C-r>=<SID>CreateRemoteURL()<cr><esc>F:w
 
 " open terminal {{{3
 " (at $HOME if new tab, at the directory of the current file otherwise)

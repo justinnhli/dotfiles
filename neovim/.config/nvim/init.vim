@@ -864,6 +864,51 @@ function s:ToggleSpellCheck()
 	endif
 endfunction
 
+function s:MisspellingsToLocList()
+	" store cursor position
+	let l:save_cursor = getcurpos()
+	" disable wrapscan to avoid infinite loop
+	let l:save_wrapscan = &wrapscan
+	set nowrapscan
+	" initialize to the beginning of the file
+	silent! normal! gg0
+	let l:prev_pos = []
+	let l:bufnr = bufnr()
+	" collect misspellings
+	let l:result = []
+	while v:true
+		" go to and get the next bad word
+		silent! keepjumps normal! ]s
+		let l:badword = spellbadword()
+		let l:curr_pos = getpos('.')
+		" if there is none, break
+		if empty(l:badword[0]) || l:curr_pos == l:prev_pos
+			break
+		endif
+		" add the position of the bad word to the result
+		let l:loc_item = {
+			\'bufnr': l:bufnr,
+			\'lnum':l:curr_pos[1],
+			\'col':l:curr_pos[2],
+			\'text': l:badword[0],
+		\}
+		call add(l:result, l:loc_item)
+		" update the position
+		let l:prev_pos = l:curr_pos
+	endwhile
+	" restore wrapscan
+	let &wrapscan = l:save_wrapscan
+	" restore cursor position
+	call setpos('.', l:save_cursor)
+	" set the location list
+	call setloclist(0, l:result)
+	" go to the next misspelling after the cursor
+	lafter
+	" open the location list and move the cursor back to the window
+	lopen
+	wincmd p
+endfunction
+
 " mappings {{{3
 nnoremap  <leader><leader>0  :call <SID>ToggleScrollOff()<cr>:set scrolloff?<cr>
 nnoremap  <leader><leader>c  :call <SID>ToggleColorColumn()<cr>:setlocal colorcolumn?<cr>
@@ -874,7 +919,8 @@ nnoremap  <leader><leader>m  :call <SID>ToggleColorscheme()<cr>:echo &background
 nnoremap  <leader><leader>M  :call <SID>SetColorscheme(0)<cr>:echo &background g:colors_name<cr>
 nnoremap  <leader><leader>n  :set number! number?<cr>
 nnoremap  <leader><leader>p  :set paste! paste?<cr>
-nnoremap  <leader><leader>s  :call <SID>ToggleSpellCheck()<cr>:set spell?<cr>
+nnoremap  <leader><leader>s  :call <SID>ToggleSpellCheck()<cr>:setlocal spell?<cr>
+nnoremap  <leader><leader>S  :setlocal spell<cr>:call <SID>MisspellingsToLocList()<cr>
 nnoremap  <leader><leader>w  :set wrap! wrap?<cr>
 nnoremap  <leader><leader>/  :set hlsearch! hlsearch?<cr>
 

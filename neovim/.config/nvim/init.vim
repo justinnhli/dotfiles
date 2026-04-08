@@ -81,13 +81,13 @@ function BuildTabLine()
 	let l:tabline = ''
 	let l:cur_tab = tabpagenr()
 	" for each tab page
-	for l:i in range(tabpagenr('$'))
-		let l:buffers = tabpagebuflist(l:i + 1)
-		let l:filename = fnamemodify(bufname(l:buffers[tabpagewinnr(l:i + 1) - 1]), ':p:t')
+	for l:i in range(1, tabpagenr('$'))
 		" set highlighting
-		let l:tabline .= (l:i + 1 == l:cur_tab ? '%#TabLineSel#' : '%#TabLine#')
+		let l:tabline .= (l:i == l:cur_tab ? '%#TabLineSel#' : '%#TabLine#')
 		let l:tabline .= ' '
 		" set filename
+		let l:buffers = tabpagebuflist(l:i)
+		let l:filename = fnamemodify(bufname(l:buffers[tabpagewinnr(l:i) - 1]), ':p:t')
 		if l:filename ==# ''
 			let l:tabline .= '[No Name]'
 		elseif strlen(l:filename) > 15
@@ -97,7 +97,7 @@ function BuildTabLine()
 		endif
 		let l:tabline .= ' '
 		" set window number and modified flag
-		let l:tabline .= '[' .. tabpagewinnr(l:i + 1,'$') .. ']'
+		let l:tabline .= '[' .. tabpagewinnr(l:i, '$') .. ']'
 		" tab page is modified if any buffer is modified
 		for l:buffer in l:buffers
 			if getbufvar(l:buffer, '&modified' )

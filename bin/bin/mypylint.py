@@ -70,6 +70,7 @@ def run_pylint(args, path):
             '--disable', 'too-many-positional-arguments',
             '--disable', 'too-many-public-methods',
             '--disable', 'too-many-statements',
+            '--disable', 'too-many-ancestors',
             str(path),
         ],
         cwd=args.pwd,

@@ -936,6 +936,7 @@ endif
 
 " version control commands {{{2
 function s:ShowJJDiff()
+	let l:cursor = getpos('.')
 	let l:filetype = &filetype
 	leftabove vnew
 	lcd #:p:h
@@ -946,6 +947,7 @@ function s:ShowJJDiff()
 	diffthis
 	wincmd l
 	diffthis
+	call setpos('.', l:cursor)
 endfunction
 function s:ShowJJBlame()
 	let l:cursor = getpos('.')
@@ -964,7 +966,7 @@ function s:ShowJJBlame()
 	setlocal scrollbind
 	call setpos('.', l:cursor)
 endfunction
-" diff against most recent revision in jj
+" diff against most recent commit
 nnoremap  <leader>rd    :silent! call <SID>ShowJJDiff()<cr>
 " show blame/annotation
 nnoremap  <leader>rb    :silent! call <SID>ShowJJBlame()<cr>

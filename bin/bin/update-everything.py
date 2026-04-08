@@ -363,7 +363,7 @@ def pull_git():
 
 
 @register()
-def pull_jj():
+def fetch_jj():
     # type: () -> None
     """Fetch on all jj repos."""
     for repo_git_path in sorted(CODE_REPO_PATH.glob('*/.jj/')):

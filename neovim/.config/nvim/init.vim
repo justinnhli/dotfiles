@@ -922,10 +922,10 @@ function s:MisspellingsToLocList()
 endfunction
 
 " mappings {{{3
-nnoremap  <leader><leader>0  :call <SID>ToggleScrollOff()<cr>:set scrolloff?<cr>
+nnoremap  <leader><leader>0  :call <SID>ToggleScrollOff()<cr>:setlocal scrolloff?<cr>
 nnoremap  <leader><leader>c  :call <SID>ToggleColorColumn()<cr>:setlocal colorcolumn?<cr>
 nnoremap  <leader><leader>d  :call <SID>ToggleDiff()<cr>:echo (&diff ? 'diffthis' : 'diffoff')<cr>
-nnoremap  <leader><leader>f  :call <SID>ToggleFoldMethod()<cr>:set foldmethod?<cr>
+nnoremap  <leader><leader>f  :call <SID>ToggleFoldMethod()<cr>:setlocal foldmethod?<cr>
 nnoremap  <leader><leader>l  :set list! list?<cr>
 nnoremap  <leader><leader>m  :call <SID>ToggleColorscheme()<cr>:echo &background g:colors_name<cr>
 nnoremap  <leader><leader>M  :call <SID>SetColorscheme(0)<cr>:echo &background g:colors_name<cr>

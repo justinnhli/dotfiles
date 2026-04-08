@@ -9,10 +9,8 @@ jupyter/.config/jupyter/migrated
 jupyter/.config/jupyter/serverconfig/jupyterlabapputilsextensionannouncements.json
 keras/.keras/datasets
 neovim/.config/nvim/.netrwhist
-neovim/.config/nvim/autoload/plug.vim
-neovim/.config/nvim/autoload/plug.vim.old
+neovim/.config/nvim/nvim-pack-lock.json
 neovim/.config/nvim/nviminfo
-neovim/.config/nvim/plugged/
 neovim/.config/nvim/spell/*
 !neovim/.config/nvim/spell/en.utf-8.add
 python/.config/python/.python_history

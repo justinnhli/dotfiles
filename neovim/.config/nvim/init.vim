@@ -16,7 +16,6 @@ let g:templates_dir_path = g:vimrc_dir_path .. '/templates/'
 let g:autocorrect_path = g:vimrc_dir_path .. '/autocorrect.vim'
 let g:spell_path = g:vimrc_dir_path .. '/spell/en.utf-8.add'
 let g:thesaurus_path = g:vimrc_dir_path .. '/thesaurus.vim'
-let g:vimplug_path = g:vimrc_dir_path .. '/autoload/plug.vim'
 
 let g:justinnhli_pim_path=expand('~/Dropbox/pim')
 let g:justinnhli_scholarship_path=expand('~/Dropbox/scholarship')
@@ -24,54 +23,38 @@ let g:justinnhli_library_path=expand('~/papers')
 
 let g:large_file_size = 1024 * 1024 * 10 " define a large file as > 10MB
 
-" vimplug {{{1
-if has('nvim') && !empty($MYVIMRC)
-	" TODO eventually replace with built-in package manager (:help packadd)
-	" can call Lua package manager with :lua vim.pack.add({URL, ...})
-
-	" define plugins
-	let s:plugins = []
-	" tools
-	let s:plugins = s:plugins + ['junegunn/goyo.vim']
-	let s:plugins = s:plugins + ['mbbill/undotree'] " TODO eventually replace with built-in undotree (:help :Undotree)
-	" extensions
-	let s:plugins = s:plugins + ['ludovicchabant/vim-gutentags']
-	let s:plugins = s:plugins + ['rhysd/clever-f.vim']
-	" color schemes
-	let s:plugins = s:plugins + ['sainnhe/everforest']
-	let s:plugins = s:plugins + ['cocopon/iceberg.vim']
-	let s:plugins = s:plugins + ['morhetz/gruvbox']
-	let s:plugins = s:plugins + ['pgdouyon/vim-yin-yang']
-	" settings
-	let s:plugins = s:plugins + ['tpope/vim-sleuth']
-	" syntax
-	let s:plugins = s:plugins + ['glench/vim-jinja2-syntax']
-	let s:plugins = s:plugins + ['justinnhli/journal.vim']
-	let s:plugins = s:plugins + ['keith/swift.vim']
-	let s:plugins = s:plugins + ['leafgarland/typescript-vim']
-	let s:plugins = s:plugins + ['raimon49/requirements.txt.vim']
-
-	" auto-install vim-plug
-	if !filereadable(g:vimplug_path)
-		call system('curl -fLo ' .. g:vimlug_path .. ' --create-dirs "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"')
-		if filereadable(g:vimplug_path)
-			augroup justinnhli_vimplug
-				autocmd!
-				autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
-			augroup END
-		endif
-	endif
-
-	" register plugins with vim-plug
-	call plug#begin(expand('<sfile>:p:h') .. '/plugged')
-	for plugin in s:plugins
-		try
-			Plug plugin
-		catch
-			echom 'error registering plugin ' .. plugin
-		endtry
+" packages {{{1
+"
+" package data {{{2
+let s:packages = []
+" tools
+let s:packages = s:packages + ['junegunn/goyo.vim']
+let s:packages = s:packages + ['mbbill/undotree'] " TODO eventually replace with built-in undotree (:help :Undotree)
+" extensions
+let s:packages = s:packages + ['ludovicchabant/vim-gutentags']
+let s:packages = s:packages + ['rhysd/clever-f.vim']
+" color schemes
+let s:packages = s:packages + ['sainnhe/everforest']
+let s:packages = s:packages + ['cocopon/iceberg.vim']
+let s:packages = s:packages + ['morhetz/gruvbox']
+let s:packages = s:packages + ['pgdouyon/vim-yin-yang']
+" settings
+let s:packages = s:packages + ['tpope/vim-sleuth']
+" syntax
+let s:packages = s:packages + ['glench/vim-jinja2-syntax']
+let s:packages = s:packages + ['justinnhli/journal.vim']
+let s:packages = s:packages + ['keith/swift.vim']
+let s:packages = s:packages + ['leafgarland/typescript-vim']
+let s:packages = s:packages + ['raimon49/requirements.txt.vim']
+" load packages {{{2
+function s:LoadPackages()
+	for l:package in s:packages
+		let l:url = 'https://github.com/' .. l:package
+		execute "lua vim.pack.add({'" .. l:url .. "'}, {confirm=false})"
 	endfor
-	call plug#end()
+endfunction
+if exists(':packadd') == 2 " exact match
+	call <SID>LoadPackages()
 endif
 
 " options {{{1

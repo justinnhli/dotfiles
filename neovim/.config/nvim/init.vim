@@ -741,7 +741,7 @@ if exists('&thesaurusfunc')
 			return []
 		endif
 	endfunction
-	set thesaurusfunc=s:ThesaurusFunc
+	set thesaurusfunc=<SID>ThesaurusFunc
 	inoremap  <C-t>  <C-x><C-t><C-n><C-n><C-p>
 endif
 

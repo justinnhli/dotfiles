@@ -11,7 +11,6 @@ colocate = false
 diff-editor = ":builtin"
 
 [revset-aliases]
-"closest_bookmark(to)" = "heads(::to & bookmarks())"
 "hidden_bookmarks()" = "bookmarks(regex:'^hidden-')"
 "visible_bookmarks()" = "bookmarks() ~ hidden_bookmarks()"
 "non_hidden_heads()" = "heads(::) ~ hidden_bookmarks() ~ untracked_remote_bookmarks()"
@@ -30,7 +29,7 @@ fetch = ["git", "fetch"]
 loga = ["log", "-r", "::"]
 logn = ["log", "-r", "present(@) | ancestors(immutable_heads().., 2) | present(trunk())"]
 push = ["git", "push"]
-tug = ["bookmark", "move", "--from", "closest_bookmark(@-)", "--to", "@-"]
+tug = ["bookmark", "advance", "--to", "@-"]
 
 [templates]
 draft_commit_description = '''

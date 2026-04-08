@@ -61,15 +61,15 @@ if has('nvim') && !empty($MYVIMRC)
 	endif
 
 	" register plugins with vim-plug
-    call plug#begin(expand('<sfile>:p:h') .. '/plugged')
-    for plugin in s:plugins
-        try
-            Plug plugin
-        catch
-            echom 'error registering plugin ' .. plugin
-        endtry
-    endfor
-    call plug#end()
+	call plug#begin(expand('<sfile>:p:h') .. '/plugged')
+	for plugin in s:plugins
+		try
+			Plug plugin
+		catch
+			echom 'error registering plugin ' .. plugin
+		endtry
+	endfor
+	call plug#end()
 endif
 
 " settings {{{1
@@ -897,19 +897,19 @@ function s:PrevQuickFixOrLocation()
 endfunction
 " load buffers into location list {{{3
 function s:LExprBuffers()
-    let l:buffers = getbufinfo({'buflisted': 1})
-    let l:result = []
-    for l:buffer in l:buffers
-        if l:buffer['hidden'] || empty(l:buffer['name']) || empty(l:buffer['windows'])
+	let l:buffers = getbufinfo({'buflisted': 1})
+	let l:result = []
+	for l:buffer in l:buffers
+		if l:buffer['hidden'] || empty(l:buffer['name']) || empty(l:buffer['windows'])
 			continue
-        endif
+		endif
 		if l:buffer['name'] =~# '^term:'
 			continue
 		endif
 		let l:message = printf('buffer: %s; windows: %s', l:buffer['bufnr'], l:buffer['windows'])
 		call add(l:result, fnamemodify(l:buffer['name'], ':p:~') .. ':0:' .. l:message)
-    endfor
-    return l:result
+	endfor
+	return l:result
 endfunction
 
 " quickfix/location mappings {{{2
@@ -1059,7 +1059,7 @@ function s:FormatTable(visual, use_spaces)
 	else
 		let l:range='%'
 	endif
-    let l:cursor = getpos('.')
+	let l:cursor = getpos('.')
 	execute l:range .. 's/\m\C  \+/	/eg'
 	if a:use_spaces
 		execute "silent " .. l:range .. "!column -ts '	'"

@@ -82,6 +82,8 @@ function BuildTabLine()
 	let l:cur_tab = tabpagenr()
 	" for each tab page
 	for l:i in range(1, tabpagenr('$'))
+		" set clickable area
+		let l:tabline .= '%' .. (l:i) .. 'T'
 		" set highlighting
 		let l:tabline .= (l:i == l:cur_tab ? '%#TabLineSel#' : '%#TabLine#')
 		let l:tabline .= ' '

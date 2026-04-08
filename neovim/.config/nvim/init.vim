@@ -91,7 +91,7 @@ function BuildStatusLine()
 	let l:result .= ' '
 	" file format
 	let l:fileformat = getbufvar(l:bufnr, '&fileformat')
-	if l:fileformat != 'unix'
+	if l:fileformat !=# 'unix'
 		let l:result .= '[%{&fileformat}]'
 	endif
 	" byte-order mark (BOM)
@@ -634,7 +634,7 @@ function s:FormatTable(visual, use_spaces)
 	let l:cursor = getpos('.')
 	execute l:range .. 's/\m\C  \+/	/eg'
 	if a:use_spaces
-		execute "silent " .. l:range .. "!column -ts '	'"
+		execute 'silent ' .. l:range .. "!column -ts '	'"
 		execute l:range .. 's/\m\C \+$//eg'
 	endif
 	call setpos('.', l:cursor)
@@ -1204,7 +1204,7 @@ function s:CloseAssociatedLocationList()
 	" count the number of location lists in the tab
 	let l:num_loc_lists = 0
 	for l:other_win_id in gettabinfo(l:tabnr)[0]['windows']
-		if getbufvar(winbufnr(win_id2win(l:other_win_id)), '&buftype') == 'quickfix'
+		if getbufvar(winbufnr(win_id2win(l:other_win_id)), '&buftype') ==# 'quickfix'
 			let l:num_loc_lists += 1
 		endif
 	endfor

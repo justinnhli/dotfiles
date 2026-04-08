@@ -4,9 +4,11 @@
 # pylint: disable = line-too-long
 
 import re
-from argparse import ArgumentParser, FileType
+from argparse import ArgumentParser
 from collections import defaultdict
 from itertools import chain
+from pathlib import Path
+from sys import stdin
 from textwrap import dedent
 
 
@@ -84,12 +86,14 @@ def main():
     """Provide a CLI entry point."""
     test()
     arg_parser = ArgumentParser()
-    arg_parser.add_argument('fds', nargs='*', type=FileType('r'))
+    arg_parser.add_argument('inputfile', nargs='*', type=Path)
     args = arg_parser.parse_args()
-    if args.fds == []:
-        args = arg_parser.parse_args(['-'])
-    for fd in args.fds:
-        print(bib_to_str(ris2bib(parse_ris(fd.read().strip()))))
+    if args.inputfile is None:
+        print(bib_to_str(ris2bib(parse_ris(stdin.read()))))
+    else:
+        for path in args.inputfile:
+            with path.expanduser().resolve().open(encoding='utf-8') as fd:
+                print(bib_to_str(ris2bib(parse_ris(fd.read()))))
 
 
 TESTS = [

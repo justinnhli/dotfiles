@@ -2,8 +2,9 @@
 """Sort the input by the text at the indent level."""
 
 import re
+from argparse import ArgumentParser
+from pathlib import Path
 from sys import stdin
-from argparse import ArgumentParser, FileType
 
 
 def determine_indent(text):
@@ -83,12 +84,17 @@ def main():
     # type: () -> None
     """Provide a CLI entry point."""
     arg_parser = ArgumentParser()
-    arg_parser.add_argument('inputfile', nargs='?', type=FileType('r'), default=stdin)
+    arg_parser.add_argument('inputfile', nargs='?', type=Path)
     arg_parser.add_argument('-d', dest='depth', type=int, help='the depth of the indent to sort by')
     arg_parser.add_argument('-r', dest='reverse', action='store_true', help='sort in reverse order')
     args = arg_parser.parse_args()
+    if args.inputfile is None:
+        contents = stdin.read()
+    else:
+        with args.inputfile.expanduser().resolve().open(encoding='utf-8') as fd:
+            contents = fd.read()
     print(sort_indented(
-        args.inputfile.read(),
+        contents,
         depth=args.depth,
         reverse=args.reverse,
     ))

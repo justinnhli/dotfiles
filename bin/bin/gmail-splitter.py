@@ -2,10 +2,11 @@
 """Convert Gmail conversation print content to a journal-suitable format."""
 
 import re
-from sys import stdin
-from argparse import ArgumentParser, FileType
+from argparse import ArgumentParser
 from collections import namedtuple
 from datetime import datetime
+from pathlib import Path
+from sys import stdin
 from textwrap import indent
 
 SIGNATURE_RE = '\n'.join([
@@ -93,9 +94,14 @@ def main():
     # type: () -> None
     """Provide a CLI entry point."""
     arg_parser = ArgumentParser()
-    arg_parser.add_argument('inputfile', nargs='?', type=FileType('r'), default=stdin)
+    arg_parser.add_argument('inputfile', nargs='?', type=Path)
     args = arg_parser.parse_args()
-    format_emails(args.inputfile.read())
+    if args.inputfile is None:
+        contents = stdin.read()
+    else:
+        with args.inputfile.expanduser().resolve().open(encoding='utf-8') as fd:
+            contents = fd.read()
+    format_emails(contents)
 
 
 if __name__ == '__main__':

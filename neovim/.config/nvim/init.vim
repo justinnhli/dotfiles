@@ -1222,6 +1222,10 @@ function s:CloseAssociatedLocationList()
 	" get the tabnr and winnr of the window being closed
 	let l:win_id = expand('<afile>')
 	let [l:tabnr, l:winnr] = win_id2tabwin(l:win_id)
+	" if the window being closed is a location list, return
+	if getbufvar(winbufnr(win_id2win(l:win_id)), '&buftype') ==# 'quickfix'
+		return
+	endif
 	" count the number of location lists in the tab
 	let l:num_loc_lists = 0
 	for l:other_win_id in gettabinfo(l:tabnr)[0]['windows']
@@ -1230,7 +1234,7 @@ function s:CloseAssociatedLocationList()
 		endif
 	endfor
 	" if all remaining windows are location lists, close the tab
-	if l:num_loc_lists > 0 && l:num_loc_lists == winnr('$') - 1
+	if l:num_loc_lists > 0 && l:num_loc_lists == tabpagewinnr(l:tabnr, '$') - 1
 		tabclose
 	endif
 	" otherwise, try to get the win_id of the location list of the closing window

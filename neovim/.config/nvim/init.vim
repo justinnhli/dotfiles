@@ -871,11 +871,11 @@ function s:MisspellingsToLocList()
 	let l:save_wrapscan = &wrapscan
 	set nowrapscan
 	" initialize to the beginning of the file
-	silent! normal! gg0
+	silent! keepjumps normal! gg0
 	let l:prev_pos = []
 	let l:bufnr = bufnr()
 	" collect misspellings
-	let l:result = []
+	let l:counter = {}
 	while v:true
 		" go to and get the next bad word
 		silent! keepjumps normal! ]s
@@ -885,14 +885,16 @@ function s:MisspellingsToLocList()
 		if empty(l:badword[0]) || l:curr_pos == l:prev_pos
 			break
 		endif
-		" add the position of the bad word to the result
-		let l:loc_item = {
+		" add the position of the bad word to the counter
+		if !has_key(l:counter, l:badword[0])
+			let l:counter[l:badword[0]] = []
+		endif
+		let l:loc_datum = {
 			\'bufnr': l:bufnr,
 			\'lnum':l:curr_pos[1],
 			\'col':l:curr_pos[2],
-			\'text': l:badword[0],
 		\}
-		call add(l:result, l:loc_item)
+		call add(l:counter[l:badword[0]], l:loc_datum)
 		" update the position
 		let l:prev_pos = l:curr_pos
 	endwhile
@@ -900,8 +902,18 @@ function s:MisspellingsToLocList()
 	let &wrapscan = l:save_wrapscan
 	" restore cursor position
 	call setpos('.', l:save_cursor)
+	" build the location list
+	let l:loclist = []
+	for [word, loc_data] in items(l:counter)
+		let l:text = word .. ' (' .. len(loc_data) .. ' occurrence(s))'
+		for loc_datum in loc_data
+			let l:key = [loc_datum.lnum, loc_datum.col]
+			let l:loc_datum['text'] = l:text
+			call add(l:loclist, [l:key, l:loc_datum])
+		endfor
+	endfor
 	" set the location list
-	call setloclist(0, l:result)
+	call setloclist(0, map(sort(l:loclist), {_, pair -> pair[1]}))
 	" go to the next misspelling after the cursor
 	lafter
 	" open the location list and move the cursor back to the window

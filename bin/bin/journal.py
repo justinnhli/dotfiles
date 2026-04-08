@@ -230,8 +230,8 @@ class Journal(Entries):
             candidates |= set(k for k in selected if start_date <= k.date < end_date)
         return candidates
 
-    def filter(self, terms=None, icase=True, whole_words=False, date_ranges=None, dates_only=False):
-        # type: (Iterable[str], bool, bool, Sequence[DateRange], bool) -> dict[Title, Entry]
+    def filter(self, terms=None, icase=True, whole_words=False, date_ranges=None, title_type=None):
+        # type: (Iterable[str], bool, bool, Sequence[DateRange], str) -> dict[Title, Entry]
         """Filter the entries.
 
         Parameters:
@@ -240,16 +240,18 @@ class Journal(Entries):
             whole_words (bool): Match must be the entire word. Defaults to False.
             date_ranges (Sequence[DateRange]):
                 Date ranges for the entries. Optional.
-            dates_only (bool): Filter out non-date entries.
+            title_type (str): Filter by title type. Defaults to None
 
         Returns:
             dict[str, Entry]: The entries.
         """
         selected = set(self.entries.keys())
-        if date_ranges or dates_only:
+        if title_type == 'date':
             selected = set(title for title in selected if title.is_date)
-        if date_ranges:
-            selected = self._filter_by_date(selected, *date_ranges)
+            if date_ranges:
+                selected = self._filter_by_date(selected, *date_ranges)
+        elif title_type == 'word':
+            selected = set(title for title in selected if not title.is_date)
         if terms:
             selected = self._filter_by_terms(selected, terms, icase, whole_words)
         return {title: self.entries[title] for title in selected}
@@ -393,7 +395,7 @@ def filter_entries(journal, args, **kwargs):
         icase=kwargs.get('icase', args.icase),
         whole_words=kwargs.get('whole_words', args.whole_words),
         date_ranges=kwargs.get('date_ranges', args.date_ranges),
-        dates_only=kwargs.get('dates_only', None),
+        title_type=kwargs.get('title_type', args.title_type),
     )
 
 
@@ -663,7 +665,7 @@ def do_count(journal, args):
             0 if len(num_words) <= 1 else round(stdev(num_words))
         ),
     } # type: dict[str, Callable[[Entries, str, Sequence[int]], Any]]
-    entries = filter_entries(journal, args, dates_only=True)
+    entries = filter_entries(journal, args, title_type='date')
     if not entries:
         return
     for heading, (flag, function) in COUNT_COL_FNS.items():
@@ -686,7 +688,7 @@ def do_graph(journal, args):
         journal (Journal): The journal.
         args (Namespace): The CLI arguments.
     """
-    entries = filter_entries(journal, args, dates_only=True)
+    entries = filter_entries(journal, args, title_type='date')
     disjoint_sets = dict((k, k) for k in entries)
     referents = defaultdict(set) # type: dict[Title, set[Title]]
     edges = defaultdict(set) # type: dict[Title, set[Title]]
@@ -996,6 +998,12 @@ def build_arg_parser(arg_parser):
         action='store_true',
         help='only match whole words',
     )
+    group.add_argument(
+        '--title-type',
+        dest='title_type',
+        choices=('date', 'word'),
+        help='filter by title type',
+    )
 
     group = arg_parser.add_argument_group('OUTPUT OPTIONS (IGNORED BY -[AI])')
     group.add_argument(
@@ -1112,6 +1120,9 @@ def process_args(arg_parser, args):
     if args.date_spec is None:
         args.date_ranges = None
     else:
+        if args.title_type == 'word':
+            arg_parser.error('-d and --title-type=word cannot be used together')
+        args.title_type = 'date'
         range_regex = re.compile(RANGE_BOUND_REGEX.pattern + ':?' + RANGE_BOUND_REGEX.pattern)
         date_ranges = []
         for date_range in args.date_spec.split(','):

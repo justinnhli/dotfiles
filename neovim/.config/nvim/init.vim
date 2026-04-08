@@ -96,8 +96,8 @@ function BuildTabLine()
 		" set window number and modified flag
 		let l:tabline .= '[' .. tabpagewinnr(l:i + 1,'$') .. ']'
 		" tab page is modified if any buffer is modified
-		for b in l:buffers
-			if getbufvar(b, '&modified' )
+		for l:buffer in l:buffers
+			if getbufvar(l:buffer, '&modified' )
 				let l:tabline .= '+'
 				break
 			endif
@@ -362,7 +362,7 @@ function s:SetColorScheme()
 	execute 'colorscheme ' .. g:colorschemes[g:colorscheme_index][0]
 	execute 'set ft=' .. &ft
 endfunction
-for i in range(len(g:colorschemes))
+for s:i in range(len(g:colorschemes))
 	try
 		call s:SetColorScheme()
 		break
@@ -787,15 +787,15 @@ function s:ToggleSpellCheck()
 	let l:spellgroups = ['SpellBad', 'SpellCap', 'SpellRare', 'SpellLocal']
 	if &spell == 0
 		setlocal spell
-		for group in l:spellgroups
-			execute 'highlight clear ' .. group
+		for l:group in l:spellgroups
+			execute 'highlight clear ' .. l:group
 		endfor
 		call s:SetColorScheme()
 	elseif execute('highlight SpellBad') !~? 'links to Error'
 		setlocal spell
-		for group in l:spellgroups
-			execute 'highlight clear ' .. group
-			execute 'highlight link ' .. group .. ' Error'
+		for l:group in l:spellgroups
+			execute 'highlight clear ' .. l:group
+			execute 'highlight link ' .. l:group .. ' Error'
 		endfor
 	else
 		setlocal nospell

@@ -5,10 +5,10 @@ highlight link n2tComment Comment
 syntax keyword n2tKeyword CHIP IN OUT PARTS
 highlight link n2tKeyword Keyword
 
-syntax match n2tFunction '[A-Z][0-9A-Za-z]\+\ze('
+syntax match n2tFunction '[A-Z][0-9A-Za-z_]\+\ze('
 highlight link n2tFunction Function
 
-syntax match n2tIdentifier '\<[a-z]\+\ze='
+syntax match n2tIdentifier '\<[a-z][a-z_]*\ze='
 highlight link n2tIdentifier Identifier
 
 syntax match n2tNumber '-\?\<[0-9]\+\>'

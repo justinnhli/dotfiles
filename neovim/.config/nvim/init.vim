@@ -77,6 +77,56 @@ endif
 " options {{{1
 
 " functions {{{3
+function BuildStatusLine()
+	" constants
+	let l:paths_max_width = winwidth(0) - 32
+	" determine context
+	let l:pwd = fnamemodify(getcwd(g:statusline_winid), ':~') .. '/'
+	let l:bufnr = winbufnr(g:statusline_winid)
+	let l:filepath = expand('#' .. l:bufnr .. ':p')
+	" initialize statusline
+	let l:result = ''
+	" buffer number
+	let l:result .= '%n'
+	" pwd and file path
+	let l:display_pwd = l:pwd
+	let l:display_filepath = fnamemodify(l:filepath, ':~:.')
+	if strlen(l:display_pwd) + strlen(l:display_filepath) + 3 > l:paths_max_width
+		let l:display_pwd = pathshorten(l:display_pwd)
+		if strlen(l:display_pwd) + strlen(l:display_filepath) + 3 > l:paths_max_width
+			let l:display_filepath = pathshorten(l:display_filepath)
+		endif
+	endif
+	let l:result .= ' ' .. l:display_pwd
+	let l:result .= ' ' .. l:display_filepath
+	" modified
+	let l:result .= '%( %M%)'
+	" spacer
+	let l:result .= ' '
+	" file format
+	let l:fileformat = nvim_get_option_value('fileformat', {'buf': l:bufnr})
+	if l:fileformat != 'unix'
+		let l:result .= '[%{&fileformat}]'
+	endif
+	" byte-order mark (BOM)
+	if &bomb
+		let l:result .= '[BOM]'
+	endif
+	" read only
+	let l:result .= '%r'
+	" paste
+	if &paste
+		let l:result .= '%#ErrorMsg#[paste]%*'
+	endif
+	" alignment separator
+	let l:result .= '%='
+	" cursor position
+	let l:result .= ' (%l/%L,%c)'
+	" buffer scroll position
+	let l:result .= '%4P'
+	return l:result
+endfunction
+
 function BuildTabLine()
 	let l:tabline = ''
 	let l:cur_tab = tabpagenr()
@@ -111,47 +161,6 @@ function BuildTabLine()
 	endfor
 	let l:tabline .= '%T%#TabLineFill#%='
 	return l:tabline
-endfunction
-
-function s:UseHomeTilde(path)
-	if a:path =~ '^' .. $HOME
-		return '~' .. a:path[strlen($HOME):]
-	else
-		return a:path
-	endif
-endfunction
-
-function s:GetGitBranch(path)
-	let l:cmd = ''
-	let l:cmd .= '( '
-	let l:cmd .= 'cd ' .. shellescape(fnamemodify(a:path, ':p:h'))
-	let l:cmd .= ' && '
-	let l:cmd .= 'git symbolic-ref --quiet --short HEAD'
-	let l:cmd .= ' ) 2>/dev/null'
-	let l:gitoutput = substitute(system(l:cmd), '\n\+$', '', '')
-	if len(l:gitoutput) == 0
-		return ''
-	else
-		return '(' .. l:gitoutput .. ')'
-	endif
-endfunc
-
-function GetStatusLineFile()
-	" gives git branch, working path, and file path
-	let l:branch = <SID>GetGitBranch(expand('%:p:h'))
-	let l:pwd = <SID>UseHomeTilde(getcwd()) .. '/'
-	let l:filepath = <SID>UseHomeTilde(expand('%'))
-	let l:max_width = winwidth(0) - 32
-	if strlen(l:branch) + strlen(l:pwd) + strlen(l:filepath) + 3 > l:max_width
-		let l:pwd = pathshorten(l:pwd)
-		if strlen(l:branch) + strlen(l:pwd) + strlen(l:filepath) + 3 > l:max_width
-			let l:filepath = pathshorten(l:filepath)
-		endif
-	endif
-	if l:filepath =~# '^\./'
-		let l:filepath = l:filepath[2:]
-	endif
-	return l:branch .. ' ' .. l:pwd .. ' ' .. l:filepath
 endfunction
 
 " options {{{3
@@ -229,28 +238,7 @@ if has('persistent_undo')
 	set   undofile
 endif
 if has('statusline')
-	" buffer number
-	set   statusline=%n
-	" git branch, pwd, file path
-	set   statusline+=\ %{GetStatusLineFile()}
-	" modified
-	set   statusline+=%(\ %M%)
-	" file format
-	set   statusline+=\ [%{&ff}]
-	" byte-order mark (BOM)
-	set   statusline+=%{&bomb?'[BOM]':''}
-	" read only
-	set   statusline+=%r
-	" file type
-	set   statusline+=%y
-	" paste
-	set   statusline+=%#ErrorMsg#%{&paste?'[paste]':''}%*
-	" alignment separator
-	set   statusline+=%=
-	" cursor position
-	set   statusline+=\ (%l/%L,%c)
-	" buffer position
-	set   statusline+=%4P
+	set   statusline=%!BuildStatusLine()
 endif
 if has('syntax')
 	set   spell

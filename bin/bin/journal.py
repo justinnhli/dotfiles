@@ -426,6 +426,18 @@ def group_entries(entries, unit, summary=True, reverse=True):
     return result
 
 
+def sort_entries(entries, key_func=None, reverse=True):
+    # type: (Iterable[Entry], Callable[[Entry], Any], bool) -> list[Entry]
+    """Sort entries lexicographically, but always put date entries first."""
+    grouped_entries = defaultdict(list)
+    for entry in entries:
+        grouped_entries[entry.title.is_date].append(entry)
+    return (
+        sorted(grouped_entries[True], key=key_func, reverse=reverse)
+        + sorted(grouped_entries[False], key=key_func, reverse=reverse)
+    )
+
+
 def print_table(data, headers=None, gap_size=2):
     # type: (list[Sequence[Any]], Optional[Sequence[str]], int) -> None
     """Print a table of data.
@@ -753,8 +765,8 @@ def do_list(journal, args):
     """
     entries = filter_entries(journal, args)
     print('\n'.join(
-        str(title) for title
-        in sorted(entries.keys(), reverse=args.reverse)
+        str(entry.title) for entry
+        in sort_entries(entries.values(), reverse=args.reverse)
     ))
 
 
@@ -770,7 +782,10 @@ def do_show(journal, args):
     entries = filter_entries(journal, args)
     if not entries:
         return
-    text = '\n\n'.join(entry.text for _, entry in sorted(entries.items(), reverse=args.reverse))
+    text = '\n\n'.join(
+        entry.text for entry
+        in sort_entries(entries.values(), reverse=args.reverse)
+    )
     if stdout.isatty():
         temp_file = Path(mkstemp(FILE_EXTENSION)[1]).expanduser().resolve()
         with temp_file.open('w', encoding='utf-8') as fd:
@@ -864,8 +879,9 @@ def do_vimgrep(journal, args):
     if not args.terms:
         args.terms.append('^.')
     results = []
-    for entry in entries.values():
+    for entry in sort_entries(entries.values(), reverse=args.reverse):
         lines = entry.text.splitlines()
+        entry_results = []
         for term in args.terms:
             if args.whole_words:
                 term = r'\b' + term + r'\b'
@@ -884,15 +900,16 @@ def do_vimgrep(journal, args):
                 ).group()
                 match_line_num = entry.line_num + line_num - 1
                 match_col_num = col_num + 1
-                results.append((
-                    (entry.title, -match_line_num, -match_col_num),
+                entry_results.append((
+                    (-match_line_num, -match_col_num),
                     entry.filepath,
                     match_line_num,
                     match_col_num,
                     entry.title,
                     f'{prefix}{match.group()}{suffix}'
                 ))
-    for _, path, line_num, col_num, title, preview in sorted(results, reverse=args.reverse):
+        results.extend(sorted(entry_results))
+    for _, path, line_num, col_num, title, preview in results:
         print(':'.join([
             f'{path}',
             f'{line_num}',

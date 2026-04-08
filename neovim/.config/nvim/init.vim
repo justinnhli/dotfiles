@@ -947,8 +947,27 @@ function s:ShowJJDiff()
 	wincmd l
 	diffthis
 endfunction
+function s:ShowJJBlame()
+	let l:cursor = getpos('.')
+	setlocal nowrap
+	normal! gg
+	leftabove vnew
+	lcd #:p:h
+	read!jj file annotate #:p
+		\ --template 'self.commit().change_id().short(8) ++ " " ++'
+		\'truncate_end(8, self.commit().author().email().local()) ++ " " ++'
+		\'self.commit().committer().timestamp().format("\%Y-\%m-\%d \%H:\%M:\%S") ++ "\n"'
+	normal! ggdd
+	setlocal readonly buftype=nofile filetype=vcsblame nowrap scrollbind
+	vertical resize 42
+	wincmd l
+	setlocal scrollbind
+	call setpos('.', l:cursor)
+endfunction
 " diff against most recent revision in jj
 nnoremap  <leader>rd    :silent! call <SID>ShowJJDiff()<cr>
+" show blame/annotation
+nnoremap  <leader>rb    :silent! call <SID>ShowJJBlame()<cr>
 
 " external commands {{{2
 if exists('*nvim_create_buf')

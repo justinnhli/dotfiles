@@ -22,6 +22,7 @@ diff-editor = ":builtin"
 log = "fork_point(log_revset()) | log_revset()"
 
 [aliases]
+clone = ["git", "clone"]
 gc = ["util", "gc"]
 fetch = ["git", "fetch"]
 "new+" = ["new", "--insert-after", "@"]

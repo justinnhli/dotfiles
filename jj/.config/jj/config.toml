@@ -23,6 +23,8 @@ log = "fork_point(important_commits())::important_commits() | conflicts() | @::"
 [aliases]
 gc = ["util", "gc"]
 fetch = ["git", "fetch"]
+"new+" = ["new", "--insert-after", "@"]
+"new-" = ["new", "--insert-before", "@"]
 loga = ["log", "-r", "::"]
 logn = ["log", "-r", "present(@) | ancestors(immutable_heads().., 2) | present(trunk())"]
 push = ["git", "push"]

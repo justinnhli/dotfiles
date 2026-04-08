@@ -81,16 +81,19 @@ function BuildStatusLine()
 	" constants
 	let l:paths_max_width = winwidth(0) - 32
 	" determine context
-	let l:pwd = fnamemodify(getcwd(g:statusline_winid), ':~') .. '/'
+	let l:pwd = fnamemodify(getcwd(g:statusline_winid), ':p:~')
 	let l:bufnr = winbufnr(g:statusline_winid)
-	let l:filepath = expand('#' .. l:bufnr .. ':p')
+	let l:filepath = expand('#' .. l:bufnr .. ':p:~')
 	" initialize statusline
 	let l:result = ''
 	" buffer number
 	let l:result .= '%n'
 	" pwd and file path
 	let l:display_pwd = l:pwd
-	let l:display_filepath = fnamemodify(l:filepath, ':~:.')
+	let l:display_filepath = l:filepath
+	if l:filepath[:len(l:pwd) - 1] == l:pwd
+		let l:display_filepath = l:filepath[len(l:pwd):]
+	endif
 	if strlen(l:display_pwd) + strlen(l:display_filepath) + 3 > l:paths_max_width
 		let l:display_pwd = pathshorten(l:display_pwd)
 		if strlen(l:display_pwd) + strlen(l:display_filepath) + 3 > l:paths_max_width

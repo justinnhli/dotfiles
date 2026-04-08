@@ -1161,7 +1161,7 @@ def parse_args(arg_parser, args):
     journal = Journal(args.directory, use_cache=args.use_cache, ignores=args.ignores)
     if len(journal) == 0:
         arg_parser.error(f'no journal entries found in {args.directory}')
-    if args.log:
+    if args.log and args.operation.__name__ in ('do_show', 'do_list', 'do_vimgrep'):
         log_search(arg_parser, args, journal)
     args.operation(journal, args)
     try:
@@ -1180,9 +1180,6 @@ def log_search(arg_parser, args, journal):
         args (Namespace): The CLI arguments.
         journal (Journal): The journal.
     """
-    logged_functions = ('do_show', 'do_list', 'do_vimgrep')
-    if args.operation.__name__ not in logged_functions:
-        return
     log_file = journal.directory / '.log'
     if not (args.log and log_file.exists()):
         return

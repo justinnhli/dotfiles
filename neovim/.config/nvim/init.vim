@@ -361,6 +361,12 @@ for s:i in range(len(g:colorschemes))
 	endtry
 endfor
 
+" signs {{{1
+
+sign define jjadd text=++ texthl=Added
+sign define jjmod text=~~ texthl=Changed
+sign define locbang text=!! texthl=Removed
+
 " mappings {{{1
 
 " file shortcuts {{{2
@@ -792,61 +798,46 @@ function s:SetSignsFromJJCallback(job_id, data, event)
 	" define regex to extract line numbers
 	let l:regex = '^ *\(\([0-9]\+\) \+\)\?\([0-9]\+\):'
 	" loop through `jj diff` output
-	for line in a:data
+	for l:line in a:data
 		" if output does not match diff, skip it
-		if match(line, l:regex) == -1
+		if match(l:line, l:regex) == -1
 			continue
 		endif
 		" extract line numbers
-		let linediff = split(substitute(line, l:regex .. '.*', '\2 \3', ''))
-		" add signs
-		" FIXME use :sign place ...
+		let linediff = split(substitute(l:line, l:regex .. '.*', '\2 \3', ''))
+		" place signs
 		if len(linediff) == 1
-			call sign_place(0, 'jj', 'jjadd', bufname(), {'lnum': linediff[0]})
+			call sign_place(0, 'jj', 'jjadd', bufnr(), {'lnum': linediff[0]})
 		else
-			call sign_place(0, 'jj', 'jjmod', bufname(), {'lnum': linediff[1]})
+			call sign_place(0, 'jj', 'jjmod', bufnr(), {'lnum': linediff[1]})
 		endif
 	endfor
 endfunction
 
 function SetSignsFromJJ()
-	" check if the file is under version control
+	" return if the file is not under version control
 	call system('cd ' .. expand('%:p:h') .. ' && jj root')
 	if v:shell_error
 		return
 	endif
 	" clear signs
-	call sign_unplacelist(sign_getplaced(bufname(), {'group': 'jj'}))
-	" define signs, if not already defined
-	" FIXME define signs unconditionally elsewhere instead
-	if !len(sign_getdefined('jjadd'))
-		" FIXME use :sign define ...
-		call sign_define('jjadd', {'text': '++', 'texthl': 'Added'})
-		call sign_define('jjmod', {'text': '~~', 'texthl': 'Changed'})
-	endif
+	call sign_unplace('*', {'buffer': bufnr()})
 	" start asynchronous job to determine changes
 	let l:command = ['jj', 'diff', '--context', '0', expand('%:p')]
-    let l:options = {'cwd': expand('%:p:h'), 'on_stdout': function('s:SetSignsFromJJCallback')}
+	let l:options = {'cwd': expand('%:p:h'), 'on_stdout': function('s:SetSignsFromJJCallback')}
 	call jobstart(l:command, l:options)
 endfunction
 
 function SetSignsFromLoc()
-	" check if there is a location list
+	" return if there is no location list
 	if len(getloclist(0)) == 0
 		return
 	endif
 	" clear signs
-	call sign_unplacelist(sign_getplaced('', {'name': 'locbang'}))
-	" define signs, if not already defined
-	" FIXME define signs unconditionally elsewhere instead
-	if !len(sign_getdefined('locbang'))
-		" FIXME use :sign define ...
-		call sign_define('locbang', {'text': '!!', 'texthl': 'Removed'})
-	endif
-	" add signs for location list items
-	for entry in getloclist(0)
-		" FIXME use :sign place ...
-		call sign_place(0, 'jj', 'locbag', entry.bufnr, {'lnum': entry.lnum})
+	call sign_unplace('*', {'buffer': bufnr()})
+	" place signs for location list items
+	for l:entry in getloclist(0)
+		call sign_place(0, 'loc', 'locbang', l:entry.bufnr, {'lnum': l:entry.lnum})
 	endfor
 endfunction
 

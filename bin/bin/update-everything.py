@@ -463,6 +463,7 @@ def update_everything():
     sync_vim_spellfiles()
     update_vimplug()
     pull_git()
+    fetch_jj()
     update_actr()
     # this should happen after pull_git() due to the symbolic links
     reset_gnupg_permissions()

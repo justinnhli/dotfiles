@@ -13,9 +13,9 @@ diff-editor = ":builtin"
 [revset-aliases]
 "hidden_bookmarks()" = "bookmarks(regex:'^hidden-')"
 "visible_bookmarks()" = "bookmarks() ~ hidden_bookmarks()"
-"non_hidden_heads()" = "heads(::) ~ hidden_bookmarks() ~ untracked_remote_bookmarks()"
+"visible_heads()" = "heads(::) ~ hidden_bookmarks() ~ untracked_remote_bookmarks()"
 "closest_immutable(to)" = "heads(::to & immutable_heads())"
-"log_revset()" = "(@--::) | closest_immutable(@) | non_hidden_heads() | visible_bookmarks() | conflicts() | @::"
+"log_revset()" = "@--:: | closest_immutable(@) | visible_heads() | visible_bookmarks() | conflicts()"
 
 [revsets]
 log = "fork_point(log_revset()) | log_revset()"

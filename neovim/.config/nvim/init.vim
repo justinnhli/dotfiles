@@ -505,27 +505,10 @@ function s:DuplicateBuffer()
 	execute 'buffer ' .. l:bufnum
 endfunction
 
-function s:MaximizeWindow()
-	if !exists('w:maximized') || w:maximized == 0
-		let w:maximized = 1
-		resize
-		vertical resize
-		augroup justinnhli_maximize_window
-			autocmd!
-			autocmd WinLeave * execute 'normal! \<C-w>='
-		augroup END
-	else
-		let w:maximized = 0
-		execute 'normal! \<C-w>='
-		autocmd! justinnhli_maximize_window
-	endif
-endfunction
-
 nnoremap  <leader>wd     :call <SID>DuplicateBuffer()<cr>
 nnoremap  <leader>wT     <C-w>T
 nnoremap  <leader>wc     :close<cr>
 nnoremap  <leader>wo     :only<cr>
-nnoremap  <leader>w<cr>  :call <SID>MaximizeWindow()<cr>
 
 " tab manipulation {{{3
 
@@ -534,49 +517,6 @@ function s:CloseRightTabs()
 	while l:cur < tabpagenr('$')
 		execute 'tabclose ' .. (l:cur + 1)
 	endwhile
-endfunction
-
-function s:MoveToRelativeTab(n)
-	let l:num_tabs = tabpagenr('$')
-	let l:cur_tab = tabpagenr()
-	let l:cur_win = winnr('#')
-	let l:cur_buf = bufnr('%')
-	let l:new_tab = a:n + l:cur_tab
-	if a:n == 0 || (l:num_tabs == 1 && winnr('$') == 1)
-		return
-	endif
-	if l:new_tab < 1
-		execute '0tabnew'
-		let l:cur_tab += 1
-	elseif l:new_tab > l:num_tabs
-		execute 'tablast'
-		execute 'tabnew'
-	else
-		if a:n < 0
-			if l:num_tabs == tabpagenr('$')
-				execute 'tabprev ' .. abs(a:n)
-			elseif a:n != -1
-				execute 'tabprev ' .. (abs(a:n) - 1)
-			endif
-		else
-			if l:num_tabs == tabpagenr('$')
-				execute 'tabnext ' .. l:new_tab
-			elseif a:n != 1
-				execute 'tabnext ' .. (l:new_tab - 1)
-			endif
-		endif
-		vert botright split
-	endif
-	execute 'buffer ' .. l:cur_buf
-	let l:new_tab = tabpagenr()
-	execute 'tabnext ' .. l:cur_tab
-	execute l:cur_win .. 'wincmd c'
-	if l:new_tab > l:num_tabs
-		execute 'tabnext ' .. (l:new_tab - 1)
-	else
-		execute 'tabnext ' .. l:new_tab
-	endif
-	" FIXME fails when new_tab is the highest tab
 endfunction
 
 nnoremap  <leader>tc     :tabclose<cr>
@@ -594,8 +534,6 @@ nnoremap  <leader>t9     :tabmove 8<cr>
 nnoremap  <leader>t0     :tabmove 9<cr>
 nnoremap  <leader>th     :tabmove -1<cr>
 nnoremap  <leader>tl     :tabmove +1<cr>
-nnoremap  <leader>t-     :call <SID>MoveToRelativeTab(-1)<cr>
-nnoremap  <leader>t=     :call <SID>MoveToRelativeTab(1)<cr>
 
 " window movement {{{3
 

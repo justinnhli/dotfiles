@@ -18,7 +18,7 @@ diff-editor = ":builtin"
 "important_commits()" = "@ | closest_immutable(@) | non_hidden_heads()"
 
 [revsets]
-log = "fork_point(important_commits())::important_commits() | conflicts()"
+log = "fork_point(important_commits())::important_commits() | conflicts() | @::"
 
 [aliases]
 gc = ["util", "gc"]

@@ -30,7 +30,9 @@ fetch = ["git", "fetch"]
 loga = ["log", "-r", "::"]
 logn = ["log", "-r", "present(@) | ancestors(immutable_heads().., 2) | present(trunk())"]
 push = ["git", "push"]
-tug = ["bookmark", "advance", "--to", "@-"]
+"tug+" = ["bookmark", "advance", "--to", "@+"]
+tug = ["bookmark", "advance", "--to", "@"]
+"tug-" = ["bookmark", "advance", "--to", "@-"]
 
 [templates]
 draft_commit_description = '''

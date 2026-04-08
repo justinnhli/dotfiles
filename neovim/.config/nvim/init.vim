@@ -199,6 +199,7 @@ set   sidescrolloff=10
 set   signcolumn=number
 set   smartcase
 set   smarttab " neovim default
+execute 'set spellfile=' .. g:spell_path
 set nostartofline " neovim default
 set   tabpagemax=50 " neovim default
 set   tabstop=4

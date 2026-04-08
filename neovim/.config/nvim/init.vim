@@ -61,14 +61,15 @@ if has('nvim') && !empty($MYVIMRC)
 	endif
 
 	" register plugins with vim-plug
-	try
-		call plug#begin(expand('<sfile>:p:h') .. '/plugged')
-		for s:plugin in s:plugins
-			Plug s:plugin
-		endfor
-		call plug#end()
-	catch
-	endtry
+    call plug#begin(expand('<sfile>:p:h') .. '/plugged')
+    for plugin in s:plugins
+        try
+            Plug plugin
+        catch
+            echom 'error registering plugin ' .. plugin
+        endtry
+    endfor
+    call plug#end()
 endif
 
 " settings {{{1

@@ -8,7 +8,9 @@ email = "justinnhli@gmail.com"
 colocate = false
 
 [ui]
-diff-editor = ":builtin"
+diff-editor = ["/home/justinnhli/bin/diff4.py", "--output", "$output", "$left", "$right"]
+merge-editor = ["/home/justinnhli/bin/diff4.py", "--base", "$base", "--output", "$output", "$left", "$right"]
+diff-instructions = false
 conflict-marker-style = "snapshot"
 
 [revset-aliases]

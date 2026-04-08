@@ -1010,8 +1010,20 @@ if exists(':tnoremap')
 endif
 
 " version control commands {{{2
+function s:ShowJJDiff()
+	let l:filetype = &filetype
+	leftabove vnew
+	lcd #:p:h
+	read!jj file show -r 'latest(files(#:p) & ..@ ~ @)' #:p
+	normal! ggdd
+	setlocal readonly buftype=nofile
+	execute 'setlocal filetype=' .. l:filetype
+	diffthis
+	wincmd l
+	diffthis
+endfunction
 " diff against most recent revision in jj
-nnoremap  <leader>rd    :diffthis<cr>:leftabove vertical vnew<cr>:lcd #:p:h<cr>:read!jj file show -r 'latest(files(#:p) & ..@ ~ @)' #:p<cr>:0d<cr>:setlocal readonly buftype=nofile<cr>:diffthis<cr>
+nnoremap  <leader>rd    :silent! call <SID>ShowJJDiff()<cr>
 
 " external commands {{{2
 if exists('*nvim_create_buf')

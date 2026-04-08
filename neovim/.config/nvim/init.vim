@@ -24,6 +24,7 @@ let g:large_file_size = 1024 * 1024 * 10 " define a large file as > 10MB
 " vimplug {{{3
 if has('nvim') && !empty($MYVIMRC)
 	" TODO eventually replace with built-in package manager (:help packadd)
+	" can call Lua package manager with :lua vim.pack.add({URL, ...})
 
 	" define plugins
 	let s:plugins = []

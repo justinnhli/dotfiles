@@ -9,14 +9,15 @@ from tempfile import TemporaryDirectory
 try:
     import pytesseract
     from PIL import Image
-except (ModuleNotFoundError, ImportError) as err:
+except ImportError as err:
 
-    def run_with_venv(venv):
-        # type: (str) -> None
+    def run_with_venv(venv, err):
+        # type: (str, ImportError) -> None
         """Run this script in a virtual environment.
 
         Parameters:
             venv (str): The virtual environment to use.
+            err (ImportError): The exception from a failed import.
 
         Raises:
             FileNotFoundError: If the virtual environment does not exist.
@@ -33,7 +34,7 @@ except (ModuleNotFoundError, ImportError) as err:
             raise ImportError(f'no module {err.name} in venv "{venv}" ({venv_python})')
         execv(str(venv_python), [str(venv_python), *sys.argv])
 
-    run_with_venv('pytesseract')
+    run_with_venv('pytesseract', err)
 
 
 def ocr_directory(path, lang='eng', verbose=False):

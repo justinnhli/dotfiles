@@ -909,10 +909,10 @@ function s:MisspellingsToLocList()
 	call setpos('.', l:save_cursor)
 	" build the location list
 	let l:loclist = []
-	for [word, loc_data] in items(l:counter)
-		let l:text = word .. ' (' .. len(loc_data) .. ' occurrence(s))'
-		for loc_datum in loc_data
-			let l:sort_key = printf('%5d %5d', loc_datum.lnum, loc_datum.col)
+	for [l:word, l:loc_data] in items(l:counter)
+		let l:text = l:word .. ' (' .. len(l:loc_data) .. ' occurrence(s))'
+		for l:loc_datum in l:loc_data
+			let l:sort_key = printf('%5d %5d', l:loc_datum.lnum, l:loc_datum.col)
 			let l:loc_datum['text'] = l:text
 			call add(l:loclist, [l:sort_key, l:loc_datum])
 		endfor
@@ -1158,7 +1158,7 @@ function s:AutoCorrectAndLog()
 	let l:bad_word = expand('<cword>')
 	execute 'normal! 1z='
 	let l:new_word = expand('<cword>')
-	" ignore if the word contains non-alphabetic characters
+	" ignore if the bad word contains non-alphabetic characters
 	if l:bad_word =~# '[^A-Za-z]'
 		return
 	endif
@@ -1329,15 +1329,15 @@ if exists('&quickfixtextfunc')
 		let l:filename_length = 0
 		let l:linenum = 0
 		let l:colnum = 0
-		for item in l:items
-			if strlen(bufname(item.bufnr)) > l:filename_length
-				let l:filename_length = strlen(bufname(item.bufnr))
+		for l:item in l:items
+			if strlen(bufname(l:item.bufnr)) > l:filename_length
+				let l:filename_length = strlen(bufname(l:item.bufnr))
 			endif
-			if item.lnum > l:linenum
-				let l:linenum = item.lnum
+			if l:item.lnum > l:linenum
+				let l:linenum = l:item.lnum
 			endif
-			if item.col > l:colnum
-				let l:colnum = item.col
+			if l:item.col > l:colnum
+				let l:colnum = l:item.col
 			endif
 		endfor
 		let l:linenum_length = strlen(string(l:linenum))
@@ -1434,7 +1434,7 @@ function s:LockQuickfixRead()
 	if exists('w:was_quickfix') && w:was_quickfix
 		let l:cur_buf = bufnr()
 		close
-		exec 'buffer ' .. l:cur_buf
+		execute 'buffer ' .. l:cur_buf
 	endif
 endfunction
 function s:LockQuickfixWinLeave()

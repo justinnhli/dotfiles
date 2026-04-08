@@ -1262,43 +1262,37 @@ if exists('&quickfixtextfunc')
 		else
 			let l:items = getloclist(a:info.winid)
 		endif
+		let l:items = l:items[a:info.start_idx - 1:a:info.end_idx - 1]
 		" get the max length of each component of the list
 		let l:filename_length = 0
 		let l:linenum = 0
 		let l:colnum = 0
-		for idx in range(a:info.start_idx - 1, a:info.end_idx - 1)
-			if items[idx].bufnr == 0
-				continue
+		for item in l:items
+			if strlen(bufname(item.bufnr)) > l:filename_length
+				let l:filename_length = strlen(bufname(item.bufnr))
 			endif
-			if strlen(bufname(items[idx].bufnr)) > l:filename_length
-				let l:filename_length = strlen(bufname(items[idx].bufnr))
+			if item.lnum > l:linenum
+				let l:linenum = item.lnum
 			endif
-			if items[idx].lnum > l:linenum
-				let l:linenum = items[idx].lnum
-			endif
-			if items[idx].col > l:colnum
-				let l:colnum = items[idx].col
+			if item.col > l:colnum
+				let l:colnum = item.col
 			endif
 		endfor
 		let l:linenum_length = strlen(string(l:linenum))
 		let l:colnum_length = strlen(string(l:colnum))
-		" build each line
-		let l:result = []
-		for idx in range(a:info.start_idx - 1, a:info.end_idx - 1)
-			let l:row = ''
-			let l:row .= bufname(items[idx].bufnr)
-			let l:row .= repeat(' ', l:filename_length - strlen(bufname(items[idx].bufnr)))
-			let l:row .= '|('
-			let l:row .= repeat(' ', l:linenum_length - strlen(string(items[idx].lnum)))
-			let l:row .= string(items[idx].lnum)
-			let l:row .= ', '
-			let l:row .= repeat(' ', l:colnum_length - strlen(string(items[idx].col + 1)))
-			let l:row .= string(items[idx].col)
-			let l:row .= ')| '
-			let l:row .= items[idx].text
-			call add(l:result, l:row)
-		endfor
-		return l:result
+		" transform each item into a string
+		return map(l:items, {index, item -> ''
+			\ .. bufname(item.bufnr)
+			\ .. repeat(' ', l:filename_length - strlen(bufname(item.bufnr)))
+			\ .. '|('
+			\ .. repeat(' ', l:linenum_length - strlen(string(item.lnum)))
+			\ .. string(item.lnum)
+			\ .. ', '
+			\ .. repeat(' ', l:colnum_length - strlen(string(item.col)))
+			\ .. string(item.col)
+			\ .. ')| '
+			\ .. item.text
+			\ })
 	endfunction
 	set quickfixtextfunc=<SID>QuickFixTextFormatter
 endif

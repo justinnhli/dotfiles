@@ -907,9 +907,9 @@ function s:MisspellingsToLocList()
 	for [word, loc_data] in items(l:counter)
 		let l:text = word .. ' (' .. len(loc_data) .. ' occurrence(s))'
 		for loc_datum in loc_data
-			let l:key = [loc_datum.lnum, loc_datum.col]
+			let l:sort_key = printf('%5d %5d', loc_datum.lnum, loc_datum.col)
 			let l:loc_datum['text'] = l:text
-			call add(l:loclist, [l:key, l:loc_datum])
+			call add(l:loclist, [l:sort_key, l:loc_datum])
 		endfor
 	endfor
 	" set the location list

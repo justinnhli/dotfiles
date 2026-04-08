@@ -13,6 +13,7 @@ from os import chdir as cd, chmod, environ, execvp, fork, wait
 from pathlib import Path
 from stat import S_IRUSR
 from statistics import mean, median, stdev
+from subprocess import run
 from sys import stdout, exit as sys_exit
 from tarfile import open as open_tar_file, TarInfo
 from tempfile import mkstemp
@@ -616,7 +617,7 @@ def register(flag=None):
 @register('-A')
 def do_archive(_, args):
     # type: (Journal, Namespace) -> None
-    """Archive to datetimed tarball.
+    """Archive to a tarball.
 
     Parameters:
         args (Namespace): The CLI arguments.
@@ -632,10 +633,45 @@ def do_archive(_, args):
         else:
             return tarinfo
 
-    archive_name = 'jrnl' + datetime.now().strftime('%Y%m%d%H%M%S')
-    with open_tar_file(archive_name + '.txz', 'w:xz') as tar:
-        tar.add(args.directory, arcname=archive_name, filter=tarinfo_filter)
-        tar.add(__file__, arcname=join_path(archive_name, basename(__file__)))
+    archive_stem = 'jrnl' + datetime.now().strftime('%Y%m%d%H%M%S')
+    archive_path = Path() / f'{archive_stem}.txz'
+    with open_tar_file(archive_path, 'w:xz') as tar:
+        tar.add(args.directory, arcname=archive_stem, filter=tarinfo_filter)
+        tar.add(__file__, arcname=join_path(archive_stem, basename(__file__)))
+    encrypted_path = archive_path.with_suffix('.txz.gpg')
+    run(
+        [
+            'gpg',
+            '--encrypt',
+            '--output', str(encrypted_path),
+            '--recipient', 'justinnhli',
+            str(archive_path)
+        ],
+        check=True,
+    )
+    archive_path.unlink()
+
+
+@register('-U')
+def do_unarchive(_, args):
+    # type: (Journal, Namespace) -> None
+    """Unarchive from a tarball."""
+    assert len(args.terms) == 1
+    encrypted_path = Path(args.terms[0]).expanduser().resolve()
+    assert encrypted_path.exists()
+    archive_path = encrypted_path.with_suffix('')
+    run(
+        [
+            'gpg',
+            '--decrypt',
+            '--output', str(archive_path),
+            str(encrypted_path),
+        ],
+        check=True,
+    )
+    with open_tar_file(archive_path) as tar:
+        tar.extractall(path=args.directory)
+    archive_path.unlink()
 
 
 @register('-C')
@@ -1158,9 +1194,12 @@ def parse_args(arg_parser, args):
     if arg_parser is None:
         arg_parser = build_arg_parser(ArgumentParser())
     args = process_args(arg_parser, args)
-    journal = Journal(args.directory, use_cache=args.use_cache, ignores=args.ignores)
-    if len(journal) == 0:
-        arg_parser.error(f'no journal entries found in {args.directory}')
+    if args.operation.__name__ in ('do_archive', 'do_unarchive'):
+        journal = None
+    else:
+        journal = Journal(args.directory, use_cache=args.use_cache, ignores=args.ignores)
+        if len(journal) == 0:
+            arg_parser.error(f'no journal entries found in {args.directory}')
     if args.log and args.operation.__name__ in ('do_show', 'do_list', 'do_vimgrep'):
         log_search(arg_parser, args, journal)
     args.operation(journal, args)

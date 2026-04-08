@@ -65,11 +65,6 @@ export PASSWORD_STORE_DIR="$SECRETS_HOME/.password-store"
 export PASSWORD_STORE_CLIP_TIME=20
 # python
 export PYTHONIOENCODING='utf-8'
-if [ -e "$XDG_CONFIG_HOME/python/pythonstartup.py" ] && command -v python3 >/dev/null 2>&1 && python3 -c 'import readline' >/dev/null 2>&1; then
-	# Python on macOS does not include readline by default
-	# https://pypi.org/project/gnureadline/
-	export PYTHONSTARTUP="$XDG_CONFIG_HOME/python/pythonstartup.py"
-fi
 # scikit-learn
 export SCIKIT_LEARN_DATA="$XDG_DATA_HOME/scikit-learn"
 # soar

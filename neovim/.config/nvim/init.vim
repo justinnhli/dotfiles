@@ -353,38 +353,49 @@ sign define locbang text=!! texthl=Removed
 
 " pim files {{{3
 if isdirectory(g:justinnhli_pim_path)
-	function s:EditLatestNote()
-		let l:note_file = sort(globpath(g:justinnhli_pim_path, 'notes/[0-9][0-9][0-9][0-9]*.journal', v:false, v:true))[-1]
-		execute 'tabnew ' .. l:note_file
-		$
+	let g:justinnhli_pim_files = {}
+	let g:justinnhli_pim_files['J'] = g:justinnhli_pim_path .. '/journal/next.journal'
+	let g:justinnhli_pim_files['L'] = g:justinnhli_pim_path .. '/journal/list.journal'
+	let g:justinnhli_pim_files['R'] = g:justinnhli_pim_path .. '/journal/repo.journal'
+	let g:justinnhli_pim_files['M'] = g:justinnhli_pim_path .. '/journal/memo.md'
+	let g:justinnhli_pim_files['N'] = g:justinnhli_pim_path .. '/notes/' .. strftime('%Y-%m') .. '.journal'
+	let g:justinnhli_pim_files['B'] = sort(globpath(g:justinnhli_pim_path, 'notes/[0-9][0-9][0-9][0-9]*.journal', v:false, v:true))[-1]
+	let g:justinnhli_pim_files['D'] = g:justinnhli_pim_path .. '/journal/dynalist.journal'
+	let g:justinnhli_pim_files['S'] = '$HOME/Dropbox/sync.txt'
+	let g:justinnhli_pim_files['C'] = g:justinnhli_pim_path .. '/contacts/contacts.vcf'
+	let g:justinnhli_pim_files['P'] = g:justinnhli_pim_path .. '/library.bib'
+	let g:justinnhli_pim_files['T'] = g:justinnhli_pim_path .. '/journal/temp.journal'
+	function s:EditJournalFile(char)
+		let l:path = g:justinnhli_pim_files[a:char]
+		if a:char == 'D'
+			call system('~/bin/dynalist.py --headers --output ' .. l:path)
+		endif
+		call EditHere(l:path)
+		if a:char == 'D'
+			silent! setlocal buftype=nowrite filetype=journal nomodifiable
+		endif
 	endfunction
-	function s:EditDynalist()
-		let l:dynalist_file = g:justinnhli_pim_path .. '/journal/dynalist.journal'
-		call system('~/bin/dynalist.py --headers --output ' .. l:dynalist_file)
-		execute 'tabnew ' .. l:dynalist_file
-		silent! setlocal buftype=nowrite filetype=journal nomodifiable
-	endfunction
-	nnoremap  <silent>  <leader>JJ  :tabnew <C-r>=g:justinnhli_pim_path<cr>/journal/next.journal<cr>
-	nnoremap  <silent>  <leader>JL  :tabnew <C-r>=g:justinnhli_pim_path<cr>/journal/list.journal<cr>
-	nnoremap  <silent>  <leader>JR  :tabnew <C-r>=g:justinnhli_pim_path<cr>/journal/repo.journal<cr>
-	nnoremap  <silent>  <leader>JM  :tabnew <C-r>=g:justinnhli_pim_path<cr>/journal/memo.md<cr>
-	nnoremap  <silent>  <leader>JB  :call <SID>EditLatestNote()<cr>
-	nnoremap  <silent>  <leader>JN  :tabnew <C-r>=g:justinnhli_pim_path<cr>/notes/<C-r>=strftime('%Y-%m')<cr>.journal<cr>:$<cr>
-	nnoremap  <silent>  <leader>JS  :tabnew $HOME/Dropbox/sync.txt<cr>
-	nnoremap  <silent>  <leader>JD  :call <SID>EditDynalist()<cr>
-	nnoremap  <silent>  <leader>JC  :tabnew <C-r>=g:justinnhli_pim_path<cr>/contacts/contacts.vcf<cr>
-	nnoremap  <silent>  <leader>JP  :tabnew <C-r>=g:justinnhli_pim_path<cr>/library.bib<cr>
-	nnoremap  <silent>  <leader>JT  :tabnew <C-r>=g:justinnhli_pim_path<cr>/journal/temp.journal<cr>
+	nnoremap  <silent>  <leader>JJ  :call <SID>EditJournalFile('J')<cr>
+	nnoremap  <silent>  <leader>JL  :call <SID>EditJournalFile('L')<cr>
+	nnoremap  <silent>  <leader>JR  :call <SID>EditJournalFile('R')<cr>
+	nnoremap  <silent>  <leader>JM  :call <SID>EditJournalFile('M')<cr>
+	nnoremap  <silent>  <leader>JB  :call <SID>EditJournalFile('B')<cr>
+	nnoremap  <silent>  <leader>JN  :call <SID>EditJournalFile('N')<cr>
+	nnoremap  <silent>  <leader>JD  :call <SID>EditJournalFile('D')<cr>
+	nnoremap  <silent>  <leader>JS  :call <SID>EditJournalFile('S')<cr>
+	nnoremap  <silent>  <leader>JC  :call <SID>EditJournalFile('C')<cr>
+	nnoremap  <silent>  <leader>JP  :call <SID>EditJournalFile('P')<cr>
+	nnoremap  <silent>  <leader>JT  :call <SID>EditJournalFile('T')<cr>
 endif
 
 " vim config files {{{3
-nnoremap  <leader>VV   :tabnew $MYVIMRC<cr>
-nnoremap  <leader>VS   :tabnew <C-r>=g:spell_path<cr><cr>
-nnoremap  <leader>VZ   :tabnew <C-r>=g:autocorrect_path<cr><cr>
+nnoremap  <leader>VV   :call EditHere($MYVIMRC)<cr>
+nnoremap  <leader>VS   :call EditHere(g:spell_path)<cr>
+nnoremap  <leader>VZ   :call EditHere(g:autocorrect_path)<cr>
 
 " other files {{{3
-nnoremap  <leader>B   :tabnew ~/.bashrc<cr>
-nnoremap  <leader>H   :tabnew ~/Dropbox/personal/logs/shistory/<C-r>=strftime('%Y')<cr>.shistory<cr>
+nnoremap  <leader>B    :call EditHere('$HOME/.bashrc')<cr>
+nnoremap  <leader>H    :call EditHere('$HOME/Dropbox/personal/logs/shistory/' .. strftime('%Y') .. '.shistory')<cr>
 
 " buffer spawning {{{2
 
@@ -1454,6 +1465,18 @@ endif
 command!  -nargs=1 -complete=file  OpenExternal  :call <SID>OpenExternal(<f-args>)
 
 " user functions {{{1
+
+" EditHere {{{3
+function EditHere(filepath)
+	let l:path = trim(a:filepath)
+	if line('$') == 1 && getline(1) == '' && bufname('%') == '' && &modified == v:false
+		" if the buffer is empty, unnamed, and unmodified, open the file here
+		execute 'edit ' .. l:path
+	else
+		" otherwise, open in a new tab
+		execute 'tabnew ' .. l:path
+	endif
+endfunction
 
 " UnicodeToAscii {{{3
 function UnicodeToAscii()

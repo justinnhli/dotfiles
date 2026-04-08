@@ -338,10 +338,10 @@ if [ -d "$pim_path" ]; then
 		upper_key="$(echo "$lower_key" | tr '[:lower:]' '[:upper:]')"
 		alias_name="vij${lower_key}"
 		if [ $nvim_terminal -eq 1 ]; then
-			alias_command="\$(command -v nvimcmd.py) \"tabnew | execute(\\\"normal 1 J${upper_key}\\\") | tabclose -1\""
+			alias_command="\$(command -v nvimcmd.py) \"tabnew | execute(\\\"normal 1 J${upper_key}\\\")\""
 			alias "$alias_name=$alias_command"
 		else
-			alias_command="\$VISUAL -c \"normal 1 J${upper_key}\" -c tabonly"
+			alias_command="\$VISUAL -c \"normal 1 J${upper_key}\""
 			alias "$alias_name=$alias_command"
 		fi
 	done 

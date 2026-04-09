@@ -24,7 +24,7 @@ let g:large_file_size = 1024 * 1024 * 10 " define a large file as > 10MB
 " vimplug {{{3
 if has('nvim') && !empty($MYVIMRC)
 	" TODO eventually replace with built-in package manager (:help packadd)
-	"auto-install vim-plug
+	" auto-install vim-plug
 	let s:plug_path = fnamemodify($MYVIMRC, ':p:h') .. '/autoload/plug.vim'
 	if !filereadable(s:plug_path)
 		call system('curl -fLo ' .. s:plug_path .. ' --create-dirs "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"')

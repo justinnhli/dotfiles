@@ -3,8 +3,6 @@
 " vint: -ProhibitSetNoCompatible
 
 " preamble {{{1
-
-" preamble {{{3
 set nocompatible " neovim default
 set encoding=utf-8 " neovim default
 scriptencoding utf-8
@@ -20,8 +18,6 @@ let g:justinnhli_library_path=expand('~/papers')
 let g:large_file_size = 1024 * 1024 * 10 " define a large file as > 10MB
 
 " vimplug {{{1
-
-" vimplug {{{3
 if has('nvim') && !empty($MYVIMRC)
 	" TODO eventually replace with built-in package manager (:help packadd)
 	" can call Lua package manager with :lua vim.pack.add({URL, ...})
@@ -72,9 +68,9 @@ if has('nvim') && !empty($MYVIMRC)
 	call plug#end()
 endif
 
-" settings {{{1
+" options {{{1
 
-" setting functions {{{3
+" functions {{{3
 function BuildTabLine()
 	let l:tabline = ''
 	let l:cur_tab = tabpagenr()
@@ -150,7 +146,7 @@ function GetStatusLineFile()
 	return l:branch .. ' ' .. l:pwd .. ' ' .. l:filepath
 endfunction
 
-" settings {{{3
+" options {{{3
 filetype plugin on
 filetype indent on
 if has('syntax')
@@ -367,28 +363,44 @@ endfor
 
 " mappings {{{1
 
-" window spawning functions {{{2
+" file shortcuts {{{2
 
-" start terminal {{{3
-if exists(':terminal')
-	function s:StartTerminal(pre_cmd, cmd)
-		for l:pre_cmd in a:pre_cmd
-			execute l:pre_cmd
-		endfor
-		" strip whitespace from command
-		let l:cmd = trim(a:cmd)
-		if l:cmd ==# ''
-			terminal
-			setlocal nonumber nospell scrollback=100000
-			normal! 1|
-			startinsert
-		else
-			call termopen(l:cmd)
-		endif
+" pim files {{{3
+if isdirectory(g:justinnhli_pim_path)
+	function s:EditLatestNote()
+		let l:note_file = sort(globpath(g:justinnhli_pim_path, 'notes/[0-9][0-9][0-9][0-9]*.journal', v:false, v:true))[-1]
+		execute 'tabnew ' .. l:note_file
+		$
 	endfunction
+	function s:EditDynalist()
+		let l:dynalist_file = g:justinnhli_pim_path .. '/journal/dynalist.journal'
+		call system('~/bin/dynalist.py --headers --output ' .. l:dynalist_file)
+		execute 'tabnew ' .. l:dynalist_file
+		silent! setlocal buftype=nowrite filetype=journal nomodifiable
+	endfunction
+	nnoremap  <silent>  <leader>JJ  :tabnew <C-r>=g:justinnhli_pim_path<cr>/journal/next.journal<cr>
+	nnoremap  <silent>  <leader>JL  :tabnew <C-r>=g:justinnhli_pim_path<cr>/journal/list.journal<cr>
+	nnoremap  <silent>  <leader>JR  :tabnew <C-r>=g:justinnhli_pim_path<cr>/journal/repo.journal<cr>
+	nnoremap  <silent>  <leader>JM  :tabnew <C-r>=g:justinnhli_pim_path<cr>/journal/memo.md<cr>
+	nnoremap  <silent>  <leader>JB  :call <SID>EditLatestNote()<cr>
+	nnoremap  <silent>  <leader>JN  :tabnew <C-r>=g:justinnhli_pim_path<cr>/notes/<C-r>=strftime('%Y-%m')<cr>.journal<cr>:$<cr>
+	nnoremap  <silent>  <leader>JS  :tabnew $HOME/Dropbox/sync.txt<cr>
+	nnoremap  <silent>  <leader>JD  :call <SID>EditDynalist()<cr>
+	nnoremap  <silent>  <leader>JC  :tabnew <C-r>=g:justinnhli_pim_path<cr>/contacts/contacts.vcf<cr>
+	nnoremap  <silent>  <leader>JP  :tabnew <C-r>=g:justinnhli_pim_path<cr>/library.bib<cr>
+	nnoremap  <silent>  <leader>JT  :tabnew <C-r>=g:justinnhli_pim_path<cr>/journal/temp.journal<cr>
 endif
 
-" window spawning mappings {{{2
+" vim config files {{{3
+nnoremap  <leader>VV   :tabnew $MYVIMRC<cr>
+nnoremap  <leader>VS   :tabnew <C-r>=fnamemodify($MYVIMRC, ':p:h')<cr>/spell/en.utf-8.add<cr>
+nnoremap  <leader>VZ   :tabnew <C-r>=fnamemodify($MYVIMRC, ':p:h')<cr>/autocorrect.vim<cr>
+
+" other files {{{3
+nnoremap  <leader>B   :tabnew ~/.bashrc<cr>
+nnoremap  <leader>H   :tabnew ~/Dropbox/personal/logs/shistory/<C-r>=strftime('%Y')<cr>.shistory<cr>
+
+" buffer spawning {{{2
 
 " open file {{{3
 nnoremap  <leader>wee  :edit<space>
@@ -422,8 +434,24 @@ nnoremap  <leader>wkr  q:ileftabove split scp://user@server.tld//absolute/path/t
 nnoremap  <leader>wlr  q:irightbelow vsplit scp://user@server.tld//absolute/path/to/file<esc>F:w
 nnoremap  <leader>tr   q:itabnew scp://user@server.tld//absolute/path/to/file<esc>F:w
 
-" open terminal (at $HOME if new tab, at the directory of the current file otherwise) {{{3
+" open terminal {{{3
+" (at $HOME if new tab, at the directory of the current file otherwise)
 if exists(':terminal')
+	function s:StartTerminal(pre_cmd, cmd)
+		for l:pre_cmd in a:pre_cmd
+			execute l:pre_cmd
+		endfor
+		" strip whitespace from command
+		let l:cmd = trim(a:cmd)
+		if l:cmd ==# ''
+			terminal
+			setlocal nonumber nospell scrollback=100000
+			normal! 1|
+			startinsert
+		else
+			call termopen(l:cmd)
+		endif
+	endfunction
 	nnoremap  <silent>  <leader>wet  :call <SID>StartTerminal(['silent! lcd ' .. expand('%:p:h')], '')<cr>
 	nnoremap  <silent>  <leader>wht  :call <SID>StartTerminal(['leftabove vnew', 'silent! lcd ' .. expand('%:p:h')], '')<cr>
 	nnoremap  <silent>  <leader>wjt  :call <SID>StartTerminal(['rightbelow new', 'silent! lcd ' .. expand('%:p:h')], '')<cr>
@@ -475,16 +503,16 @@ xnoremap  <leader>wkf  "zy:<C-u>leftabove new<cr>:lvimgrep /<C-r>z/g **/*<cr>
 xnoremap  <leader>wlf  "zy:<C-u>rightbelow vnew<cr>:lvimgrep /<C-r>z/g **/*<cr>
 xnoremap  <leader>tf   "zy:<C-u>tabnew<cr>:lvimgrep /<C-r>z/g **/*<cr>
 
-" window manipulation functions {{{2
+" window/tab management {{{2
 
-" duplicate buffer {{{3
+" window manipulation {{{3
+
 function s:DuplicateBuffer()
 	let l:bufnum = bufnr('%')
 	tabnew
 	execute 'buffer ' .. l:bufnum
 endfunction
 
-" maximize window {{{3
 function s:MaximizeWindow()
 	if !exists('w:maximized') || w:maximized == 0
 		let w:maximized = 1
@@ -501,7 +529,14 @@ function s:MaximizeWindow()
 	endif
 endfunction
 
-" close right tabs {{{3
+nnoremap  <leader>wd     :call <SID>DuplicateBuffer()<cr>
+nnoremap  <leader>wT     <C-w>T
+nnoremap  <leader>wc     :close<cr>
+nnoremap  <leader>wo     :only<cr>
+nnoremap  <leader>w<cr>  :call <SID>MaximizeWindow()<cr>
+
+" tab manipulation {{{3
+
 function s:CloseRightTabs()
 	let l:cur = tabpagenr()
 	while l:cur < tabpagenr('$')
@@ -509,7 +544,6 @@ function s:CloseRightTabs()
 	endwhile
 endfunction
 
-" move to relative tab {{{3
 function s:MoveToRelativeTab(n)
 	let l:num_tabs = tabpagenr('$')
 	let l:cur_tab = tabpagenr()
@@ -553,16 +587,6 @@ function s:MoveToRelativeTab(n)
 	" FIXME fails when new_tab is the highest tab
 endfunction
 
-" window manipulation mappings {{{2
-
-" window manipulation mappings {{{3
-nnoremap  <leader>wd     :call <SID>DuplicateBuffer()<cr>
-nnoremap  <leader>wT     <C-w>T
-nnoremap  <leader>wc     :close<cr>
-nnoremap  <leader>wo     :only<cr>
-nnoremap  <leader>w<cr>  :call <SID>MaximizeWindow()<cr>
-
-" tab manipulation mappings {{{3
 nnoremap  <leader>tc     :tabclose<cr>
 nnoremap  <leader>to     :tabonly<cr>
 nnoremap  <leader>tp     :call <SID>CloseRightTabs()<cr>
@@ -581,13 +605,14 @@ nnoremap  <leader>tl     :tabmove +1<cr>
 nnoremap  <leader>t-     :call <SID>MoveToRelativeTab(-1)<cr>
 nnoremap  <leader>t=     :call <SID>MoveToRelativeTab(1)<cr>
 
-" window movement mappings {{{3
+" window movement {{{3
+
 nnoremap  <C-h>  <C-w>h
 nnoremap  <C-j>  <C-w>j
 nnoremap  <C-k>  <C-w>k
 nnoremap  <C-l>  <C-w>l
 
-" tab movement mappings {{{3
+" tab movement {{{3
 nnoremap  <S-h>      :tabprev<cr>
 nnoremap  <S-l>      :tabnext<cr>
 nnoremap  <C-tab>    :tabnext<cr>
@@ -605,35 +630,274 @@ nnoremap  <M-8>      :8tabnext<cr>
 nnoremap  <M-9>      :9tabnext<cr>
 nnoremap  <M-0>      :10tabnext<cr>
 
-" file mappings {{{2
+" text movement {{{2
 
-" pim file mappings {{{3
-if isdirectory(g:justinnhli_pim_path)
-	function s:EditLatestNote()
-		let l:note_file = sort(globpath(g:justinnhli_pim_path, 'notes/[0-9][0-9][0-9][0-9]*.journal', v:false, v:true))[-1]
-		execute 'tabnew ' .. l:note_file
-		$
+" within-line {{{3
+nnoremap  <C-a>  ^
+nnoremap  <C-e>  $
+cnoremap  <C-a>  <home>
+cnoremap  <C-e>  <end>
+inoremap  <C-a>  <home>
+inoremap  <C-e>  <end>
+xnoremap  <C-a>  <home>
+xnoremap  <C-e>  <end>
+
+" text indent {{{3
+function s:IndentTextObject(updown, inout, visual)
+	if a:visual
+		normal! gv
+	endif
+	let l:line_num = line('.')
+	let l:step = (a:updown > 0 ? 1 : -1)
+	let l:src_indent = indent(l:line_num)
+	let l:dest_indent = l:src_indent + (a:inout * &tabstop)
+	if dest_indent < 0
+		let l:dest_indent = 0
+	endif
+	let l:cur_indent = indent(l:line_num)
+	let l:line_num += l:step
+	while 1 <= l:line_num && l:line_num <= line('$')
+		let l:cur_indent = indent(l:line_num)
+		if l:cur_indent < l:src_indent || l:cur_indent == l:dest_indent
+			if a:visual && l:step == 1
+				let l:line_num -= 1
+			end
+			call cursor(l:line_num, 0)
+			return
+		endif
+		let l:line_num += l:step
+	endwhile
+endfunction
+nnoremap  <silent>  [,  :<C-u>call <SID>IndentTextObject(-1, -1, 0)<cr>
+nnoremap  <silent>  [.  :<C-u>call <SID>IndentTextObject(-1, 0, 0)<cr>
+nnoremap  <silent>  [/  :<C-u>call <SID>IndentTextObject(-1, 1, 0)<cr>
+nnoremap  <silent>  ],  :<C-u>call <SID>IndentTextObject(1, -1, 0)<cr>
+nnoremap  <silent>  ].  :<C-u>call <SID>IndentTextObject(1, 0, 0)<cr>
+nnoremap  <silent>  ]/  :<C-u>call <SID>IndentTextObject(1, 1, 0)<cr>
+onoremap  <silent>  [,  :<C-u>call <SID>IndentTextObject(-1, -1, 0)<cr>
+onoremap  <silent>  [.  :<C-u>call <SID>IndentTextObject(-1, 0, 0)<cr>
+onoremap  <silent>  [/  :<C-u>call <SID>IndentTextObject(-1, 1, 0)<cr>
+onoremap  <silent>  ],  :<C-u>call <SID>IndentTextObject(1, -1, 0)<cr>
+onoremap  <silent>  ].  :<C-u>call <SID>IndentTextObject(1, 0, 0)<cr>
+onoremap  <silent>  ]/  :<C-u>call <SID>IndentTextObject(1, 1, 0)<cr>
+xnoremap  <silent>  [,  <esc>:call <SID>IndentTextObject(-1, -1, 1)<cr><esc>gv
+xnoremap  <silent>  [.  <esc>:call <SID>IndentTextObject(-1, 0, 1)<cr><esc>gv
+xnoremap  <silent>  [/  <esc>:call <SID>IndentTextObject(-1, 1, 1)<cr><esc>gv
+xnoremap  <silent>  ],  <esc>:call <SID>IndentTextObject(1, -1, 1)<cr><esc>gv
+xnoremap  <silent>  ].  <esc>:call <SID>IndentTextObject(1, 0, 1)<cr><esc>gv
+xnoremap  <silent>  ]/  <esc>:call <SID>IndentTextObject(1, 0, 1)<cr><esc>gv
+
+" paragraph {{{3
+nnoremap  <expr>  }  foldclosed(search('^$', 'Wn')) == -1 ? "}" : "}j}"
+nnoremap  <expr>  {  foldclosed(search('^$', 'Wnb')) == -1 ? "{" : "{k{"
+
+" editing {{{2
+
+" format table {{{3
+function s:FormatTable(visual, use_spaces)
+	" vint: -ProhibitCommandWithUnintendedSideEffect -ProhibitCommandRelyOnUser
+	if a:visual
+		let l:range="'<,'>"
+	else
+		let l:range='%'
+	endif
+	let l:cursor = getpos('.')
+	execute l:range .. 's/\m\C  \+/	/eg'
+	if a:use_spaces
+		execute "silent " .. l:range .. "!column -ts '	'"
+		execute l:range .. 's/\m\C \+$//eg'
+	endif
+	call setpos('.', l:cursor)
+endfunction
+nnoremap  <leader><bar>     :<C-u>call <SID>FormatTable(v:false, v:false)<cr>
+nnoremap  <leader><bslash>  :<C-u>call <SID>FormatTable(v:false, v:true)<cr>
+xnoremap  <leader><bar>     :<C-u>call <SID>FormatTable(v:true, v:false)<cr>gv
+xnoremap  <leader><bslash>  :<C-u>call <SID>FormatTable(v:true, v:true)<cr>gv
+
+" thesaurus {{{3
+
+if exists('&thesaurusfunc')
+	let g:thesaurus = {}
+	let s:thesaurus_path = fnamemodify($MYVIMRC, ':p:h') .. '/thesaurus.vim'
+	if filereadable(s:thesaurus_path)
+		execute 'source ' .. s:thesaurus_path
+	endif
+	function s:ThesaurusFunc(find_start, base)
+		if a:find_start
+			return match(getline('.')[:col('.') - 2], '.*\zs\s\ze') + 1
+		elseif has_key(g:thesaurus, a:base)
+			return g:thesaurus[a:base]
+		else
+			return []
+		endif
 	endfunction
-	function s:EditDynalist()
-		let l:dynalist_file = g:justinnhli_pim_path .. '/journal/dynalist.journal'
-		call system('~/bin/dynalist.py --headers --output ' .. l:dynalist_file)
-		execute 'tabnew ' .. l:dynalist_file
-		silent! setlocal buftype=nowrite filetype=journal nomodifiable
-	endfunction
-	nnoremap  <silent>  <leader>JJ  :tabnew <C-r>=g:justinnhli_pim_path<cr>/journal/next.journal<cr>
-	nnoremap  <silent>  <leader>JL  :tabnew <C-r>=g:justinnhli_pim_path<cr>/journal/list.journal<cr>
-	nnoremap  <silent>  <leader>JR  :tabnew <C-r>=g:justinnhli_pim_path<cr>/journal/repo.journal<cr>
-	nnoremap  <silent>  <leader>JM  :tabnew <C-r>=g:justinnhli_pim_path<cr>/journal/memo.md<cr>
-	nnoremap  <silent>  <leader>JB  :call <SID>EditLatestNote()<cr>
-	nnoremap  <silent>  <leader>JN  :tabnew <C-r>=g:justinnhli_pim_path<cr>/notes/<C-r>=strftime('%Y-%m')<cr>.journal<cr>:$<cr>
-	nnoremap  <silent>  <leader>JS  :tabnew $HOME/Dropbox/sync.txt<cr>
-	nnoremap  <silent>  <leader>JD  :call <SID>EditDynalist()<cr>
-	nnoremap  <silent>  <leader>JC  :tabnew <C-r>=g:justinnhli_pim_path<cr>/contacts/contacts.vcf<cr>
-	nnoremap  <silent>  <leader>JP  :tabnew <C-r>=g:justinnhli_pim_path<cr>/library.bib<cr>
-	nnoremap  <silent>  <leader>JT  :tabnew <C-r>=g:justinnhli_pim_path<cr>/journal/temp.journal<cr>
+	set thesaurusfunc=s:ThesaurusFunc
+	inoremap  <C-t>  <C-x><C-t><C-n><C-n><C-p>
 endif
 
-" float output functions {{{3
+" option toggles {{{2
+
+" functions {{{3
+
+" colorcolumn {{{4
+function s:ToggleColorColumn()
+	if &colorcolumn == 0
+		setlocal colorcolumn=80
+	elseif &colorcolumn == 80
+		setlocal colorcolumn=100
+	else
+		setlocal colorcolumn=0
+	endif
+endfunction
+
+" colorscheme {{{4
+function s:ToggleColorScheme()
+	let g:colorscheme_index += 1
+	let g:colorscheme_index = g:colorscheme_index % len(g:colorschemes)
+	call s:SetColorScheme()
+endfunction
+
+" diff {{{4
+function s:ToggleDiff()
+	if &diff
+		diffoff
+	else
+		diffthis
+	endif
+endfunction
+
+" foldmethod {{{4
+function s:ToggleFoldMethod()
+	if &foldmethod ==# 'indent'
+		setlocal foldmethod=syntax
+	elseif &foldmethod ==# 'syntax'
+		setlocal foldmethod=indent
+	endif
+endfunction
+
+" scrolloff {{{4
+function s:ToggleScrollOff()
+	if &scrolloff == 0
+		setlocal scrolloff=999
+	elseif &scrolloff == 1
+		setlocal scrolloff=0
+	elseif &scrolloff == 999
+		setlocal scrolloff=1
+	endif
+endfunction
+
+" spellcheck {{{4
+function s:ToggleSpellCheck()
+	let l:spellgroups = ['SpellBad', 'SpellCap', 'SpellRare', 'SpellLocal']
+	if &spell == 0
+		setlocal spell
+		for l:group in l:spellgroups
+			execute 'highlight clear ' .. l:group
+		endfor
+		call s:SetColorScheme()
+	elseif execute('highlight SpellBad') !~? 'links to Error'
+		setlocal spell
+		for l:group in l:spellgroups
+			execute 'highlight clear ' .. l:group
+			execute 'highlight link ' .. l:group .. ' Error'
+		endfor
+	else
+		setlocal nospell
+	endif
+endfunction
+
+" mappings {{{3
+nnoremap  <leader><leader>0  :call <SID>ToggleScrollOff()<cr>:set scrolloff?<cr>
+nnoremap  <leader><leader>c  :call <SID>ToggleColorColumn()<cr>:setlocal colorcolumn?<cr>
+nnoremap  <leader><leader>d  :call <SID>ToggleDiff()<cr>:echo (&diff ? 'diffthis' : 'diffoff')<cr>
+nnoremap  <leader><leader>f  :call <SID>ToggleFoldMethod()<cr>:set foldmethod?<cr>
+nnoremap  <leader><leader>l  :set list! list?<cr>
+nnoremap  <leader><leader>m  :call <SID>ToggleColorScheme()<cr>:echo &background g:colors_name<cr>
+nnoremap  <leader><leader>n  :set number! number?<cr>
+nnoremap  <leader><leader>p  :set paste! paste?<cr>
+nnoremap  <leader><leader>s  :call <SID>ToggleSpellCheck()<cr>:set spell?<cr>
+nnoremap  <leader><leader>w  :set wrap! wrap?<cr>
+nnoremap  <leader><leader>/  :set hlsearch! hlsearch?<cr>
+
+" folding {{{2
+" get fold level of line 
+function s:SetFoldLevelToLine()
+	if &shiftwidth == 0
+		let l:fold_level = indent('.') / &tabstop
+	else
+		let l:fold_level = indent('.') / &shiftwidth
+	endif
+	execute 'set foldenable foldlevel=' .. l:fold_level
+	echo l:fold_level
+endfunction
+nnoremap  <silent>  <leader>.  :<C-u>call <SID>SetFoldLevelToLine()<cr>
+
+" search {{{2
+" default to very magic search
+nnoremap  /          /\v
+nnoremap  ?          ?\v
+" search for selected text
+xnoremap  /          y<esc>/\V<C-r>"<cr>
+xnoremap  ?          y<esc>?\V<C-r>"<cr>
+" 2match
+nnoremap  <leader>/  :2match IncSearch ''<left>
+xnoremap  <leader>/  "zy:2match IncSearch <C-r>=shellescape(getreg('z'))<cr><cr>
+" n/N always goes forwards/backwards (and turns on highlighting) 
+nnoremap  n          :set hlsearch<cr>/<cr>zz
+nnoremap  <S-n>      :set hlsearch<cr>?<cr>zz
+xnoremap  n          :<C-u>set hlsearch<cr>/<cr>zz
+xnoremap  <S-n>      :<C-u>set hlsearch<cr>?<cr>zz
+
+" quickfix/location {{{2
+
+" creation from buffer {{{3
+function s:LExprBuffers()
+	let l:buffers = getbufinfo({'buflisted': 1})
+	let l:result = []
+	for l:buffer in l:buffers
+		if l:buffer['hidden'] || empty(l:buffer['name']) || empty(l:buffer['windows'])
+			continue
+		endif
+		if l:buffer['name'] =~# '^term:'
+			continue
+		endif
+		let l:message = printf('buffer: %s; windows: %s', l:buffer['bufnr'], l:buffer['windows'])
+		call add(l:result, fnamemodify(l:buffer['name'], ':p:~') .. ':0:' .. l:message)
+	endfor
+	return l:result
+endfunction
+nnoremap  <leader>lb  :lgetexpr <SID>LExprBuffers() <bar> :lopen<cr>
+
+" movement {{{3
+function s:NextQuickFixOrLocation()
+	lopen
+	lnext
+endfunction
+function s:PrevQuickFixOrLocation()
+	lopen
+	lprev
+endfunction
+" TODO turn into autocmd that automatically maps to quickfix and location
+" the event is QuickFixCmdPost
+" check if location list is open with if get(getloclist(0, {'winid':0}), 'winid', 0)
+nnoremap  <S-j>    :silent! call <SID>NextQuickFixOrLocation()<cr>
+nnoremap  <S-k>    :silent! call <SID>PrevQuickFixOrLocation()<cr>
+nnoremap  <C-S-j>  :silent! lnfile<cr>
+nnoremap  <C-S-k>  :silent! lpfile<cr>
+
+" terminal {{{2
+if exists(':tnoremap')
+	tnoremap  <esc><esc>  <C-\><C-n>
+	tnoremap  <C-[><C-[>  <C-\><C-n>
+	tnoremap  <S-up>  <up>
+	tnoremap  <S-down>  <down>
+	tnoremap  <S-left>  <left>
+	tnoremap  <S-right>  <right>
+	tnoremap  <S-backspace>  <backspace>
+	tnoremap  <S-cr>  <cr>
+endif
+
+" external commands {{{2
 if exists('*nvim_create_buf')
 	function FloatOutput(cmd)
 		" get the output to display
@@ -666,17 +930,15 @@ if exists('*nvim_create_buf')
 		" create a remap to close the window
 		execute 'nnoremap  <buffer>  <cr>  :call nvim_win_close(' .. l:win .. ', v:false) \| nunmap <buffer> <lt>cr><cr>'
 	endfunction
-endif
-
-" float output mappings {{{3
-if exists('*FloatOutput')
 	nnoremap  <leader>cc  :call FloatOutput('python3 -c "print()"')<left><left><left><left>
 	xnoremap  <leader>cc  "zy:call FloatOutput('python3 -c "print(<C-r>z)"')<cr>
 	nnoremap  <leader>ca  :call FloatOutput('ccal.py')<cr>
 	xnoremap  <leader>ca  "zy:call FloatOutput('ccal.py <C-r>z')<cr>
 endif
+nnoremap  <leader><cr>  :silent lmake<cr>
+xnoremap  <leader><cr>  y<esc>:!<C-r>"<cr>
 
-" open external functions {{{3
+" open external {{{2
 function s:OpenExternal(arg)
 	let l:target = trim(a:arg)
 	if l:target !=# '.' && l:target !=# '..' && l:target !=# '~'
@@ -713,215 +975,89 @@ function s:OpenExternal(arg)
 	call jobstart([l:program, l:target])
 	echo 'executing ' .. l:program .. ' ' .. l:target
 endfunction
-
-" open external mappings{{{3
 nnoremap  <leader>O  :call <SID>OpenExternal('<C-r>=expand('<cWORD>')<cr>')<cr>
 xnoremap  <leader>O  "zy:call <SID>OpenExternal('<C-r>z')<cr>
+nnoremap  <leader>o  :OpenExternal<space>
 
-" vim setting mappings {{{3
-nnoremap  <leader>VV   :tabnew $MYVIMRC<cr>
-nnoremap  <leader>VS   :tabnew <C-r>=fnamemodify($MYVIMRC, ':p:h')<cr>/spell/en.utf-8.add<cr>
-nnoremap  <leader>VZ   :tabnew <C-r>=fnamemodify($MYVIMRC, ':p:h')<cr>/autocorrect.vim<cr>
+" other mappings {{{2
 
-" other file mappings {{{3
-nnoremap  <leader>B   :tabnew ~/.bashrc<cr>
-nnoremap  <leader>H   :tabnew ~/Dropbox/personal/logs/shistory/<C-r>=strftime('%Y')<cr>.shistory<cr>
+" <C-s> to write file {{{3
+nnoremap  <C-s>      :update<cr>
+inoremap  <C-s>      <esc>:update<cr>
+xnoremap  <C-s>      <esc>:update<cr>gv
 
-" toggle functions {{{2
+" <C-a> to select all {{{3
+nnoremap  <leader>a  ggVG
 
-" toggle colorcolumn {{{3
-function s:ToggleColorColumn()
-	if &colorcolumn == 0
-		setlocal colorcolumn=80
-	elseif &colorcolumn == 80
-		setlocal colorcolumn=100
-	else
-		setlocal colorcolumn=0
+" <C-d> to insert date {{{3
+inoremap  <C-d>  <C-r>=strftime('%Y-%m-%d')<cr>
+
+" increment/decrement numbers
+nnoremap  <C-=>  <C-a>
+xnoremap  <C-=>  <C-a>
+nnoremap  <C-->  <C-x>
+xnoremap  <C-->  <C-x>
+
+" force the use of the command line window {{{3
+nnoremap  :   :<C-f>i
+nnoremap  q:  :
+xnoremap  :   :<C-f>i
+xnoremap  q:  :
+
+" stay in visual mode after tabbing {{{3
+xnoremap  <tab>    >gv
+xnoremap  <S-tab>  <gv
+xnoremap  >        >gv
+xnoremap  <        <gv
+
+" yank/paste {{{3
+" make Y behave like other capitals
+nnoremap  Y  y$
+" jump to the end of pasted text
+nnoremap  p  p`]
+" select previously pasted text
+nnoremap  gp  `[v`]
+" yank/paste from clipboard
+nnoremap  <leader>p  "+p
+nnoremap  <leader>y  "+y
+xnoremap  <leader>y  "+y
+
+" rebind undo/redo traverse the undo tree instead of the undo stack {{{3
+nnoremap  u      g-
+nnoremap  <C-r>  g+
+
+" log a autocorrected spellcheck word {{{3
+function s:AutoCorrectAndLog()
+	" get the incorrect word and the correct word
+	let l:bad_word = expand('<cword>')
+	execute 'normal! 1z='
+	let l:new_word = expand('<cword>')
+	" ignore if the word contains non-alphabetic characters
+	if l:bad_word =~# '[^A-Za-z]'
+		return
 	endif
-endfunction
-
-" toggle colorscheme {{{3
-function s:ToggleColorScheme()
-	let g:colorscheme_index += 1
-	let g:colorscheme_index = g:colorscheme_index % len(g:colorschemes)
-	call s:SetColorScheme()
-endfunction
-
-" toggle diff {{{3
-function s:ToggleDiff()
-	if &diff
-		diffoff
-	else
-		diffthis
+	" ignore if the word is in the dictionary
+	if empty(spellbadword(l:bad_word)[0])
+		return
 	endif
-endfunction
-
-" toggle foldmethod {{{3
-function s:ToggleFoldMethod()
-	if &foldmethod ==# 'indent'
-		setlocal foldmethod=syntax
-	elseif &foldmethod ==# 'syntax'
-		setlocal foldmethod=indent
+	" ignore if the only differences are in capitalization
+	if tolower(l:bad_word) == tolower(l:new_word)
+		return
 	endif
+	" add the word to the autocorrect file
+	let l:autocorrect_file = fnamemodify($MYVIMRC, ':p:h') .. '/autocorrect.vim'
+	call writefile(['"iabbrev  <buffer>  ' .. l:bad_word .. '  ' .. l:new_word], l:autocorrect_file, 'a')
 endfunction
+nnoremap  <leader>z         :<C-u>call <SID>AutoCorrectAndLog()<cr>
 
-" toggle scrolloff {{{3
-function s:ToggleScrollOff()
-	if &scrolloff == 0
-		setlocal scrolloff=999
-	elseif &scrolloff == 1
-		setlocal scrolloff=0
-	elseif &scrolloff == 999
-		setlocal scrolloff=1
-	endif
-endfunction
-
-" toggle spellcheck {{{3
-function s:ToggleSpellCheck()
-	let l:spellgroups = ['SpellBad', 'SpellCap', 'SpellRare', 'SpellLocal']
-	if &spell == 0
-		setlocal spell
-		for l:group in l:spellgroups
-			execute 'highlight clear ' .. l:group
-		endfor
-		call s:SetColorScheme()
-	elseif execute('highlight SpellBad') !~? 'links to Error'
-		setlocal spell
-		for l:group in l:spellgroups
-			execute 'highlight clear ' .. l:group
-			execute 'highlight link ' .. l:group .. ' Error'
-		endfor
-	else
-		setlocal nospell
-	endif
-endfunction
-
-" setting toggle mappings {{{2
-
-" setting toggle mappings {{{3
-nnoremap  <leader><leader>0  :call <SID>ToggleScrollOff()<cr>:set scrolloff?<cr>
-nnoremap  <leader><leader>c  :call <SID>ToggleColorColumn()<cr>:setlocal colorcolumn?<cr>
-nnoremap  <leader><leader>d  :call <SID>ToggleDiff()<cr>:echo (&diff ? 'diffthis' : 'diffoff')<cr>
-nnoremap  <leader><leader>f  :call <SID>ToggleFoldMethod()<cr>:set foldmethod?<cr>
-nnoremap  <leader><leader>l  :set list! list?<cr>
-nnoremap  <leader><leader>m  :call <SID>ToggleColorScheme()<cr>:echo &background g:colors_name<cr>
-nnoremap  <leader><leader>n  :set number! number?<cr>
-nnoremap  <leader><leader>p  :set paste! paste?<cr>
-nnoremap  <leader><leader>s  :call <SID>ToggleSpellCheck()<cr>:set spell?<cr>
-nnoremap  <leader><leader>w  :set wrap! wrap?<cr>
-nnoremap  <leader><leader>/  :set hlsearch! hlsearch?<cr>
-
-" text movement functions {{{2
-
-" indent text object {{{3
-function s:IndentTextObject(updown, inout, visual)
-	if a:visual
-		normal! gv
-	endif
-	let l:line_num = line('.')
-	let l:step = (a:updown > 0 ? 1 : -1)
-	let l:src_indent = indent(l:line_num)
-	let l:dest_indent = l:src_indent + (a:inout * &tabstop)
-	if dest_indent < 0
-		let l:dest_indent = 0
-	endif
-	let l:cur_indent = indent(l:line_num)
-	let l:line_num += l:step
-	while 1 <= l:line_num && l:line_num <= line('$')
-		let l:cur_indent = indent(l:line_num)
-		if l:cur_indent < l:src_indent || l:cur_indent == l:dest_indent
-			if a:visual && l:step == 1
-				let l:line_num -= 1
-			end
-			call cursor(l:line_num, 0)
-			return
-		endif
-		let l:line_num += l:step
-	endwhile
-endfunction
-
-" text movement mappings {{{2
-
-" within-line movement mappings {{{3
-nnoremap  <C-a>  ^
-nnoremap  <C-e>  $
-cnoremap  <C-a>  <home>
-cnoremap  <C-e>  <end>
-inoremap  <C-a>  <home>
-inoremap  <C-e>  <end>
-xnoremap  <C-a>  <home>
-xnoremap  <C-e>  <end>
-
-" text indent movement mappings {{{3
-nnoremap  <silent>  [,  :<C-u>call <SID>IndentTextObject(-1, -1, 0)<cr>
-nnoremap  <silent>  [.  :<C-u>call <SID>IndentTextObject(-1, 0, 0)<cr>
-nnoremap  <silent>  [/  :<C-u>call <SID>IndentTextObject(-1, 1, 0)<cr>
-nnoremap  <silent>  ],  :<C-u>call <SID>IndentTextObject(1, -1, 0)<cr>
-nnoremap  <silent>  ].  :<C-u>call <SID>IndentTextObject(1, 0, 0)<cr>
-nnoremap  <silent>  ]/  :<C-u>call <SID>IndentTextObject(1, 1, 0)<cr>
-onoremap  <silent>  [,  :<C-u>call <SID>IndentTextObject(-1, -1, 0)<cr>
-onoremap  <silent>  [.  :<C-u>call <SID>IndentTextObject(-1, 0, 0)<cr>
-onoremap  <silent>  [/  :<C-u>call <SID>IndentTextObject(-1, 1, 0)<cr>
-onoremap  <silent>  ],  :<C-u>call <SID>IndentTextObject(1, -1, 0)<cr>
-onoremap  <silent>  ].  :<C-u>call <SID>IndentTextObject(1, 0, 0)<cr>
-onoremap  <silent>  ]/  :<C-u>call <SID>IndentTextObject(1, 1, 0)<cr>
-xnoremap  <silent>  [,  <esc>:call <SID>IndentTextObject(-1, -1, 1)<cr><esc>gv
-xnoremap  <silent>  [.  <esc>:call <SID>IndentTextObject(-1, 0, 1)<cr><esc>gv
-xnoremap  <silent>  [/  <esc>:call <SID>IndentTextObject(-1, 1, 1)<cr><esc>gv
-xnoremap  <silent>  ],  <esc>:call <SID>IndentTextObject(1, -1, 1)<cr><esc>gv
-xnoremap  <silent>  ].  <esc>:call <SID>IndentTextObject(1, 0, 1)<cr><esc>gv
-xnoremap  <silent>  ]/  <esc>:call <SID>IndentTextObject(1, 0, 1)<cr><esc>gv
-
-" paragraph movement mappings {{{3
-nnoremap  <expr>  }  foldclosed(search('^$', 'Wn')) == -1 ? "}" : "}j}"
-nnoremap  <expr>  {  foldclosed(search('^$', 'Wnb')) == -1 ? "{" : "{k{"
-
-" quickfix/location functions {{{2
-
-" next quickfix/location {{{3
-function s:NextQuickFixOrLocation()
-	lopen
-	lnext
-endfunction
-" prev quickfix/location {{{3
-function s:PrevQuickFixOrLocation()
-	lopen
-	lprev
-endfunction
-" load buffers into location list {{{3
-function s:LExprBuffers()
-	let l:buffers = getbufinfo({'buflisted': 1})
-	let l:result = []
-	for l:buffer in l:buffers
-		if l:buffer['hidden'] || empty(l:buffer['name']) || empty(l:buffer['windows'])
-			continue
-		endif
-		if l:buffer['name'] =~# '^term:'
-			continue
-		endif
-		let l:message = printf('buffer: %s; windows: %s', l:buffer['bufnr'], l:buffer['windows'])
-		call add(l:result, fnamemodify(l:buffer['name'], ':p:~') .. ':0:' .. l:message)
-	endfor
-	return l:result
-endfunction
-
-" quickfix/location mappings {{{2
-
-" create location lists from various sources {{{3
-nnoremap  <leader>lb  :lgetexpr <SID>LExprBuffers() <bar> :lopen<cr>
-
-" move to next quickfix/location {{{3
-" TODO turn into autocmd that automatically maps to quickfix and location
-" the event is QuickFixCmdPost
-" check if location list is open with if get(getloclist(0, {'winid':0}), 'winid', 0)
-nnoremap  <S-j>    :silent! call <SID>NextQuickFixOrLocation()<cr>
-nnoremap  <S-k>    :silent! call <SID>PrevQuickFixOrLocation()<cr>
-nnoremap  <C-S-j>  :silent! lnfile<cr>
-nnoremap  <C-S-k>  :silent! lpfile<cr>
+" edit register {{{3
+nnoremap  <leader>@         :<C-f>ilet @=<C-r><C-r>
+" change directory to file {{{3
+nnoremap  <leader>;         :lcd %:p:h<cr>
 
 " disabled mappings {{{2
 
-" disable arrow keys {{{3
+" arrow keys {{{3
 nnoremap  <up>       <nop>
 nnoremap  <down>     <nop>
 nnoremap  <left>     <nop>
@@ -959,7 +1095,7 @@ xnoremap  <S-down>   <nop>
 xnoremap  <S-left>   <nop>
 xnoremap  <S-right>  <nop>
 
-" disable right mouse {{{3
+" right mouse {{{3
 nnoremap  <rightmouse>    <nop>
 nnoremap  <2-rightmouse>  <nop>
 nnoremap  <3-rightmouse>  <nop>
@@ -973,7 +1109,7 @@ xnoremap  <2-rightmouse>  <nop>
 xnoremap  <3-rightmouse>  <nop>
 xnoremap  <4-rightmouse>  <nop>
 
-" disable function keys {{{3
+" function keys {{{3
 nnoremap  <F1>   <nop>
 nnoremap  <F2>   <nop>
 nnoremap  <F3>   <nop>
@@ -1005,185 +1141,6 @@ xnoremap  <S-k>  <nop>
 xnoremap  K  <nop>
 " disable Ex mode
 nnoremap  Q  <nop>
-
-" editor mappings {{{2
-
-" <C-s> to write file {{{3
-nnoremap  <C-s>  :update<cr>
-inoremap  <C-s>  <esc>:update<cr>
-xnoremap  <C-s>  <esc>:update<cr>gv
-
-" <C-d> to insert date {{{3
-inoremap  <C-d>  <C-r>=strftime('%Y-%m-%d')<cr>
-
-" increment/decrement numbers
-nnoremap  <C-=>  <C-a>
-xnoremap  <C-=>  <C-a>
-nnoremap  <C-->  <C-x>
-xnoremap  <C-->  <C-x>
-
-" default to very magic search {{{3
-nnoremap  /      /\v
-nnoremap  ?      ?\v
-
-" easily search for selected text {{{3
-xnoremap  /      y<esc>/\V<C-r>"<cr>
-xnoremap  ?      y<esc>?\V<C-r>"<cr>
-
-" rebind n/N to always go forwards/backwards (and turns on highlighting) {{{3
-nnoremap  n      :set hlsearch<cr>/<cr>zz
-nnoremap  <S-n>  :set hlsearch<cr>?<cr>zz
-xnoremap  n      :<C-u>set hlsearch<cr>/<cr>zz
-xnoremap  <S-n>  :<C-u>set hlsearch<cr>?<cr>zz
-
-" force the use of the command line window {{{3
-nnoremap  :      :<C-f>i
-nnoremap  q:     :
-xnoremap  :      :<C-f>i
-xnoremap  q:     :
-
-" editing functions {{{2
-
-" format table {{{3
-function s:FormatTable(visual, use_spaces)
-	" vint: -ProhibitCommandWithUnintendedSideEffect -ProhibitCommandRelyOnUser
-	if a:visual
-		let l:range="'<,'>"
-	else
-		let l:range='%'
-	endif
-	let l:cursor = getpos('.')
-	execute l:range .. 's/\m\C  \+/	/eg'
-	if a:use_spaces
-		execute "silent " .. l:range .. "!column -ts '	'"
-		execute l:range .. 's/\m\C \+$//eg'
-	endif
-	call setpos('.', l:cursor)
-endfunction
-
-" editing mappings {{{2
-
-" editing mappings {{{3
-nnoremap  <leader><bar>     :<C-u>call <SID>FormatTable(v:false, v:false)<cr>
-nnoremap  <leader><bslash>  :<C-u>call <SID>FormatTable(v:false, v:true)<cr>
-xnoremap  <leader><bar>     :<C-u>call <SID>FormatTable(v:true, v:false)<cr>gv
-xnoremap  <leader><bslash>  :<C-u>call <SID>FormatTable(v:true, v:true)<cr>gv
-
-" thesaurus functions {{{2
-
-" thesaurus functions {{{3
-if exists('&thesaurusfunc')
-	let g:thesaurus = {}
-	let s:thesaurus_path = fnamemodify($MYVIMRC, ':p:h') .. '/thesaurus.vim'
-	if filereadable(s:thesaurus_path)
-		execute 'source ' .. s:thesaurus_path
-	endif
-	function s:ThesaurusFunc(find_start, base)
-		if a:find_start
-			return match(getline('.')[:col('.') - 2], '.*\zs\s\ze') + 1
-		elseif has_key(g:thesaurus, a:base)
-			return g:thesaurus[a:base]
-		else
-			return []
-		endif
-	endfunction
-	set thesaurusfunc=s:ThesaurusFunc
-endif
-
-" thesaurus mappings {{{2
-
-" thesaurus mappings {{{3
-inoremap  <C-t>  <C-x><C-t><C-n><C-n><C-p>
-
-" other mappings {{{2
-
-" stay in visual mode after tabbing {{{3
-xnoremap  <tab>    >gv
-xnoremap  <S-tab>  <gv
-xnoremap  >        >gv
-xnoremap  <        <gv
-
-" select previously pasted text {{{3
-nnoremap  gp       `[v`]
-
-" jump to the end of pasted text {{{3
-nnoremap  p        p`]
-
-" make Y behave like other capitals {{{3
-nnoremap  Y        y$
-
-" rebind undo/redo traverse the undo tree instead of the undo stack {{{3
-nnoremap  u        g-
-nnoremap  <C-r>    g+
-
-" get fold level of line {{{3
-function s:SetFoldLevelToLine()
-	if &shiftwidth == 0
-		let l:fold_level = indent('.') / &tabstop
-	else
-		let l:fold_level = indent('.') / &shiftwidth
-	endif
-	execute 'set foldenable foldlevel=' .. l:fold_level
-	echo l:fold_level
-endfunction
-
-" log a autocorrected spellcheck word {{{3
-function s:AutoCorrectAndLog()
-	" get the incorrect word and the correct word
-	let l:bad_word = expand('<cword>')
-	execute 'normal! 1z='
-	let l:new_word = expand('<cword>')
-	" ignore if the word contains non-alphabetic characters
-	if l:bad_word =~# '[^A-Za-z]'
-		return
-	endif
-	" ignore if the word is in the dictionary
-	if empty(spellbadword(l:bad_word)[0])
-		return
-	endif
-	" ignore if the only differences are in capitalization
-	if tolower(l:bad_word) == tolower(l:new_word)
-		return
-	endif
-	" add the word to the autocorrect file
-	let l:autocorrect_file = fnamemodify($MYVIMRC, ':p:h') .. '/autocorrect.vim'
-	call writefile(['"iabbrev  <buffer>  ' .. l:bad_word .. '  ' .. l:new_word], l:autocorrect_file, 'a')
-endfunction
-
-" miscellaneous editing mappings {{{3
-nnoremap  <leader>a         ggVG
-nnoremap  <leader>o         :OpenExternal<space>
-nnoremap  <leader>p         "+p
-nnoremap  <leader>y         "+y
-xnoremap  <leader>y         "+y
-nnoremap  <leader>z         :<C-u>call <SID>AutoCorrectAndLog()<cr>
-nnoremap  <leader>/         :2match IncSearch ''<left>
-xnoremap  <leader>/         "zy:2match IncSearch <C-r>=shellescape(getreg('z'))<cr><cr>
-nnoremap  <leader>@         :<C-f>ilet @=<C-r><C-r>
-nnoremap  <leader><cr>      :silent lmake<cr>
-xnoremap  <leader><cr>      y<esc>:!<C-r>"<cr>
-nnoremap  <leader>;         :lcd %:p:h<cr>
-nnoremap  <silent>  <leader>.          :<C-u>call <SID>SetFoldLevelToLine()<cr>
-if exists(':tnoremap')
-	tnoremap  <esc><esc>  <C-\><C-n>
-	tnoremap  <C-[><C-[>  <C-\><C-n>
-	tnoremap  <S-up>  <up>
-	tnoremap  <S-down>  <down>
-	tnoremap  <S-left>  <left>
-	tnoremap  <S-right>  <right>
-	tnoremap  <S-backspace>  <backspace>
-	tnoremap  <S-cr>  <cr>
-endif
-
-" commands {{{1
-
-" float output {{{3
-if exists('*FloatOutput')
-	command!  -nargs=1 -complete=file  FloatOutput  :call FloatOutput(<f-args>)
-endif
-
-" open external {{{3
-command!  -nargs=1 -complete=file  OpenExternal  :call <SID>OpenExternal(<f-args>)
 
 " autocmds {{{1
 
@@ -1344,6 +1301,13 @@ augroup justinnhli_miscellaneous
 		autocmd  TermClose  *         call feedkeys('i')
 	endif
 augroup END
+
+" commands {{{1
+
+if exists('*FloatOutput')
+	command!  -nargs=1 -complete=file  FloatOutput  :call FloatOutput(<f-args>)
+endif
+command!  -nargs=1 -complete=file  OpenExternal  :call <SID>OpenExternal(<f-args>)
 
 " user functions {{{1
 

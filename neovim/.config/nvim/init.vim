@@ -731,12 +731,13 @@ xnoremap  <leader><bslash>  :<C-u>call <SID>FormatTable(v:true, v:true)<cr>gv
 " thesaurus {{{3
 
 if exists('&thesaurusfunc')
-	let g:thesaurus = {}
-	let s:thesaurus_path = fnamemodify($MYVIMRC, ':p:h') .. '/thesaurus.vim'
-	if filereadable(s:thesaurus_path)
-		execute 'source ' .. s:thesaurus_path
-	endif
+	let g:thesaurus_path = fnamemodify($MYVIMRC, ':p:h') .. '/thesaurus.vim'
 	function s:ThesaurusFunc(find_start, base)
+		if !exists('g:jrnl_ignore_files') || empty(g:thesaurus)
+			if filereadable(g:thesaurus_path)
+				execute 'source ' .. g:thesaurus_path
+			endif
+		endif
 		if a:find_start
 			return match(getline('.')[:col('.') - 2], '.*\zs\s\ze') + 1
 		elseif has_key(g:thesaurus, a:base)

@@ -1252,6 +1252,55 @@ augroup justinnhli_autoset_grep_mappings
 	autocmd  FileType  *  call <SID>AutosetGrepMappings()
 augroup END
 
+" check quickfixtextfunc {{{3
+function s:QuickFixTextFormatter(info)
+	" get the items in the list
+	let l:items = []
+	if a:info.quickfix
+		let l:items = getqflist()
+	else
+		let l:items = getloclist(a:info.winid)
+	endif
+	" get the max length of each component of the list
+	let l:filename_length = 0
+	let l:linenum = 0
+	let l:colnum = 0
+	for idx in range(a:info.start_idx - 1, a:info.end_idx - 1)
+		if items[idx].bufnr == 0
+			continue
+		endif
+		if strlen(bufname(items[idx].bufnr)) > l:filename_length
+			let l:filename_length = strlen(bufname(items[idx].bufnr))
+		endif
+		if items[idx].lnum > l:linenum
+			let l:linenum = items[idx].lnum
+		endif
+		if items[idx].col > l:colnum
+			let l:colnum = items[idx].col
+		endif
+	endfor
+	let l:linenum_length = strlen(string(l:linenum))
+	let l:colnum_length = strlen(string(l:colnum))
+	" build each line
+	let l:result = []
+	for idx in range(a:info.start_idx - 1, a:info.end_idx - 1)
+		let l:row = ''
+		let l:row .= bufname(items[idx].bufnr)
+		let l:row .= repeat(' ', l:filename_length - strlen(bufname(items[idx].bufnr)))
+		let l:row .= '|('
+		let l:row .= repeat(' ', l:linenum_length - strlen(string(items[idx].lnum)))
+		let l:row .= string(items[idx].lnum)
+		let l:row .= ', '
+		let l:row .= repeat(' ', l:colnum_length - strlen(string(items[idx].col + 1)))
+		let l:row .= string(items[idx].col)
+		let l:row .= ')| '
+		let l:row .= items[idx].text
+		call add(l:result, l:row)
+	endfor
+	return l:result
+endfunction
+set quickfixtextfunc=<SID>QuickFixTextFormatter
+
 " create intermediate directories {{{3
 function s:CreateIntermediateDirectories(file, buf)
 	if empty(getbufvar(a:buf, '&buftype')) && a:file!~#'\v^\w+\:\/'

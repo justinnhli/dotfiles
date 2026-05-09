@@ -728,7 +728,7 @@ xnoremap  <leader><bslash>  :<C-u>call <SID>FormatTable(v:true, v:true)<cr>gv
 if exists('&thesaurusfunc')
 	let g:thesaurus_path = fnamemodify($MYVIMRC, ':p:h') .. '/thesaurus.vim'
 	function s:ThesaurusFunc(find_start, base)
-		if !exists('g:jrnl_ignore_files') || empty(g:thesaurus)
+		if !exists('g:jrnl_ignore_files') || !exists('g:thesaurus') || empty(g:thesaurus)
 			if filereadable(g:thesaurus_path)
 				execute 'source ' .. g:thesaurus_path
 			endif

@@ -956,6 +956,10 @@ if exists(':tnoremap')
 	tnoremap  <S-cr>  <cr>
 endif
 
+" version control commands {{{2
+" diff against most recent revision in jj
+nnoremap  <leader>rd    :diffthis<cr>:leftabove vertical vnew<cr>:lcd #:p:h<cr>:read!jj file show -r 'latest(files(#:p) & ..@ ~ @)' #:p<cr>:0d<cr>:setlocal readonly buftype=nofile<cr>:diffthis<cr>
+
 " external commands {{{2
 if exists('*nvim_create_buf')
 	function FloatOutput(cmd)

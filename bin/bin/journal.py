@@ -911,13 +911,7 @@ def do_vimgrep(journal, args):
                     f'{prefix}{match.group()}{suffix}'
                 ))
         results.extend(sorted(entry_results))
-    max_length = max(
-        len(str(path) + str(line_num) + str(col_num))
-        for _, path, line_num, col_num, _, _ in results
-    )
     for _, path, line_num, col_num, title, preview in results:
-        length = len(str(path) + str(line_num) + str(col_num))
-        padding = (max_length - length) * '.'
         if title.is_date:
             label = title.iso()
         else:
@@ -926,7 +920,7 @@ def do_vimgrep(journal, args):
             f'{path}',
             f'{line_num}',
             f'{col_num}',
-            f'{padding}[{label}] {preview}',
+            f'[{label}] {preview}',
         ]))
 
 

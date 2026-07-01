@@ -8,10 +8,20 @@ email = "justinnhli@gmail.com"
 colocate = false
 
 [ui]
-diff-editor = ["/home/justinnhli/bin/diff4.py", "--output", "$output", "$left", "$right"]
-merge-editor = ["/home/justinnhli/bin/diff4.py", "--base", "$base", "--output", "$output", "$left", "$right"]
 diff-instructions = false
 conflict-marker-style = "snapshot"
+
+[[--scope]]
+--when.platforms = ["linux"]
+[--scope.ui]
+diff-editor = ["/home/justinnhli/bin/diff4.py", "--output", "$output", "$left", "$right"]
+merge-editor = ["/home/justinnhli/bin/diff4.py", "--base", "$base", "--output", "$output", "$left", "$right"]
+
+[[--scope]]
+--when.platforms = ["macos"]
+[--scope.ui]
+diff-editor = ["/Users/justinnhli/bin/diff4.py", "--output", "$output", "$left", "$right"]
+merge-editor = ["/Users/justinnhli/bin/diff4.py", "--base", "$base", "--output", "$output", "$left", "$right"]
 
 [revset-aliases]
 "hidden_bookmarks()" = "bookmarks(regex:'^hidden-')"

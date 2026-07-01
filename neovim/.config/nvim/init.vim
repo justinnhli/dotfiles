@@ -1486,6 +1486,7 @@ function UnicodeToAscii()
 	%s/\%u2022/* /eg " bullet
 	" hyphen (0x2D)
 	%s/\%u2010/ - /eg " hyphen
+	%s/\%u2011/ - /eg " non-breaking hyphen
 	%s/\%u2013/ - /eg " en dash
 	%s/\%u2014/ - /eg " em dash
 	%s/\%u2015/ - /eg " horizontal bar
@@ -1532,6 +1533,7 @@ function EmojiToShortcode()
 	%s/\%uFE0F//eg
 	" replace emoji with shortcodes
 	%s/☺/:smile:/eg
+	%s/☹/:frown:/eg
 	%s/❤/:heart:/eg
 	%s/👍/:thumbs_up:/eg
 	%s/💯/:100:/eg

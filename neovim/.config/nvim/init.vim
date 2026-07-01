@@ -1260,10 +1260,13 @@ nnoremap  Q  <nop>
 
 " quickfix and location windows {{{3
 function s:CloseAssociatedLocationList()
+	" get the tabnr and winnr of the window being closed
+	let l:win_id = expand('<afile>')
+	let [l:tabnr, l:winnr] = win_id2tabwin(l:win_id)
 	" count the number of location lists in the tab
 	let l:num_loc_lists = 0
-	for l:win_id in gettabinfo(tabpagenr())[0]['windows']
-		if getbufvar(winbufnr(win_id2win(l:win_id)), '&buftype') == 'quickfix'
+	for l:other_win_id in gettabinfo(l:tabnr)[0]['windows']
+		if getbufvar(winbufnr(win_id2win(l:other_win_id)), '&buftype') == 'quickfix'
 			let l:num_loc_lists += 1
 		endif
 	endfor
@@ -1272,7 +1275,7 @@ function s:CloseAssociatedLocationList()
 		tabclose
 	endif
 	" otherwise, try to get the win_id of the location list of the closing window
-	let l:loc_win_id = getloclist(winnr(), {'winid': 0})['winid']
+	let l:loc_win_id = get(getloclist(l:win_id, {'winid': 0}), 'winid', 0)
 	" close the location list if it is open
 	if l:loc_win_id != 0
 		execute win_id2win(l:loc_win_id) .. 'wincmd c'

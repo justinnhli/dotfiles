@@ -107,7 +107,7 @@ function BuildStatusLine()
 	" spacer
 	let l:result .= ' '
 	" file format
-	let l:fileformat = nvim_get_option_value('fileformat', {'buf': l:bufnr})
+	let l:fileformat = getbufvar(l:bufnr, '&fileformat')
 	if l:fileformat != 'unix'
 		let l:result .= '[%{&fileformat}]'
 	endif

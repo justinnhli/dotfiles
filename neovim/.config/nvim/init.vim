@@ -1275,12 +1275,31 @@ nnoremap  Q  <nop>
 " autocmds {{{1
 
 " quickfix and location windows {{{3
+function s:CloseAssociatedLocationList()
+	" count the number of location lists in the tab
+	let l:num_loc_lists = 0
+	for l:win_id in gettabinfo(tabpagenr())[0]['windows']
+		if getbufvar(winbufnr(win_id2win(l:win_id)), '&buftype') == 'quickfix'
+			let l:num_loc_lists += 1
+		endif
+	endfor
+	" if all remaining windows are location lists, close the tab
+	if l:num_loc_lists > 0 && l:num_loc_lists == winnr('$') - 1
+		tabclose
+	endif
+	" otherwise, try to get the win_id of the location list of the closing window
+	let l:loc_win_id = getloclist(winnr(), {'winid': 0})['winid']
+	" close the location list if it is open
+	if l:loc_win_id != 0
+		execute win_id2win(l:loc_win_id) .. 'wincmd c'
+	endif
+endfunction
 augroup justinnhli_quickfix
 	autocmd!
 	" open the location window after a quickfix command
 	autocmd  QuickFixCmdPost  l*  silent! lclose | lwindow
-	" close the location window if it's the only window in a tab
-	autocmd  WinEnter         *   if winnr('$') == 1 && getbufvar(winbufnr(winnr()), '&buftype') == 'quickfix' | quit | endif
+	" close the location window if it's the only remaining window in a tab
+	autocmd  WinClosed        *   call <SID>CloseAssociatedLocationList()
 	" hide quickfix and location windows when typing
 	autocmd  InsertEnter      *   silent! lclose | silent! cclose
 	" hide quickfix and location windows when the file has changed

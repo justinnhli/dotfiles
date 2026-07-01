@@ -373,6 +373,8 @@ if isdirectory(g:justinnhli_pim_path)
 		call EditHere(l:path)
 		if a:char == 'D'
 			silent! setlocal buftype=nowrite filetype=journal nomodifiable
+		elseif a:char == 'B'
+			$
 		endif
 	endfunction
 	nnoremap  <silent>  <leader>JJ  :call <SID>EditJournalFile('J')<cr>

@@ -9,6 +9,7 @@ colocate = false
 
 [ui]
 diff-editor = ":builtin"
+conflict-marker-style = "snapshot"
 
 [revset-aliases]
 "hidden_bookmarks()" = "bookmarks(regex:'^hidden-')"

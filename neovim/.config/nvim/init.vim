@@ -350,7 +350,7 @@ function s:SetColorscheme(index=-1)
 endfunction
 for s:i in range(len(g:colorschemes))
 	try
-		call s:SetColorscheme()
+		call <SID>SetColorscheme()
 		break
 	catch
 		let g:colorscheme_index += 1
@@ -761,7 +761,7 @@ endfunction
 " colorscheme {{{4
 function s:ToggleColorscheme()
 	let g:colorscheme_index = (g:colorscheme_index + 1) % len(g:colorschemes)
-	call s:SetColorscheme()
+	call <SID>SetColorscheme()
 endfunction
 
 " diff {{{4
@@ -850,7 +850,7 @@ function s:ToggleSpellCheck()
 		for l:group in l:spellgroups
 			execute 'highlight clear ' .. l:group
 		endfor
-		call s:SetColorscheme()
+		call <SID>SetColorscheme()
 	elseif execute('highlight SpellBad') !~? 'links to Error'
 		setlocal spell
 		for l:group in l:spellgroups

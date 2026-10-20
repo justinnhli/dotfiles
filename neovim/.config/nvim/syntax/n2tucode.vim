@@ -1,5 +1,4 @@
 syntax match n2tComment '//.*'
-syntax region n2tComment start='/\*' end='*/'
 highlight link n2tComment Comment
 
 syntax match n2tFunction ';\zsJMP'

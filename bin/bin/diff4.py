@@ -7,6 +7,82 @@ from subprocess import run
 from tempfile import NamedTemporaryFile
 
 
+def determine_layout(lpath, bpath, rpath, opath):
+    # type: (Path, Path, Path, Path) -> list[str]
+    if bpath is not None:
+        assert opath is None # not sure if this could be violated
+        return 'all'
+    if opath is None:
+        assert bpath is None # not sure if this could be violated
+        return 'diff'
+    with lpath.open() as fd:
+        ltext = fd.read()
+    with rpath.open() as fd:
+        rtext = fd.read()
+    with opath.open() as fd:
+        otext = fd.read()
+    if ltext == otext:
+        return 'output-right'
+    elif rtext == otext:
+        return 'output-left'
+    else:
+        return 'all'
+
+
+def layout_diff_script(lpath, bpath, rpath, opath):
+    # type: (Path, Path, Path, Path) -> list[str]
+    """Create a script to show the left-right diff."""
+    result = []
+    # open the left file first
+    result.append(f'tabnew {lpath}')
+    # open the right file to the right of that
+    result.append(f'rightbelow vertical diffsplit {rpath}')
+    return result
+
+
+def layout_left_script(lpath, bpath, rpath, opath):
+    # type: (Path, Path, Path, Path) -> list[str]
+    """Create a script to put the output on the left."""
+    result = []
+    # overwrite the output file with the left file
+    lpath.copy(opath)
+    # open the output file first
+    result.append(f'tabnew {opath}')
+    # open the right file to the right of that
+    result.append(f'rightbelow vertical diffsplit {rpath}')
+    return result
+
+
+def layout_right_script(lpath, bpath, rpath, opath):
+    # type: (Path, Path, Path, Path) -> list[str]
+    """Create a script to put the output on the right."""
+    result = []
+    # overwrite the output file with the right file
+    rpath.copy(opath)
+    # open the left file first
+    result.append(f'tabnew {lpath}')
+    # open the output file to the right of that
+    result.append(f'rightbelow vertical diffsplit {opath}')
+    return result
+
+
+def layout_all_script(lpath, bpath, rpath, opath):
+    # type: (Path, Path, Path, Path) -> list[str]
+    result = []
+    # open the left file first
+    result.append(f'tabnew {lpath}')
+    # if there is a base, open it to the right
+    if args.base:
+        result.append(f'rightbelow vertical diffsplit {bpath}')
+    # open the right file to the right of that
+    result.append(f'rightbelow vertical diffsplit {rpath}')
+    # if there is an output file, open it at the bottom
+    if args.output:
+        result.append(f'rightbelow diffsplit {opath}')
+        result.append('execute "normal! \\<C-w>J"')
+    return result
+
+
 def main():
     # type: () -> None
     """Provide a CLI entry point."""
@@ -18,7 +94,6 @@ def main():
     arg_parser.add_argument('right', type=Path, help='the right side of the diff/merge')
     arg_parser.add_argument('--base', type=Path, help='the common ancestor file/directory')
     arg_parser.add_argument('--output', type=Path, help='the output file/directory')
-    arg_parser.add_argument('--split', action='store_true', help='use a layout for splitting commits')
     # parse the arguments
     args = arg_parser.parse_args()
     # resolve all paths
@@ -29,9 +104,6 @@ def main():
     if args.output:
         args.output = args.output.expanduser().resolve()
     # validate arguments
-    if args.split:
-        args.base = args.output
-        args.output = None
     roots = (args.left, args.base, args.right, args.output)
     arg_type = None
     for root in roots:
@@ -70,20 +142,26 @@ def main():
                 ((root / relative_path) if root else None)
                 for root in roots
             ))
+    # determine layout
+    layout = 'all'
+    for version_paths in paths:
+        new_layout = determine_layout(*version_paths)
+        if layout == 'all':
+            layout = new_layout
+        elif layout != new_layout:
+            layout = 'all'
+            break
     # create a script to set up a tab for each file
     vimscript = []
-    for lpath, bpath, rpath, opath in paths:
-        # open the left file first
-        vimscript.append(f'tabnew {lpath}')
-        # if there is a base, open it to the right
-        if args.base:
-            vimscript.append(f'rightbelow vertical diffsplit {bpath}')
-        # open the right file to the right of that
-        vimscript.append(f'rightbelow vertical diffsplit {rpath}')
-        # if there is an output file, open it at the bottom
-        if args.output:
-            vimscript.append(f'rightbelow diffsplit {opath}')
-            vimscript.append('execute "normal! \\<C-w>J"')
+    for version_paths in paths:
+        if layout == 'diff':
+            vimscript.extend(layout_diff_script(*version_paths))
+        elif layout == 'output-left':
+            vimscript.extend(layout_left_script(*version_paths))
+        elif layout == 'output-right':
+            vimscript.extend(layout_right_script(*version_paths))
+        else:
+            vimscript.extend(layout_all_script(*version_paths))
     vimscript.append('tabclose 1')
     # write the vimscript to file
     vimscript_file = NamedTemporaryFile(mode='w', delete=False)

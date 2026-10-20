@@ -65,7 +65,7 @@ def update_brew():
     if not which('brew'):
         return
     run(['brew', 'update'], check=True)
-    run(['brew', 'upgrade'], check=True)
+    run(['brew', 'upgrade', '--force-bottle'], check=True)
     run(['brew', 'autoremove'], check=True)
     run(['brew', 'cleanup'], check=True)
 

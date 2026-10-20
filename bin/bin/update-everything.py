@@ -85,7 +85,7 @@ def update_vim_pack():
     """Update neovim packages."""
     if not which('nvim'):
         return
-    run(['nvim', '-c', 'lua vim.pack.update()', '-c', 'qa'], check=True)
+    run(['nvim', '-c', 'lua vim.pack.update(nil, {force=true})', '-c', 'qa'], check=True)
 
 
 @register()
